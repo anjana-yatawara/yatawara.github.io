@@ -32,18 +32,45 @@ body {
   color: white;
 }
 
+/* Profile Section */
 .profile-container {
-  display: inline-block;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #56C389; /* Dark background color */
+  padding: 20px;
+  border-radius: 10px; /* Add rounded corners */
 }
 
 .profile-pic {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  border: 4px solid white;
+  border: 4px solid #EDFFEC; /* Light color border */
   object-fit: cover;
-  margin-bottom: 10px;
+  margin-right: 20px; /* Add spacing between image and text */
+}
+
+.profile-details h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: white;
+}
+
+.profile-details h2 {
+  font-size: 1.8rem;
+  margin: 5px 0;
+  color: #EDFFEC;
+}
+
+.profile-details a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: #EDFFEC;
+}
+
+.profile-details a:hover {
+  text-decoration: underline;
 }
 
 h1 {
