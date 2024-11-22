@@ -2,15 +2,16 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #E9FBFF;
-  color: #268181;
+  background-color: #EDFFEC; /* Updated light background color */
+  color: #56C389; /* Updated text color */
 }
 
 /* Header Section */
 .header {
   position: relative;
   text-align: center;
-  height: 400px;
+  height: 100vh; /* Ensure full screen height */
+  overflow: hidden;
 }
 
 .background-image {
@@ -19,6 +20,8 @@ body {
   object-fit: cover;
   position: absolute;
   z-index: 1;
+  top: 0;
+  left: 0;
 }
 
 .overlay {
@@ -62,7 +65,7 @@ a {
 
 /* Navigation Bar */
 .navbar {
-  background-color: #268181;
+  background-color: #56C389; /* Updated dark color */
   padding: 10px 0;
 }
 
