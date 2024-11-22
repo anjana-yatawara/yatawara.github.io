@@ -10,8 +10,7 @@ body {
 .header {
   position: relative;
   text-align: center;
-  height: 100vh; /* Ensure full screen height */
-  overflow: hidden;
+  height: 400px;
 }
 
 .background-image {
