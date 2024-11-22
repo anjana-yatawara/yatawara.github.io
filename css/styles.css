@@ -93,3 +93,37 @@ display: block; /* Ensure proper alignment */
 .navbar ul li a:hover {
   text-decoration: underline;
 }
+
+.has-submenu {
+    position: relative;
+}
+
+.has-submenu ul {
+    display: none;
+    position: absolute;
+    background-color: #26443B;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+}
+
+.has-submenu:hover ul {
+    display: block;
+}
+
+.has-submenu ul li {
+    margin: 0;
+}
+
+.has-submenu ul li a {
+    display: block;
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+}
+
+.has-submenu ul li a:hover {
+    background-color: #56C389;
+}
+
