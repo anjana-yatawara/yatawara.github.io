@@ -46,20 +46,24 @@ body {
   margin-bottom: 10px;
 }
 
-h1 {
-  font-size: 2rem;
+.profile-details h1 {
+  font-size: 2.5rem; /* Larger font size for name */
   margin: 10px 0 5px;
 }
 
-h2 {
-  font-size: 1.5rem;
+.profile-details h2 {
+  font-size: 1.8rem; /* Slightly smaller than name */
   margin: 5px 0;
+  line-height: 1.4;
 }
 
-a {
-  text-decoration: none;
-  color: white;
+.profile-details a {
+  display: block; /* Ensure proper alignment */
   font-size: 1.2rem;
+  color: inherit;
+  text-decoration: none;
+  margin-top: 5px;
+  line-height: 1.2;
 }
 
 /* Navigation Bar */
