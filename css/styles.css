@@ -1,7 +1,7 @@
 /* General Reset */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   background-color: #EDFFEC; /* Updated light background color */
   color: #26443B; /* Updated text color */
 }
