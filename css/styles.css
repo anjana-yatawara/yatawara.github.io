@@ -58,7 +58,7 @@ body {
 }
 
 .profile-details a {
-  display: block; /* Ensure proper alignment */
+
   font-size: 1rem;
   color: inherit;
   text-decoration: none;
