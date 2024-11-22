@@ -1,46 +1,30 @@
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
   margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #fdfdfd;
   color: #333;
 }
 
 .container {
-  width: 80%;
+  width: 85%;
   margin: auto;
-  overflow: hidden;
   max-width: 1200px;
-}
-
-/* Header Section */
-.header {
-  background-color: #4A90E2;
-  color: white;
-  text-align: center;
-  padding: 2rem 0;
-}
-
-.header h1 {
-  font-size: 2.5rem;
-}
-
-.header .sub-title {
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
-}
-
-.header .specialization {
-  font-size: 1rem;
-  font-style: italic;
 }
 
 /* Navigation Bar */
 .navbar {
-  background-color: #333;
-  overflow: hidden;
+  background-color: #4A90E2;
+  color: white;
+  padding: 10px 20px;
+}
+
+.navbar .logo a {
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .navbar .nav-links {
@@ -48,44 +32,37 @@ body {
   padding: 0;
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .navbar .nav-links li {
-  margin: 0 15px;
+  margin-left: 20px;
 }
 
 .navbar .nav-links a {
   color: white;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  transition: color 0.3s;
 }
 
 .navbar .nav-links a:hover {
-  text-decoration: underline;
+  color: #50b3a2;
 }
 
 /* Section */
 .section {
-  padding: 2rem 0;
+  padding: 60px 0;
   text-align: center;
 }
 
 .section h2 {
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 20px;
 }
 
 .bg-light {
   background-color: #f9f9f9;
-}
-
-/* Profile Photo */
-.profile-photo {
-  border-radius: 50%;
-  max-width: 200px;
-  margin: 1rem auto;
-  display: block;
 }
 
 /* Footer */
@@ -93,5 +70,55 @@ body {
   background-color: #333;
   color: white;
   text-align: center;
-  padding: 1rem 0;
+  padding: 20px 0;
+}
+
+/* Profile Section (from previous work) */
+.profile-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.profile-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  text-align: left;
+  gap: 20px;
+  max-width: 1000px;
+  background-color: white;
+  padding: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.profile-image img {
+  max-width: 150px;
+  height: auto;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-text h1 {
+  font-size: 2.5rem;
+  color: #4A90E2;
+  margin-bottom: 10px;
+}
+
+.profile-text h2 {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.profile-text p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.8;
 }
