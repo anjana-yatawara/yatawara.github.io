@@ -10,6 +10,21 @@ citation: false
 
 ::: {.pub-entry}
 ::: {.pub-title}
+Evaluating Fine-Scale Air-Quality Heterogeneity Using a Low-Cost Multipollutant Sensor Network in Twin Cities, Minnesota
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me} et al.
+:::
+::: {.pub-venue}
+ACS ES&T Air, 2025
+:::
+::: {.pub-links}
+[Paper](https://pubs.acs.org/doi/abs/10.1021/acsestair.5c00439)
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
 Income-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework
 :::
 ::: {.pub-authors}

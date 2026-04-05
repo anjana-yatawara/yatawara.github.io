@@ -102,6 +102,8 @@ My approach centers on four kinds of interaction. **Student-teacher interaction*
 
 I use AI deliberately and ethically — Custom GPT tutors support coding practice and concept review, but only after students have built foundational understanding. As I tell my students: *"Anyone can google the steps to a hypothesis test, but you need to understand the basics to interpret the result and make inferences."*
 
+We also have to accept the reality that the industry and job market have changed dramatically over the last couple of years. It is my duty to prepare my students for this new world — not just with statistical theory, but with computational skills, AI literacy, data science workflows, and the critical thinking needed to work alongside AI rather than be replaced by it. This is a central part of my teaching philosophy and why I invest heavily in building AI-integrated learning experiences.
+
 
 ## AI Tools for Students
 

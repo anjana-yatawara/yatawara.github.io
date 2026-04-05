@@ -4,6 +4,7 @@ title-block-banner: false
 toc: false
 page-layout: full
 css: styles/extra.css
+citation: false
 ---
 
 ::: {.hero-section}
@@ -31,7 +32,7 @@ Assistant Professor of Mathematics & Statistics
 :::
 
 ::: {.bio-text}
-I am a statistician and applied mathematician studying how financial markets encode and forget information. My research develops new econometric models for volatility persistence, applies machine learning to public health forecasting, and investigates income-based environmental exposure disparities. I also build AI-powered tools that help students learn statistics — work supported by the California Learning Lab. At CSUB, I teach courses spanning elementary statistics to mathematical statistics and applied data science, and I mentor undergraduate researchers across multiple funded programs.
+I am a statistician and applied mathematician studying how financial markets encode and forget information. My research develops new econometric models for volatility persistence, applies machine learning to public health forecasting, and investigates income-based environmental exposure disparities. I also build AI-powered tools that help students learn statistics — work supported by the California Learning Lab. The industry and job market have changed dramatically in recent years, and I see it as my responsibility to prepare students for this new reality — equipping them not just with statistical knowledge, but with the computational, AI-literate, and data-driven skills that the modern workforce demands. At CSUB, I teach courses spanning elementary statistics to mathematical statistics and applied data science, and I mentor undergraduate researchers across multiple funded programs.
 :::
 
 ::: {.pillar-grid}
@@ -68,25 +69,25 @@ I help organizations solve complex problems through statistical modeling, machin
 
 ::: {.pub-entry}
 ::: {.pub-title}
-From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education
-:::
-::: {.pub-authors}
-[**A. Yatawara**]{.me}, J. Wang, A. Cruz, M. Mishra
-:::
-::: {.pub-venue}
-Submitted to Journal of Statistics and Data Science Education, 2025
-:::
-:::
-
-::: {.pub-entry}
-::: {.pub-title}
 Income-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework
 :::
 ::: {.pub-authors}
 [**A. Yatawara**]{.me}, K. Ko, C. Rodriguez
 :::
 ::: {.pub-venue}
-Submitted to Environmental Research: Health, 2025
+Published in Environmental Research: Health, 2025
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Evaluating Fine-Scale Air-Quality Heterogeneity Using a Low-Cost Multipollutant Sensor Network in Twin Cities, Minnesota
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me} et al.
+:::
+::: {.pub-venue}
+Published in ACS ES&T Air, 2025
 :::
 :::
 

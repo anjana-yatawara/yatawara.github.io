@@ -39,6 +39,8 @@ I pursue data-driven applications that serve public needs, with current focus on
 
 **Income-Based Exposure Disparities in California** — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. [Published in *Environmental Research: Health*, 2025](https://iopscience.iop.org/article/10.1088/2752-5309/ae4134/meta){.badge-published}
 
+**Fine-Scale Air-Quality Heterogeneity in Twin Cities** — Analysis of data from a dense low-cost network of 45 multi-pollutant sensors in the Minneapolis-St. Paul metropolitan area to investigate spatiotemporal pollutant patterns and exposure disparities. [Published in *ACS ES&T Air*, 2025](https://pubs.acs.org/doi/abs/10.1021/acsestair.5c00439){.badge-published}
+
 **Air Pollution & Fertility Patterns** — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship.
 
 
