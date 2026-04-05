@@ -1,0 +1,33 @@
+---
+title: "Nothing Ever Fully Goes Away"
+subtitle: "What financial markets taught me about how memory actually works"
+author: "Anjana Yatawara"
+date: "2026-04-05"
+categories: [research, life]
+image: "thumbnail.png"
+draft: false
+---
+
+We assume forgetting is exponential. Something happens, it fades, it's gone. Like a half-life — cut in half, cut in half again, and pretty soon it rounds to zero. That's what every standard model in finance assumes about volatility: a shock hits the market, and its impact decays exponentially. Clean. Fast. Predictable.
+
+But when I actually estimated how markets remember — without assuming any shape at all, just letting the data speak — the answer was different. The memory kernel isn't exponential. It's *sub-exponential*. Markets forget fast at first, then slow down. The initial shock fades quickly, but a residual hangs around far longer than any exponential model predicts.
+
+The first half of a memory disappears in about five days. The last one percent can linger for a year.
+
+I think life works the same way.
+
+You move on from most things quickly. A bad meeting, an awkward conversation, a missed flight — half the emotional weight is gone by the weekend. But that one failure from years ago? That relationship that ended badly? That moment you didn't speak up? Those aren't gone. They're at lag 1,000, contributing a fraction of a percent of their original weight to every decision you make today.
+
+Not enough to notice. Enough to matter.
+
+The stretched exponential — the function that fits this pattern — has a shape parameter called $\alpha$. When $\alpha = 1$, memory is exponential: things fade on schedule. When $\alpha < 1$, the past sticks around longer than it should. In financial markets, I found $\alpha \approx 0.27$ across hundreds of assets. Nowhere close to 1.
+
+The beautiful part is *why*. A stretched exponential isn't just a curve — it's a mixture. It's what you get when many different exponential decay rates operate simultaneously. Some memories fade in days. Some in months. Some almost never. The aggregate of all those timescales, running in parallel, produces the concave, slow-fading shape we observe.
+
+Markets are like this because they aggregate millions of participants with different horizons — a day trader and a pension fund experience the same crash but process it on completely different timescales. And I suspect we're like this too. Different parts of us — our rational mind, our emotions, our body, our identity — process the same event at different speeds. The result isn't a clean exponential decay. It's richer, slower, and more human than that.
+
+Nothing ever fully goes away. It just contributes less.
+
+---
+
+*This is the central finding of my paper "The Shape of Volatility Memory," currently in preparation for the Journal of Business & Economic Statistics. The math is rigorous. The metaphor is mine.*
