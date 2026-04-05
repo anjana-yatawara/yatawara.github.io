@@ -9,7 +9,7 @@ citation: false
 
 ::: {.hero-section}
 
-![](images/profile.jpg){.hero-photo fig-alt="Anjana Yatawara"}
+![](images/profile.png){.hero-photo fig-alt="Anjana Yatawara"}
 
 # Anjana Yatawara
 
