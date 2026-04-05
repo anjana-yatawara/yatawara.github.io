@@ -1,7 +1,0 @@
-/.quarto/
-/docs/
-/_site/
-*.html
-!index.html
-.DS_Store
-node_modules/

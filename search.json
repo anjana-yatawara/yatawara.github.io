@@ -1,0 +1,247 @@
+[
+  {
+    "objectID": "cv/index.html",
+    "href": "cv/index.html",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Ph.D. in Mathematics — Statistics Emphasis Missouri University of Science and Technology, 2017–2023 Advisor: Dr. V.A. Samaranayake Focus: Time series with conditional heteroscedastic structure\nB.Sc. Special Degree in Statistics (Second Class Honors, Upper Division) University of Peradeniya, Sri Lanka, 2012–2016"
+  },
+  {
+    "objectID": "cv/index.html#education",
+    "href": "cv/index.html#education",
+    "title": "Curriculum Vitae",
+    "section": "",
+    "text": "Ph.D. in Mathematics — Statistics Emphasis Missouri University of Science and Technology, 2017–2023 Advisor: Dr. V.A. Samaranayake Focus: Time series with conditional heteroscedastic structure\nB.Sc. Special Degree in Statistics (Second Class Honors, Upper Division) University of Peradeniya, Sri Lanka, 2012–2016"
+  },
+  {
+    "objectID": "cv/index.html#academic-positions",
+    "href": "cv/index.html#academic-positions",
+    "title": "Curriculum Vitae",
+    "section": "Academic Positions",
+    "text": "Academic Positions\nAssistant Professor of Mathematics California State University, Bakersfield — August 2023–Present\nGraduate Teaching Assistant Missouri University of Science and Technology — August 2017–July 2023\nTeaching Assistant University of Peradeniya, Sri Lanka — 2016–2017"
+  },
+  {
+    "objectID": "cv/index.html#grants-funding",
+    "href": "cv/index.html#grants-funding",
+    "title": "Curriculum Vitae",
+    "section": "Grants & Funding",
+    "text": "Grants & Funding\n\n\n\n\n\n\n\n\n\nYear\nTitle\nRole\nFunder\n\n\n\n\n2025\nAir Pollution Disparities in California, 2000–2025\nPI\nCES Mini-Grant, CSUB\n\n\n2024\nELEVATE: Enhancing Learning Experiences Via AI Techniques\nCo-PI\nCalifornia Learning Lab AI FAST Challenge"
+  },
+  {
+    "objectID": "cv/index.html#awards-honors",
+    "href": "cv/index.html#awards-honors",
+    "title": "Curriculum Vitae",
+    "section": "Awards & Honors",
+    "text": "Awards & Honors\n\nMissouri S&T Nominee for MAGS Excellence in Teaching Award (2022)\nGTA Teaching Excellence Award — Lecture Classes (2021–22, 2019–20)\nHonorable Mention, GTA Teaching Excellence — Lecture Classes (2020–21, 2018–19)\nHonorable Mention, GTA Teaching Excellence — Recitation Classes (2017–18)\nCSUB Affordable Learning Solutions Recognition (2024–25)\nInvited for inclusion in CSU Sustainability and Climate Change Faculty Directory"
+  },
+  {
+    "objectID": "cv/index.html#technical-skills",
+    "href": "cv/index.html#technical-skills",
+    "title": "Curriculum Vitae",
+    "section": "Technical Skills",
+    "text": "Technical Skills\nLanguages & Software: R, Python, MATLAB, SAS, SQL, LaTeX, Git/GitHub, HTML/CSS\nStatistical Methods: GARCH-family models, time series analysis, Bayesian inference, maximum likelihood estimation, Monte Carlo simulation, multivariate methods, causal inference\nMachine Learning: Random forests, gradient boosting (XGBoost), neural networks (LSTM, GRU-CNN), SVMs, k-means clustering, PCA\nAI & LLMs: Custom GPT development, prompt engineering, local LLM deployment, OpenAI API\nCloud & Computing: JupyterLab, Google Cloud, AWS, CSUB AI Lab (GPU workstations), National Research Platform / Nautilus cluster"
+  },
+  {
+    "objectID": "cv/index.html#professional-memberships",
+    "href": "cv/index.html#professional-memberships",
+    "title": "Curriculum Vitae",
+    "section": "Professional Memberships",
+    "text": "Professional Memberships\n\nAmerican Statistical Association (ASA)\nAmerican Mathematical Society (AMS)"
+  },
+  {
+    "objectID": "cv/index.html#service-selected",
+    "href": "cv/index.html#service-selected",
+    "title": "Curriculum Vitae",
+    "section": "Service (Selected)",
+    "text": "Service (Selected)\n\nProposed Center for Applied AI & Data Science Innovation (CAADSI) at CSUB\nProposed CSUB AI Essentials Certificate\nPlanned and developed AI Lab (Science III, Room 214)\nAdmin for National Research Platform / Nautilus cluster\nMember, Scientific Committee, CSU Mathematical Sciences Conference (2023)\nInitiated education partnership with Lawrence Berkeley National Laboratory\nOpenAI Day campus engagement (ChatGPT Project Team)\n\n\nFull CV available as PDF upon request. Email ayatawara@csub.edu."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Anjana Yatawara",
+    "section": "",
+    "text": "Assistant Professor of Mathematics & Statistics\n\n\nCalifornia State University, Bakersfield"
+  },
+  {
+    "objectID": "index.html#recent-selected-work",
+    "href": "index.html#recent-selected-work",
+    "title": "Anjana Yatawara",
+    "section": "Recent & selected work",
+    "text": "Recent & selected work\n\n\nFrom Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education\n\n\nA. Yatawara, J. Wang, A. Cruz, M. Mishra\n\n\nSubmitted to Journal of Statistics and Data Science Education, 2025\n\n\n\n\nIncome-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework\n\n\nA. Yatawara, K. Ko, C. Rodriguez\n\n\nSubmitted to Environmental Research: Health, 2025\n\n\n\n\nThe Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Business & Economic Statistics\n\n\n\n\nMF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Forecasting\n\n\nSee all publications →"
+  },
+  {
+    "objectID": "research/index.html",
+    "href": "research/index.html",
+    "title": "Research",
+    "section": "",
+    "text": "My research program is organized around four pillars that share a common methodological core: modeling complex temporal and spatial patterns in data to produce actionable insights."
+  },
+  {
+    "objectID": "research/index.html#volatility",
+    "href": "research/index.html#volatility",
+    "title": "Research",
+    "section": "Financial Volatility & Time Series Econometrics",
+    "text": "Financial Volatility & Time Series Econometrics\nThis is my primary research area. I develop new econometric models for financial volatility that capture how markets encode, retain, and forget information over time.\nThe Shape of Volatility Memory — My central project establishes that volatility memory kernels across 100+ financial assets (equities, currencies, commodities, fixed income, crypto, VIX) follow sub-exponential decay patterns better described by stretched exponentials than by the standard GARCH or FIGARCH alternatives. This work introduces the GMARCH and SEARCH model frameworks. In production — target: Journal of Business & Economic Statistics\nMF2V-GARCH — Augments Conrad & Engle’s (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox with six functions. In production — target: Journal of Forecasting\nMF2-GARCH-A — Extends the MF2-GARCH with a sign-sensitive long-run component that captures asymmetric responses to positive and negative return shocks. Near completion — target: International Journal of Forecasting\nMF2-EGARCH — An exponential GARCH version of the multiplicative factor multi-frequency framework. Finalizing — target: PLOS ONE\nAdditional models: Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH (FI-GJRGARCH), and Smooth Transition FI-GJRGARCH extensions.\n\nSoftware\n\nMF2V-GARCH Toolbox for MATLAB — Six functions styled after Conrad & Schoelkopf’s mf2garch repository. Zenodo DOI forthcoming."
+  },
+  {
+    "objectID": "research/index.html#ml",
+    "href": "research/index.html#ml",
+    "title": "Research",
+    "section": "Machine Learning for Time Series",
+    "text": "Machine Learning for Time Series\nMy second line of work connects modern deep learning architectures to statistical time series baselines.\nGRU-CNN Hybrid for Influenza Forecasting — A hybrid gated recurrent unit / convolutional neural network model with Yeo-Johnson scaling for forecasting influenza-like illnesses. Presented at JSM 2025 (Infectious Disease Epidemiology Section). Joint work with student Noah Gallego and Prof. Isuru Ratnayake (KUMC). Manuscript in preparation"
+  },
+  {
+    "objectID": "research/index.html#env",
+    "href": "research/index.html#env",
+    "title": "Research",
+    "section": "Environmental Justice & Air Quality",
+    "text": "Environmental Justice & Air Quality\nI pursue data-driven applications that serve public needs, with current focus on air pollution exposure disparities.\nIncome-Based Exposure Disparities in California — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. Submitted to Environmental Research: Health\nAir Pollution & Fertility Patterns — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship.\nMinneapolis-St. Paul Sensor Network — Analysis of data from a dense network of 45 low-cost multi-pollutant sensors investigating spatiotemporal patterns and exposure disparities."
+  },
+  {
+    "objectID": "research/index.html#education",
+    "href": "research/index.html#education",
+    "title": "Research",
+    "section": "AI in Statistics Education",
+    "text": "AI in Statistics Education\nI maintain a growing research agenda at the intersection of artificial intelligence and statistics education, supported by the California Learning Lab ELEVATE grant.\nScaffolded LLM Tutors — Lead author on “From Answer Generators to Thinking Partners,” which develops a framework for AI-driven tutoring, prompt engineering, and ethical classroom integration using Custom GPTs. Submitted to JSDSE\nStructured AI Tutoring in Engineering Education — Co-authored WIP paper contributing AI prompt design methodology. Accepted at IEEE Frontiers in Education 2025\nComputer-Aided Instruction for K–12 Teachers — Cognitive apprenticeship approach to LLM integration for K–12 professional development. Accepted at IEEE FIE 2025"
+  },
+  {
+    "objectID": "research/index.html#collaborators",
+    "href": "research/index.html#collaborators",
+    "title": "Research",
+    "section": "Collaborators",
+    "text": "Collaborators\n\nV.A. Samaranayake — Missouri University of Science and Technology (Ph.D. advisor)\nIsuru Ratnayake — University of Kansas Medical Center\nAlberto Cruz — CSUB, Computer & Electrical Engineering (ELEVATE PI)\nJianjun Wang — CSUB, Mathematics\nMaruti Mishra — CSUB\nEduardo Montoya — CSUB, Mathematics (Statistical Data Science curriculum)\nBilin Zeng — CSUB, Mathematics"
+  },
+  {
+    "objectID": "research/index.html#grants-funding",
+    "href": "research/index.html#grants-funding",
+    "title": "Research",
+    "section": "Grants & Funding",
+    "text": "Grants & Funding\n\n\n\n\n\n\n\n\n\nYear\nGrant\nRole\nSource\n\n\n\n\n2025\nAir Pollution Disparities in California, 2000–2025\nPI\nCES Mini-Grant, CSUB\n\n\n2024–25\nELEVATE: Enhancing Learning Experiences Via AI Techniques\nCo-PI\nCalifornia Learning Lab AI FAST Challenge"
+  },
+  {
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Occasional writing on research, teaching, and the tools I use. Expect accessible explanations of econometric methods, R and Python tutorials, reflections on teaching with AI, and notes from conferences.\n\n\n\n\n\n\n\n\nNo matching items\nCitationBibTeX citation:@online{untitled,\n  author = {},\n  title = {Blog},\n  url = {https://www.yatawara.com/blog/},\n  langid = {en}\n}\nFor attribution, please cite this work as:\n“Blog.” n.d. https://www.yatawara.com/blog/."
+  },
+  {
+    "objectID": "teaching/index.html",
+    "href": "teaching/index.html",
+    "title": "Teaching",
+    "section": "",
+    "text": "I teach statistics and applied mathematics at CSUB with an emphasis on computational thinking, real-world data, and student-centered active learning. I integrate AI tools thoughtfully — only after core concepts are secure — and build Custom GPT tutors to support individualized practice outside the classroom."
+  },
+  {
+    "objectID": "teaching/index.html#current-recent-courses",
+    "href": "teaching/index.html#current-recent-courses",
+    "title": "Teaching",
+    "section": "Current & Recent Courses",
+    "text": "Current & Recent Courses\n\n\nMATH 2200\n\n\nElementary Statistics\nIntroduction to statistical methods with an emphasis on critical thinking, data analysis using R, and real-world applications. Topics include descriptive statistics, probability, inference for proportions and means, ANOVA, and linear regression.\n\nUndergraduate · OER materials · AI-assisted learning tools\n\n\n\n\n\nMATH 3209\n\n\nStatistical Measures of Inequality in Society\nIntroduction to statistical methods stressing critical thinking and awareness of how statistics are applied across disciplines. Individual and group projects with real data. Uses R for data analysis.\n\nUndergraduate · General Education · Spring 2025\n\n\n\n\n\nMATH 3210\n\n\nApplied Statistical Computing and Multivariate Methods\nStatistical computing course covering R and SAS from first principles through Shiny apps and dashboards. Topics include data management, visualization, PCA, factor analysis, k-means clustering, and multivariate methods.\n\nGraduate · R & SAS · Fall 2024\n\n\n\n\n\nMATH 4200\n\n\nMathematical Statistics\nFundamentals of statistical inference: sampling distributions, estimation theory (sufficiency, efficiency, MLE, method of moments), hypothesis testing, likelihood ratio tests, confidence intervals, and Bayesian methods. Simulation and inference with R.\n\nUpper-division · Proof-based · Spring 2025\n\n\n\n\n\nMATH 4230\n\n\nApplied Statistical Methods for Data Science\nAdvanced statistical methods bridging theory and data science practice. Regularization (ridge, lasso), tree-based methods, random forests, gradient boosting, neural networks, SVMs, and unsupervised learning. Uses the ISLR textbook with R and Python.\n\nUpper-division · New course · Statistical Data Science concentration"
+  },
+  {
+    "objectID": "teaching/index.html#teaching-philosophy",
+    "href": "teaching/index.html#teaching-philosophy",
+    "title": "Teaching",
+    "section": "Teaching Philosophy",
+    "text": "Teaching Philosophy\nMy approach centers on three principles. First, statistics is learned by doing — every class involves hands-on data analysis, not just formulas on a board. Second, AI should augment, not replace — I build Custom GPT tutors that help students practice and debug code, but only after they understand the underlying concepts. Third, every student can succeed — I scaffold carefully, give partial credit for demonstrated effort, and hold extensive office hours.\nStudent evaluations consistently reflect this philosophy. In Spring 2025, my average positive rating across MATH 2200 and MATH 4200 was approximately 88%, with students noting: “Truly an amazing professor that cares for students” and “Use of AI was extremely helpful for studying outside of class.”"
+  },
+  {
+    "objectID": "teaching/index.html#ai-tools-for-students",
+    "href": "teaching/index.html#ai-tools-for-students",
+    "title": "Teaching",
+    "section": "AI Tools for Students",
+    "text": "AI Tools for Students\nI develop Custom GPT tutors to support my courses:\n\nR Tutor for MATH 2200 — Learning assistant for R coding in introductory statistics\nMATH 4200 AI Assistant — Guided problem-solving for mathematical statistics\nLaTeX Converter — Helps students typeset mathematical work\nMATLAB / R / Python Learning Assistants — Language-specific coding support\nMathBuddy Jr. — Accessible math practice tool\nStudy Coach GPT — General study strategies and organization"
+  },
+  {
+    "objectID": "teaching/index.html#teaching-innovations",
+    "href": "teaching/index.html#teaching-innovations",
+    "title": "Teaching",
+    "section": "Teaching Innovations",
+    "text": "Teaching Innovations\n\nOER Development — Recognized by CSUB Affordable Learning Solutions (2024–25) for providing zero-cost materials and building AI tools that improve student learning\nELEVATE Project — Co-PI on California Learning Lab grant developing AI-enhanced learning experiences for STEM education\nCSUB JupyterLab Cloud — Launched browser-based access to R, Python, and VS Code for students via CAL-ICOR partnership\nAI Instructional Module — Co-developed with Kim Mishkind for first-year seminar (BA 1028), teaching AI literacy and prompt engineering"
+  },
+  {
+    "objectID": "teaching/index.html#student-mentorship",
+    "href": "teaching/index.html#student-mentorship",
+    "title": "Teaching",
+    "section": "Student Mentorship",
+    "text": "Student Mentorship\nI am deeply committed to undergraduate research mentorship:\n\n\n\n\n\n\n\n\n\nProgram\nYear\nStudents\nProject\n\n\n\n\nSURE (Chevron)\nSummer 2025\nJ. Rosas, J. Rodriguez, C. Rodriguez, R. Gamez\nLocal LLM applications for education\n\n\nCV Pathway\nSummer 2025\nE. DeJesus, N. Gallego\nAir pollution and fertility patterns\n\n\nStudent Research Scholars\n2024–25\n1 student\nHow Present is ChatGPT at CSUB?\n\n\nCV Pathway\nSummer 2024\nT. Regpala, J. Rodriguez Aguilar\nAir pollution research"
+  },
+  {
+    "objectID": "teaching/index.html#for-students",
+    "href": "teaching/index.html#for-students",
+    "title": "Teaching",
+    "section": "For Students",
+    "text": "For Students\nOffice hours: See your course Canvas page for current times, or email me at ayatawara@csub.edu to schedule an appointment.\nRecommendation letters: I’m happy to write letters for students I know well. Please provide at least 3 weeks’ notice, your CV/resume, the program description, and a brief note about what you’d like me to emphasize."
+  },
+  {
+    "objectID": "consulting/index.html",
+    "href": "consulting/index.html",
+    "title": "Consulting",
+    "section": "",
+    "text": "I help organizations make better decisions with data. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.\n\n\n\nDesign rigorous studies that produce defensible results. From experimental design to observational study methodology — get it right from the start.\n\n\n\nFinancial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.\n\n\n\nBuild models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data — with interpretability built in.\n\n\n\nAir quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.\n\n\n\nCustom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.\n\n\n\nCustom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data."
+  },
+  {
+    "objectID": "consulting/index.html#statistical-consulting-data-science-advisory",
+    "href": "consulting/index.html#statistical-consulting-data-science-advisory",
+    "title": "Consulting",
+    "section": "",
+    "text": "I help organizations make better decisions with data. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.\n\n\n\nDesign rigorous studies that produce defensible results. From experimental design to observational study methodology — get it right from the start.\n\n\n\nFinancial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.\n\n\n\nBuild models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data — with interpretability built in.\n\n\n\nAir quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.\n\n\n\nCustom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.\n\n\n\nCustom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data."
+  },
+  {
+    "objectID": "consulting/index.html#how-i-work",
+    "href": "consulting/index.html#how-i-work",
+    "title": "Consulting",
+    "section": "How I Work",
+    "text": "How I Work\n1. Discovery — We discuss your problem, data, and goals in a free initial conversation.\n2. Proposal — I provide a clear scope, timeline, methodology, and fixed-fee quote.\n3. Engagement — I do the work, with regular check-ins and transparent communication.\n4. Delivery — You receive a complete report with reproducible code, clear visualizations, and actionable recommendations."
+  },
+  {
+    "objectID": "consulting/index.html#credentials",
+    "href": "consulting/index.html#credentials",
+    "title": "Consulting",
+    "section": "Credentials",
+    "text": "Credentials\n\nPh.D. in Mathematics (Statistics Emphasis) — Missouri University of Science & Technology\nAssistant Professor — California State University, Bakersfield\nActive researcher with publications in financial econometrics, environmental statistics, and AI in education\nExperienced with R, Python, MATLAB, SAS, SQL, LaTeX, Git, TensorFlow, and cloud computing platforms\nMember of the American Statistical Association and American Mathematical Society\n\n\nLet’s discuss your project\nI’m available for short-term analysis projects, ongoing advisory relationships, and custom training. Reach out and we’ll find the right approach for your needs.\nContact me"
+  },
+  {
+    "objectID": "publications/index.html",
+    "href": "publications/index.html",
+    "title": "Publications",
+    "section": "",
+    "text": "From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education\n\n\nA. Yatawara, J. Wang, A. Cruz, M. Mishra\n\n\nSubmitted to Journal of Statistics and Data Science Education (JSDSE), 2025\n\n\n\n\nIncome-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework\n\n\nA. Yatawara, K. Ko, C. Rodriguez\n\n\nSubmitted to Environmental Research: Health (Manuscript ID: ERH-100416), 2025"
+  },
+  {
+    "objectID": "publications/index.html#journal-articles-under-review",
+    "href": "publications/index.html#journal-articles-under-review",
+    "title": "Publications",
+    "section": "",
+    "text": "From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education\n\n\nA. Yatawara, J. Wang, A. Cruz, M. Mishra\n\n\nSubmitted to Journal of Statistics and Data Science Education (JSDSE), 2025\n\n\n\n\nIncome-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework\n\n\nA. Yatawara, K. Ko, C. Rodriguez\n\n\nSubmitted to Environmental Research: Health (Manuscript ID: ERH-100416), 2025"
+  },
+  {
+    "objectID": "publications/index.html#conference-papers-peer-reviewed",
+    "href": "publications/index.html#conference-papers-peer-reviewed",
+    "title": "Publications",
+    "section": "Conference Papers (Peer-Reviewed)",
+    "text": "Conference Papers (Peer-Reviewed)\n\n\nWIP: Structured AI Tutoring in Engineering Education\n\n\nA. Cruz, A. Yatawara, et al.\n\n\nAccepted — IEEE Frontiers in Education Conference (FIE), 2025\n\n\n\n\nComputer-Aided Instruction for K–12 Teachers: A Cognitive Apprenticeship Approach to LLM Integration\n\n\nA. Cruz, A. Yatawara, et al.\n\n\nAccepted — IEEE Frontiers in Education Conference (FIE), 2025"
+  },
+  {
+    "objectID": "publications/index.html#conference-proceedings",
+    "href": "publications/index.html#conference-proceedings",
+    "title": "Publications",
+    "section": "Conference Proceedings",
+    "text": "Conference Proceedings\n\n\nA Multiplicative Factor Multi-Frequency Exponential GARCH Model\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nJSM Proceedings — Business and Economic Statistics Section, 2022\n\n\n\n\nAn Asymmetric Hyperbolic Generalized Autoregressive Conditional Heteroscedastic Model\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nJSM Proceedings — Business and Economic Statistics Section, 2021"
+  },
+  {
+    "objectID": "publications/index.html#working-papers",
+    "href": "publications/index.html#working-papers",
+    "title": "Publications",
+    "section": "Working Papers",
+    "text": "Working Papers\n\n\nThe Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets In production\n\n\nA. Yatawara\n\n\nTarget: Journal of Business & Economic Statistics\n\n\n\n\nMF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume In production\n\n\nA. Yatawara\n\n\nTarget: Journal of Forecasting\n\n\n\n\nMF2-GARCH-A: Volatility Modelling with a Sign-Sensitive Long-Run Component Near completion\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nTarget: International Journal of Forecasting\n\n\n\n\nThe Multiplicative Factor Multi-Frequency Exponential GARCH (MF2-EGARCH) Finalizing\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nTarget: PLOS ONE (Mathematics and Statistics)\n\n\n\n\nMultiple Regime Hyperbolic GARCH (MR-HYGARCH): A Regime-Switching Asymmetric Long-Memory Model Near completion\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nTarget: TBD\n\n\n\n\nA Component GARCH-Type Fractionally Integrated GJR-GARCH and Smooth Transition Extension In preparation\n\n\nA. Yatawara, V.A. Samaranayake\n\n\nTarget: TBD\n\n\n\n\nImproving Influenza Forecasting: A GRU-CNN Hybrid Model with Yeo-Johnson Scaling In preparation\n\n\nA. Yatawara, N. Gallego, I. Ratnayake\n\n\nTarget: TBD"
+  },
+  {
+    "objectID": "publications/index.html#selected-presentations",
+    "href": "publications/index.html#selected-presentations",
+    "title": "Publications",
+    "section": "Selected Presentations",
+    "text": "Selected Presentations\n\n\n\n\n\n\n\n\nYear\nTitle\nVenue\n\n\n\n\n2025\nHybrid LSTM Deep Learning Model for Forecasting Influenza-Like Illnesses\nJSM, Nashville, TN (Contributed Paper)\n\n\n2025\nFindings from ELEVATE\nAI in Education Day, UC Berkeley (Invited Panel)\n\n\n2025\nBuild Your AI Teaching Assistant\nNextTech Kern (Session Lead)\n\n\n2022\nA Multiplicative Factor Multi-Frequency Exponential GARCH Model\nJSM, Washington DC (Contributed Paper)\n\n\n2021\nThe Asymmetric Hyperbolic GARCH Model\nJSM Virtual (Speed Presentation)"
+  }
+]
