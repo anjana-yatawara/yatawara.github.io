@@ -161,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul class="collapse">
   <li><a href="#volatility" id="toc-volatility" class="nav-link active" data-scroll-target="#volatility">Financial Volatility &amp; Time Series Econometrics</a></li>
-  <li><a href="#ml" id="toc-ml" class="nav-link" data-scroll-target="#ml">Machine Learning for Time Series</a></li>
+  <li><a href="#ml" id="toc-ml" class="nav-link" data-scroll-target="#ml">Hybrid Time Series &amp; Machine Learning</a></li>
   <li><a href="#env" id="toc-env" class="nav-link" data-scroll-target="#env">Environmental Justice &amp; Air Quality</a></li>
   <li><a href="#education" id="toc-education" class="nav-link" data-scroll-target="#education">AI in Statistics Education</a></li>
   <li><a href="#collaborators" id="toc-collaborators" class="nav-link" data-scroll-target="#collaborators">Collaborators</a></li>
@@ -196,35 +196,34 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="volatility">Financial Volatility &amp; Time Series Econometrics</h2>
 <p>This is my primary research area. I develop new econometric models for financial volatility that capture how markets encode, retain, and forget information over time.</p>
 <p><strong>The Shape of Volatility Memory</strong> — My central project establishes that volatility memory kernels across 100+ financial assets (equities, currencies, commodities, fixed income, crypto, VIX) follow sub-exponential decay patterns better described by stretched exponentials than by the standard GARCH or FIGARCH alternatives. This work introduces the GMARCH and SEARCH model frameworks. <span class="badge-inprogress">In production — target: <em>Journal of Business &amp; Economic Statistics</em></span></p>
-<p><strong>MF2V-GARCH</strong> — Augments Conrad &amp; Engle’s (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox with six functions. <span class="badge-inprogress">In production — target: <em>Journal of Forecasting</em></span></p>
+<p><strong>MF2V-GARCH</strong> — Augments Conrad &amp; Engle’s (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox. <span class="badge-inprogress">In production — target: <em>Journal of Forecasting</em></span></p>
 <p><strong>MF2-GARCH-A</strong> — Extends the MF2-GARCH with a sign-sensitive long-run component that captures asymmetric responses to positive and negative return shocks. <span class="badge-inprogress">Near completion — target: <em>International Journal of Forecasting</em></span></p>
-<p><strong>MF2-EGARCH</strong> — An exponential GARCH version of the multiplicative factor multi-frequency framework. <span class="badge-inprogress">Finalizing — target: <em>PLOS ONE</em></span></p>
+<p><strong>MF2-EGARCH</strong> — An exponential GARCH version of the multiplicative factor multi-frequency framework, with several variations for the long-term component including an asymmetric MEM and a logarithmic MEM. <span class="badge-inprogress">Near completion — target: <em>International Journal of Forecasting</em></span></p>
 <p><strong>Additional models:</strong> Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH (FI-GJRGARCH), and Smooth Transition FI-GJRGARCH extensions.</p>
 <section id="software" class="level3">
 <h3 class="anchored" data-anchor-id="software">Software</h3>
 <ul>
-<li><a href="https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB"><strong>MF2V-GARCH Toolbox for MATLAB</strong></a> — Six functions styled after Conrad &amp; Schoelkopf’s <code>mf2garch</code> repository. Zenodo DOI forthcoming.</li>
+<li><a href="https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB"><strong>MF2V-GARCH Toolbox for MATLAB</strong></a> — Six functions styled after Conrad &amp; Schoelkopf’s <code>mf2garch</code> repository.</li>
 </ul>
 </section>
 </section>
 <section id="ml" class="level2">
-<h2 class="anchored" data-anchor-id="ml">Machine Learning for Time Series</h2>
-<p>My second line of work connects modern deep learning architectures to statistical time series baselines.</p>
+<h2 class="anchored" data-anchor-id="ml">Hybrid Time Series &amp; Machine Learning</h2>
+<p>I am exploring the intersection of classical time series econometrics and modern deep learning, with the goal of building hybrid models that combine the interpretability of statistical methods with the flexibility of neural architectures. This work aims to produce explainable ML-based forecasting models grounded in rigorous statistical foundations — bridging the gap between traditional econometric approaches and data-driven methods.</p>
 <p><strong>GRU-CNN Hybrid for Influenza Forecasting</strong> — A hybrid gated recurrent unit / convolutional neural network model with Yeo-Johnson scaling for forecasting influenza-like illnesses. Presented at JSM 2025 (Infectious Disease Epidemiology Section). Joint work with student Noah Gallego and Prof.&nbsp;Isuru Ratnayake (KUMC). <span class="badge-inprogress">Manuscript in preparation</span></p>
 </section>
 <section id="env" class="level2">
 <h2 class="anchored" data-anchor-id="env">Environmental Justice &amp; Air Quality</h2>
 <p>I pursue data-driven applications that serve public needs, with current focus on air pollution exposure disparities.</p>
-<p><strong>Income-Based Exposure Disparities in California</strong> — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. <span class="badge-submitted">Submitted to <em>Environmental Research: Health</em></span></p>
+<p><strong>Income-Based Exposure Disparities in California</strong> — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. <a href="https://iopscience.iop.org/article/10.1088/2752-5309/ae4134/meta" class="badge-published">Published in <em>Environmental Research: Health</em>, 2025</a></p>
 <p><strong>Air Pollution &amp; Fertility Patterns</strong> — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship.</p>
-<p><strong>Minneapolis-St.&nbsp;Paul Sensor Network</strong> — Analysis of data from a dense network of 45 low-cost multi-pollutant sensors investigating spatiotemporal patterns and exposure disparities.</p>
 </section>
 <section id="education" class="level2">
 <h2 class="anchored" data-anchor-id="education">AI in Statistics Education</h2>
 <p>I maintain a growing research agenda at the intersection of artificial intelligence and statistics education, supported by the California Learning Lab ELEVATE grant.</p>
 <p><strong>Scaffolded LLM Tutors</strong> — Lead author on “From Answer Generators to Thinking Partners,” which develops a framework for AI-driven tutoring, prompt engineering, and ethical classroom integration using Custom GPTs. <span class="badge-submitted">Submitted to <em>JSDSE</em></span></p>
-<p><strong>Structured AI Tutoring in Engineering Education</strong> — Co-authored WIP paper contributing AI prompt design methodology. <span class="badge-accepted">Accepted at IEEE Frontiers in Education 2025</span></p>
-<p><strong>Computer-Aided Instruction for K–12 Teachers</strong> — Cognitive apprenticeship approach to LLM integration for K–12 professional development. <span class="badge-accepted">Accepted at IEEE FIE 2025</span></p>
+<p><strong>Structured AI Tutoring in Engineering Education</strong> — Co-authored WIP paper contributing AI prompt design methodology. <a href="https://ieeexplore.ieee.org/abstract/document/11328293" class="badge-published">Published — IEEE Frontiers in Education 2025</a></p>
+<p><strong>Computer-Aided Instruction for K–12 Teachers</strong> — Cognitive apprenticeship approach to LLM integration for K–12 professional development. <span class="badge-published">Published — IEEE FIE 2025</span></p>
 </section>
 <section id="collaborators" class="level2">
 <h2 class="anchored" data-anchor-id="collaborators">Collaborators</h2>
@@ -274,15 +273,7 @@ ul.task-list li input[type="checkbox"] {
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{untitled,
-  author = {},
-  title = {Research},
-  url = {https://www.yatawara.com/research/},
-  langid = {en}
-}
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-untitled" class="csl-entry quarto-appendix-citeas" role="listitem">
-<span>“Research.”</span> n.d. <a href="https://www.yatawara.com/research/">https://www.yatawara.com/research/</a>.
-</div></div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
