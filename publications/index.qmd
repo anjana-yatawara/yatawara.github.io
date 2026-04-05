@@ -1,0 +1,185 @@
+---
+title: "Publications"
+toc: true
+toc-depth: 2
+---
+
+<!-- TODO: Add Google Scholar meta tags to individual paper pages for indexing -->
+
+## Journal Articles Under Review
+
+::: {.pub-entry}
+::: {.pub-title}
+From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, J. Wang, A. Cruz, M. Mishra
+:::
+::: {.pub-venue}
+Submitted to Journal of Statistics and Data Science Education (JSDSE), 2025
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Income-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, K. Ko, C. Rodriguez
+:::
+::: {.pub-venue}
+Submitted to Environmental Research: Health (Manuscript ID: ERH-100416), 2025
+:::
+:::
+
+
+## Conference Papers (Peer-Reviewed)
+
+::: {.pub-entry}
+::: {.pub-title}
+WIP: Structured AI Tutoring in Engineering Education
+:::
+::: {.pub-authors}
+A. Cruz, [**A. Yatawara**]{.me}, et al.
+:::
+::: {.pub-venue}
+Accepted — IEEE Frontiers in Education Conference (FIE), 2025
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Computer-Aided Instruction for K–12 Teachers: A Cognitive Apprenticeship Approach to LLM Integration
+:::
+::: {.pub-authors}
+A. Cruz, [**A. Yatawara**]{.me}, et al.
+:::
+::: {.pub-venue}
+Accepted — IEEE Frontiers in Education Conference (FIE), 2025
+:::
+:::
+
+
+## Conference Proceedings
+
+::: {.pub-entry}
+::: {.pub-title}
+A Multiplicative Factor Multi-Frequency Exponential GARCH Model
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+JSM Proceedings — Business and Economic Statistics Section, 2022
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+An Asymmetric Hyperbolic Generalized Autoregressive Conditional Heteroscedastic Model
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+JSM Proceedings — Business and Economic Statistics Section, 2021
+:::
+:::
+
+
+## Working Papers
+
+::: {.pub-entry}
+::: {.pub-title}
+The Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets [In production]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}
+:::
+::: {.pub-venue}
+Target: Journal of Business & Economic Statistics
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+MF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume [In production]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}
+:::
+::: {.pub-venue}
+Target: Journal of Forecasting
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+MF2-GARCH-A: Volatility Modelling with a Sign-Sensitive Long-Run Component [Near completion]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+Target: International Journal of Forecasting
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+The Multiplicative Factor Multi-Frequency Exponential GARCH (MF2-EGARCH) [Finalizing]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+Target: PLOS ONE (Mathematics and Statistics)
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Multiple Regime Hyperbolic GARCH (MR-HYGARCH): A Regime-Switching Asymmetric Long-Memory Model [Near completion]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+Target: TBD
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+A Component GARCH-Type Fractionally Integrated GJR-GARCH and Smooth Transition Extension [In preparation]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, V.A. Samaranayake
+:::
+::: {.pub-venue}
+Target: TBD
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Improving Influenza Forecasting: A GRU-CNN Hybrid Model with Yeo-Johnson Scaling [In preparation]{.badge-inprogress}
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, N. Gallego, I. Ratnayake
+:::
+::: {.pub-venue}
+Target: TBD
+:::
+:::
+
+
+## Selected Presentations
+
+| Year | Title | Venue |
+|------|-------|-------|
+| 2025 | Hybrid LSTM Deep Learning Model for Forecasting Influenza-Like Illnesses | JSM, Nashville, TN (Contributed Paper) |
+| 2025 | Findings from ELEVATE | AI in Education Day, UC Berkeley (Invited Panel) |
+| 2025 | Build Your AI Teaching Assistant | NextTech Kern (Session Lead) |
+| 2022 | A Multiplicative Factor Multi-Frequency Exponential GARCH Model | JSM, Washington DC (Contributed Paper) |
+| 2021 | The Asymmetric Hyperbolic GARCH Model | JSM Virtual (Speed Presentation) |

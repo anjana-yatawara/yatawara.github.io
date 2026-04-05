@@ -1,0 +1,82 @@
+---
+title: "Curriculum Vitae"
+toc: true
+toc-depth: 2
+---
+
+<!-- TODO: Add downloadable PDF link once updated CV is ready -->
+<!-- [Download PDF](files/Yatawara_CV.pdf){.cta-button} -->
+
+## Education
+
+**Ph.D. in Mathematics — Statistics Emphasis**
+Missouri University of Science and Technology, 2017–2023
+*Advisor: Dr. V.A. Samaranayake*
+Focus: Time series with conditional heteroscedastic structure
+
+**B.Sc. Special Degree in Statistics** (Second Class Honors, Upper Division)
+University of Peradeniya, Sri Lanka, 2012–2016
+
+
+## Academic Positions
+
+**Assistant Professor of Mathematics**
+California State University, Bakersfield — August 2023–Present
+
+**Graduate Teaching Assistant**
+Missouri University of Science and Technology — August 2017–July 2023
+
+**Teaching Assistant**
+University of Peradeniya, Sri Lanka — 2016–2017
+
+
+## Grants & Funding
+
+| Year | Title | Role | Funder |
+|------|-------|------|--------|
+| 2025 | Air Pollution Disparities in California, 2000–2025 | PI | CES Mini-Grant, CSUB |
+| 2024 | ELEVATE: Enhancing Learning Experiences Via AI Techniques | Co-PI | California Learning Lab AI FAST Challenge |
+
+
+## Awards & Honors
+
+- Missouri S&T Nominee for MAGS Excellence in Teaching Award (2022)
+- GTA Teaching Excellence Award — Lecture Classes (2021–22, 2019–20)
+- Honorable Mention, GTA Teaching Excellence — Lecture Classes (2020–21, 2018–19)
+- Honorable Mention, GTA Teaching Excellence — Recitation Classes (2017–18)
+- CSUB Affordable Learning Solutions Recognition (2024–25)
+- Invited for inclusion in CSU Sustainability and Climate Change Faculty Directory
+
+
+## Technical Skills
+
+**Languages & Software:** R, Python, MATLAB, SAS, SQL, LaTeX, Git/GitHub, HTML/CSS
+
+**Statistical Methods:** GARCH-family models, time series analysis, Bayesian inference, maximum likelihood estimation, Monte Carlo simulation, multivariate methods, causal inference
+
+**Machine Learning:** Random forests, gradient boosting (XGBoost), neural networks (LSTM, GRU-CNN), SVMs, k-means clustering, PCA
+
+**AI & LLMs:** Custom GPT development, prompt engineering, local LLM deployment, OpenAI API
+
+**Cloud & Computing:** JupyterLab, Google Cloud, AWS, CSUB AI Lab (GPU workstations), National Research Platform / Nautilus cluster
+
+
+## Professional Memberships
+
+- American Statistical Association (ASA)
+- American Mathematical Society (AMS)
+
+
+## Service (Selected)
+
+- Proposed Center for Applied AI & Data Science Innovation (CAADSI) at CSUB
+- Proposed CSUB AI Essentials Certificate
+- Planned and developed AI Lab (Science III, Room 214)
+- Admin for National Research Platform / Nautilus cluster
+- Member, Scientific Committee, CSU Mathematical Sciences Conference (2023)
+- Initiated education partnership with Lawrence Berkeley National Laboratory
+- OpenAI Day campus engagement (ChatGPT Project Team)
+
+---
+
+*Full CV available as PDF upon request. Email [ayatawara@csub.edu](mailto:ayatawara@csub.edu).*

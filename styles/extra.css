@@ -1,0 +1,5 @@
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
+/* Remove default Quarto title block on pages that use custom headers */
+.no-title #title-block-header { display: none; }
