@@ -1,0 +1,119 @@
+---
+pagetitle: "Anjana Yatawara"
+title-block-banner: false
+toc: false
+page-layout: full
+css: styles/extra.css
+---
+
+::: {.hero-section}
+
+![](images/profile.jpg){.hero-photo fig-alt="Anjana Yatawara"}
+
+# Anjana Yatawara
+
+::: {.subtitle}
+Assistant Professor of Mathematics & Statistics
+:::
+
+::: {.affiliation}
+[California State University, Bakersfield](https://www.csub.edu/math/)
+:::
+
+::: {.social-icons}
+[<i class="bi bi-google"></i>](https://scholar.google.com/citations?user=n5WtVd0AAAAJ&hl=en&oi=ao "Google Scholar")
+[<i class="bi bi-github"></i>](https://github.com/anjana-yatawara "GitHub")
+[<i class="bi bi-orcid"></i>](https://orcid.org/0009-0007-8506-7763 "ORCID")
+[<i class="bi bi-linkedin"></i>](https://www.linkedin.com/in/anjana-yatawara "LinkedIn")
+[<i class="bi bi-envelope-fill"></i>](mailto:ayatawara@csub.edu "Email")
+:::
+
+:::
+
+::: {.bio-text}
+I am a statistician and applied mathematician studying how financial markets encode and forget information. My research develops new econometric models for volatility persistence, applies machine learning to public health forecasting, and investigates income-based environmental exposure disparities. I also build AI-powered tools that help students learn statistics — work supported by the California Learning Lab. At CSUB, I teach courses spanning elementary statistics to mathematical statistics and applied data science, and I mentor undergraduate researchers across multiple funded programs.
+:::
+
+::: {.pillar-grid}
+
+::: {.pillar-card}
+<a href="research/index.qmd" class="pillar-card">
+<div class="pillar-icon"><i class="bi bi-graph-up"></i></div>
+### Volatility, Memory & Markets
+I study how financial markets remember. My work develops new models for volatility persistence across asset classes — from equities and currencies to crypto and VIX.
+</a>
+:::
+
+::: {.pillar-card}
+<a href="teaching/index.qmd" class="pillar-card">
+<div class="pillar-icon"><i class="bi bi-mortarboard"></i></div>
+### Building Statistical Thinkers
+I teach statistics with an emphasis on real-world data, computational tools, and AI-assisted learning — equipping students to think critically with data.
+</a>
+:::
+
+::: {.pillar-card}
+<a href="consulting/index.qmd" class="pillar-card">
+<div class="pillar-icon"><i class="bi bi-bar-chart-line"></i></div>
+### Data Science for Decisions
+I help organizations solve complex problems through statistical modeling, machine learning, and rigorous data analysis.
+</a>
+:::
+
+:::
+
+::: {.recent-work}
+
+## Recent & selected work
+
+::: {.pub-entry}
+::: {.pub-title}
+From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, J. Wang, A. Cruz, M. Mishra
+:::
+::: {.pub-venue}
+Submitted to Journal of Statistics and Data Science Education, 2025
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+Income-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, K. Ko, C. Rodriguez
+:::
+::: {.pub-venue}
+Submitted to Environmental Research: Health, 2025
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+The Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}
+:::
+::: {.pub-venue}
+Working paper — target: Journal of Business & Economic Statistics
+:::
+:::
+
+::: {.pub-entry}
+::: {.pub-title}
+MF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}
+:::
+::: {.pub-venue}
+Working paper — target: Journal of Forecasting
+:::
+:::
+
+[See all publications →](publications/index.qmd)
+
+:::
