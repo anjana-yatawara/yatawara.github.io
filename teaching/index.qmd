@@ -2,6 +2,7 @@
 title: "Teaching"
 toc: true
 toc-depth: 2
+citation: false
 ---
 
 I teach statistics and applied mathematics at CSUB with an emphasis on computational thinking, real-world data, and student-centered active learning. I integrate AI tools thoughtfully — only after core concepts are secure — and build Custom GPT tutors to support individualized practice outside the classroom.
@@ -17,6 +18,18 @@ Introduction to statistical methods with an emphasis on critical thinking, data 
 
 ::: {.course-meta}
 Undergraduate · OER materials · AI-assisted learning tools
+:::
+:::
+
+::: {.course-card}
+::: {.course-code}
+MATH 3200
+:::
+### Probability Theory
+First course in the mathematical theory of probability and statistics. Topics include combinatorial methods, conditional and marginal probability, discrete and continuous random variables, probability distributions, mathematical expectation, covariance and correlation, asymptotic distributions, and sampling distributions. Uses R for simulations.
+
+::: {.course-meta}
+Upper-division · Wackerly, Mendenhall & Scheaffer · Fall 2025
 :::
 :::
 
@@ -58,22 +71,36 @@ Upper-division · Proof-based · Spring 2025
 
 ::: {.course-card}
 ::: {.course-code}
+MATH 4210
+:::
+### Regression Modeling and Analysis
+Advanced course in applied regression analysis. Topics include linear regression, randomization tests, correlation analysis, model diagnostics and remedial measures, matrix algebra notation for regression, variable and model selection techniques. Additional topics may include Poisson regression, logistic regression, path analysis, and forecasting. Uses R or SAS.
+
+::: {.course-meta}
+Upper-division · Applied · 4 units
+:::
+:::
+
+::: {.course-card}
+::: {.course-code}
 MATH 4230
 :::
 ### Applied Statistical Methods for Data Science
 Advanced statistical methods bridging theory and data science practice. Regularization (ridge, lasso), tree-based methods, random forests, gradient boosting, neural networks, SVMs, and unsupervised learning. Uses the ISLR textbook with R and Python.
 
 ::: {.course-meta}
-Upper-division · New course · Statistical Data Science concentration
+Upper-division · Statistical Data Science concentration
 :::
 :::
 
 
 ## Teaching Philosophy
 
-My approach centers on three principles. First, **statistics is learned by doing** — every class involves hands-on data analysis, not just formulas on a board. Second, **AI should augment, not replace** — I build Custom GPT tutors that help students practice and debug code, but only after they understand the underlying concepts. Third, **every student can succeed** — I scaffold carefully, give partial credit for demonstrated effort, and hold extensive office hours.
+My teaching is rooted in the belief that education has the power to transform lives — a conviction shaped by my mother, who spent over 35 years teaching in rural schools in Sri Lanka, changing the trajectories of countless students and families.
 
-Student evaluations consistently reflect this philosophy. In Spring 2025, my average positive rating across MATH 2200 and MATH 4200 was approximately 88%, with students noting: *"Truly an amazing professor that cares for students"* and *"Use of AI was extremely helpful for studying outside of class."*
+My approach centers on four kinds of interaction. **Student-teacher interaction** comes first: I learn every student's name, create a comfortable classroom atmosphere, and make myself approachable. I treat every question the same, whether simple or complex, because I never want a student to feel insecure about asking. **Student-subject interaction** means showing students why statistics matters before diving into formulas — I motivate concepts with real-world examples tailored to the class composition, from stock markets and cryptocurrencies to environmental data. **Peer-to-peer interaction** happens through group projects, collaborative mini-analyses, and in-class problem solving where students teach each other. **Student-real world interaction** prepares students for life after the classroom through oral presentations, guided reports, and conversations about higher education and careers.
+
+I use AI deliberately and ethically — Custom GPT tutors support coding practice and concept review, but only after students have built foundational understanding. As I tell my students: *"Anyone can google the steps to a hypothesis test, but you need to understand the basics to interpret the result and make inferences."*
 
 
 ## AI Tools for Students
@@ -94,6 +121,7 @@ I develop Custom GPT tutors to support my courses:
 - **ELEVATE Project** — Co-PI on California Learning Lab grant developing AI-enhanced learning experiences for STEM education
 - **CSUB JupyterLab Cloud** — Launched browser-based access to R, Python, and VS Code for students via CAL-ICOR partnership
 - **AI Instructional Module** — Co-developed with Kim Mishkind for first-year seminar (BA 1028), teaching AI literacy and prompt engineering
+- **Statistical Data Science Concentration** — Collaborated with Drs. Montoya and Zeng to revise the statistics concentration and design MATH 4230
 
 
 ## Student Mentorship

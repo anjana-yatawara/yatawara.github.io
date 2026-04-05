@@ -1,11 +1,14 @@
 ---
 title: "Consulting"
 toc: false
+citation: false
 ---
 
 ## Statistical Consulting & Data Science Advisory
 
-I help organizations make better decisions with data. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.
+I provide statistical consulting and data science advisory services through **California State University, Bakersfield**. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.
+
+All consulting engagements are conducted through CSUB's institutional framework.
 
 ::: {.service-grid}
 
@@ -44,9 +47,9 @@ Custom workshops on R, Python, SAS, statistics, machine learning, and AI for you
 
 ## How I Work
 
-**1. Discovery** — We discuss your problem, data, and goals in a free initial conversation.
+**1. Discovery** — We discuss your problem, data, and goals in an initial conversation.
 
-**2. Proposal** — I provide a clear scope, timeline, methodology, and fixed-fee quote.
+**2. Proposal** — I provide a clear scope, timeline, methodology, and quote through CSUB.
 
 **3. Engagement** — I do the work, with regular check-ins and transparent communication.
 
@@ -64,7 +67,7 @@ Custom workshops on R, Python, SAS, statistics, machine learning, and AI for you
 
 ::: {.cta-section}
 ### Let's discuss your project
-I'm available for short-term analysis projects, ongoing advisory relationships, and custom training. Reach out and we'll find the right approach for your needs.
+I'm available for analysis projects, advisory relationships, and custom training — all conducted through CSUB. Reach out and we'll find the right approach for your needs.
 
 [Contact me](mailto:ayatawara@csub.edu){.cta-button}
 :::

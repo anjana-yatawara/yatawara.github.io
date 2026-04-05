@@ -67,5 +67,4 @@ execute:
   freeze: auto
 
 # Metadata for Google Scholar
-citation: true
 google-scholar: true

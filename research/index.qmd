@@ -2,6 +2,7 @@
 title: "Research"
 toc: true
 toc-depth: 2
+citation: false
 ---
 
 My research program is organized around four pillars that share a common methodological core: modeling complex temporal and spatial patterns in data to produce actionable insights.
@@ -12,22 +13,22 @@ This is my primary research area. I develop new econometric models for financial
 
 **The Shape of Volatility Memory** — My central project establishes that volatility memory kernels across 100+ financial assets (equities, currencies, commodities, fixed income, crypto, VIX) follow sub-exponential decay patterns better described by stretched exponentials than by the standard GARCH or FIGARCH alternatives. This work introduces the GMARCH and SEARCH model frameworks. [In production — target: *Journal of Business & Economic Statistics*]{.badge-inprogress}
 
-**MF2V-GARCH** — Augments Conrad & Engle's (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox with six functions. [In production — target: *Journal of Forecasting*]{.badge-inprogress}
+**MF2V-GARCH** — Augments Conrad & Engle's (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox. [In production — target: *Journal of Forecasting*]{.badge-inprogress}
 
 **MF2-GARCH-A** — Extends the MF2-GARCH with a sign-sensitive long-run component that captures asymmetric responses to positive and negative return shocks. [Near completion — target: *International Journal of Forecasting*]{.badge-inprogress}
 
-**MF2-EGARCH** — An exponential GARCH version of the multiplicative factor multi-frequency framework. [Finalizing — target: *PLOS ONE*]{.badge-inprogress}
+**MF2-EGARCH** — An exponential GARCH version of the multiplicative factor multi-frequency framework, with several variations for the long-term component including an asymmetric MEM and a logarithmic MEM. [Near completion — target: *International Journal of Forecasting*]{.badge-inprogress}
 
 **Additional models:** Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH (FI-GJRGARCH), and Smooth Transition FI-GJRGARCH extensions.
 
 ### Software
 
-- [**MF2V-GARCH Toolbox for MATLAB**](https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB) — Six functions styled after Conrad & Schoelkopf's `mf2garch` repository. Zenodo DOI forthcoming.
+- [**MF2V-GARCH Toolbox for MATLAB**](https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB) — Six functions styled after Conrad & Schoelkopf's `mf2garch` repository.
 
 
-## Machine Learning for Time Series {#ml}
+## Hybrid Time Series & Machine Learning {#ml}
 
-My second line of work connects modern deep learning architectures to statistical time series baselines.
+I am exploring the intersection of classical time series econometrics and modern deep learning, with the goal of building hybrid models that combine the interpretability of statistical methods with the flexibility of neural architectures. This work aims to produce explainable ML-based forecasting models grounded in rigorous statistical foundations — bridging the gap between traditional econometric approaches and data-driven methods.
 
 **GRU-CNN Hybrid for Influenza Forecasting** — A hybrid gated recurrent unit / convolutional neural network model with Yeo-Johnson scaling for forecasting influenza-like illnesses. Presented at JSM 2025 (Infectious Disease Epidemiology Section). Joint work with student Noah Gallego and Prof. Isuru Ratnayake (KUMC). [Manuscript in preparation]{.badge-inprogress}
 
@@ -36,11 +37,9 @@ My second line of work connects modern deep learning architectures to statistica
 
 I pursue data-driven applications that serve public needs, with current focus on air pollution exposure disparities.
 
-**Income-Based Exposure Disparities in California** — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. [Submitted to *Environmental Research: Health*]{.badge-submitted}
+**Income-Based Exposure Disparities in California** — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. [Published in *Environmental Research: Health*, 2025](https://iopscience.iop.org/article/10.1088/2752-5309/ae4134/meta){.badge-published}
 
 **Air Pollution & Fertility Patterns** — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship.
-
-**Minneapolis-St. Paul Sensor Network** — Analysis of data from a dense network of 45 low-cost multi-pollutant sensors investigating spatiotemporal patterns and exposure disparities.
 
 
 ## AI in Statistics Education {#education}
@@ -49,9 +48,9 @@ I maintain a growing research agenda at the intersection of artificial intellige
 
 **Scaffolded LLM Tutors** — Lead author on "From Answer Generators to Thinking Partners," which develops a framework for AI-driven tutoring, prompt engineering, and ethical classroom integration using Custom GPTs. [Submitted to *JSDSE*]{.badge-submitted}
 
-**Structured AI Tutoring in Engineering Education** — Co-authored WIP paper contributing AI prompt design methodology. [Accepted at IEEE Frontiers in Education 2025]{.badge-accepted}
+**Structured AI Tutoring in Engineering Education** — Co-authored WIP paper contributing AI prompt design methodology. [Published — IEEE Frontiers in Education 2025](https://ieeexplore.ieee.org/abstract/document/11328293){.badge-published}
 
-**Computer-Aided Instruction for K–12 Teachers** — Cognitive apprenticeship approach to LLM integration for K–12 professional development. [Accepted at IEEE FIE 2025]{.badge-accepted}
+**Computer-Aided Instruction for K–12 Teachers** — Cognitive apprenticeship approach to LLM integration for K–12 professional development. [Published — IEEE FIE 2025]{.badge-published}
 
 
 ## Collaborators

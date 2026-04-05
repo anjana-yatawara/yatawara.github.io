@@ -2,23 +2,11 @@
 title: "Publications"
 toc: true
 toc-depth: 2
+citation: false
 ---
 
-<!-- TODO: Add Google Scholar meta tags to individual paper pages for indexing -->
 
-## Journal Articles Under Review
-
-::: {.pub-entry}
-::: {.pub-title}
-From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education
-:::
-::: {.pub-authors}
-[**A. Yatawara**]{.me}, J. Wang, A. Cruz, M. Mishra
-:::
-::: {.pub-venue}
-Submitted to Journal of Statistics and Data Science Education (JSDSE), 2025
-:::
-:::
+## Published
 
 ::: {.pub-entry}
 ::: {.pub-title}
@@ -28,12 +16,12 @@ Income-Based Exposure Disparities Across California Counties, 2000–2023: A Gen
 [**A. Yatawara**]{.me}, K. Ko, C. Rodriguez
 :::
 ::: {.pub-venue}
-Submitted to Environmental Research: Health (Manuscript ID: ERH-100416), 2025
+Environmental Research: Health, 2025
+:::
+::: {.pub-links}
+[Paper](https://iopscience.iop.org/article/10.1088/2752-5309/ae4134/meta)
 :::
 :::
-
-
-## Conference Papers (Peer-Reviewed)
 
 ::: {.pub-entry}
 ::: {.pub-title}
@@ -43,7 +31,10 @@ WIP: Structured AI Tutoring in Engineering Education
 A. Cruz, [**A. Yatawara**]{.me}, et al.
 :::
 ::: {.pub-venue}
-Accepted — IEEE Frontiers in Education Conference (FIE), 2025
+IEEE Frontiers in Education Conference (FIE), 2025
+:::
+::: {.pub-links}
+[Paper](https://ieeexplore.ieee.org/abstract/document/11328293)
 :::
 :::
 
@@ -55,7 +46,22 @@ Computer-Aided Instruction for K–12 Teachers: A Cognitive Apprenticeship Appro
 A. Cruz, [**A. Yatawara**]{.me}, et al.
 :::
 ::: {.pub-venue}
-Accepted — IEEE Frontiers in Education Conference (FIE), 2025
+IEEE Frontiers in Education Conference (FIE), 2025
+:::
+:::
+
+
+## Under Review
+
+::: {.pub-entry}
+::: {.pub-title}
+From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}, J. Wang, A. Cruz, M. Mishra
+:::
+::: {.pub-venue}
+Submitted to Journal of Statistics and Data Science Education (JSDSE), 2025
 :::
 :::
 
@@ -83,6 +89,24 @@ An Asymmetric Hyperbolic Generalized Autoregressive Conditional Heteroscedastic 
 :::
 ::: {.pub-venue}
 JSM Proceedings — Business and Economic Statistics Section, 2021
+:::
+:::
+
+
+## Dissertation
+
+::: {.pub-entry}
+::: {.pub-title}
+The Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)²EGARCH)
+:::
+::: {.pub-authors}
+[**A. Yatawara**]{.me}
+:::
+::: {.pub-venue}
+Ph.D. Dissertation, Missouri University of Science and Technology, 2023
+:::
+::: {.pub-links}
+[ProQuest](https://www.proquest.com/openview/964c28fd3197a880e84e510d38de2daa/1?pq-origsite=gscholar&cbl=18750&diss=y)
 :::
 :::
 
@@ -127,31 +151,19 @@ Target: International Journal of Forecasting
 
 ::: {.pub-entry}
 ::: {.pub-title}
-The Multiplicative Factor Multi-Frequency Exponential GARCH (MF2-EGARCH) [Finalizing]{.badge-inprogress}
+The Multiplicative Factor Multi-Frequency Exponential GARCH (MF2-EGARCH) [Near completion]{.badge-inprogress}
 :::
 ::: {.pub-authors}
 [**A. Yatawara**]{.me}, V.A. Samaranayake
 :::
 ::: {.pub-venue}
-Target: PLOS ONE (Mathematics and Statistics)
+Target: International Journal of Forecasting
 :::
 :::
 
 ::: {.pub-entry}
 ::: {.pub-title}
 Multiple Regime Hyperbolic GARCH (MR-HYGARCH): A Regime-Switching Asymmetric Long-Memory Model [Near completion]{.badge-inprogress}
-:::
-::: {.pub-authors}
-[**A. Yatawara**]{.me}, V.A. Samaranayake
-:::
-::: {.pub-venue}
-Target: TBD
-:::
-:::
-
-::: {.pub-entry}
-::: {.pub-title}
-A Component GARCH-Type Fractionally Integrated GJR-GARCH and Smooth Transition Extension [In preparation]{.badge-inprogress}
 :::
 ::: {.pub-authors}
 [**A. Yatawara**]{.me}, V.A. Samaranayake
