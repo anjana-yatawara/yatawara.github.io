@@ -49,81 +49,67 @@
     "text": "Service (Selected)\n\nProposed Center for Applied AI & Data Science Innovation (CAADSI) at CSUB\nProposed CSUB AI Essentials Certificate\nPlanned and developed AI Lab (Science III, Room 214)\nContributed to CSUB’s campus-wide ChatGPT deployment as part of the ChatGPT Project Team\nMember, Scientific Committee, CSU Mathematical Sciences Conference (2023)\n\n\nFull CV available as PDF upon request. Email ayatawara@csub.edu."
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Anjana Yatawara",
+    "objectID": "kernelstats/kernelstats_page.html#what-is-kernelstats",
+    "href": "kernelstats/kernelstats_page.html#what-is-kernelstats",
+    "title": "KernelStats",
+    "section": "What is KernelStats?",
+    "text": "What is KernelStats?\nKernelStats is a free, open-source statistical analysis platform I built to replace expensive commercial tools like Minitab ($1,700/yr), JMP ($1,785/yr), and SAS ($8,700/yr). It runs entirely in your browser — no installation, no license, no barriers.\nI built KernelStats because I believe powerful statistical analysis should be accessible to everyone: students learning their first hypothesis test, researchers on a budget, and organizations that shouldn’t need an enterprise contract to run a t-test.\n\n\n\n\n\n\nTipTry it now\n\n\n\nVisit kernelstats.com — no account required."
+  },
+  {
+    "objectID": "kernelstats/kernelstats_page.html#features",
+    "href": "kernelstats/kernelstats_page.html#features",
+    "title": "KernelStats",
+    "section": "Features",
+    "text": "Features\n\nData Quality\n\nVariable Doctor — 15 automated diagnostics detect coded missing values, numeric-as-text, date columns, outliers, and ID columns. One-click fixes with full undo.\nSupport for CSV, Excel, SPSS, Stata, SAS, RDS, and direct paste/URL import\n\n\n\nAnalysis\n\n20+ hypothesis tests with a Test Finder wizard that recommends the right test\n10 regression families — linear, logistic, probit, multinomial, ordinal, Poisson, negative binomial, zero-inflated, hurdle, and bias-reduced\nTime series & GARCH — ARIMA (auto-selection), GARCH(1,1), GJR-GARCH, EGARCH with volatility plots, news impact curves, and forecasting\nSurvival analysis — Kaplan-Meier, Cox PH, hazard ratio forest plots, Schoenfeld tests\nMachine learning pipeline — 7 algorithms with auto-detect classification vs regression, model comparison, ROC curves, variable importance\n\n\n\nOutput\n\nPlain-English interpretations for every test result\nProfessional reports in Word (.docx) or HTML with customizable sections\nIndustry templates — SPC control charts (Cp/Cpk), RFM segmentation, Pareto, heatmaps, volcano plots"
+  },
+  {
+    "objectID": "kernelstats/kernelstats_page.html#how-it-compares",
+    "href": "kernelstats/kernelstats_page.html#how-it-compares",
+    "title": "KernelStats",
+    "section": "How it compares",
+    "text": "How it compares\n\n\n\nFeature\nKernelStats\nMinitab\nJMP\nSAS\n\n\n\n\nAnnual cost\nFree\n$1,700\n$1,785\n$8,700\n\n\nOpen source\n✓\n\n\n\n\n\nRuns in browser\n✓\n\n\n\n\n\nVariable Doctor\n✓\n\n\n\n\n\nTest Finder wizard\n✓\n\n\n\n\n\nGARCH models\n✓\n\n\n✓\n\n\nML pipeline\n✓\n\n✓\n✓\n\n\nPlain-English output\n✓"
+  },
+  {
+    "objectID": "kernelstats/kernelstats_page.html#technology",
+    "href": "kernelstats/kernelstats_page.html#technology",
+    "title": "KernelStats",
+    "section": "Technology",
+    "text": "Technology\nKernelStats is built in R with Shiny, powered by ggplot2, and backed by 132 statistical methods mapped to peer-reviewed R packages. The source code is MIT-licensed and available on GitHub.\n\n\nLinks:\n\nkernelstats.com — Live app\nGitHub — Source code\n\n\n\nComing soon:\n\nKernelStats Pro — AI-powered version with Claude integration, automated interpretation, and enterprise deployment"
+  },
+  {
+    "objectID": "consulting/consulting_page.html",
+    "href": "consulting/consulting_page.html",
+    "title": "Consulting",
     "section": "",
-    "text": "Assistant Professor of Mathematics & Statistics\n\n\nCalifornia State University, Bakersfield"
+    "text": "I provide statistical consulting and data science advisory services through California State University, Bakersfield. Whether you need AI-automated analytics dashboards, rigorous statistical analysis, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.\nAll consulting engagements are conducted through CSUB’s institutional framework."
   },
   {
-    "objectID": "index.html#recent-selected-work",
-    "href": "index.html#recent-selected-work",
-    "title": "Anjana Yatawara",
-    "section": "Recent & selected work",
-    "text": "Recent & selected work\n\n\nIncome-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework\n\n\nA. Yatawara, K. Ko, C. Rodriguez\n\n\nPublished in Environmental Research: Health, 2025\n\n\n\n\nEvaluating Fine-Scale Air-Quality Heterogeneity Using a Low-Cost Multipollutant Sensor Network in Twin Cities, Minnesota\n\n\nA. Yatawara et al.\n\n\nPublished in ACS ES&T Air, 2025\n\n\n\n\nThe Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Business & Economic Statistics\n\n\n\n\nMF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Forecasting\n\n\nSee all publications →"
+    "objectID": "consulting/consulting_page.html#services",
+    "href": "consulting/consulting_page.html#services",
+    "title": "Consulting",
+    "section": "Services",
+    "text": "Services\n\nAI-Automated Data Analytics Dashboards\nMy flagship offering. I build custom, AI-powered analytics dashboards tailored to your organization’s specific data and decision-making needs. These are not generic BI tools — they are purpose-built platforms that combine statistical rigor with modern AI to deliver automated insights, anomaly detection, and plain-English reporting.\n\nCustom dashboards built to your KPIs and data sources\nAutomated reporting with AI-generated interpretations\nReal-time data pipelines and interactive visualizations\nBuilt on production-grade R/Python with deployment to your infrastructure or cloud\nPowered by the same engine behind KernelStats, my open-source analysis platform\n\n\n\nTime Series & Forecasting\nFinancial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.\n\n\nMachine Learning & Prediction\nBuild models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data — with interpretability built in.\n\n\nStudy Design & Analysis\nDesign rigorous studies that produce defensible results. From experimental design to observational study methodology — get it right from the start.\n\n\nEnvironmental & Health Analytics\nAir quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.\n\n\nAI Strategy & Implementation\nCustom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.\n\n\nTraining & Workshops\nCustom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data."
   },
   {
-    "objectID": "research/index.html",
-    "href": "research/index.html",
-    "title": "Research",
-    "section": "",
-    "text": "My research program is organized around four pillars that share a common methodological core: modeling complex temporal and spatial patterns in data to produce actionable insights."
+    "objectID": "consulting/consulting_page.html#how-i-work",
+    "href": "consulting/consulting_page.html#how-i-work",
+    "title": "Consulting",
+    "section": "How I Work",
+    "text": "How I Work\n1. Discovery — We discuss your problem, data, and goals in an initial conversation.\n2. Proposal — I provide a clear scope, timeline, methodology, and quote through CSUB.\n3. Engagement — I do the work, with regular check-ins and transparent communication.\n4. Delivery — You receive a complete report with reproducible code, clear visualizations, and actionable recommendations."
   },
   {
-    "objectID": "research/index.html#volatility",
-    "href": "research/index.html#volatility",
-    "title": "Research",
-    "section": "Financial Volatility & Time Series Econometrics",
-    "text": "Financial Volatility & Time Series Econometrics\nThis is my primary research area. I develop new econometric models for financial volatility that capture how markets encode, retain, and forget information over time.\nThe Shape of Volatility Memory — My central project establishes that volatility memory kernels across 100+ financial assets (equities, currencies, commodities, fixed income, crypto, VIX) follow sub-exponential decay patterns better described by stretched exponentials than by the standard GARCH or FIGARCH alternatives. This work introduces the GMARCH and SEARCH model frameworks. In production — target: Journal of Business & Economic Statistics\nMF2V-GARCH — Augments Conrad & Engle’s (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox. In production — target: Journal of Forecasting\nMF2-GARCH-A — Extends the MF2-GARCH with a sign-sensitive long-run component that captures asymmetric responses to positive and negative return shocks. Near completion — target: International Journal of Forecasting\nMF2-EGARCH — An exponential GARCH version of the multiplicative factor multi-frequency framework, with several variations for the long-term component including an asymmetric MEM and a logarithmic MEM. Near completion — target: International Journal of Forecasting\nAdditional models: Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH (FI-GJRGARCH), and Smooth Transition FI-GJRGARCH extensions.\n\nSoftware\n\nMF2V-GARCH Toolbox for MATLAB — Six functions styled after Conrad & Schoelkopf’s mf2garch repository."
+    "objectID": "consulting/consulting_page.html#credentials",
+    "href": "consulting/consulting_page.html#credentials",
+    "title": "Consulting",
+    "section": "Credentials",
+    "text": "Credentials\n\nPh.D. in Mathematics (Statistics Emphasis) — Missouri University of Science & Technology\nAssistant Professor — California State University, Bakersfield\nCreator of KernelStats — Open-source statistical analysis platform\nActive researcher with publications in financial econometrics, environmental statistics, and AI in education\nExperienced with R, Python, MATLAB, SAS, SQL, LaTeX, Git, TensorFlow, and cloud computing platforms\nMember of the American Statistical Association and American Mathematical Society"
   },
   {
-    "objectID": "research/index.html#ml",
-    "href": "research/index.html#ml",
-    "title": "Research",
-    "section": "Hybrid Time Series & Machine Learning",
-    "text": "Hybrid Time Series & Machine Learning\nI am exploring the intersection of classical time series econometrics and modern deep learning, with the goal of building hybrid models that combine the interpretability of statistical methods with the flexibility of neural architectures. This work aims to produce explainable ML-based forecasting models grounded in rigorous statistical foundations — bridging the gap between traditional econometric approaches and data-driven methods.\nGRU-CNN Hybrid for Influenza Forecasting — A hybrid gated recurrent unit / convolutional neural network model with Yeo-Johnson scaling for forecasting influenza-like illnesses. Presented at JSM 2025 (Infectious Disease Epidemiology Section). Joint work with student Noah Gallego and Prof. Isuru Ratnayake (KUMC). Manuscript in preparation"
-  },
-  {
-    "objectID": "research/index.html#env",
-    "href": "research/index.html#env",
-    "title": "Research",
-    "section": "Environmental Justice & Air Quality",
-    "text": "Environmental Justice & Air Quality\nI pursue data-driven applications that serve public needs, with current focus on air pollution exposure disparities.\nIncome-Based Exposure Disparities in California — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. Published in Environmental Research: Health, 2025\nFine-Scale Air-Quality Heterogeneity in Twin Cities — Analysis of data from a dense low-cost network of 45 multi-pollutant sensors in the Minneapolis-St. Paul metropolitan area to investigate spatiotemporal pollutant patterns and exposure disparities. Published in ACS ES&T Air, 2025\nAir Pollution & Fertility Patterns — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship."
-  },
-  {
-    "objectID": "research/index.html#education",
-    "href": "research/index.html#education",
-    "title": "Research",
-    "section": "AI in Statistics Education",
-    "text": "AI in Statistics Education\nI maintain a growing research agenda at the intersection of artificial intelligence and statistics education, supported by the California Learning Lab ELEVATE grant.\nScaffolded LLM Tutors — Lead author on “From Answer Generators to Thinking Partners,” which develops a framework for AI-driven tutoring, prompt engineering, and ethical classroom integration using Custom GPTs. Submitted to JSDSE\nStructured AI Tutoring in Engineering Education — Co-authored WIP paper contributing AI prompt design methodology. Published — IEEE Frontiers in Education 2025\nComputer-Aided Instruction for K–12 Teachers — Cognitive apprenticeship approach to LLM integration for K–12 professional development. Published — IEEE FIE 2025"
-  },
-  {
-    "objectID": "research/index.html#collaborators",
-    "href": "research/index.html#collaborators",
-    "title": "Research",
-    "section": "Collaborators",
-    "text": "Collaborators\n\nV.A. Samaranayake — Missouri University of Science and Technology (Ph.D. advisor)\nIsuru Ratnayake — University of Kansas Medical Center\nAlberto Cruz — CSUB, Computer & Electrical Engineering (ELEVATE PI)\nJianjun Wang — CSUB, Mathematics\nMaruti Mishra — CSUB\nEduardo Montoya — CSUB, Mathematics (Statistical Data Science curriculum)\nBilin Zeng — CSUB, Mathematics"
-  },
-  {
-    "objectID": "research/index.html#grants-funding",
-    "href": "research/index.html#grants-funding",
-    "title": "Research",
-    "section": "Grants & Funding",
-    "text": "Grants & Funding\n\n\n\n\n\n\n\n\n\nYear\nGrant\nRole\nSource\n\n\n\n\n2025\nAir Pollution Disparities in California, 2000–2025\nPI\nCES Mini-Grant, CSUB\n\n\n2024–25\nELEVATE: Enhancing Learning Experiences Via AI Techniques\nCo-PI\nCalifornia Learning Lab AI FAST Challenge"
-  },
-  {
-    "objectID": "blog/index.html",
-    "href": "blog/index.html",
-    "title": "Blog",
-    "section": "",
-    "text": "Occasional writing on research, teaching, and the tools I use. Expect accessible explanations of econometric methods, R and Python tutorials, reflections on teaching with AI, and notes from conferences.\n\n\n\n\n\n\n\n\n\nNothing Ever Fully Goes Away\n\n\n\nresearch\n\nlife\n\n\n\n\n\n\n\n\n\nApr 5, 2026\n\n3 min\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "blog/posts/memory/index.html",
-    "href": "blog/posts/memory/index.html",
-    "title": "Nothing Ever Fully Goes Away",
-    "section": "",
-    "text": "We assume forgetting is exponential. Something happens, it fades, it’s gone. Like a half-life — cut in half, cut in half again, and pretty soon it rounds to zero. That’s what every standard model in finance assumes about volatility: a shock hits the market, and its impact decays exponentially. Clean. Fast. Predictable.\nBut when I actually estimated how markets remember — without assuming any shape at all, just letting the data speak — the answer was different. The memory kernel isn’t exponential. It’s sub-exponential. Markets forget fast at first, then slow down. The initial shock fades quickly, but a residual hangs around far longer than any exponential model predicts.\nThe first half of a memory disappears in about five days. The last one percent can linger for a year.\nI think life works the same way.\nYou move on from most things quickly. A bad meeting, an awkward conversation, a missed flight — half the emotional weight is gone by the weekend. But that one failure from years ago? That relationship that ended badly? That moment you didn’t speak up? Those aren’t gone. They’re at lag 1,000, contributing a fraction of a percent of their original weight to every decision you make today.\nNot enough to notice. Enough to matter.\nThe stretched exponential — the function that fits this pattern — has a shape parameter called \\(\\alpha\\). When \\(\\alpha = 1\\), memory is exponential: things fade on schedule. When \\(\\alpha &lt; 1\\), the past sticks around longer than it should. In financial markets, I found \\(\\alpha \\approx 0.27\\) across hundreds of assets. Nowhere close to 1.\nThe beautiful part is why. A stretched exponential isn’t just a curve — it’s a mixture. It’s what you get when many different exponential decay rates operate simultaneously. Some memories fade in days. Some in months. Some almost never. The aggregate of all those timescales, running in parallel, produces the concave, slow-fading shape we observe.\nMarkets are like this because they aggregate millions of participants with different horizons — a day trader and a pension fund experience the same crash but process it on completely different timescales. And I suspect we’re like this too. Different parts of us — our rational mind, our emotions, our body, our identity — process the same event at different speeds. The result isn’t a clean exponential decay. It’s richer, slower, and more human than that.\nNothing ever fully goes away. It just contributes less.\n\nThis is the central finding of my paper “The Shape of Volatility Memory,” currently in preparation for the Journal of Business & Economic Statistics. The math is rigorous. The metaphor is mine."
+    "objectID": "consulting/consulting_page.html#lets-discuss-your-project",
+    "href": "consulting/consulting_page.html#lets-discuss-your-project",
+    "title": "Consulting",
+    "section": "Let’s discuss your project",
+    "text": "Let’s discuss your project\nI’m available for analysis projects, advisory relationships, dashboard builds, and custom training — all conducted through CSUB. Reach out and we’ll find the right approach for your needs.\nContact me"
   },
   {
     "objectID": "teaching/index.html",
@@ -175,32 +161,81 @@
     "text": "For Students\nOffice hours: See your course Canvas page for current times, or email me at ayatawara@csub.edu to schedule an appointment.\nRecommendation letters: I’m happy to write letters for students I know well. Please provide at least 3 weeks’ notice, your CV/resume, the program description, and a brief note about what you’d like me to emphasize."
   },
   {
-    "objectID": "consulting/index.html",
-    "href": "consulting/index.html",
-    "title": "Consulting",
+    "objectID": "blog/posts/memory/index.html",
+    "href": "blog/posts/memory/index.html",
+    "title": "Nothing Ever Fully Goes Away",
     "section": "",
-    "text": "I provide statistical consulting and data science advisory services through California State University, Bakersfield. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.\nAll consulting engagements are conducted through CSUB’s institutional framework.\n\n\n\nDesign rigorous studies that produce defensible results. From experimental design to observational study methodology — get it right from the start.\n\n\n\nFinancial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.\n\n\n\nBuild models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data — with interpretability built in.\n\n\n\nAir quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.\n\n\n\nCustom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.\n\n\n\nCustom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data."
+    "text": "We assume forgetting is exponential. Something happens, it fades, it’s gone. Like a half-life — cut in half, cut in half again, and pretty soon it rounds to zero. That’s what every standard model in finance assumes about volatility: a shock hits the market, and its impact decays exponentially. Clean. Fast. Predictable.\nBut when I actually estimated how markets remember — without assuming any shape at all, just letting the data speak — the answer was different. The memory kernel isn’t exponential. It’s sub-exponential. Markets forget fast at first, then slow down. The initial shock fades quickly, but a residual hangs around far longer than any exponential model predicts.\nThe first half of a memory disappears in about five days. The last one percent can linger for a year.\nI think life works the same way.\nYou move on from most things quickly. A bad meeting, an awkward conversation, a missed flight — half the emotional weight is gone by the weekend. But that one failure from years ago? That relationship that ended badly? That moment you didn’t speak up? Those aren’t gone. They’re at lag 1,000, contributing a fraction of a percent of their original weight to every decision you make today.\nNot enough to notice. Enough to matter.\nThe stretched exponential — the function that fits this pattern — has a shape parameter called \\(\\alpha\\). When \\(\\alpha = 1\\), memory is exponential: things fade on schedule. When \\(\\alpha &lt; 1\\), the past sticks around longer than it should. In financial markets, I found \\(\\alpha \\approx 0.27\\) across hundreds of assets. Nowhere close to 1.\nThe beautiful part is why. A stretched exponential isn’t just a curve — it’s a mixture. It’s what you get when many different exponential decay rates operate simultaneously. Some memories fade in days. Some in months. Some almost never. The aggregate of all those timescales, running in parallel, produces the concave, slow-fading shape we observe.\nMarkets are like this because they aggregate millions of participants with different horizons — a day trader and a pension fund experience the same crash but process it on completely different timescales. And I suspect we’re like this too. Different parts of us — our rational mind, our emotions, our body, our identity — process the same event at different speeds. The result isn’t a clean exponential decay. It’s richer, slower, and more human than that.\nNothing ever fully goes away. It just contributes less.\n\nThis is the central finding of my paper “The Shape of Volatility Memory,” currently in preparation for the Journal of Business & Economic Statistics. The math is rigorous. The metaphor is mine."
   },
   {
-    "objectID": "consulting/index.html#statistical-consulting-data-science-advisory",
-    "href": "consulting/index.html#statistical-consulting-data-science-advisory",
-    "title": "Consulting",
+    "objectID": "blog/index.html",
+    "href": "blog/index.html",
+    "title": "Blog",
     "section": "",
-    "text": "I provide statistical consulting and data science advisory services through California State University, Bakersfield. Whether you need rigorous statistical analysis, predictive modeling, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.\nAll consulting engagements are conducted through CSUB’s institutional framework.\n\n\n\nDesign rigorous studies that produce defensible results. From experimental design to observational study methodology — get it right from the start.\n\n\n\nFinancial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.\n\n\n\nBuild models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data — with interpretability built in.\n\n\n\nAir quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.\n\n\n\nCustom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.\n\n\n\nCustom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data."
+    "text": "Occasional writing on research, teaching, and the tools I use. Expect accessible explanations of econometric methods, R and Python tutorials, reflections on teaching with AI, and notes from conferences.\n\n\n\n\n\n\n\n\n\nNothing Ever Fully Goes Away\n\n\n\nresearch\n\nlife\n\n\n\n\n\n\n\n\n\nApr 5, 2026\n\n3 min\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "consulting/index.html#how-i-work",
-    "href": "consulting/index.html#how-i-work",
-    "title": "Consulting",
-    "section": "How I Work",
-    "text": "How I Work\n1. Discovery — We discuss your problem, data, and goals in an initial conversation.\n2. Proposal — I provide a clear scope, timeline, methodology, and quote through CSUB.\n3. Engagement — I do the work, with regular check-ins and transparent communication.\n4. Delivery — You receive a complete report with reproducible code, clear visualizations, and actionable recommendations."
+    "objectID": "research/index.html",
+    "href": "research/index.html",
+    "title": "Research",
+    "section": "",
+    "text": "My research program is organized around four pillars that share a common methodological core: modeling complex temporal and spatial patterns in data to produce actionable insights."
   },
   {
-    "objectID": "consulting/index.html#credentials",
-    "href": "consulting/index.html#credentials",
-    "title": "Consulting",
-    "section": "Credentials",
-    "text": "Credentials\n\nPh.D. in Mathematics (Statistics Emphasis) — Missouri University of Science & Technology\nAssistant Professor — California State University, Bakersfield\nActive researcher with publications in financial econometrics, environmental statistics, and AI in education\nExperienced with R, Python, MATLAB, SAS, SQL, LaTeX, Git, TensorFlow, and cloud computing platforms\nMember of the American Statistical Association and American Mathematical Society\n\n\nLet’s discuss your project\nI’m available for analysis projects, advisory relationships, and custom training — all conducted through CSUB. Reach out and we’ll find the right approach for your needs.\nContact me"
+    "objectID": "research/index.html#volatility",
+    "href": "research/index.html#volatility",
+    "title": "Research",
+    "section": "Financial Volatility & Time Series Econometrics",
+    "text": "Financial Volatility & Time Series Econometrics\nThis is my primary research area. I develop new econometric models for financial volatility that capture how markets encode, retain, and forget information over time.\nThe Shape of Volatility Memory — My central project establishes that volatility memory kernels across 100+ financial assets (equities, currencies, commodities, fixed income, crypto, VIX) follow sub-exponential decay patterns better described by stretched exponentials than by the standard GARCH or FIGARCH alternatives. This work introduces the GMARCH and SEARCH model frameworks. In production — target: Journal of Business & Economic Statistics\nMF2V-GARCH — Augments Conrad & Engle’s (2025) Multiplicative Factor Multi-Frequency GARCH with a smoothed trading volume component, estimated across 15 US assets with rolling out-of-sample evaluation. Includes a complete MATLAB toolbox. In production — target: Journal of Forecasting\nMF2-GARCH-A — Extends the MF2-GARCH with a sign-sensitive long-run component that captures asymmetric responses to positive and negative return shocks. Near completion — target: International Journal of Forecasting\nMF2-EGARCH — An exponential GARCH version of the multiplicative factor multi-frequency framework, with several variations for the long-term component including an asymmetric MEM and a logarithmic MEM. Near completion — target: International Journal of Forecasting\nAdditional models: Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH (FI-GJRGARCH), and Smooth Transition FI-GJRGARCH extensions.\n\nSoftware\n\nMF2V-GARCH Toolbox for MATLAB — Six functions styled after Conrad & Schoelkopf’s mf2garch repository."
+  },
+  {
+    "objectID": "research/index.html#ml",
+    "href": "research/index.html#ml",
+    "title": "Research",
+    "section": "Hybrid Time Series & Machine Learning",
+    "text": "Hybrid Time Series & Machine Learning\nI am exploring the intersection of classical time series econometrics and modern deep learning, with the goal of building hybrid models that combine the interpretability of statistical methods with the flexibility of neural architectures. This work aims to produce explainable ML-based forecasting models grounded in rigorous statistical foundations — bridging the gap between traditional econometric approaches and data-driven methods.\nGRU-CNN Hybrid for Influenza Forecasting — A hybrid gated recurrent unit / convolutional neural network model with Yeo-Johnson scaling for forecasting influenza-like illnesses. Presented at JSM 2025 (Infectious Disease Epidemiology Section). Joint work with student Noah Gallego and Prof. Isuru Ratnayake (KUMC). Manuscript in preparation"
+  },
+  {
+    "objectID": "research/index.html#env",
+    "href": "research/index.html#env",
+    "title": "Research",
+    "section": "Environmental Justice & Air Quality",
+    "text": "Environmental Justice & Air Quality\nI pursue data-driven applications that serve public needs, with current focus on air pollution exposure disparities.\nIncome-Based Exposure Disparities in California — Introduces a reproducible, county-level, multi-pollutant statistical framework (PM2.5, NO₂, O₃, SO₂, CO) to quantify long-term income-based exposure disparities across California counties. Joint work with student co-authors Kayla Ko and Christian Rodriguez. Funded by the CES Mini-Grant. Published in Environmental Research: Health, 2025\nFine-Scale Air-Quality Heterogeneity in Twin Cities — Analysis of data from a dense low-cost network of 45 multi-pollutant sensors in the Minneapolis-St. Paul metropolitan area to investigate spatiotemporal pollutant patterns and exposure disparities. Published in ACS ES&T Air, 2025\nAir Pollution & Fertility Patterns — Ongoing interdisciplinary project investigating relationships between pollution and fertility in California counties, combining statistical modeling and machine learning. CV Pathway 2025 Summer Research Apprenticeship."
+  },
+  {
+    "objectID": "research/index.html#education",
+    "href": "research/index.html#education",
+    "title": "Research",
+    "section": "AI in Statistics Education",
+    "text": "AI in Statistics Education\nI maintain a growing research agenda at the intersection of artificial intelligence and statistics education, supported by the California Learning Lab ELEVATE grant.\nScaffolded LLM Tutors — Lead author on “From Answer Generators to Thinking Partners,” which develops a framework for AI-driven tutoring, prompt engineering, and ethical classroom integration using Custom GPTs. Submitted to JSDSE\nStructured AI Tutoring in Engineering Education — Co-authored WIP paper contributing AI prompt design methodology. Published — IEEE Frontiers in Education 2025\nComputer-Aided Instruction for K–12 Teachers — Cognitive apprenticeship approach to LLM integration for K–12 professional development. Published — IEEE FIE 2025"
+  },
+  {
+    "objectID": "research/index.html#collaborators",
+    "href": "research/index.html#collaborators",
+    "title": "Research",
+    "section": "Collaborators",
+    "text": "Collaborators\n\nV.A. Samaranayake — Missouri University of Science and Technology (Ph.D. advisor)\nIsuru Ratnayake — University of Kansas Medical Center\nAlberto Cruz — CSUB, Computer & Electrical Engineering (ELEVATE PI)\nJianjun Wang — CSUB, Mathematics\nMaruti Mishra — CSUB\nEduardo Montoya — CSUB, Mathematics (Statistical Data Science curriculum)\nBilin Zeng — CSUB, Mathematics"
+  },
+  {
+    "objectID": "research/index.html#grants-funding",
+    "href": "research/index.html#grants-funding",
+    "title": "Research",
+    "section": "Grants & Funding",
+    "text": "Grants & Funding\n\n\n\n\n\n\n\n\n\nYear\nGrant\nRole\nSource\n\n\n\n\n2025\nAir Pollution Disparities in California, 2000–2025\nPI\nCES Mini-Grant, CSUB\n\n\n2024–25\nELEVATE: Enhancing Learning Experiences Via AI Techniques\nCo-PI\nCalifornia Learning Lab AI FAST Challenge"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Anjana Yatawara",
+    "section": "",
+    "text": "Assistant Professor of Mathematics & Statistics\n\n\nCalifornia State University, Bakersfield"
+  },
+  {
+    "objectID": "index.html#recent-selected-work",
+    "href": "index.html#recent-selected-work",
+    "title": "Anjana Yatawara",
+    "section": "Recent & selected work",
+    "text": "Recent & selected work\n\n\nIncome-Based Exposure Disparities Across California Counties, 2000–2023: A Generalizable Statistical Framework\n\n\nA. Yatawara, K. Ko, C. Rodriguez\n\n\nPublished in Environmental Research: Health, 2025\n\n\n\n\nEvaluating Fine-Scale Air-Quality Heterogeneity Using a Low-Cost Multipollutant Sensor Network in Twin Cities, Minnesota\n\n\nA. Yatawara et al.\n\n\nPublished in ACS ES&T Air, 2025\n\n\n\n\nThe Shape of Volatility Memory: Sub-Exponential ARCH(∞) Kernels Across 100+ Financial Assets\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Business & Economic Statistics\n\n\n\n\nMF2V-GARCH: Augmenting Multi-Factor Volatility with Smoothed Trading Volume\n\n\nA. Yatawara\n\n\nWorking paper — target: Journal of Forecasting\n\n\nSee all publications →"
   },
   {
     "objectID": "publications/index.html",
