@@ -25,9 +25,9 @@ website:
       - text: Teaching
         href: teaching/index.qmd
       - text: Consulting
-        href: consulting/index.qmd
+        href: consulting/consulting_page.qmd
       - text: KernelStats          # ← ADD THIS
-        href: kernelstats/index.qmd
+        href: kernelstats/kernelstats_page.qmd
       - text: CV
         href: cv/index.qmd
       - text: Blog
