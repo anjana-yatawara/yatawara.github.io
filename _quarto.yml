@@ -18,17 +18,19 @@ website:
     background: "#F7F6F3"
     foreground: "#2A2927"
     left:
-      - text: "Research"
+      - text: Research
         href: research/index.qmd
-      - text: "Publications"
+      - text: Publications
         href: publications/index.qmd
-      - text: "Teaching"
+      - text: Teaching
         href: teaching/index.qmd
-      - text: "Consulting"
+      - text: Consulting
         href: consulting/index.qmd
-      - text: "CV"
+      - text: KernelStats          # ← ADD THIS
+        href: kernelstats/index.qmd
+      - text: CV
         href: cv/index.qmd
-      - text: "Blog"
+      - text: Blog
         href: blog/index.qmd
     right:
       - icon: github

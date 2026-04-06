@@ -1,0 +1,75 @@
+---
+title: "KernelStats"
+subtitle: "The core of your analysis."
+page-layout: article
+toc: false
+---
+
+::: {.column-page}
+
+![](../images/kernelstats.svg){fig-align="center" width="400px" style="margin-bottom: 1rem;"}
+
+:::
+
+## What is KernelStats?
+
+**KernelStats** is a free, open-source statistical analysis platform I built to replace expensive commercial tools like Minitab ($1,700/yr), JMP ($1,785/yr), and SAS ($8,700/yr). It runs entirely in your browser --- no installation, no license, no barriers.
+
+I built KernelStats because I believe powerful statistical analysis should be accessible to everyone: students learning their first hypothesis test, researchers on a budget, and organizations that shouldn't need an enterprise contract to run a t-test.
+
+::: {.callout-tip}
+## Try it now
+Visit [**kernelstats.com**](https://kernelstats.com) --- no account required.
+:::
+
+## Features
+
+### Data Quality
+
+- **Variable Doctor** --- 15 automated diagnostics detect coded missing values, numeric-as-text, date columns, outliers, and ID columns. One-click fixes with full undo.
+- Support for CSV, Excel, SPSS, Stata, SAS, RDS, and direct paste/URL import
+
+### Analysis
+
+- **20+ hypothesis tests** with a Test Finder wizard that recommends the right test
+- **10 regression families** --- linear, logistic, probit, multinomial, ordinal, Poisson, negative binomial, zero-inflated, hurdle, and bias-reduced
+- **Time series & GARCH** --- ARIMA (auto-selection), GARCH(1,1), GJR-GARCH, EGARCH with volatility plots, news impact curves, and forecasting
+- **Survival analysis** --- Kaplan-Meier, Cox PH, hazard ratio forest plots, Schoenfeld tests
+- **Machine learning pipeline** --- 7 algorithms with auto-detect classification vs regression, model comparison, ROC curves, variable importance
+
+### Output
+
+- **Plain-English interpretations** for every test result
+- **Professional reports** in Word (.docx) or HTML with customizable sections
+- **Industry templates** --- SPC control charts (Cp/Cpk), RFM segmentation, Pareto, heatmaps, volcano plots
+
+## How it compares
+
+| Feature | KernelStats | Minitab | JMP | SAS |
+|---------|:-----------:|:-------:|:---:|:---:|
+| Annual cost | **Free** | $1,700 | $1,785 | $8,700 |
+| Open source | ✓ | | | |
+| Runs in browser | ✓ | | | |
+| Variable Doctor | ✓ | | | |
+| Test Finder wizard | ✓ | | | |
+| GARCH models | ✓ | | | ✓ |
+| ML pipeline | ✓ | | ✓ | ✓ |
+| Plain-English output | ✓ | | | |
+
+## Technology
+
+KernelStats is built in R with Shiny, powered by ggplot2, and backed by 132 statistical methods mapped to peer-reviewed R packages. The source code is MIT-licensed and available on GitHub.
+
+::: {.grid}
+::: {.g-col-6}
+**Links:**
+
+- [kernelstats.com](https://kernelstats.com) --- Live app
+- [GitHub](https://github.com/anjana-yatawara/kernel) --- Source code
+:::
+::: {.g-col-6}
+**Coming soon:**
+
+- **KernelStats Pro** --- AI-powered version with Claude integration, automated interpretation, and enterprise deployment
+:::
+:::

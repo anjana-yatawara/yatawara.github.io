@@ -1,0 +1,71 @@
+---
+title: "Consulting"
+subtitle: "Statistical Consulting & Data Science Advisory"
+page-layout: article
+toc: true
+---
+
+I provide statistical consulting and data science advisory services through **California State University, Bakersfield**. Whether you need AI-automated analytics dashboards, rigorous statistical analysis, or a data science strategy, I bring the methodological depth of academic research and the practical focus of applied problem-solving to every engagement.
+
+All consulting engagements are conducted through CSUB's institutional framework.
+
+## Services
+
+### AI-Automated Data Analytics Dashboards {.unnumbered}
+
+**My flagship offering.** I build custom, AI-powered analytics dashboards tailored to your organization's specific data and decision-making needs. These are not generic BI tools --- they are purpose-built platforms that combine statistical rigor with modern AI to deliver automated insights, anomaly detection, and plain-English reporting.
+
+- Custom dashboards built to your KPIs and data sources
+- Automated reporting with AI-generated interpretations
+- Real-time data pipelines and interactive visualizations
+- Built on production-grade R/Python with deployment to your infrastructure or cloud
+- Powered by the same engine behind [KernelStats](https://kernelstats.com), my open-source analysis platform
+
+### Time Series & Forecasting {.unnumbered}
+
+Financial volatility modeling, demand forecasting, epidemiological trends, and environmental monitoring. Specializing in GARCH-family models and hybrid ML approaches.
+
+### Machine Learning & Prediction {.unnumbered}
+
+Build models that generalize. Random forests, gradient boosting, neural networks, and deep learning for structured and sequential data --- with interpretability built in.
+
+### Study Design & Analysis {.unnumbered}
+
+Design rigorous studies that produce defensible results. From experimental design to observational study methodology --- get it right from the start.
+
+### Environmental & Health Analytics {.unnumbered}
+
+Air quality analysis, exposure assessment, pollution modeling, and public health data analysis. Experience with EPA AQS data, sensor networks, and multi-pollutant frameworks.
+
+### AI Strategy & Implementation {.unnumbered}
+
+Custom GPT development, LLM integration for education and business workflows, and organizational AI readiness assessment. Presented with OpenAI at NextTech Kern.
+
+### Training & Workshops {.unnumbered}
+
+Custom workshops on R, Python, SAS, statistics, machine learning, and AI for your team. Designed for practical skill-building with real data.
+
+## How I Work
+
+**1. Discovery** --- We discuss your problem, data, and goals in an initial conversation.
+
+**2. Proposal** --- I provide a clear scope, timeline, methodology, and quote through CSUB.
+
+**3. Engagement** --- I do the work, with regular check-ins and transparent communication.
+
+**4. Delivery** --- You receive a complete report with reproducible code, clear visualizations, and actionable recommendations.
+
+## Credentials
+
+- **Ph.D. in Mathematics (Statistics Emphasis)** --- Missouri University of Science & Technology
+- **Assistant Professor** --- California State University, Bakersfield
+- **Creator of [KernelStats](https://kernelstats.com)** --- Open-source statistical analysis platform
+- **Active researcher** with publications in financial econometrics, environmental statistics, and AI in education
+- **Experienced with** R, Python, MATLAB, SAS, SQL, LaTeX, Git, TensorFlow, and cloud computing platforms
+- **Member** of the American Statistical Association and American Mathematical Society
+
+## Let's discuss your project
+
+I'm available for analysis projects, advisory relationships, dashboard builds, and custom training --- all conducted through CSUB. Reach out and we'll find the right approach for your needs.
+
+[Contact me](mailto:ayatawara@csub.edu){.btn .btn-primary}
