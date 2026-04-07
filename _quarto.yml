@@ -28,6 +28,8 @@ website:
         href: consulting/consulting_page.qmd
       - text: KernelStats          # ← ADD THIS
         href: kernelstats/kernelstats_page.qmd
+      - text: Games                    # ← ADD
+        href: games/index.qmd         # ← ADD
       - text: CV
         href: cv/index.qmd
       - text: Blog
