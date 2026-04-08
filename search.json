@@ -51,28 +51,28 @@
   {
     "objectID": "kernelstats/kernelstats_page.html#what-is-kernelstats",
     "href": "kernelstats/kernelstats_page.html#what-is-kernelstats",
-    "title": "KernelStats",
+    "title": "Anjana Yatawara",
     "section": "What is KernelStats?",
     "text": "What is KernelStats?\nKernelStats is a free, open-source statistical analysis platform I built to replace expensive commercial tools like Minitab ($1,700/yr), JMP ($1,785/yr), and SAS ($8,700/yr). It runs entirely in your browser — no installation, no license, no barriers.\nI built KernelStats because I believe powerful statistical analysis should be accessible to everyone: students learning their first hypothesis test, researchers on a budget, and organizations that shouldn’t need an enterprise contract to run a t-test.\n\n\n\n\n\n\nTipTry it now\n\n\n\nVisit kernelstats.com — no account required."
   },
   {
     "objectID": "kernelstats/kernelstats_page.html#features",
     "href": "kernelstats/kernelstats_page.html#features",
-    "title": "KernelStats",
+    "title": "Anjana Yatawara",
     "section": "Features",
     "text": "Features\n\nData Quality\n\nVariable Doctor — 15 automated diagnostics detect coded missing values, numeric-as-text, date columns, outliers, and ID columns. One-click fixes with full undo.\nSupport for CSV, Excel, SPSS, Stata, SAS, RDS, and direct paste/URL import\n\n\n\nAnalysis\n\n20+ hypothesis tests with a Test Finder wizard that recommends the right test\n10 regression families — linear, logistic, probit, multinomial, ordinal, Poisson, negative binomial, zero-inflated, hurdle, and bias-reduced\nTime series & GARCH — ARIMA (auto-selection), GARCH(1,1), GJR-GARCH, EGARCH with volatility plots, news impact curves, and forecasting\nSurvival analysis — Kaplan-Meier, Cox PH, hazard ratio forest plots, Schoenfeld tests\nMachine learning pipeline — 7 algorithms with auto-detect classification vs regression, model comparison, ROC curves, variable importance\n\n\n\nOutput\n\nPlain-English interpretations for every test result\nProfessional reports in Word (.docx) or HTML with customizable sections\nIndustry templates — SPC control charts (Cp/Cpk), RFM segmentation, Pareto, heatmaps, volcano plots"
   },
   {
     "objectID": "kernelstats/kernelstats_page.html#how-it-compares",
     "href": "kernelstats/kernelstats_page.html#how-it-compares",
-    "title": "KernelStats",
+    "title": "Anjana Yatawara",
     "section": "How it compares",
-    "text": "How it compares\n\n\n\nFeature\nKernelStats\nMinitab\nJMP\nSAS\n\n\n\n\nAnnual cost\nFree\n$1,700\n$1,785\n$8,700\n\n\nOpen source\n✓\n\n\n\n\n\nRuns in browser\n✓\n\n\n\n\n\nVariable Doctor\n✓\n\n\n\n\n\nTest Finder wizard\n✓\n\n\n\n\n\nGARCH models\n✓\n\n\n✓\n\n\nML pipeline\n✓\n\n✓\n✓\n\n\nPlain-English output\n✓"
+    "text": "How it compares\n\n\n\nFeature\nKernelStats\nMinitab\nJMP\nSAS\n\n\n\n\nAnnual cost\nFree\n$1,700\n$1,785\n$8,700\n\n\nOpen source\n✓\n\n\n\n\n\nRuns in browser\n✓\n\n\n\n\n\nVariable Doctor\n✓\n\n\n\n\n\nTest Finder wizard\n✓\n\n\n\n\n\nGARCH models\n✓\n\n\n✓\n\n\nML pipeline\n✓\n✓\n✓\n✓\n\n\nPlain-English output\n✓"
   },
   {
     "objectID": "kernelstats/kernelstats_page.html#technology",
     "href": "kernelstats/kernelstats_page.html#technology",
-    "title": "KernelStats",
+    "title": "Anjana Yatawara",
     "section": "Technology",
     "text": "Technology\nKernelStats is built in R with Shiny, powered by ggplot2, and backed by 132 statistical methods mapped to peer-reviewed R packages. The source code is MIT-licensed and available on GitHub.\n\n\nLinks:\n\nkernelstats.com — Live app\nGitHub — Source code\n\n\n\nComing soon:\n\nKernelStats Pro — AI-powered version with Claude integration, automated interpretation, and enterprise deployment"
   },
