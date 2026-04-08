@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Just for fun.">
 
 <title>Games – Anjana Yatawara</title>
 <style>
@@ -80,14 +79,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="../styles/extra.css">
-<meta property="og:title" content="Games – Anjana Yatawara">
-<meta property="og:description" content="Just for fun.">
+<meta property="og:title" content="Games">
 <meta property="og:site_name" content="Anjana Yatawara">
 <meta property="og:locale" content="en_US">
-<meta name="twitter:title" content="Games – Anjana Yatawara">
-<meta name="twitter:description" content="Just for fun.">
+<meta name="twitter:title" content="Games">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="citation_title" content="Games">
 <meta name="citation_fulltext_html_url" content="https://www.yatawara.com/games/">
 <meta name="citation_language" content="en">
 </head>
@@ -166,45 +162,154 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Games</h1>
-</div>
-
-<div>
-  <div class="description">
-    Just for fun.
-  </div>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">🕹️ ARCADE</h1></header>
 
 
-<div class="quarto-title-meta">
 
-    
+
+<style>
+.arcade-header {
+  text-align: center;
+  padding: 2rem 0 1rem;
+}
+.arcade-header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #2A2927;
+  margin-bottom: 0.3rem;
+}
+.arcade-header p {
+  color: #888;
+  font-size: 0.95rem;
+  margin: 0;
+}
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 900px;
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+.game-card {
+  background: #1C1C1E;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #2C2C2E;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.game-card iframe {
+  width: 100%;
+  height: 480px;
+  border: none;
+  display: block;
+}
+.game-card .game-info {
+  padding: 1rem 1.2rem;
+}
+.game-card .game-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.4rem;
+}
+.game-card .game-desc {
+  font-size: 0.82rem;
+  color: #B0B0B0;
+  line-height: 1.5;
+  margin: 0 0 0.6rem;
+}
+.game-card .game-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.game-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: #ccc;
+  border: 1px solid #3a3a3a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.game-tag.fire { border-color: #FF3B0A; color: #FF7A00; }
+.game-tag.space { border-color: #00e5ff; color: #00e5ff; }
+.game-tag.action { border-color: #FFD700; color: #FFD700; }
+.game-card .game-links {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+.game-card .game-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.game-card .game-links a:hover { color: #fff; }
+.coming-soon {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+</style>
+
+<div class="arcade-header">
   
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="sigma-strike" class="level2">
-<h2 class="anchored" data-anchor-id="sigma-strike">Sigma Strike</h2>
-<p>A retro space shooter where you defend the distribution from rogue outliers. Chain kills for combo multipliers, collect power-ups, and battle bosses every 10 waves.</p>
-<p><strong>Controls:</strong> Arrow keys or A/D to move, Space to shoot, B for bomb, P to pause. On mobile, use the virtual joystick with auto-fire.</p>
-<div style="width:100%;max-width:520px;margin:1.5rem auto;border-radius:8px;overflow:hidden;border:1px solid #ddd;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-  <iframe src="sigma-strike.html" style="width:100%;height:780px;border:none;display:block;" allowfullscreen=""></iframe>
+  <p>Games by Anjana Yatawara. Built for fun. Play in browser.</p>
 </div>
-<p style="text-align:center;font-size:0.85em;color:#888;margin-top:0.5rem;">
-Best experienced fullscreen on desktop. <a href="sigma-strike.html" target="_blank">Open in new tab →</a>
-</p>
+
+<div class="game-grid">
+
+  <div class="game-card">
+    <iframe src="revenge-of-the-basco.html" allowfullscreen="" loading="lazy"></iframe>
+    <div class="game-info">
+      <div class="game-title">Revenge of the Basco</div>
+      <div class="game-desc">Tabasco chooses violence. Tap to fly through hellfire columns. Survive the chaos. Beat the bosses. Don't blink.</div>
+      <div class="game-tags">
+        <span class="game-tag fire">Fire</span>
+        <span class="game-tag action">One-Tap</span>
+        <span class="game-tag">Chaos</span>
+      </div>
+      <div class="game-links">
+        <a href="revenge-of-the-basco.html" target="_blank">⛶ Fullscreen</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-card">
+    <iframe src="sigma-strike.html" allowfullscreen="" loading="lazy"></iframe>
+    <div class="game-info">
+      <div class="game-title">Sigma Strike</div>
+      <div class="game-desc">Defend the distribution from rogue outliers. Chain kills for combos, collect power-ups, battle bosses every 10 waves.</div>
+      <div class="game-tags">
+        <span class="game-tag space">Space</span>
+        <span class="game-tag action">Shooter</span>
+        <span class="game-tag">Stats</span>
+      </div>
+      <div class="game-links">
+        <a href="sigma-strike.html" target="_blank">⛶ Fullscreen</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="coming-soon">More games coming soon...</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
