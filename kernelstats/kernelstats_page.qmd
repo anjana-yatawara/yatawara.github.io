@@ -1,6 +1,6 @@
 ---
-title: "KernelStats"
-subtitle: "The core of your analysis."
+pagetitle: "KernelStats"
+title-block-banner: false
 page-layout: article
 toc: false
 ---
@@ -53,7 +53,7 @@ Visit [**kernelstats.com**](https://kernelstats.com) --- no account required.
 | Variable Doctor | ✓ | | | |
 | Test Finder wizard | ✓ | | | |
 | GARCH models | ✓ | | | ✓ |
-| ML pipeline | ✓ | | ✓ | ✓ |
+| ML pipeline | ✓ | ✓ | ✓ | ✓ |
 | Plain-English output | ✓ | | | |
 
 ## Technology

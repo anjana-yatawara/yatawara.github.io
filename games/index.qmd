@@ -1,6 +1,8 @@
 ---
 title: "Games"
 description: "Statistics-themed games built for fun and learning."
+resources:
+  - sigma-strike.html
 ---
 
 ## Sigma Strike

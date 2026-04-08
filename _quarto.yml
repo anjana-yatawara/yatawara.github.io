@@ -26,10 +26,10 @@ website:
         href: teaching/index.qmd
       - text: Consulting
         href: consulting/consulting_page.qmd
-      - text: KernelStats          # ← ADD THIS
+      - text: KernelStats
         href: kernelstats/kernelstats_page.qmd
-      - text: Games                    # ← ADD
-        href: games/index.qmd         # ← ADD
+      - text: Games
+        href: games/index.qmd
       - text: CV
         href: cv/index.qmd
       - text: Blog
@@ -69,5 +69,4 @@ format:
 execute:
   freeze: auto
 
-# Metadata for Google Scholar
 google-scholar: true
