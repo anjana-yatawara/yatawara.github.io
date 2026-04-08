@@ -1,5 +1,7 @@
 project:
   type: website
+  resources:
+    - games/sigma-strike.html
 
 website:
   title: "Anjana Yatawara"
