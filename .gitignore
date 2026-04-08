@@ -1,8 +1,7 @@
 /.quarto/
 /docs/
 /_site/
-*.html
-!games/sigma-strike.html
+!games/*.html
 !index.html
 .DS_Store
 node_modules/
