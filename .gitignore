@@ -2,6 +2,7 @@
 /docs/
 /_site/
 *.html
+!games/sigma-strike.html
 !index.html
 .DS_Store
 node_modules/
