@@ -124,6 +124,10 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 .tb-bg{flex:1;height:3px;background:var(--bg3);border-radius:3px;overflow:hidden}
 .tb-f{height:100%;background:var(--violet);border-radius:3px;transition:width 1s linear}.tb-f.urg{background:var(--coral)}
 .tb-l{font-family:var(--fc);font-size:.62rem;color:var(--ink4);min-width:18px;text-align:right}.tb-l.urg{color:var(--coral);animation:pl .5s infinite}
+.ext-btn{font-family:var(--fc);font-size:.62rem;padding:.22rem .5rem;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--ink3);cursor:pointer;transition:all .15s;letter-spacing:.03em;white-space:nowrap;user-select:none;min-height:24px;line-height:1;display:inline-flex;align-items:center;font-weight:600}
+.ext-btn:hover{border-color:var(--violet);color:var(--violet);background:var(--vi-l)}
+.ext-btn:active{transform:scale(.95)}
+.ext-btn.used,.ext-btn[hidden]{display:none}
 .pw{width:100%;max-width:560px;height:2px;background:var(--bg3);border-radius:2px;margin:0 1.2rem .5rem;overflow:hidden}
 .pf{height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:2px;transition:width .4s}
 
@@ -296,7 +300,8 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 <div class="rl"><span class="rl-i">📜</span><div class="rl-t"><b>6 Acts, 5 questions each.</b> 138 questions in the pool — every run is different.</div></div>
 <div class="rl"><span class="rl-i">🎭</span><div class="rl-t"><b>7 question types:</b> pick the correct solution, spot the broken step, identify a distribution, pick the next line of a proof, true/false, set up the right integral, and conceptual intuition checks.</div></div>
 <div class="rl"><span class="rl-i">🔒</span><div class="rl-t"><b>Sequential Acts.</b> Each Act unlocks only after the previous one is cleared. The math builds on itself.</div></div>
-<div class="rl"><span class="rl-i">⏱️</span><div class="rl-t"><b>Speed bonus.</b> Answer within 15 seconds for +1 point.</div></div>
+<div class="rl"><span class="rl-i">⏱️</span><div class="rl-t"><b>Speed bonus.</b> Answer within 22 seconds for +1 point.</div></div>
+<div class="rl"><span class="rl-i">🕐</span><div class="rl-t"><b>Need more time?</b> Tap <code style="font-family:var(--fc);font-size:.72rem;padding:.05rem .3rem;background:var(--vi-l);color:var(--violet);border-radius:4px">+20s</code> next to the timer (one use per question — forfeits that question's speed bonus).</div></div>
 <div class="rl"><span class="rl-i">🔥</span><div class="rl-t"><b>Streak tracker.</b> 3+ correct in a row lights it up.</div></div>
 <div class="rl"><span class="rl-i">🏆</span><div class="rl-t"><b>Earn your title.</b> 90%+ overall → <em>Grandmaster of the Continuum</em>.</div></div>
 <div style="margin-top:1rem;text-align:center"><button class="bt bp" onclick="cM()">Let's Go</button></div>
@@ -355,7 +360,7 @@ body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse
 <!-- GAME -->
 <div class="scr vt" id="s-g">
 <div class="gt"><div class="gh"><div class="gb" id="gl"></div><div class="gsc"><span id="gs">0</span> pts</div></div></div>
-<div class="tw2"><div class="tb-bg"><div class="tb-f" id="tb"></div></div><div class="tb-l" id="tl">30</div></div>
+<div class="tw2"><div class="tb-bg"><div class="tb-f" id="tb"></div></div><button class="ext-btn" id="ext-btn" onclick="addTime()" title="Need more time? (+20s, forfeits speed bonus)">+20s</button><div class="tb-l" id="tl">45</div></div>
 <div class="pw"><div class="pf" id="pf"></div></div>
 <div class="gbod">
 <div class="qc" id="qc">
@@ -2655,9 +2660,10 @@ function confirmReset(){
 // ========= GAME STATE =========
 const QS_PER_ROUND=5;
 let cr=0, cq=0, sc=0, tot=0, bon=0, stk=0, bstk=0, hist=[], rqs=[], rC=0, rB=0, rScores=[];
-let tI=null, tL=0, curPct=0;
-const TIMER_SEC=30;
-const SPEED_THRESHOLD=15;
+let tI=null, tL=0, curPct=0, extraUsed=false;
+const TIMER_SEC=45;
+const SPEED_THRESHOLD=22;
+const EXTRA_SECONDS=20;
 
 function goPlay(){
   iA();
@@ -2702,6 +2708,9 @@ function sT(){
   clearInterval(tI);tL=TIMER_SEC;const b=$('tb'),l=$('tl');
   b.style.width='100%';b.classList.remove('urg');l.textContent=tL;l.classList.remove('urg');
   b.style.transition='none';b.offsetHeight;b.style.transition='width 1s linear';
+  // reset +20s extension
+  extraUsed=false;
+  const xb=$('ext-btn');if(xb){xb.classList.remove('used');xb.textContent='+20s'}
   tI=setInterval(()=>{
     tL--;l.textContent=Math.max(0,tL);b.style.width=Math.max(0,tL/TIMER_SEC*100)+'%';
     if(tL<=5&&tL>0){b.classList.add('urg');l.classList.add('urg')}
@@ -2718,6 +2727,17 @@ function sT(){
       }
     }
   },1000);
+}
+
+function addTime(){
+  if(extraUsed) return;
+  extraUsed=true;
+  tL+=EXTRA_SECONDS;
+  const b=$('tb'),l=$('tl');
+  l.textContent=Math.max(0,tL);
+  b.style.width=Math.min(100,Math.max(0,tL/TIMER_SEC*100))+'%';
+  if(tL>5){b.classList.remove('urg');l.classList.remove('urg')}
+  const xb=$('ext-btn');if(xb)xb.classList.add('used');
 }
 
 // ========= RENDER QUESTION =========
@@ -2818,6 +2838,7 @@ function rTF(az,q){
 
 function dA(ok,exp,btn,all,correctIdx){
   clearInterval(tI);
+  const xb=$('ext-btn');if(xb)xb.classList.add('used');
   all.forEach(b=>{
     b.classList.add('lk');
     const oi=+b.dataset.oi;
@@ -2830,7 +2851,7 @@ function dA(ok,exp,btn,all,correctIdx){
 function fA(ok,exp){
   tot++;let eb=0;
   if(ok){sc++;rC++;stk++;if(stk>bstk)bstk=stk;
-    if(tL>=SPEED_THRESHOLD){eb=1;bon++;rB++;sc++}
+    if(tL>=SPEED_THRESHOLD && !extraUsed){eb=1;bon++;rB++;sc++}
     sOk();$('qc').classList.add('pp')}
   else{stk=0;sNo();$('qc').classList.add('sk')}
   const sEl=$('gs');sEl.textContent=sc;sEl.classList.remove('pop');sEl.offsetHeight;sEl.classList.add('pop');
