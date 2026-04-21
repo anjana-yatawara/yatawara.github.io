@@ -1,0 +1,3126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fafbfc">
+<title>Acts of the Continuous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="window.KATEX_READY=true"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#fafbfc;--white:#ffffff;--bg2:#f1f5f9;--bg3:#e2e8f0;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --ink:#0f172a;--ink2:#1e293b;--ink3:#475569;--ink4:#94a3b8;--ink5:#cbd5e1;
+  --navy:#1e293b;--blue:#3b82f6;--blue2:#2563eb;--blue-l:#eff6ff;--blue-b:#bfdbfe;
+  --emerald:#10b981;--em-l:#ecfdf5;--em-b:#a7f3d0;
+  --coral:#ef4444;--co-l:#fef2f2;--co-b:#fecaca;
+  --amber:#f59e0b;--am-l:#fffbeb;--am-b:#fde68a;
+  --violet:#8b5cf6;--vi-l:#f5f3ff;--vi-b:#ddd6fe;
+  --code-bg:#0f172a;--code-tx:#e2e8f0;
+  --f:'Inter',-apple-system,'Segoe UI',sans-serif;
+  --fc:'Fira Code','SF Mono',monospace;
+  --r:14px;--sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);
+  --sh3:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.05);
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+html{height:100%;overflow:hidden}
+body{min-height:100%;height:100%;font-family:var(--f);background:var(--bg);color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased;font-size:15px}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(139,92,246,.04),transparent 70%);pointer-events:none;z-index:0}
+
+/* KaTeX sizing so inline math fits cleanly in option buttons */
+.katex{font-size:.96em}
+.katex-display{margin:.4em 0!important}
+.katex-display>.katex{font-size:1em}
+
+.scr{display:none;flex-direction:column;align-items:center;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative;z-index:1}
+.scr.vc{justify-content:center}.scr.vt{justify-content:flex-start;padding-top:calc(.5rem + var(--st))}
+.scr.on{display:flex;animation:fi .35s ease}
+
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes cp{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:none}}
+@keyframes sk{0%,100%{transform:translateX(0)}15%{transform:translateX(-5px)}35%{transform:translateX(5px)}55%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes pp{0%{transform:scale(1)}40%{transform:scale(1.012)}100%{transform:scale(1)}}
+@keyframes si{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(108vh) rotate(720deg);opacity:0}}
+@keyframes pl{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes stagger{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes checkDraw{to{stroke-dashoffset:0}}
+@keyframes circleDraw{to{stroke-dashoffset:0}}
+@keyframes scorePop{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+/* ===== TITLE ===== */
+.tw{text-align:center;max-width:460px;padding:1.8rem 1.3rem calc(1.8rem + var(--sb))}
+.t-badge{margin-bottom:.9rem;display:flex;justify-content:center}
+.t-badge-i{width:70px;height:70px;border-radius:20px;background:linear-gradient(135deg,var(--violet),var(--blue));display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--sh3);position:relative;overflow:hidden}
+.t-badge-i::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 60%)}
+.t-badge-i svg{position:relative;z-index:1}
+.t-h{font-family:var(--f);font-size:1.9rem;font-weight:900;color:var(--ink);line-height:1.1;margin-bottom:.35rem;letter-spacing:-.035em}
+.t-h em{font-style:normal;background:linear-gradient(135deg,var(--violet),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:900}
+.t-war{font-family:var(--fc);color:var(--violet);font-size:.74rem;font-weight:500;letter-spacing:.06em;margin-top:.05rem;margin-bottom:.7rem;text-transform:lowercase;opacity:.85}
+.t-f{color:var(--ink4);font-size:.82rem;line-height:1.55;margin-bottom:1.3rem;max-width:360px;margin-inline:auto;font-style:italic}
+.t-grid{display:flex;gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.4rem;box-shadow:var(--sh)}
+.t-cell{flex:1;background:var(--white);padding:.65rem .5rem;text-align:center}
+.t-cv{font-family:var(--f);font-size:1.35rem;font-weight:800;color:var(--navy)}
+.t-cl{font-size:.55rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.14em;margin-top:.08rem}
+.t-sub{font-size:.86rem;color:var(--ink3);line-height:1.6;margin-bottom:.7rem}
+.t-sub em{color:var(--violet);font-style:normal;font-weight:600}
+.t-note{font-size:.72rem;color:var(--ink3);line-height:1.55;margin-bottom:1.2rem;padding:.55rem .7rem;background:#fefce8;border:1px solid #fde68a;border-radius:10px;max-width:360px;margin-inline:auto;text-align:left}
+.t-note b{color:#b45309;font-weight:700}
+.hw{margin-top:.9rem;font-size:.74rem;color:var(--ink4);cursor:pointer;padding:.4rem;transition:color .15s}
+.hw:active{color:var(--blue)}
+
+/* ===== ACTS DASHBOARD (unlockable rounds) ===== */
+.acts{margin-top:1.3rem;padding-top:1.1rem;border-top:1px solid var(--border);width:100%;max-width:380px}
+.acts-title{font-size:.6rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.55rem;text-align:center}
+.act-row{display:flex;align-items:center;gap:.55rem;margin-bottom:.4rem;padding:.55rem .7rem;border-radius:10px;background:var(--white);border:1px solid var(--border);transition:all .15s;cursor:pointer;user-select:none}
+.act-row:active:not(.lock){transform:scale(.985);background:var(--bg2)}
+.act-row.lock{opacity:.5;cursor:not-allowed;background:var(--bg2)}
+.act-row.done{border-color:var(--em-b);background:var(--em-l)}
+.act-idx{font-family:var(--fc);font-size:.68rem;color:var(--ink4);font-weight:700;width:26px;flex-shrink:0;text-align:center}
+.act-row.done .act-idx{color:var(--emerald)}
+.act-info{flex:1;min-width:0}
+.act-name{font-size:.78rem;font-weight:700;color:var(--ink2);line-height:1.2}
+.act-row.lock .act-name{color:var(--ink4)}
+.act-sub{font-size:.6rem;color:var(--ink4);line-height:1.25;margin-top:.1rem}
+.act-bar{margin-top:.25rem;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.act-bar-f{height:100%;border-radius:2px;transition:width .5s}
+.act-rt{font-size:.62rem;color:var(--ink4);flex-shrink:0;font-weight:600}
+.act-row.done .act-rt{color:var(--emerald)}
+.act-row.lock .act-rt::before{content:'🔒 '}
+
+/* ===== BUTTONS ===== */
+.bt{font-family:var(--f);font-weight:600;font-size:.9rem;padding:.75rem 2rem;border:none;border-radius:10px;cursor:pointer;transition:all .15s;min-height:48px;display:inline-flex;align-items:center;justify-content:center;user-select:none;letter-spacing:-.01em}
+.bp{background:linear-gradient(135deg,var(--blue2),var(--violet));color:#fff;box-shadow:0 1px 3px rgba(99,102,241,.3),0 2px 6px rgba(99,102,241,.15)}
+.bp:active{transform:scale(.97);filter:brightness(.93)}
+.bs{background:var(--white);color:var(--ink2);border:1px solid var(--border)}
+.bs:active{background:var(--bg2)}
+.bsm{font-size:.78rem;padding:.35rem .9rem;min-height:34px;border-radius:8px}
+
+/* ===== MODAL ===== */
+.mo{position:fixed;inset:0;background:rgba(15,23,42,.2);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.mo.on{display:flex}
+.mi{background:var(--white);border-radius:20px;padding:1.5rem;max-width:400px;width:100%;max-height:82dvh;overflow-y:auto;box-shadow:var(--sh3)}
+.mi h2{font-family:var(--f);font-size:1.15rem;color:var(--ink);margin-bottom:.8rem}
+.rl{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.55rem}
+.rl-i{font-size:1rem;flex-shrink:0;margin-top:.12rem}
+.rl-t{font-size:.8rem;color:var(--ink2);line-height:1.55}.rl-t b{color:var(--violet)}
+
+/* ===== GAME HEADER ===== */
+.gt{width:100%;max-width:560px;position:sticky;top:0;z-index:5;background:var(--bg);padding:.35rem 1.2rem .15rem}
+.gh{display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem}
+.gb{font-size:.68rem;font-weight:600;color:var(--violet);background:var(--vi-l);padding:.2rem .65rem;border-radius:6px;max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em}
+.gsc{font-size:.78rem;color:var(--ink4);display:flex;align-items:center;gap:.3rem}
+.gsc span{color:var(--violet);font-weight:700;font-size:.95rem;transition:transform .2s}
+.gsc span.pop{animation:scorePop .3s ease}
+.tw2{width:100%;max-width:560px;display:flex;align-items:center;gap:.4rem;padding:0 1.2rem;margin-bottom:.15rem}
+.tb-bg{flex:1;height:3px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.tb-f{height:100%;background:var(--violet);border-radius:3px;transition:width 1s linear}.tb-f.urg{background:var(--coral)}
+.tb-l{font-family:var(--fc);font-size:.62rem;color:var(--ink4);min-width:18px;text-align:right}.tb-l.urg{color:var(--coral);animation:pl .5s infinite}
+.pw{width:100%;max-width:560px;height:2px;background:var(--bg3);border-radius:2px;margin:0 1.2rem .5rem;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:2px;transition:width .4s}
+
+/* ===== QUESTION CARD ===== */
+.gbod{width:100%;max-width:560px;padding:0 1.2rem calc(1.5rem + var(--sb))}
+.qc{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.1rem 1rem;box-shadow:var(--sh2);animation:cp .3s ease;position:relative;overflow:hidden}
+.qc::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;border-radius:4px 0 0 4px}
+.qc.r0::before{background:var(--blue)}.qc.r1::before{background:var(--emerald)}.qc.r2::before{background:var(--coral)}
+.qc.r3::before{background:var(--amber)}.qc.r4::before{background:var(--violet)}.qc.r5::before{background:var(--navy)}
+.qc.sk{animation:sk .3s}.qc.pp{animation:pp .25s}
+.q-n{font-family:var(--fc);font-size:.6rem;color:var(--ink5);margin-bottom:.3rem;padding-left:.1rem}
+.q-c{font-size:.56rem;text-transform:uppercase;letter-spacing:.12em;font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem;padding-left:.1rem;flex-wrap:wrap}
+.q-c .lbl{color:var(--ink3)}
+.q-c .typ{padding:.12rem .45rem;border-radius:5px;font-size:.52rem;font-weight:700;letter-spacing:.08em}
+.typ.pickSoln{background:var(--blue-l);color:var(--blue)}
+.typ.tf{background:var(--am-l);color:#92400e}
+.typ.spotErr{background:var(--co-l);color:var(--coral)}
+.typ.nextLine{background:var(--em-l);color:var(--emerald)}
+.typ.identify{background:var(--vi-l);color:var(--violet)}
+.typ.setup{background:var(--bg2);color:var(--ink3)}
+.typ.intuition{background:#cffafe;color:#0e7490}
+.q-t{font-size:.92rem;line-height:1.55;color:var(--ink);font-weight:500;padding-left:.1rem}
+
+/* Given[] proof scratchpad (nextLine) */
+.q-given{margin-top:.65rem;padding:.65rem .8rem;border-radius:10px;background:var(--bg2);border:1px solid var(--border);font-size:.84rem;line-height:1.65;color:var(--ink2)}
+.q-given .gl-row{padding:.12rem 0}
+.q-given .gl-q{color:var(--violet);font-weight:700;font-family:var(--fc);font-size:.92em}
+
+/* ===== ANSWERS (MC-style, used for pickSoln/identify/nextLine/setup) ===== */
+.ans{display:flex;flex-direction:column;gap:.4rem;margin-top:.65rem}
+.ab{width:100%;text-align:left;padding:.75rem .9rem;min-height:48px;background:var(--white);border:1.5px solid var(--border);border-radius:10px;color:var(--ink2);font-size:.86rem;font-family:var(--f);cursor:pointer;transition:all .12s;line-height:1.5;display:flex;align-items:flex-start;user-select:none;box-shadow:var(--sh);opacity:0;animation:stagger .3s ease forwards}
+.ab:nth-child(1){animation-delay:.05s}.ab:nth-child(2){animation-delay:.1s}
+.ab:nth-child(3){animation-delay:.15s}.ab:nth-child(4){animation-delay:.2s}
+.ab:active:not(.lk){background:var(--bg2);border-color:var(--vi-b);transform:scale(.985)}
+.ab.ok{background:var(--em-l)!important;border-color:var(--em-b)!important;color:var(--ink2)!important;font-weight:500;box-shadow:0 0 0 2px rgba(16,185,129,.18)}
+.ab.no{background:var(--co-l)!important;border-color:var(--co-b)!important;color:var(--ink2)!important;opacity:.68}
+.ab.lk{pointer-events:none;animation:none;opacity:1}
+.ab.ok.lk,.ab.no.lk{opacity:1}
+.ab .mk{font-weight:700;margin-right:.55rem;color:var(--ink4);font-size:.76rem;flex-shrink:0;padding-top:.05rem;min-width:1.3rem}
+.ab.ok .mk{color:var(--emerald)}
+.ab.no .mk{color:var(--coral)}
+.ab .ct{flex:1;min-width:0}
+
+/* spotErr: steps shown as buttons, numbered, KaTeX inside */
+.ab.step{padding:.7rem .85rem}
+.ab.step .mk{font-family:var(--fc);min-width:3.5rem;color:var(--ink3);font-weight:600}
+.ab.step.ok .mk{color:var(--emerald)}
+.ab.step.no .mk{color:var(--coral)}
+
+/* TF */
+.tfr{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.65rem}
+.tfb{min-height:56px;border-radius:12px;font-size:.92rem;font-weight:600;font-family:var(--f);cursor:pointer;border:2px solid var(--border);background:var(--white);color:var(--ink2);transition:all .12s;user-select:none;display:flex;align-items:center;justify-content:center;gap:.3rem;box-shadow:var(--sh);opacity:0;animation:stagger .3s ease forwards}
+.tfb:nth-child(1){animation-delay:.05s}.tfb:nth-child(2){animation-delay:.12s}
+.tfb:active:not(.lk){background:var(--bg2);transform:scale(.97)}
+.tfb.ok{background:var(--em-l)!important;border-color:var(--emerald)!important;color:var(--emerald)!important;box-shadow:0 0 0 2px rgba(16,185,129,.12)}
+.tfb.no{background:var(--co-l)!important;border-color:var(--coral)!important;color:var(--coral)!important;opacity:.7}
+.tfb.lk{pointer-events:none;animation:none;opacity:1}
+.tfb.ok.lk,.tfb.no.lk{opacity:1}
+
+/* ===== FEEDBACK ICON + TEXT ===== */
+.fb-icon{text-align:center;margin-top:.6rem;height:48px;display:none}
+.fb-icon.vi{display:flex;align-items:center;justify-content:center}
+.fb-icon svg{width:44px;height:44px}
+.fb-icon .circle{fill:none;stroke-width:2.5;stroke-dasharray:157;stroke-dashoffset:157;animation:circleDraw .4s ease forwards}
+.fb-icon .mark{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:checkDraw .3s ease .25s forwards}
+.fb-icon.ok-i .circle,.fb-icon.ok-i .mark{stroke:var(--emerald)}
+.fb-icon.no-i .circle,.fb-icon.no-i .mark{stroke:var(--coral)}
+
+.fb{margin-top:.35rem;padding:.8rem .9rem;border-radius:12px;font-size:.84rem;line-height:1.58;display:none;animation:si .25s}
+.fb.fo{background:var(--em-l);border:1px solid var(--em-b);color:#065f46}
+.fb.fn{background:var(--co-l);border:1px solid var(--co-b);color:#991b1b}
+.fh{font-weight:700;font-size:.88rem;margin-bottom:.15rem}
+.fbo{font-size:.72rem;margin-top:.15rem;opacity:.7;font-style:italic}
+
+/* ===== NEXT ===== */
+.nw{margin-top:.65rem;display:none}.nw.vi{display:block}
+.nb{width:100%;min-height:48px;font-size:.9rem;border-radius:10px;background:linear-gradient(135deg,var(--blue2),var(--violet));color:#fff;border:none;font-family:var(--f);font-weight:600;cursor:pointer;user-select:none;box-shadow:0 1px 3px rgba(99,102,241,.25);transition:all .12s}
+.nb:active{transform:scale(.98);filter:brightness(.93)}
+
+/* ===== ROUND SCREENS ===== */
+.ri,.rc{text-align:center;max-width:420px;padding:1.5rem 1.5rem}
+.ri-icon{margin-bottom:.85rem;display:flex;justify-content:center}
+.r-n{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink3);letter-spacing:.02em;text-transform:uppercase;margin-bottom:.15rem}
+.r-title{font-family:var(--f);font-size:1.75rem;font-weight:900;color:var(--ink);letter-spacing:-.03em;line-height:1.15;margin-bottom:.2rem}
+.r-title em{font-style:normal;color:var(--violet);font-weight:900}
+.r-sub{font-family:var(--f);font-size:.85rem;font-weight:600;color:var(--ink3);margin:.25rem 0 .75rem;letter-spacing:-.01em}
+.r-d{font-size:.83rem;color:var(--ink3);line-height:1.6;margin-bottom:1.4rem}
+.r-sp{font-size:.76rem;color:var(--ink4);margin-bottom:1rem}.r-sp span{color:var(--violet);font-weight:700}
+.rc-e{font-size:2.5rem;margin-bottom:.3rem}
+.rc-t{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;letter-spacing:-.01em}
+.rc-s{font-size:.88rem;color:var(--ink3)}.rc-b{font-size:.78rem;color:var(--amber);margin:.25rem 0 1.2rem}
+
+/* ===== RESULTS ===== */
+.res{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:1.5rem 1.3rem;max-width:420px;width:100%;box-shadow:var(--sh3);text-align:center;margin:0 1rem}
+.res-e{font-size:2.6rem;margin-bottom:.2rem}
+.res-t{font-family:var(--f);font-size:1.3rem;font-weight:800;color:var(--ink);margin-bottom:.15rem;letter-spacing:-.02em}
+.res-t em{font-style:normal;background:linear-gradient(135deg,var(--violet),var(--blue2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.res-st{font-size:.84rem;color:var(--ink3);margin-bottom:.85rem;line-height:1.45}
+.res-sc{font-family:var(--f);font-size:2.2rem;font-weight:800;color:var(--ink);margin-bottom:.1rem}
+.res-sc small{font-size:.9rem;color:var(--ink4);font-weight:400}
+.res-p{font-size:.76rem;color:var(--ink4);margin-bottom:.9rem}
+.res-g{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-bottom:1rem}
+.sb2{background:var(--bg);border-radius:10px;padding:.45rem .2rem;border:1px solid var(--border)}
+.sb2 .sv2{font-size:1.05rem;font-weight:700;color:var(--ink2)}.sb2 .sl2{font-size:.52rem;color:var(--ink4);text-transform:uppercase;letter-spacing:.06em;margin-top:.05rem}
+.res-bt{display:flex;flex-direction:column;gap:.35rem}
+
+/* ROUND BARS */
+.rb{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;font-size:.7rem}
+.rb-name{color:var(--ink3);width:84px;text-align:right;flex-shrink:0;font-weight:500}
+.rb-track{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.rb-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.rb-score{color:var(--ink4);width:32px;font-weight:600;font-family:var(--fc);font-size:.62rem;text-align:right}
+
+/* ===== REVIEW ===== */
+.rv-t{width:100%;max-width:560px;position:sticky;top:0;z-index:5;background:var(--bg);padding:.35rem 1.2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.3rem;border-bottom:1px solid var(--border)}
+.rv-t h2{font-family:var(--f);font-size:1rem;color:var(--ink)}.rv-r{display:flex;gap:.25rem;align-items:center}
+.rv-tb{display:flex;gap:.2rem}
+.rv-ta{font-size:.68rem;padding:.2rem .55rem;border-radius:6px;border:1px solid var(--border);background:var(--white);color:var(--ink4);cursor:pointer;font-family:var(--f);min-height:26px;display:inline-flex;align-items:center;user-select:none}
+.rv-ta.ac{background:var(--vi-l);border-color:var(--vi-b);color:var(--violet)}
+.rv-bd{width:100%;max-width:560px;padding:.35rem 1.2rem calc(1.5rem + var(--sb))}
+.rv-c{background:var(--white);border-radius:var(--r);padding:.9rem;margin-bottom:.4rem;border:1px solid var(--border);box-shadow:var(--sh)}
+.rv-c.rw{border-left:3px solid var(--coral)}.rv-c.rr{border-left:3px solid var(--emerald)}
+.rv-q{font-size:.85rem;color:var(--ink);margin-bottom:.35rem;line-height:1.45}
+.rv-a{font-size:.78rem;color:var(--ink3);line-height:1.5}
+.rv-a .tag{display:inline-block;font-size:.62rem;padding:.08rem .4rem;border-radius:4px;margin-right:.3rem;font-weight:700}
+.rv-a .tag.c{background:var(--em-l);color:var(--emerald)}
+.rv-a .tag.w{background:var(--co-l);color:var(--coral)}
+.rv-a .exp{color:var(--ink4);font-style:italic;margin-top:.25rem;display:block}
+
+/* STREAK + CONFETTI */
+.str{position:fixed;top:calc(.4rem + var(--st));left:50%;transform:translateX(-50%);font-size:.72rem;font-weight:700;background:var(--white);border:1px solid var(--am-b);color:var(--amber);padding:.2rem .6rem;border-radius:8px;opacity:0;transition:opacity .2s;z-index:20;pointer-events:none;box-shadow:var(--sh2)}
+.str.vi{opacity:1}
+.ccn{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.cfi{position:absolute;border-radius:2px;top:-12px;animation:cf 2.8s ease-in forwards}
+
+.lb-hd{font-family:var(--f);font-size:1.15rem;font-weight:800;color:var(--ink);text-align:center;margin-bottom:.2rem;letter-spacing:-.02em}
+.lb-sub{font-family:var(--fc);font-size:.66rem;color:var(--ink4);text-align:center;text-transform:uppercase;letter-spacing:.12em;margin-bottom:1rem}
+.lb-ls{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+.lb-rw{display:flex;align-items:center;gap:.5rem;padding:.55rem .7rem;background:var(--white);border:1px solid var(--border);border-radius:10px;font-size:.82rem;box-shadow:var(--sh);animation:stagger .3s ease forwards;opacity:0}
+.lb-rw.me{background:#fffbeb;border-color:var(--am-b)}
+.lb-rk{font-family:var(--fc);font-size:.72rem;font-weight:700;color:var(--ink4);width:24px;flex-shrink:0;text-align:right}
+.lb-rk.g{color:#d97706;font-size:1rem}
+.lb-rk.s{color:#94a3b8;font-size:1rem}
+.lb-rk.b{color:#b45309;font-size:1rem}
+.lb-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:var(--ink2)}
+.lb-pct{font-family:var(--fc);font-weight:700;color:var(--violet);font-size:.82rem;flex-shrink:0}
+.lb-sc{font-family:var(--fc);font-size:.7rem;color:var(--ink4);flex-shrink:0}
+.lb-dt{font-family:var(--fc);font-size:.62rem;color:var(--ink5);flex-shrink:0;display:none}
+@media(min-width:400px){.lb-dt{display:block}}
+.lb-em{text-align:center;color:var(--ink4);padding:2rem .8rem;font-size:.85rem;font-style:italic}
+.lb-st{font-size:.7rem;color:var(--ink4);text-align:center;margin:.5rem 0 .8rem;font-family:var(--fc)}
+
+.mi .nm-in{width:100%;padding:.7rem .85rem;font-size:1rem;border:1.5px solid var(--border);border-radius:10px;margin:.3rem 0 1rem;font-family:var(--f);color:var(--ink);outline:none;box-sizing:border-box;background:var(--white)}
+.mi .nm-in:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.mi .nm-hint{font-size:.72rem;color:var(--ink4);margin-bottom:.2rem}
+.mi-btns{display:flex;gap:.5rem;margin-top:.4rem}
+.mi-btns .bt{flex:1}
+
+@media(max-width:480px){.t-h{font-size:1.6rem}.r-title{font-size:1.45rem}.q-t{font-size:.88rem}.ab{font-size:.82rem;padding:.65rem .8rem}.res-g{grid-template-columns:repeat(2,1fr)}.katex{font-size:.92em}}
+@media(max-width:360px){.t-h{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<div class="str" id="str"></div>
+<div class="ccn" id="ccn"></div>
+
+<!-- HOW TO PLAY MODAL -->
+<div class="mo" id="mo" onclick="if(event.target===this)cM()"><div class="mi">
+<h2>⚔️ How to Play</h2>
+<div class="rl"><span class="rl-i">📜</span><div class="rl-t"><b>6 Acts, 5 questions each.</b> 138 questions in the pool — every run is different.</div></div>
+<div class="rl"><span class="rl-i">🎭</span><div class="rl-t"><b>7 question types:</b> pick the correct solution, spot the broken step, identify a distribution, pick the next line of a proof, true/false, set up the right integral, and conceptual intuition checks.</div></div>
+<div class="rl"><span class="rl-i">🔒</span><div class="rl-t"><b>Sequential Acts.</b> Each Act unlocks only after the previous one is cleared. The math builds on itself.</div></div>
+<div class="rl"><span class="rl-i">⏱️</span><div class="rl-t"><b>Speed bonus.</b> Answer within 15 seconds for +1 point.</div></div>
+<div class="rl"><span class="rl-i">🔥</span><div class="rl-t"><b>Streak tracker.</b> 3+ correct in a row lights it up.</div></div>
+<div class="rl"><span class="rl-i">🏆</span><div class="rl-t"><b>Earn your title.</b> 90%+ overall → <em>Grandmaster of the Continuum</em>.</div></div>
+<div style="margin-top:1rem;text-align:center"><button class="bt bp" onclick="cM()">Let's Go</button></div>
+</div></div>
+
+<!-- TITLE SCREEN -->
+<div class="scr vc on" id="s-t"><div class="tw">
+<div class="t-badge"><div class="t-badge-i">
+<svg width="38" height="38" viewBox="0 0 40 40" fill="none"><path d="M6 30 Q14 8, 20 20 Q26 32, 34 10" stroke="white" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="6" cy="30" r="2.5" fill="white"/><circle cx="34" cy="10" r="2.5" fill="white"/></svg>
+</div></div>
+<div class="t-h">Acts of the<br><em>Continuous</em></div>
+<div class="t-war">— a study in six acts —</div>
+<div class="t-f">Read the density. Trust the integral. Know the distribution.</div>
+<div class="t-grid">
+<div class="t-cell"><div class="t-cv">6</div><div class="t-cl">Acts</div></div>
+<div class="t-cell"><div class="t-cv">30</div><div class="t-cl">Per Run</div></div>
+<div class="t-cell"><div class="t-cv">138</div><div class="t-cl">In Pool</div></div>
+</div>
+<div class="t-sub">Continuous distributions, MGFs, and bivariate analysis.<br>Study for <em>Exam 2</em>.</div>
+<div class="t-note"><b>💡 Partner with my <em>Thinking</em> & <em>Structure</em> AI bots</b> — don't copy-paste. Let AI play this game for you, and your Exam 2 grade distribution shifts left. Ha ha :D</div>
+<button class="bt bp" id="main-play-btn" onclick="goPlay()">Enter Act I</button>
+<div class="hw" onclick="oM()">How to play →</div>
+<div class="hw" onclick="sLB()" style="margin-top:.35rem">View leaderboard →</div>
+
+<div class="acts" id="acts-dash">
+  <div class="acts-title">The Six Acts</div>
+  <div id="acts-list"></div>
+</div>
+<div style="margin-top:.9rem;text-align:center">
+  <button class="bt bs bsm" id="reset-btn" onclick="confirmReset()" style="display:none">Reset Progress</button>
+</div>
+</div></div>
+
+<!-- ROUND INTRO -->
+<div class="scr vc" id="s-r"><div class="ri">
+<div class="ri-icon" id="ri-icon"></div>
+<div class="r-n" id="rn"></div>
+<div class="r-title" id="r-title"></div>
+<div class="r-sub" id="rt"></div>
+<div class="r-d" id="rd"></div>
+<div class="r-sp" id="rp"></div>
+<button class="bt bp" onclick="sR()">Begin Act</button>
+<div style="margin-top:.6rem"><button class="bt bs bsm" onclick="goTitle()">← Back</button></div>
+</div></div>
+
+<!-- ROUND COMPLETE -->
+<div class="scr vc" id="s-rc"><div class="rc">
+<div class="rc-e" id="rce"></div>
+<div class="rc-t" id="rct"></div>
+<div class="rc-s" id="rcs"></div>
+<div class="rc-b" id="rcb"></div>
+<button class="bt bp" id="rcbt" onclick="aRC()">Continue</button>
+<div style="margin-top:.6rem"><button class="bt bs bsm" onclick="goTitle()">← Back to Home</button></div>
+</div></div>
+
+<!-- GAME -->
+<div class="scr vt" id="s-g">
+<div class="gt"><div class="gh"><div class="gb" id="gl"></div><div class="gsc"><span id="gs">0</span> pts</div></div></div>
+<div class="tw2"><div class="tb-bg"><div class="tb-f" id="tb"></div></div><div class="tb-l" id="tl">30</div></div>
+<div class="pw"><div class="pf" id="pf"></div></div>
+<div class="gbod">
+<div class="qc" id="qc">
+  <div class="q-n" id="qn"></div>
+  <div class="q-c" id="qca"></div>
+  <div class="q-t" id="qt"></div>
+  <div class="q-given" id="qg" style="display:none"></div>
+</div>
+<div id="az"></div>
+<div class="fb-icon" id="fbi"></div>
+<div class="fb" id="fb"><div class="fh" id="fh"></div><div id="ft"></div><div class="fbo" id="fbo"></div></div>
+<div class="nw" id="nw"><button class="nb" onclick="nQ()">Next Question →</button></div>
+</div></div>
+
+<!-- RESULTS -->
+<div class="scr vc" id="s-rs" style="padding:1rem 0 calc(1rem + var(--sb))"><div class="res">
+<div class="res-e" id="re"></div>
+<div class="res-t" id="rtl"></div>
+<div class="res-st" id="rst"></div>
+<div class="res-sc" id="rsc"></div>
+<div class="res-p" id="rpc"></div>
+<div class="res-g">
+<div class="sb2"><div class="sv2" id="z1">0</div><div class="sl2">Correct</div></div>
+<div class="sb2"><div class="sv2" id="z2">0</div><div class="sl2">Speed</div></div>
+<div class="sb2"><div class="sv2" id="z3">0</div><div class="sl2">Streak</div></div>
+<div class="sb2"><div class="sv2" id="z4">0</div><div class="sl2">Total</div></div>
+</div>
+<div id="rnd-bars" style="margin-bottom:1rem"></div>
+<div class="res-bt">
+  <button class="bt bp" onclick="openSubmitModal()">Submit to Leaderboard</button>
+  <button class="bt bs bsm" onclick="sLB()">View Leaderboard</button>
+  <button class="bt bs bsm" onclick="sRv('w')">Review Mistakes</button>
+  <button class="bt bs bsm" onclick="sRv('a')">Review All</button>
+  <button class="bt bs bsm" onclick="goTitle()">Back to Home</button>
+</div>
+</div></div>
+
+<!-- LEADERBOARD SCREEN -->
+<div class="scr vc" id="s-lb" style="padding:1rem 0 calc(1rem + var(--sb))"><div class="res" style="max-width:440px">
+<div class="lb-hd">🏆 Hall of the Continuum</div>
+<div class="lb-sub">Top Runs</div>
+<div class="lb-st" id="lb-st">Loading...</div>
+<div class="lb-ls" id="lb-ls"></div>
+<div style="display:flex;gap:.5rem">
+  <button class="bt bs bsm" style="flex:1" onclick="refreshLB()">🔄 Refresh</button>
+  <button class="bt bp" style="flex:2" onclick="goTitle()">← Back to Home</button>
+</div>
+</div></div>
+
+<!-- NAME-SUBMIT MODAL -->
+<div class="mo" id="mo-nm" onclick="if(event.target===this)closeSubmitModal()"><div class="mi">
+<h2>Submit Your Score</h2>
+<div class="nm-hint">Enter a name (max 12 characters) — it will appear on the global leaderboard.</div>
+<input type="text" class="nm-in" id="nm-in" maxlength="12" placeholder="e.g. AnjanaY" autocomplete="off" spellcheck="false">
+<div id="nm-err" style="font-size:.72rem;color:var(--coral);margin-bottom:.4rem;display:none"></div>
+<div id="nm-preview" class="lb-st" style="margin:.3rem 0 .8rem"></div>
+<div class="mi-btns">
+  <button class="bt bs bsm" onclick="closeSubmitModal()">Cancel</button>
+  <button class="bt bp" id="nm-sb" onclick="confirmSubmit()">Submit</button>
+</div>
+</div></div>
+
+<!-- REVIEW -->
+<div class="scr vt" id="s-rv">
+<div class="rv-t"><h2>📋 Review</h2><div class="rv-r">
+<div class="rv-tb">
+  <button class="rv-ta ac" id="tw2" onclick="fR('w')">Mistakes</button>
+  <button class="rv-ta" id="ta2" onclick="fR('a')">All</button>
+</div>
+<button class="bt bs bsm" onclick="sw('s-rs')">← Back</button>
+</div></div>
+<div class="rv-bd" id="rvl"></div></div>
+
+<script>
+// ========= BANK DATA (injected by build_game.py) =========
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 1: FOUNDATIONS
+// =============================================================
+// 20 questions · continuous RV basics: pdf, CDF, E(X), Var(X),
+// linear transformations. Distribution:
+//   5 pickSoln | 2 spotErr | 2 identify | 6 tf | 5 setup
+//
+// Schema (all LaTeX uses $...$ inline or $$...$$ display):
+//   { id, type, cat, stem, opts[], ans, exp }
+//   - type='tf' uses ans: 0=TRUE, 1=FALSE; no opts
+//   - type='spotErr' uses steps[] (numbered derivation) and
+//     ans is the index (0-based) of the broken step
+//   - type='nextLine' uses given[] (prior lines) and opts[] (next)
+// =============================================================
+
+const ROUND_1 = {
+  id: 'r1',
+  name: 'Foundations',
+  title: 'Act I — The Density Awakens',
+  desc: 'pdf, CDF, expectation, variance, linear transformations. Before you tame any named distribution, you have to read the page.',
+  pick: 5,  // questions drawn per session
+  pool: [
+
+    // ========== PICK-SOLN (5) ==========
+    {
+      id: 'r1-q1',
+      type: 'pickSoln',
+      cat: 'Normalization',
+      stem: String.raw`Let $X$ have pdf $f(x) = cx$ on $[0,3]$, zero elsewhere. Which worked solution for $c$ is correct?`,
+      opts: [
+        String.raw`$\int_0^3 cx\,dx = c\!\left[\tfrac{x^2}{2}\right]_0^3 = \tfrac{9c}{2} = 1 \Rightarrow c = \tfrac{2}{9}$`,
+        String.raw`$\int_0^3 cx\,dx = c[x^2]_0^3 = 9c = 1 \Rightarrow c = \tfrac{1}{9}$`,
+        String.raw`$\int_0^3 cx\,dx = c[x]_0^3 = 3c = 1 \Rightarrow c = \tfrac{1}{3}$`,
+        String.raw`$\int_0^3 cx\,dx = c\!\left[\tfrac{x^2}{2}\right]_0^3 = \tfrac{9c}{2} = 1 \Rightarrow c = \tfrac{9}{2}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Antiderivative of $cx$ is $cx^2/2$. Option B forgets the $1/2$. Option C uses $x$ itself as the antiderivative. Option D has the right equation $9c/2 = 1$ but solves it backwards ($c = 2/9$, not $9/2$).`,
+    },
+    {
+      id: 'r1-q2',
+      type: 'pickSoln',
+      cat: 'CDF',
+      stem: String.raw`$X$ has pdf $f(x) = \tfrac{1}{9}x^2$ on $[0,3]$. Which is $F(x)$ for $0 \le x \le 3$?`,
+      opts: [
+        String.raw`$F(x) = \tfrac{x^2}{9}$`,
+        String.raw`$F(x) = \tfrac{x^3}{27}$`,
+        String.raw`$F(x) = \tfrac{x^3}{9}$`,
+        String.raw`$F(x) = \tfrac{x^2}{18}$`,
+      ],
+      ans: 1,
+      exp: String.raw`$F(x) = \int_0^x \tfrac{t^2}{9}\,dt = \tfrac{1}{9}\!\left[\tfrac{t^3}{3}\right]_0^x = \tfrac{x^3}{27}$. Check: $F(3) = 27/27 = 1$ $\checkmark$. Option C forgot the extra $1/3$; A differentiated instead of integrated; D mis-combined constants.`,
+    },
+    {
+      id: 'r1-q3',
+      type: 'pickSoln',
+      cat: 'Probability via CDF',
+      stem: String.raw`For $X$ with pdf $f(x) = x/2$ on $[0,2]$, the CDF is $F(x) = x^2/4$. Find $P(0.5 \le X \le 1.5)$.`,
+      opts: [
+        String.raw`$F(1.5) - F(0.5) = \tfrac{2.25}{4} - \tfrac{0.25}{4} = \tfrac{2}{4} = \tfrac{1}{2}$`,
+        String.raw`$F(1.5) + F(0.5) = \tfrac{2.25}{4} + \tfrac{0.25}{4} = \tfrac{5}{8}$`,
+        String.raw`$F(1.5) - F(0.5) = \tfrac{1.5}{4} - \tfrac{0.5}{4} = \tfrac{1}{4}$`,
+        String.raw`$f(1.5) \cdot (1.5 - 0.5) = 0.75 \cdot 1 = 0.75$`,
+      ],
+      ans: 0,
+      exp: String.raw`$P(a \le X \le b) = F(b) - F(a)$. Option B adds instead of subtracts; C uses $x$ instead of $x^2$ in $F$; D treats $f$ as a uniform height and multiplies by interval width (approximation, not identity).`,
+    },
+    {
+      id: 'r1-q4',
+      type: 'pickSoln',
+      cat: 'Expected value',
+      stem: String.raw`$X$ has pdf $f(x) = 3x^2$ on $[0,1]$. Find $E(X)$.`,
+      opts: [
+        String.raw`$E(X) = \int_0^1 3x^2\,dx = 1$`,
+        String.raw`$E(X) = \int_0^1 x \cdot 3x^2\,dx = 3\!\left[\tfrac{x^4}{4}\right]_0^1 = \tfrac{3}{4}$`,
+        String.raw`$E(X) = \int_0^1 3x^2 \cdot x^2\,dx = \int_0^1 3x^4\,dx = \tfrac{3}{5}$`,
+        String.raw`$E(X) = \int_0^1 3x^2 \cdot f(x)\,dx = \int_0^1 9x^4\,dx = \tfrac{9}{5}$`,
+      ],
+      ans: 1,
+      exp: String.raw`$E(X) = \int x\,f(x)\,dx$. Option A integrates $f$ (gives total probability, 1, not $E(X)$). Option C computes $E(X^2)$ by mistake — it multiplies by $x^2$ instead of $x$. Option D multiplies $f$ by itself, not by $x$.`,
+    },
+    {
+      id: 'r1-q5',
+      type: 'pickSoln',
+      cat: 'Variance',
+      stem: String.raw`$X$ has pdf $f(x) = \tfrac{1}{2}(2-x)$ on $[0,2]$. Given $E(X) = \tfrac{2}{3}$, which computes $\mathrm{Var}(X)$ correctly?`,
+      opts: [
+        String.raw`$E(X^2) = \tfrac{2}{3}$, so $\mathrm{Var}(X) = \tfrac{2}{3} - \left(\tfrac{2}{3}\right)^2 = \tfrac{2}{3} - \tfrac{4}{9} = \tfrac{2}{9}$`,
+        String.raw`$E(X^2) = \tfrac{2}{3}$, so $\mathrm{Var}(X) = \tfrac{2}{3} - \tfrac{2}{3} = 0$`,
+        String.raw`$E(X^2) = \left(\tfrac{2}{3}\right)^2 = \tfrac{4}{9}$, so $\mathrm{Var}(X) = \tfrac{4}{9}$`,
+        String.raw`$\mathrm{Var}(X) = E\!\left[(X - \tfrac{2}{3})\right] = 0$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\mathrm{Var}(X) = E(X^2) - [E(X)]^2$. Option B confuses $E(X)$ with $E(X^2)$ in the subtraction. Option C computes $[E(X)]^2$ and calls it $E(X^2)$. Option D forgets to square the deviation.`,
+    },
+
+    // ========== SPOT-ERROR (2) ==========
+    {
+      id: 'r1-q6',
+      type: 'spotErr',
+      cat: 'E(X) derivation',
+      stem: String.raw`For $X$ with pdf $f(x) = x/2$ on $[0,2]$, a student derives $E(X)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $E(X) = \int_0^2 x \cdot f(x)\,dx = \int_0^2 x \cdot \tfrac{x}{2}\,dx$`,
+        String.raw`Step 2: $= \tfrac{1}{2}\int_0^2 x^2\,dx = \tfrac{1}{2}\!\left[\tfrac{x^3}{3}\right]_0^2$`,
+        String.raw`Step 3: $= \tfrac{1}{2} \cdot \tfrac{4}{3} = \tfrac{2}{3}$`,
+        String.raw`Step 4: $\therefore E(X) = \tfrac{2}{3}$`,
+      ],
+      ans: 2,
+      exp: String.raw`Step 3 evaluates $\tfrac{x^3}{3}$ at $x=2$ as $\tfrac{4}{3}$ — but $2^3/3 = 8/3$, not $4/3$. The correct result is $E(X) = \tfrac{1}{2} \cdot \tfrac{8}{3} = \tfrac{4}{3}$. Classic arithmetic slip from confusing $x^2$ and $x^3$ at the endpoint.`,
+    },
+    {
+      id: 'r1-q7',
+      type: 'spotErr',
+      cat: 'Probability via CDF',
+      stem: String.raw`$X$ has CDF $F(x) = x^2/4$ on $[0,2]$. A student computes $P(1 \le X \le 1.5)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $P(1 \le X \le 1.5) = F(1.5) - F(1)$`,
+        String.raw`Step 2: $F(1.5) = (1.5)^2/4 = 2.25/4 = 0.5625$`,
+        String.raw`Step 3: $F(1) = 1$`,
+        String.raw`Step 4: $P(1 \le X \le 1.5) = 0.5625 - 1 = -0.4375$`,
+      ],
+      ans: 2,
+      exp: String.raw`Step 3 forgets to square: $F(1) = 1^2/4 = 1/4 = 0.25$, not 1. The downstream result is a negative probability, which should have been the student's red flag. Correct answer: $0.5625 - 0.25 = 0.3125$.`,
+    },
+
+    // ========== IDENTIFY (2) ==========
+    {
+      id: 'r1-q8',
+      type: 'identify',
+      cat: 'Valid pdf',
+      stem: String.raw`Which function is a VALID pdf on its stated support?`,
+      opts: [
+        String.raw`$f(x) = -\tfrac{1}{2}x$ on $[0,2]$`,
+        String.raw`$f(x) = \tfrac{3}{4}(1-x^2)$ on $[-1,1]$`,
+        String.raw`$f(x) = 2x$ on $[0,2]$`,
+        String.raw`$f(x) = \sin(x)$ on $[0,\pi]$`,
+      ],
+      ans: 1,
+      exp: String.raw`A valid pdf needs (1) $f \ge 0$ everywhere and (2) $\int f = 1$. Option A is negative. Option C integrates to $4 \ne 1$. Option D integrates to $2 \ne 1$ (would be valid if scaled by $1/2$). Option B: $\tfrac{3}{4}\int_{-1}^{1}(1-x^2)\,dx = \tfrac{3}{4} \cdot \tfrac{4}{3} = 1$ $\checkmark$ and non-negative on $[-1,1]$.`,
+    },
+    {
+      id: 'r1-q9',
+      type: 'identify',
+      cat: 'Variance identity',
+      stem: String.raw`If $E(X) = \mu$ and $E(X^2) = \nu$, then $\mathrm{Var}(X) = $ ?`,
+      opts: [
+        String.raw`$\nu - \mu$`,
+        String.raw`$\nu - \mu^2$`,
+        String.raw`$\nu^2 - \mu^2$`,
+        String.raw`$\nu - 2\mu$`,
+      ],
+      ans: 1,
+      exp: String.raw`$\mathrm{Var}(X) = E(X^2) - [E(X)]^2 = \nu - \mu^2$. Memorize this shortcut; it saves a direct-definition integral every time.`,
+    },
+
+    // ========== TRUE / FALSE (6) ==========
+    {
+      id: 'r1-q10',
+      type: 'tf',
+      cat: 'CDF property',
+      stem: String.raw`For any continuous random variable, $F(x)$ is non-decreasing in $x$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. $F'(x) = f(x) \ge 0$ for all $x$, so $F$ can only stay flat or increase. A CDF that decreased anywhere would give a negative probability.`,
+    },
+    {
+      id: 'r1-q11',
+      type: 'tf',
+      cat: 'Point probability',
+      stem: String.raw`For a continuous random variable $X$ and any real number $a$, $P(X = a) > 0$.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. For continuous $X$, $P(X = a) = \int_a^a f(x)\,dx = 0$ for every $a$. A single point has no width. This is why $P(a < X < b) = P(a \le X \le b)$ for continuous RVs.`,
+    },
+    {
+      id: 'r1-q12',
+      type: 'tf',
+      cat: 'Linear transformation',
+      stem: String.raw`If $Y = aX + b$, then $\mathrm{Var}(Y) = a^2 \mathrm{Var}(X) + b$.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. $\mathrm{Var}(aX+b) = a^2 \mathrm{Var}(X)$. The constant $b$ shifts the distribution but does not change its spread — variance is shift-invariant. Adding $b$ is a common and costly error.`,
+    },
+    {
+      id: 'r1-q13',
+      type: 'tf',
+      cat: 'pdf values',
+      stem: String.raw`A pdf $f(x)$ must satisfy $f(x) \le 1$ for all $x$.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. $f(x)$ can exceed 1 — what must integrate to 1 is $f$ over its support, not its height. Example: uniform on $[0, 0.5]$ has $f = 2$ on the interval. The bound $f \le 1$ is a pmf rule, not a pdf rule.`,
+    },
+    {
+      id: 'r1-q14',
+      type: 'tf',
+      cat: 'Normalization',
+      stem: String.raw`Every valid pdf satisfies $\int_{-\infty}^{\infty} f(x)\,dx = 1$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Total probability is 1 by definition. The support can be finite or infinite; the integral over all real $x$ (with $f = 0$ outside the support) is always 1.`,
+    },
+    {
+      id: 'r1-q15',
+      type: 'tf',
+      cat: 'Continuous probability',
+      stem: String.raw`For continuous $X$, $P(a < X < b) = P(a \le X \le b)$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. The difference is $P(X = a) + P(X = b)$, both zero for continuous $X$. Open vs closed interval doesn't matter — unlike the discrete case where it definitely does.`,
+    },
+
+    // ========== SETUP (5) ==========
+    {
+      id: 'r1-q16',
+      type: 'setup',
+      cat: 'Finding c',
+      stem: String.raw`To find $c$ for $f(x) = cx^3$ on $[0,2]$, which equation do you solve?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^2 cx^3\,dx = 1$`,
+        String.raw`$\displaystyle \int_0^2 cx^3\,dx = c$`,
+        String.raw`$\displaystyle \int_0^2 x^3\,dx = 1$`,
+        String.raw`$\displaystyle cx^3 = 1$ at $x = 2$`,
+      ],
+      ans: 0,
+      exp: String.raw`The pdf must integrate to 1 over its support. Option B drops the 1; C moves $c$ to the other side (wrong); D enforces $f(2)=1$, which is not a pdf requirement.`,
+    },
+    {
+      id: 'r1-q17',
+      type: 'setup',
+      cat: 'E(X) setup',
+      stem: String.raw`For $X$ with pdf $f(x) = x/2$ on $[0,2]$, which is the correct setup for $E(X)$?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^2 \tfrac{x}{2}\,dx$`,
+        String.raw`$\displaystyle \int_0^2 x \cdot \tfrac{x}{2}\,dx$`,
+        String.raw`$\displaystyle \int_0^2 x^2 \cdot \tfrac{x}{2}\,dx$`,
+        String.raw`$\displaystyle \int_{-\infty}^{\infty} x \cdot \tfrac{x}{2}\,dx$`,
+      ],
+      ans: 1,
+      exp: String.raw`$E(X) = \int x\,f(x)\,dx$ over the support. Option A misses the extra $x$ (that's $\int f$, not $\int xf$). Option C gives $E(X^2)$. Option D uses infinite bounds where $f$ is zero outside $[0,2]$ — technically equivalent but wasteful and error-prone.`,
+    },
+    {
+      id: 'r1-q18',
+      type: 'setup',
+      cat: 'E(X²) setup',
+      stem: String.raw`For $X$ with pdf $f(x) = x/2$ on $[0,2]$, which is the correct setup for $E(X^2)$?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^2 x^2 \cdot \tfrac{x}{2}\,dx$`,
+        String.raw`$\displaystyle \left(\int_0^2 x \cdot \tfrac{x}{2}\,dx\right)^2$`,
+        String.raw`$\displaystyle \int_0^2 x^2 \cdot \left(\tfrac{x}{2}\right)^2\,dx$`,
+        String.raw`$\displaystyle \int_0^2 x^2\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`$E(X^2) = \int x^2\,f(x)\,dx$. Option B squares $E(X)$ — that's $[E(X)]^2 \ne E(X^2)$. Option C squares the pdf by mistake. Option D forgets $f$ entirely.`,
+    },
+    {
+      id: 'r1-q19',
+      type: 'setup',
+      cat: 'Probability via CDF',
+      stem: String.raw`If $F(x) = x^2/4$ on $[0,2]$, which is correct for $P(1 \le X \le 1.5)$?`,
+      opts: [
+        String.raw`$F(1.5) - F(1)$`,
+        String.raw`$F(1) - F(1.5)$`,
+        String.raw`$F(1.5) + F(1)$`,
+        String.raw`$F(1.5) \cdot F(1)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$P(a \le X \le b) = F(b) - F(a)$ — right endpoint minus left. Option B reverses (gives a negative). C and D aren't probability identities at all.`,
+    },
+    {
+      id: 'r1-q20',
+      type: 'setup',
+      cat: 'Linear transformation',
+      stem: String.raw`If $E(X) = \mu$, $\mathrm{Var}(X) = \sigma^2$, and $Y = aX + b$, then $E(Y)$ and $\mathrm{Var}(Y)$ are:`,
+      opts: [
+        String.raw`$E(Y) = a\mu + b$, $\mathrm{Var}(Y) = a^2\sigma^2$`,
+        String.raw`$E(Y) = a\mu + b$, $\mathrm{Var}(Y) = a\sigma^2 + b$`,
+        String.raw`$E(Y) = a\mu$, $\mathrm{Var}(Y) = a^2\sigma^2 + b^2$`,
+        String.raw`$E(Y) = a\mu + b$, $\mathrm{Var}(Y) = a^2\sigma^2 + b^2$`,
+      ],
+      ans: 0,
+      exp: String.raw`Expectation is linear: $E(aX+b) = aE(X)+b$. Variance ignores shifts and squares scales: $\mathrm{Var}(aX+b) = a^2\mathrm{Var}(X)$. Options B, C, D all smuggle $b$ into the variance in some form — the classic error.`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r1-q21',
+      type: 'intuition',
+      cat: 'pdf vs probability',
+      stem: String.raw`$X$ has pdf $f(x) = 3x^2$ on $[0,1]$. You compute $f(0.9) = 2.43$. What does this value tell you?`,
+      opts: [
+        String.raw`The probability that $X = 0.9$ equals 2.43`,
+        String.raw`The density is high near $x=0.9$, so values near $0.9$ are more likely than values near $0.1$`,
+        String.raw`About 2.43% of the probability is concentrated at $x = 0.9$`,
+        String.raw`The pdf is invalid because $f(x)$ cannot exceed 1`,
+      ],
+      ans: 1,
+      exp: String.raw`A density is NOT a probability. For continuous $X$, $P(X = 0.9) = 0$ always. What $f(0.9) = 2.43$ tells you is relative likelihood: compare to $f(0.1) = 0.03$ — values near 0.9 are about 80× denser than values near 0.1. A pdf can exceed 1; only the integral must equal 1.`,
+    },
+    {
+      id: 'r1-q22',
+      type: 'intuition',
+      cat: 'Variance and shape',
+      stem: String.raw`Two normal distributions share the same mean. $X$ has variance 4; $Y$ has variance 16. Which pdf has a taller peak at the mean?`,
+      opts: [
+        String.raw`$X$ — smaller variance means the probability is more concentrated, so the peak is taller`,
+        String.raw`$Y$ — larger variance means more total probability mass`,
+        String.raw`Equal peaks — both pdfs integrate to 1`,
+        String.raw`Cannot determine without more information`,
+      ],
+      ans: 0,
+      exp: String.raw`Total probability is 1 for both. If the mass spreads out (larger $\sigma^2$), the peak must be lower to compensate; if mass concentrates (smaller $\sigma^2$), the peak rises. Variance is a measure of spread — and for fixed area, spread and peak-height trade off.`,
+    },
+    {
+      id: 'r1-q23',
+      type: 'intuition',
+      cat: 'Shift vs scale',
+      stem: String.raw`$X$ is a continuous RV with some distribution. Define $Y = X + 5$. How do $X$ and $Y$ compare?`,
+      opts: [
+        String.raw`$Y$ has the same shape as $X$, shifted right by 5 units; same variance`,
+        String.raw`$Y$ has the same mean as $X$ but larger variance`,
+        String.raw`$Y$ is a stretched version of $X$; variance increases by a factor of 5`,
+        String.raw`$Y$ has a different shape entirely`,
+      ],
+      ans: 0,
+      exp: String.raw`Adding a constant is a PURE SHIFT — every value moves right by 5, so the pdf translates right. Shape unchanged. Variance is shift-invariant: $\mathrm{Var}(Y) = \mathrm{Var}(X+5) = \mathrm{Var}(X)$. Only the mean changes: $E(Y) = E(X) + 5$.`,
+    },
+
+  ],
+};
+
+// Export (module or browser)
+
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 2: THE BELL
+// =============================================================
+// 20 questions · Normal distribution: z-scores, standardization,
+// probabilities via Φ, percentile cutoffs, comparisons.
+// Distribution: 5 pickSoln | 1 spotErr | 2 identify | 3 nextLine | 4 tf | 5 setup
+// =============================================================
+
+const ROUND_2 = {
+  id: 'r2',
+  name: 'The Bell',
+  title: 'Act II — The Curve Rings Out',
+  desc: 'Standardize, lookup, compare. Every answer lives in the $Z$-table once you know how to knock on the door.',
+  pick: 5,
+  pool: [
+
+    // ========== PICK-SOLN (5) ==========
+    {
+      id: 'r2-q1',
+      type: 'pickSoln',
+      cat: 'z-score',
+      stem: String.raw`$X \sim N(\mu=75, \sigma^2=100)$. A student scored 90. Which computes the $z$-score correctly?`,
+      opts: [
+        String.raw`$z = (90-75)/100 = 0.15$`,
+        String.raw`$z = (90-75)/10 = 1.50$`,
+        String.raw`$z = 90 - 75 = 15$  (forgets to divide by $\sigma$)`,
+        String.raw`$z = 90/75 = 1.20$`,
+      ],
+      ans: 1,
+      exp: String.raw`Standardize with $\sigma$ (std dev), not $\sigma^2$. Here $\sigma^2 = 100 \Rightarrow \sigma = 10$. Option A divides by variance — the classic $\sigma^2$-vs-$\sigma$ slip. Option C subtracts but forgets to divide. Option D divides by $\mu$ instead of $\sigma$.`,
+    },
+    {
+      id: 'r2-q2',
+      type: 'pickSoln',
+      cat: 'Interval probability',
+      stem: String.raw`$X \sim N(75, 100)$. Find $P(70 \le X \le 85)$ using $\Phi(1.00)=0.8413$, $\Phi(0.50)=0.6915$.`,
+      opts: [
+        String.raw`$z_1 = -0.5, z_2 = 1.0$. $P = \Phi(1.0) - \Phi(-0.5) = 0.8413 - 0.3085 = 0.5328$`,
+        String.raw`$z_1 = -0.5, z_2 = 1.0$. $P = \Phi(1.0) - \Phi(0.5) = 0.8413 - 0.6915 = 0.1498$`,
+        String.raw`$z_1 = -0.5, z_2 = 1.0$. $P = \Phi(1.0) + \Phi(0.5) = 0.8413 + 0.6915 = 1.5328$`,
+        String.raw`$z_1 = -5, z_2 = 10$. $P \approx 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`Use $\Phi(-0.5) = 1 - \Phi(0.5) = 0.3085$ by symmetry. Option B uses $\Phi(0.5)$ instead of $\Phi(-0.5)$ — don't reflect the sign. Option C adds when it should subtract. Option D divides by variance instead of $\sigma=10$.`,
+    },
+    {
+      id: 'r2-q3',
+      type: 'pickSoln',
+      cat: 'Percentile cutoff',
+      stem: String.raw`$X \sim N(75, 100)$. Find the top-5% cutoff $c^*$ where $P(X > c^*) = 0.05$. Use $z^* = 1.645$.`,
+      opts: [
+        String.raw`$c^* = 75 + 1.645(10) = 91.45$`,
+        String.raw`$c^* = 75 + 1.645(100) = 239.5$`,
+        String.raw`$c^* = 75 - 1.645(10) = 58.55$`,
+        String.raw`$c^* = 1.645(10) = 16.45$`,
+      ],
+      ans: 0,
+      exp: String.raw`Un-standardize: $c^* = \mu + z^*\sigma$. Option B multiplies by $\sigma^2$. Option C uses the bottom-5% cutoff (negative $z$). Option D drops $\mu$.`,
+    },
+    {
+      id: 'r2-q4',
+      type: 'pickSoln',
+      cat: 'Cross-distribution comparison',
+      stem: String.raw`Section A: $X \sim N(75,100)$, Sam scored 90. Section B: $Y \sim N(82,64)$, Alex scored 95. Who did better relative to their peers?`,
+      opts: [
+        String.raw`$z_{\text{Sam}} = 1.50$, $z_{\text{Alex}} = 1.63$. Alex — higher $z$.`,
+        String.raw`Sam — higher raw score minus $\mu$: $90-75 = 15 > 95-82 = 13$.`,
+        String.raw`Equal — both above their means.`,
+        String.raw`$z_{\text{Sam}} = 1.50$, $z_{\text{Alex}} = 1.63$. Sam — lower $z$ means less deviation from peers.`,
+      ],
+      ans: 0,
+      exp: String.raw`The $z$-score measures standing relative to peers; larger $z$ = further above the mean in SDs. $z_{\text{Alex}} = 13/8 = 1.625$, $z_{\text{Sam}} = 15/10 = 1.50$. Option B ignores the spread entirely. Option D inverts the interpretation.`,
+    },
+    {
+      id: 'r2-q5',
+      type: 'pickSoln',
+      cat: 'Upper-tail probability',
+      stem: String.raw`$X \sim N(70,9)$. Find $P(X > 73)$ using $\Phi(1.00)=0.8413$.`,
+      opts: [
+        String.raw`$z = 3/3 = 1.00$. $P(X>73) = 1 - \Phi(1.00) = 0.1587$`,
+        String.raw`$z = 3/9 = 0.33$. $P(X>73) = 1 - \Phi(0.33) = 0.6306$`,
+        String.raw`$z = 3/3 = 1.00$. $P(X>73) = \Phi(1.00) = 0.8413$`,
+        String.raw`$z = 3/3 = 1.00$. $P(X>73) = 1 - \Phi(-1.00) = 0.8413$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\sigma = \sqrt{9} = 3$, so $z = 1$. For an upper tail, $P(Z > z) = 1 - \Phi(z)$. Option B divides by $\sigma^2$. Option C reports $\Phi(z)$ itself — the LOWER tail. Option D applies the symmetry identity in the wrong direction (would be correct as $1 - \Phi(1)$ OR as $\Phi(-1)$, but not mixed).`,
+    },
+
+    // ========== SPOT-ERROR (1) ==========
+    {
+      id: 'r2-q6',
+      type: 'spotErr',
+      cat: 'z-score and probability',
+      stem: String.raw`$X \sim N(68, 12^2)$ so $\sigma = 12$. A student computes $P(X \le 80)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $z = (80 - 68)/12 = 1.00$`,
+        String.raw`Step 2: $P(X \le 80) = P(Z \le 1.00)$`,
+        String.raw`Step 3: $P(Z \le 1.00) = \Phi(-1.00) = 0.1587$`,
+        String.raw`Step 4: $\therefore P(X \le 80) = 0.1587$`,
+      ],
+      ans: 2,
+      exp: String.raw`Step 3 confuses lower tail with upper tail. $P(Z \le 1.00) = \Phi(1.00) = 0.8413$, not $\Phi(-1.00)$. The student likely looked at the wrong row in the $z$-table. A quick sanity check: 80 is above the mean, so the cumulative probability should be above 0.5 — not 0.16.`,
+    },
+
+    // ========== IDENTIFY (2) ==========
+    {
+      id: 'r2-q7',
+      type: 'identify',
+      cat: 'MGF to distribution',
+      stem: String.raw`A RV has MGF $M_X(t) = \exp\!\left\{4t + \tfrac{9t^2}{2}\right\}$. Then $X \sim$ ?`,
+      opts: [
+        String.raw`$N(\mu = 4, \sigma^2 = 9)$`,
+        String.raw`$N(\mu = 4, \sigma^2 = 3)$`,
+        String.raw`$N(\mu = 4, \sigma = 9)$`,
+        String.raw`$\text{Gamma}(4, 9)$`,
+      ],
+      ans: 0,
+      exp: String.raw`The normal MGF is $\exp\{\mu t + \tfrac{\sigma^2 t^2}{2}\}$. Read off: coefficient of $t$ is $\mu = 4$; coefficient of $t^2/2$ is $\sigma^2 = 9$. Option B takes $\sigma$ from the $t^2$ coefficient directly (forgetting the square). Option C mislabels the parameter ($N$ takes $\sigma^2$, not $\sigma$). Option D: Gamma MGF is $(1-\beta t)^{-\alpha}$, totally different form.`,
+    },
+    {
+      id: 'r2-q8',
+      type: 'identify',
+      cat: 'Distribution of a linear combination',
+      stem: String.raw`$X \sim N(10, 4)$. What is the distribution of $Y = 2X - 3$?`,
+      opts: [
+        String.raw`$Y \sim N(17, 16)$`,
+        String.raw`$Y \sim N(17, 8)$`,
+        String.raw`$Y \sim N(17, 4)$`,
+        String.raw`$Y \sim N(20, 16)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Linear combo of a normal is normal. Mean: $2(10) - 3 = 17$. Variance: $a^2 \sigma^2 = 4 \cdot 4 = 16$ — the $-3$ does nothing to variance. Option B multiplies variance by $a$ instead of $a^2$. Option C leaves variance unchanged. Option D forgets to subtract 3 in the mean.`,
+    },
+
+    // ========== NEXT-LINE (3) ==========
+    {
+      id: 'r2-q9',
+      type: 'nextLine',
+      cat: 'Standardization',
+      stem: String.raw`Standardize $X \sim N(\mu, \sigma^2)$ via the MGF method to show $Z = (X-\mu)/\sigma \sim N(0,1)$. What is the next step?`,
+      given: [
+        String.raw`$M_Z(t) = E(e^{tZ}) = E\!\left(e^{t(X-\mu)/\sigma}\right)$`,
+        String.raw`$= e^{-\mu t/\sigma} \cdot E\!\left(e^{(t/\sigma) X}\right)$`,
+        String.raw`$= e^{-\mu t/\sigma} \cdot M_X(t/\sigma)$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= e^{-\mu t/\sigma} \cdot \exp\!\left\{\mu(t/\sigma) + \sigma^2(t/\sigma)^2/2\right\}$`,
+        String.raw`$= e^{-\mu t/\sigma} \cdot \exp\!\left\{\mu t + \sigma^2 t^2/2\right\}$`,
+        String.raw`$= e^{-\mu t/\sigma} \cdot (1 - \sigma t)^{-1}$`,
+        String.raw`$= \exp\!\left\{\mu t + \tfrac{\sigma^2 t^2}{2}\right\}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Substitute $t/\sigma$ for the argument of $M_X$. Option B forgets to substitute. Option C uses the Gamma MGF. Option D drops the $e^{-\mu t/\sigma}$ factor. After simplification, the final result is $e^{t^2/2}$, the MGF of $N(0,1)$.`,
+    },
+    {
+      id: 'r2-q10',
+      type: 'nextLine',
+      cat: 'Interval probability',
+      stem: String.raw`$X \sim N(75, 100)$. Find $P(70 \le X \le 85)$. What is the next step?`,
+      given: [
+        String.raw`$P(70 \le X \le 85) = P\!\left(\tfrac{70-75}{10} \le Z \le \tfrac{85-75}{10}\right)$`,
+        String.raw`$= P(-0.5 \le Z \le 1.0)$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= \Phi(1.0) - \Phi(-0.5)$`,
+        String.raw`$= \Phi(1.0) + \Phi(-0.5)$`,
+        String.raw`$= \Phi(1.0) \cdot \Phi(-0.5)$`,
+        String.raw`$= \Phi(0.5) - \Phi(1.0)$`,
+      ],
+      ans: 0,
+      exp: String.raw`For an interval, subtract CDFs: $\Phi(\text{right}) - \Phi(\text{left})$. Option B adds (gives $> 1$). Option C multiplies (no CDF identity behind this). Option D reverses arguments and signs.`,
+    },
+    {
+      id: 'r2-q11',
+      type: 'nextLine',
+      cat: 'Percentile cutoff',
+      stem: String.raw`For $X \sim N(82, 64)$, find the 90th-percentile cutoff $c^*$. What is the next step?`,
+      given: [
+        String.raw`$P(X \le c^*) = 0.90$`,
+        String.raw`$P\!\left(Z \le \tfrac{c^* - 82}{8}\right) = 0.90$`,
+        String.raw`From the $Z$-table, $z^* = 1.28$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$c^* = 82 + 1.28(8) = 92.24$`,
+        String.raw`$c^* = 82 + 1.28(64) = 163.92$`,
+        String.raw`$c^* = 82 - 1.28(8) = 71.76$`,
+        String.raw`$c^* = 1.28(8) = 10.24$`,
+      ],
+      ans: 0,
+      exp: String.raw`Un-standardize: $c^* = \mu + z^* \sigma$. Option B uses $\sigma^2$. Option C subtracts — that's the 10th percentile, not the 90th. Option D drops $\mu$.`,
+    },
+
+    // ========== TRUE / FALSE (4) ==========
+    {
+      id: 'r2-q12',
+      type: 'tf',
+      cat: 'Parameter convention',
+      stem: String.raw`When we write $X \sim N(\mu, \sigma^2)$, the second parameter is the variance, not the standard deviation.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Textbook convention in this class: $N(\mu, \sigma^2)$ means variance. Always take the square root before standardizing. Some books use $N(\mu, \sigma)$ — watch which one you're reading.`,
+    },
+    {
+      id: 'r2-q13',
+      type: 'tf',
+      cat: 'Symmetry',
+      stem: String.raw`For the standard normal, $\Phi(-z) = 1 - \Phi(z)$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. The standard normal is symmetric about 0. The area below $-z$ equals the area above $+z$, which is $1 - \Phi(z)$. This identity lets $Z$-tables print only positive $z$.`,
+    },
+    {
+      id: 'r2-q14',
+      type: 'tf',
+      cat: 'Standardization',
+      stem: String.raw`If $X \sim N(\mu, \sigma^2)$, then $Z = (X - \mu)/\sigma^2 \sim N(0, 1)$.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. Divide by $\sigma$, not $\sigma^2$. If you divide by $\sigma^2$, then $\mathrm{Var}(Z) = \sigma^2/\sigma^4 = 1/\sigma^2 \ne 1$. The variance would be wrong by a factor of $\sigma^2$.`,
+    },
+    {
+      id: 'r2-q15',
+      type: 'tf',
+      cat: 'Normal pdf shape',
+      stem: String.raw`The normal pdf is symmetric about $\mu$, so $E(X) = \mu$ is also the median and mode.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. For any symmetric unimodal continuous distribution, mean = median = mode = axis of symmetry. For the normal, this happens to be $\mu$.`,
+    },
+
+    // ========== SETUP (5) ==========
+    {
+      id: 'r2-q16',
+      type: 'setup',
+      cat: 'z-score formula',
+      stem: String.raw`To compute a $z$-score for $X \sim N(\mu, \sigma^2)$, which expression is correct?`,
+      opts: [
+        String.raw`$z = \dfrac{x - \mu}{\sigma}$`,
+        String.raw`$z = \dfrac{x - \mu}{\sigma^2}$`,
+        String.raw`$z = \dfrac{x}{\sigma}$`,
+        String.raw`$z = \dfrac{\mu - x}{\sigma}$`,
+      ],
+      ans: 0,
+      exp: String.raw`The standard deviation $\sigma$ lives in the denominator. Option B divides by variance (scale is off). Option C forgets to center. Option D flips the sign — would give the correct magnitude but wrong direction.`,
+    },
+    {
+      id: 'r2-q17',
+      type: 'setup',
+      cat: 'Top-p cutoff',
+      stem: String.raw`To find the top-$p$ cutoff $c^*$ for $X \sim N(\mu, \sigma^2)$ satisfying $P(X > c^*) = p$, which equation do you solve?`,
+      opts: [
+        String.raw`$\Phi\!\left(\tfrac{c^* - \mu}{\sigma}\right) = 1 - p$`,
+        String.raw`$\Phi\!\left(\tfrac{c^* - \mu}{\sigma}\right) = p$`,
+        String.raw`$\Phi\!\left(\tfrac{\mu - c^*}{\sigma}\right) = 1 - p$`,
+        String.raw`$c^* = \mu + p \cdot \sigma$`,
+      ],
+      ans: 0,
+      exp: String.raw`$P(X > c^*) = p \Rightarrow P(X \le c^*) = 1 - p \Rightarrow \Phi(z^*) = 1 - p$. Option B gives the BOTTOM-$p$ cutoff. Option C flips the argument's sign. Option D uses $p$ as a $z$-score — dimensionally wrong.`,
+    },
+    {
+      id: 'r2-q18',
+      type: 'setup',
+      cat: 'Upper-tail probability',
+      stem: String.raw`For $X \sim N(\mu, \sigma^2)$ and a threshold $k$, the probability $P(X > k)$ equals:`,
+      opts: [
+        String.raw`$1 - \Phi\!\left(\tfrac{k - \mu}{\sigma}\right)$`,
+        String.raw`$\Phi\!\left(\tfrac{k - \mu}{\sigma}\right)$`,
+        String.raw`$1 - \Phi\!\left(\tfrac{\mu - k}{\sigma}\right)$`,
+        String.raw`$\Phi\!\left(\tfrac{k}{\sigma}\right)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Complement of the CDF: $P(X > k) = 1 - P(X \le k) = 1 - \Phi(z)$. Option B is the LOWER tail. Option C has the sign wrong inside $\Phi$ (would only be OK if paired with a sign flip outside too). Option D forgets to center.`,
+    },
+    {
+      id: 'r2-q19',
+      type: 'setup',
+      cat: 'Interval probability',
+      stem: String.raw`Which is the correct setup for $P(a \le X \le b)$ when $X \sim N(\mu, \sigma^2)$?`,
+      opts: [
+        String.raw`$\Phi\!\left(\tfrac{b - \mu}{\sigma}\right) - \Phi\!\left(\tfrac{a - \mu}{\sigma}\right)$`,
+        String.raw`$\Phi(b) - \Phi(a)$`,
+        String.raw`$\Phi\!\left(\tfrac{b - \mu}{\sigma^2}\right) - \Phi\!\left(\tfrac{a - \mu}{\sigma^2}\right)$`,
+        String.raw`$\Phi\!\left(\tfrac{b - \mu}{\sigma}\right) + \Phi\!\left(\tfrac{a - \mu}{\sigma}\right)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Standardize both endpoints, subtract. Option B forgets to standardize — $\Phi$ takes $z$-values, not raw $x$. Option C divides by variance. Option D adds (would exceed 1).`,
+    },
+    {
+      id: 'r2-q20',
+      type: 'setup',
+      cat: 'Bottom percentile',
+      stem: String.raw`To find the 10th-percentile cutoff $c^*$ for $X \sim N(\mu, \sigma^2)$, which equation do you solve?`,
+      opts: [
+        String.raw`$\Phi\!\left(\tfrac{c^* - \mu}{\sigma}\right) = 0.10$`,
+        String.raw`$\Phi\!\left(\tfrac{c^* - \mu}{\sigma}\right) = 0.90$`,
+        String.raw`$\tfrac{c^* - \mu}{\sigma} = 0.10$`,
+        String.raw`$\Phi\!\left(\tfrac{\mu - c^*}{\sigma}\right) = 0.10$`,
+      ],
+      ans: 0,
+      exp: String.raw`10th percentile means 10% of the mass lies below $c^*$, so $\Phi(z^*) = 0.10$, giving $z^* \approx -1.28$. Option B is the 90th percentile. Option C puts the probability where a $z$-value belongs. Option D has a sign flip inside $\Phi$.`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r2-q21',
+      type: 'intuition',
+      cat: 'Why standardize',
+      stem: String.raw`Why do we standardize a normal random variable before computing probabilities?`,
+      opts: [
+        String.raw`To convert any $N(\mu, \sigma^2)$ problem into a standard $N(0,1)$ problem we can look up in a $Z$-table`,
+        String.raw`To force the mean to equal the variance`,
+        String.raw`To eliminate the parameters $\mu$ and $\sigma$ entirely`,
+        String.raw`To make the pdf integrate to 1`,
+      ],
+      ans: 0,
+      exp: String.raw`Standardization is a tool of convenience. There are infinitely many $N(\mu,\sigma^2)$ distributions but only one $N(0,1)$, so we tabulated Φ for that one and reduce all other normals to it via $Z = (X-\mu)/\sigma$. Modern software doesn't need this trick, but the $z$-score remains the clearest way to compare values across different scales.`,
+    },
+    {
+      id: 'r2-q22',
+      type: 'intuition',
+      cat: 'Comparing z-scores',
+      stem: String.raw`Sam scored 80 on an exam with mean 70, $\sigma = 10$. Alex scored 76 on an exam with mean 70, $\sigma = 4$. In terms of class standing, who did better?`,
+      opts: [
+        String.raw`Alex — $z_{\text{Alex}} = 1.5$, $z_{\text{Sam}} = 1.0$`,
+        String.raw`Sam — higher raw score`,
+        String.raw`Equal — both scored above their means by the same absolute amount`,
+        String.raw`Cannot compare — different exams`,
+      ],
+      ans: 0,
+      exp: String.raw`$z$-scores are built precisely to make cross-distribution comparisons possible. $z_{\text{Sam}} = (80-70)/10 = 1.0$; $z_{\text{Alex}} = (76-70)/4 = 1.5$. Alex is further above the mean in standard-deviation units — "sigmas" — so has a higher class percentile. Raw scores ignore spread.`,
+    },
+    {
+      id: 'r2-q23',
+      type: 'intuition',
+      cat: '68-95-99.7 rule',
+      stem: String.raw`The "68-95-99.7 rule" says what?`,
+      opts: [
+        String.raw`For ANY distribution, about 68% of data lies within 1 SD of the mean`,
+        String.raw`For a NORMAL distribution, about 68% within $1\sigma$, 95% within $2\sigma$, 99.7% within $3\sigma$`,
+        String.raw`A 68% confidence interval uses $z^* = 1$`,
+        String.raw`68% of samples produce accurate estimates of $\mu$`,
+      ],
+      ans: 1,
+      exp: String.raw`The rule is specifically for the NORMAL distribution. For other distributions (heavy-tailed, skewed, bimodal), these percentages can be very different. Chebyshev's inequality gives a weaker universal bound that works for any distribution.`,
+    },
+
+  ],
+};
+
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 3: THE GAMMA DYNASTY
+// =============================================================
+// 20 questions · Gamma distribution: pdf, MGF derivation via
+// substitution, E and V via differentiation, recognizing Gamma
+// from shape. Distribution: 3 pickSoln | 5 spotErr | 4 identify
+// | 3 nextLine | 3 tf | 2 setup
+// =============================================================
+
+const ROUND_3 = {
+  id: 'r3',
+  name: 'The Gamma Dynasty',
+  title: 'Act III — The House That $\\Gamma$ Built',
+  desc: 'A single family covers exponential, chi-squared, Erlang, and more. Master the MGF derivation once and the rest falls into place.',
+  pick: 5,
+  pool: [
+
+    // ========== PICK-SOLN (3) ==========
+    {
+      id: 'r3-q1',
+      type: 'pickSoln',
+      cat: 'MGF at 0',
+      stem: String.raw`Which worked line verifies that $M_X(0) = 1$ for $X \sim \text{Gamma}(\alpha, \beta)$ with $M_X(t) = (1-\beta t)^{-\alpha}$?`,
+      opts: [
+        String.raw`$M_X(0) = (1 - \beta \cdot 0)^{-\alpha} = 1^{-\alpha} = 1$ $\checkmark$`,
+        String.raw`$M_X(0) = (1 - \beta \cdot 0)^{-\alpha} = 0$`,
+        String.raw`$M_X(0) = \alpha\beta$ (since $E(X) = \alpha\beta$)`,
+        String.raw`$M_X(0) = (1 - \beta \cdot 0)^{-\alpha} = (-\alpha)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$M_X(0) = 1$ is a universal sanity check — true for every valid MGF, because $M_X(0) = E(e^0) = E(1) = 1$. Option B ignores the exponent on 1. Option C confuses $M_X(0)$ with $M_X'(0) = E(X)$. Option D drops the base entirely.`,
+    },
+    {
+      id: 'r3-q2',
+      type: 'pickSoln',
+      cat: 'Moments via MGF',
+      stem: String.raw`Use $M_X(t) = (1-\beta t)^{-\alpha}$ to find $E(X)$. Which work is correct?`,
+      opts: [
+        String.raw`$M_X'(t) = \alpha\beta(1-\beta t)^{-\alpha-1}$; $E(X) = M_X'(0) = \alpha\beta$`,
+        String.raw`$M_X'(t) = -\alpha(1-\beta t)^{-\alpha-1}$; $E(X) = M_X'(0) = -\alpha$`,
+        String.raw`$M_X'(t) = \alpha(1-\beta t)^{-\alpha-1}$; $E(X) = M_X'(0) = \alpha$`,
+        String.raw`$E(X) = M_X(0) = 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`Chain rule: $\tfrac{d}{dt}(1-\beta t)^{-\alpha} = -\alpha(1-\beta t)^{-\alpha-1} \cdot (-\beta) = \alpha\beta(1-\beta t)^{-\alpha-1}$. Option B forgets the inner $-\beta$ from chain rule. Option C has the wrong sign and misses the $\beta$. Option D confuses $M(0)$ with $M'(0)$.`,
+    },
+    {
+      id: 'r3-q3',
+      type: 'pickSoln',
+      cat: 'Variance from MGF',
+      stem: String.raw`Given $M_X'(t) = \alpha\beta(1-\beta t)^{-\alpha-1}$ and $M_X''(t) = \alpha(\alpha+1)\beta^2 (1-\beta t)^{-\alpha-2}$ for Gamma. Find $\mathrm{Var}(X)$.`,
+      opts: [
+        String.raw`$\mathrm{Var}(X) = \alpha(\alpha+1)\beta^2 - (\alpha\beta)^2 = \alpha\beta^2$`,
+        String.raw`$\mathrm{Var}(X) = \alpha(\alpha+1)\beta^2$`,
+        String.raw`$\mathrm{Var}(X) = \alpha(\alpha+1)\beta^2 - \alpha\beta = \alpha\beta(\alpha\beta+\beta-1)$`,
+        String.raw`$\mathrm{Var}(X) = M_X''(0) - M_X(0) = \alpha(\alpha+1)\beta^2 - 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\mathrm{Var}(X) = E(X^2) - [E(X)]^2 = M''(0) - [M'(0)]^2$. Expand: $\alpha(\alpha+1)\beta^2 - \alpha^2\beta^2 = \alpha\beta^2[(\alpha+1) - \alpha] = \alpha\beta^2$. Option B is $E(X^2)$, not variance. Option C subtracts $E(X)$ instead of $[E(X)]^2$. Option D subtracts $M(0) = 1$ — a common confusion about which MGF value to plug in.`,
+    },
+
+    // ========== SPOT-ERROR (5) ==========
+    {
+      id: 'r3-q4',
+      type: 'spotErr',
+      cat: 'Gamma MGF — sign error',
+      stem: String.raw`Deriving the Gamma MGF $M_X(t) = \int_0^\infty e^{tx} f(x)\,dx$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_X(t) = \int_0^\infty e^{tx} \cdot \tfrac{x^{\alpha-1} e^{-x/\beta}}{\beta^\alpha \Gamma(\alpha)}\,dx$`,
+        String.raw`Step 2: $= \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty x^{\alpha-1} e^{-x(1/\beta + t)}\,dx$`,
+        String.raw`Step 3: Let $u = x(1/\beta - t)$, $dx = du/(1/\beta-t)$`,
+        String.raw`Step 4: $= \tfrac{1}{\beta^\alpha \Gamma(\alpha) (1/\beta - t)^\alpha} \int_0^\infty u^{\alpha-1} e^{-u}\,du = (1-\beta t)^{-\alpha}$`,
+      ],
+      ans: 1,
+      exp: String.raw`Step 2 has a sign error. $e^{tx} \cdot e^{-x/\beta} = e^{-x(1/\beta - t)}$, not $+t$. This is the single most common mistake in this derivation — the substitution in Step 3 is set up for $(1/\beta - t)$, so the sign in Step 2 has to match.`,
+    },
+    {
+      id: 'r3-q5',
+      type: 'spotErr',
+      cat: 'Gamma MGF — substitution',
+      stem: String.raw`Continuing the Gamma MGF derivation. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty x^{\alpha-1} e^{-x(1/\beta - t)}\,dx$`,
+        String.raw`Step 2: Let $u = x(1/\beta - t)$. Then $x = u \cdot (1/\beta - t)$, $dx = (1/\beta - t)\,du$`,
+        String.raw`Step 3: $= \tfrac{1}{\beta^\alpha \Gamma(\alpha) (1/\beta-t)^\alpha} \int_0^\infty u^{\alpha-1} e^{-u}\,du$`,
+        String.raw`Step 4: $= \tfrac{\Gamma(\alpha)}{\beta^\alpha \Gamma(\alpha)(1/\beta-t)^\alpha} = (1-\beta t)^{-\alpha}$`,
+      ],
+      ans: 1,
+      exp: String.raw`Step 2 inverts the substitution. If $u = x(1/\beta - t)$, then $x = u/(1/\beta - t)$ and $dx = du/(1/\beta - t)$ — divide, don't multiply. Step 3 shows the CORRECT final formula, meaning the student arrived at the right answer, but Step 2 as written does not actually produce Step 3. A proper derivation needs the substitution stated correctly in the first place.`,
+    },
+    {
+      id: 'r3-q6',
+      type: 'spotErr',
+      cat: 'Gamma first derivative',
+      stem: String.raw`Differentiating $M_X(t) = (1-\beta t)^{-\alpha}$ to find $E(X)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: Let $u = 1 - \beta t$, so $du/dt = -\beta$`,
+        String.raw`Step 2: $\tfrac{d}{dt} u^{-\alpha} = -\alpha \cdot u^{-\alpha - 1}$`,
+        String.raw`Step 3: By chain rule: $M_X'(t) = -\alpha(1-\beta t)^{-\alpha-1} \cdot (-\beta) = \alpha\beta(1-\beta t)^{-\alpha-1}$`,
+        String.raw`Step 4: $E(X) = M_X'(0) = \alpha\beta(1)^{-\alpha-1} = \alpha\beta$`,
+      ],
+      ans: 1,
+      exp: String.raw`Step 2 leaves out $du/dt$. The correct intermediate is $\tfrac{d}{dt} u^{-\alpha} = -\alpha u^{-\alpha-1} \cdot \tfrac{du}{dt}$. Step 3 quietly recovers by multiplying in the $-\beta$, but Step 2 standing alone is not a complete derivative — that's what the chain rule demands.`,
+    },
+    {
+      id: 'r3-q7',
+      type: 'spotErr',
+      cat: 'Gamma second derivative',
+      stem: String.raw`Differentiating $M_X'(t) = \alpha\beta(1-\beta t)^{-\alpha-1}$ to find $M_X''(t)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_X''(t) = \alpha\beta \cdot \tfrac{d}{dt}(1-\beta t)^{-\alpha-1}$`,
+        String.raw`Step 2: $= \alpha\beta \cdot (-\alpha-1)(1-\beta t)^{-\alpha-2}(-\beta)$`,
+        String.raw`Step 3: $= \alpha\beta \cdot (\alpha+1)\beta (1-\beta t)^{-\alpha-2}$`,
+        String.raw`Step 4: $E(X^2) = M_X''(0) = \alpha(\alpha+1)\beta$`,
+      ],
+      ans: 3,
+      exp: String.raw`Step 4 drops a $\beta$. From Step 3, $M_X''(t) = \alpha(\alpha+1)\beta^2 (1-\beta t)^{-\alpha-2}$. At $t=0$: $E(X^2) = \alpha(\alpha+1)\beta^2$. The two factors of $\beta$ — one from Step 1, one from the chain rule in Step 2 — multiply to $\beta^2$. Losing track is easy when two $\beta$'s get combined.`,
+    },
+    {
+      id: 'r3-q8',
+      type: 'spotErr',
+      cat: 'Variance calculation',
+      stem: String.raw`Using $E(X) = \alpha\beta$ and $E(X^2) = \alpha(\alpha+1)\beta^2$ to find $\mathrm{Var}(X)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $\mathrm{Var}(X) = E(X^2) - [E(X)]^2$`,
+        String.raw`Step 2: $= \alpha(\alpha+1)\beta^2 - \alpha\beta$`,
+        String.raw`Step 3: $= \beta[\alpha(\alpha+1)\beta - \alpha]$`,
+        String.raw`Step 4: $= \alpha\beta[(\alpha+1)\beta - 1]$`,
+      ],
+      ans: 1,
+      exp: String.raw`Step 2 forgets to square $E(X)$. $[E(X)]^2 = (\alpha\beta)^2 = \alpha^2\beta^2$, not $\alpha\beta$. The correct result is $\alpha(\alpha+1)\beta^2 - \alpha^2\beta^2 = \alpha\beta^2$. This is the textbook trap; students who write $[E(X)]^2$ as $E(X)$ end up with a wrong variance that looks reasonable.`,
+    },
+
+    // ========== IDENTIFY (4) ==========
+    {
+      id: 'r3-q9',
+      type: 'identify',
+      cat: 'Gamma recognition',
+      stem: String.raw`The pdf $f(x) = c\,x^3 e^{-2x}$ for $x > 0$ matches $\text{Gamma}(\alpha, \beta)$ with:`,
+      opts: [
+        String.raw`$\alpha = 4, \beta = 1/2$`,
+        String.raw`$\alpha = 3, \beta = 2$`,
+        String.raw`$\alpha = 3, \beta = 1/2$`,
+        String.raw`$\alpha = 4, \beta = 2$`,
+      ],
+      ans: 0,
+      exp: String.raw`Compare to $x^{\alpha-1} e^{-x/\beta}$. Power on $x$: $\alpha - 1 = 3 \Rightarrow \alpha = 4$. Exponent: $-2x = -x/(1/2) \Rightarrow \beta = 1/2$. Option B forgets $\alpha - 1$. Option C combines both errors. Option D reads the exponent coefficient as $\beta$ directly.`,
+    },
+    {
+      id: 'r3-q10',
+      type: 'identify',
+      cat: 'Gamma recognition',
+      stem: String.raw`The pdf $f(x) = c\,x^2 e^{-x/3}$ for $x > 0$ matches $\text{Gamma}(\alpha, \beta)$ with:`,
+      opts: [
+        String.raw`$\alpha = 3, \beta = 3$`,
+        String.raw`$\alpha = 2, \beta = 3$`,
+        String.raw`$\alpha = 3, \beta = 1/3$`,
+        String.raw`$\alpha = 2, \beta = 1/3$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\alpha - 1 = 2 \Rightarrow \alpha = 3$. Exponent is $-x/3$ already in the standard $-x/\beta$ form, so $\beta = 3$. Option B forgets $\alpha-1$. Option C reads $\beta$ as the reciprocal. Option D combines both errors.`,
+    },
+    {
+      id: 'r3-q11',
+      type: 'identify',
+      cat: 'Normalization constant',
+      stem: String.raw`For $f(x) = c\,x e^{-2x}$, $x > 0$, this is $\text{Gamma}(2, 1/2)$. What is $c$?`,
+      opts: [
+        String.raw`$c = 4$`,
+        String.raw`$c = 1/4$`,
+        String.raw`$c = 2$`,
+        String.raw`$c = 1/2$`,
+      ],
+      ans: 0,
+      exp: String.raw`For Gamma, $c = 1/[\beta^\alpha \Gamma(\alpha)]$. Here $\beta^\alpha = (1/2)^2 = 1/4$ and $\Gamma(2) = 1! = 1$, so $c = 1/(1/4) = 4$. Option B takes the reciprocal mis-direction. Option C equals $1/\beta$. Option D equals $\beta$.`,
+    },
+    {
+      id: 'r3-q12',
+      type: 'identify',
+      cat: 'Mean and variance',
+      stem: String.raw`For $X \sim \text{Gamma}(3, 2)$, find $E(X)$ and $\mathrm{Var}(X)$.`,
+      opts: [
+        String.raw`$E(X) = 6$, $\mathrm{Var}(X) = 12$`,
+        String.raw`$E(X) = 6$, $\mathrm{Var}(X) = 6$`,
+        String.raw`$E(X) = 5$, $\mathrm{Var}(X) = 10$`,
+        String.raw`$E(X) = 3, \mathrm{Var}(X) = 2$`,
+      ],
+      ans: 0,
+      exp: String.raw`$E(X) = \alpha\beta = 3(2) = 6$; $\mathrm{Var}(X) = \alpha\beta^2 = 3(4) = 12$. Option B forgets to square $\beta$ in variance. Option C adds instead of multiplies. Option D reports the parameters themselves.`,
+    },
+
+    // ========== NEXT-LINE (3) ==========
+    {
+      id: 'r3-q13',
+      type: 'nextLine',
+      cat: 'MGF derivation — substitution',
+      stem: String.raw`Deriving $M_X(t)$ for $\text{Gamma}(\alpha, \beta)$. What is the next step?`,
+      given: [
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty x^{\alpha-1} e^{-x(1/\beta - t)}\,dx$`,
+        String.raw`Let $u = x(1/\beta - t)$, so $x = u/(1/\beta - t)$ and $dx = du/(1/\beta - t)$.`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty \tfrac{u^{\alpha-1}}{(1/\beta-t)^{\alpha-1}} e^{-u} \cdot \tfrac{du}{(1/\beta-t)}$`,
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty u^{\alpha-1} e^{-u}\,du$`,
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^\infty u^{\alpha-1}(1/\beta-t) e^{-u}\,du$`,
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha) (1/\beta-t)^{\alpha-1}} \int_0^\infty u^{\alpha-1} e^{-u}\,du$`,
+      ],
+      ans: 0,
+      exp: String.raw`Plug BOTH substitutions into the integrand — $x^{\alpha-1}$ contributes $1/(1/\beta-t)^{\alpha-1}$, and $dx$ contributes $1/(1/\beta-t)$. Option B skips the $(1/\beta-t)$ factors entirely. Option C multiplies instead of divides. Option D only picks up the $x^{\alpha-1}$ factor and forgets the one from $dx$ — short by one power of $(1/\beta-t)$.`,
+    },
+    {
+      id: 'r3-q14',
+      type: 'nextLine',
+      cat: 'MGF derivation — Gamma function',
+      stem: String.raw`Continuing the Gamma MGF derivation. What is the next step?`,
+      given: [
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha \Gamma(\alpha) (1/\beta - t)^\alpha} \int_0^\infty u^{\alpha-1} e^{-u}\,du$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= \tfrac{\Gamma(\alpha)}{\beta^\alpha \Gamma(\alpha) (1/\beta - t)^\alpha} = \tfrac{1}{\beta^\alpha (1/\beta - t)^\alpha}$`,
+        String.raw`$= \tfrac{1}{\beta^\alpha \Gamma(\alpha)} \cdot \Gamma(\alpha-1) \cdot (1/\beta - t)^{-\alpha}$`,
+        String.raw`$= \tfrac{1}{\beta^\alpha (1/\beta - t)^\alpha} \cdot e^{-\alpha}$`,
+        String.raw`$= \tfrac{\Gamma(\alpha+1)}{\beta^\alpha \Gamma(\alpha) (1/\beta - t)^\alpha}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Recognize $\int_0^\infty u^{\alpha-1} e^{-u}\,du = \Gamma(\alpha)$. It cancels against the $\Gamma(\alpha)$ in the denominator. Option B uses $\Gamma(\alpha-1)$ (off-by-one). Option C invents an $e^{-\alpha}$ factor. Option D uses $\Gamma(\alpha+1)$ (also off-by-one). The clean cancellation is the payoff of the whole setup.`,
+    },
+    {
+      id: 'r3-q15',
+      type: 'nextLine',
+      cat: 'MGF derivation — final form',
+      stem: String.raw`One more step to finish the Gamma MGF.`,
+      given: [
+        String.raw`$M_X(t) = \tfrac{1}{\beta^\alpha (1/\beta - t)^\alpha}$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= \tfrac{1}{(\beta(1/\beta - t))^\alpha} = \tfrac{1}{(1 - \beta t)^\alpha} = (1-\beta t)^{-\alpha}$`,
+        String.raw`$= \tfrac{1}{\beta \cdot (1/\beta - t)^\alpha}$ (only one factor of $\beta$ distributes)`,
+        String.raw`$= (\beta + t)^{-\alpha}$`,
+        String.raw`$= (1 + \beta t)^{-\alpha}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Move $\beta^\alpha$ inside the outer power: $\beta \cdot (1/\beta - t) = 1 - \beta t$. Option B keeps only ONE factor of $\beta$ inside — but there are $\alpha$ of them to distribute, giving $\beta^\alpha$ not $\beta$. Option C drops the subtraction sign. Option D flips the sign of $t$.`,
+    },
+
+    // ========== TRUE / FALSE (3) ==========
+    {
+      id: 'r3-q16',
+      type: 'tf',
+      cat: 'Mean and variance',
+      stem: String.raw`For $X \sim \text{Gamma}(\alpha, \beta)$, $E(X) = \alpha\beta$ and $\mathrm{Var}(X) = \alpha\beta^2$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Derived by differentiating $M_X(t) = (1-\beta t)^{-\alpha}$ once and twice and evaluating at $t=0$. Memorize these — they underpin the whole Gamma family including exponential and chi-squared.`,
+    },
+    {
+      id: 'r3-q17',
+      type: 'tf',
+      cat: 'Convergence of MGF',
+      stem: String.raw`The Gamma MGF $M_X(t) = (1-\beta t)^{-\alpha}$ is valid for all $t \in \mathbb{R}$.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. The defining integral $\int_0^\infty x^{\alpha-1} e^{-x(1/\beta - t)} dx$ converges only when $1/\beta - t > 0$, i.e. $t < 1/\beta$. At $t = 1/\beta$ the integrand blows up. Always state the convergence region with the MGF.`,
+    },
+    {
+      id: 'r3-q18',
+      type: 'tf',
+      cat: 'Exponential as Gamma',
+      stem: String.raw`The exponential distribution $\text{Exp}(\beta)$ is the special case of Gamma with $\alpha = 1$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Plug $\alpha = 1$ into the Gamma pdf: $f(x) = x^0 e^{-x/\beta} / (\beta^1 \Gamma(1)) = (1/\beta) e^{-x/\beta}$, which is exactly the $\text{Exp}(\beta)$ pdf. This is why exponential MGF is $(1-\beta t)^{-1}$ — the Gamma MGF with $\alpha = 1$.`,
+    },
+
+    // ========== SETUP (2) ==========
+    {
+      id: 'r3-q19',
+      type: 'setup',
+      cat: 'MGF setup',
+      stem: String.raw`To derive $M_X(t)$ for $X \sim \text{Gamma}(\alpha, \beta)$, which integral do you start with?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^\infty e^{tx} \cdot \tfrac{x^{\alpha-1} e^{-x/\beta}}{\beta^\alpha \Gamma(\alpha)}\,dx$`,
+        String.raw`$\displaystyle \int_0^\infty t \cdot \tfrac{x^{\alpha-1} e^{-x/\beta}}{\beta^\alpha \Gamma(\alpha)}\,dx$`,
+        String.raw`$\displaystyle \int_{-\infty}^\infty e^{tx} \cdot \tfrac{x^{\alpha-1} e^{-x/\beta}}{\beta^\alpha \Gamma(\alpha)}\,dx$`,
+        String.raw`$\displaystyle \int_0^\infty e^{tx} \cdot x^{\alpha-1} e^{-x/\beta}\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`$M_X(t) = E(e^{tX}) = \int e^{tx} f(x)\,dx$ over the support. Gamma support is $(0, \infty)$, so those are the bounds. Option B has $t$ instead of $e^{tx}$. Option C uses the wrong support. Option D drops the normalization — the $\beta^\alpha \Gamma(\alpha)$ factor must ride along.`,
+    },
+    {
+      id: 'r3-q20',
+      type: 'setup',
+      cat: 'E(X) via MGF method',
+      stem: String.raw`Given $M_X(t) = (1-\beta t)^{-\alpha}$, the MGF method for $E(X)$ requires:`,
+      opts: [
+        String.raw`$E(X) = M_X'(0)$`,
+        String.raw`$E(X) = M_X(0)$`,
+        String.raw`$E(X) = M_X'(1)$`,
+        String.raw`$E(X) = \int t \cdot M_X(t)\,dt$`,
+      ],
+      ans: 0,
+      exp: String.raw`Moments come from derivatives of the MGF at $t=0$: $E(X^n) = M_X^{(n)}(0)$. Option B returns $1$ (always, for any MGF). Option C evaluates away from 0 and returns nothing meaningful. Option D is not a moment formula.`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r3-q21',
+      type: 'intuition',
+      cat: 'Parameter effects',
+      stem: String.raw`For $X \sim \text{Gamma}(\alpha, \beta)$, what happens to $E(X)$ and $\mathrm{Var}(X)$ when you double $\beta$ (holding $\alpha$ fixed)?`,
+      opts: [
+        String.raw`Mean doubles, variance quadruples`,
+        String.raw`Both double`,
+        String.raw`Mean doubles, variance is unchanged`,
+        String.raw`Neither changes`,
+      ],
+      ans: 0,
+      exp: String.raw`$E(X) = \alpha\beta$ scales linearly with $\beta$. $\mathrm{Var}(X) = \alpha\beta^2$ scales quadratically. So doubling $\beta$ doubles the mean and QUADRUPLES the variance. This is why $\beta$ is called the "scale parameter" — it scales both the location and the spread, but differently.`,
+    },
+    {
+      id: 'r3-q22',
+      type: 'intuition',
+      cat: 'Gamma as sum',
+      stem: String.raw`You sum 5 independent $\text{Exp}(\beta)$ waiting times: $W = X_1 + X_2 + X_3 + X_4 + X_5$. What is the distribution of $W$?`,
+      opts: [
+        String.raw`$\text{Gamma}(5, \beta)$`,
+        String.raw`$\text{Exp}(5\beta)$`,
+        String.raw`Approximately normal by CLT`,
+        String.raw`$\chi^2(5)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Summing $n$ iid $\text{Exp}(\beta)$ gives $\text{Gamma}(n, \beta)$ — see it via MGF: $[(1-\beta t)^{-1}]^5 = (1-\beta t)^{-5}$. This is WHY Gamma models "time until the $n$th event" in a Poisson process. CLT would kick in for very large $n$, but for $n=5$ the gamma is exact (and skewed).`,
+    },
+    {
+      id: 'r3-q23',
+      type: 'intuition',
+      cat: 'Support',
+      stem: String.raw`Why is the support of Gamma $(0, \infty)$ rather than all of $\mathbb{R}$?`,
+      opts: [
+        String.raw`Gamma models waiting times and durations, which are inherently non-negative`,
+        String.raw`Probabilities must always be positive`,
+        String.raw`The MGF would diverge if $x$ could be negative`,
+        String.raw`Gamma requires $\alpha$ to be a positive integer`,
+      ],
+      ans: 0,
+      exp: String.raw`Gamma arose historically as the distribution of waiting time until the $\alpha$th event in a Poisson process — a duration, always $\ge 0$. Technically, the pdf $x^{\alpha-1} e^{-x/\beta}$ is only cleanly defined for $x > 0$ at general $\alpha$. (Option C is wrong because the MGF integral actually converges on $(-\infty, 0)$ too, just not for the relevant $t$ region.)`,
+    },
+
+  ],
+};
+
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 4: EXP & BETA
+// =============================================================
+// 20 questions · Exponential, Chi-squared, Beta. Family ties to
+// Gamma, memoryless property, direct integration for Beta.
+// Distribution: 4 pickSoln | 2 spotErr | 6 identify | 0 nextLine
+// | 5 tf | 3 setup
+// =============================================================
+
+const ROUND_4 = {
+  id: 'r4',
+  name: 'Exp & Beta',
+  title: 'Act IV — The Shape of Time, The Shape of Fractions',
+  desc: 'Exponential times the clock on waiting. Chi-squared is Gamma in disguise. Beta lives in $[0,1]$ and has no MGF — integrate.',
+  pick: 5,
+  pool: [
+
+    // ========== PICK-SOLN (4) ==========
+    {
+      id: 'r4-q1',
+      type: 'pickSoln',
+      cat: 'Exponential MGF',
+      stem: String.raw`Derive the MGF of $X \sim \text{Exp}(\beta)$ with $f(x) = \tfrac{1}{\beta}e^{-x/\beta}$, $x > 0$. Which work is correct?`,
+      opts: [
+        String.raw`$M(t) = \tfrac{1}{\beta}\int_0^\infty e^{-(1/\beta - t)x}\,dx = \tfrac{1}{\beta} \cdot \tfrac{1}{1/\beta - t} = \tfrac{1}{1 - \beta t}$, $t < 1/\beta$`,
+        String.raw`$M(t) = \tfrac{1}{\beta}\int_0^\infty e^{-(1/\beta - t)x}\,dx = \tfrac{1}{\beta - t}$`,
+        String.raw`$M(t) = \tfrac{1}{\beta}\int_0^\infty e^{(t - 1/\beta)x}\,dx = \tfrac{\beta}{1 - \beta t}$`,
+        String.raw`$M(t) = \int_0^\infty e^{-x/\beta}\,dx = \beta$`,
+      ],
+      ans: 0,
+      exp: String.raw`Combine exponentials, integrate $e^{-ax}$ to $1/a$, then simplify $1/[\beta(1/\beta - t)] = 1/(1 - \beta t)$. Option B drops the $1/\beta$ factor in the final simplification. Option C has an extra $\beta$ in the numerator. Option D forgot the $e^{tx}$ entirely and so just computed the integral of the pdf (= 1), then mis-simplified.`,
+    },
+    {
+      id: 'r4-q2',
+      type: 'pickSoln',
+      cat: 'Memoryless property',
+      stem: String.raw`$X \sim \text{Exp}(\beta)$. Which computation of $P(X > 5 \mid X > 3)$ uses memorylessness correctly?`,
+      opts: [
+        String.raw`$P(X > 5 \mid X > 3) = P(X > 2) = e^{-2/\beta}$`,
+        String.raw`$P(X > 5 \mid X > 3) = P(X > 5) = e^{-5/\beta}$`,
+        String.raw`$P(X > 5 \mid X > 3) = P(X > 5) - P(X > 3)$`,
+        String.raw`$P(X > 5 \mid X > 3) = P(X > 8) = e^{-8/\beta}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Memoryless: $P(X > s+t \mid X > s) = P(X > t)$. With $s=3, t=2$: $P(X > 2) = e^{-2/\beta}$. Option B ignores the conditioning. Option C subtracts probabilities — not a conditional identity. Option D adds $s$ and $t$ wrong.`,
+    },
+    {
+      id: 'r4-q3',
+      type: 'pickSoln',
+      cat: 'Beta mean',
+      stem: String.raw`For Beta(2, 2) with $f(x) = 6x(1-x)$ on $[0,1]$, find $E(X)$.`,
+      opts: [
+        String.raw`$E(X) = \int_0^1 x \cdot 6x(1-x)\,dx = 6\int_0^1(x^2 - x^3)\,dx = 6(1/3 - 1/4) = 1/2$`,
+        String.raw`$E(X) = \int_0^1 6x(1-x)\,dx = 1$`,
+        String.raw`$E(X) = \tfrac{\alpha^2}{\alpha + \beta} = \tfrac{4}{4} = 1$`,
+        String.raw`$E(X) = \int_0^1 6(1-x)\,dx = 3$`,
+      ],
+      ans: 0,
+      exp: String.raw`$E(X) = \int x f(x) dx$. Option B integrates $f$ (= 1, total probability). Option C uses a made-up formula — the correct formula is $E(X) = \alpha/(\alpha+\beta) = 2/4 = 1/2$, not $\alpha^2/(\alpha+\beta)$. Option D drops the leading $x$ and lands on a value > 1, which can't be a mean for a $[0,1]$ RV.`,
+    },
+    {
+      id: 'r4-q4',
+      type: 'pickSoln',
+      cat: 'Chi-squared parameters',
+      stem: String.raw`Express $X \sim \chi^2(\nu)$ as a Gamma distribution. Which identification is correct?`,
+      opts: [
+        String.raw`$\chi^2(\nu) = \text{Gamma}(\alpha = \nu/2, \beta = 2)$, MGF $= (1-2t)^{-\nu/2}$`,
+        String.raw`$\chi^2(\nu) = \text{Gamma}(\alpha = \nu, \beta = 2)$, MGF $= (1-2t)^{-\nu}$`,
+        String.raw`$\chi^2(\nu) = \text{Gamma}(\alpha = \nu/2, \beta = 1/2)$, MGF $= (1-t/2)^{-\nu/2}$`,
+        String.raw`$\chi^2(\nu) = \text{Gamma}(\alpha = 2, \beta = \nu/2)$, MGF $= (1-(\nu/2)t)^{-2}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Chi-squared pdf is $f(x) = \tfrac{x^{\nu/2 - 1}e^{-x/2}}{2^{\nu/2}\Gamma(\nu/2)}$. Match against Gamma: $\alpha - 1 = \nu/2 - 1 \Rightarrow \alpha = \nu/2$, and the exponent is $-x/2 \Rightarrow \beta = 2$. Option B forgets the $/2$ on $\alpha$. Option C flips $\beta$. Option D swaps the roles entirely.`,
+    },
+
+    // ========== SPOT-ERROR (2) ==========
+    {
+      id: 'r4-q5',
+      type: 'spotErr',
+      cat: 'Exponential MGF derivation',
+      stem: String.raw`Deriving $M_X(t)$ for $\text{Exp}(\lambda)$ with $f(x) = \lambda e^{-\lambda x}$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_X(t) = \int_0^\infty e^{tx} \lambda e^{-\lambda x}\,dx = \lambda\int_0^\infty e^{-(\lambda-t)x}\,dx$`,
+        String.raw`Step 2: Since $\int_0^\infty e^{-ax}\,dx = 1/a$ for $a > 0$, and here $a = \lambda - t$:`,
+        String.raw`Step 3: $M_X(t) = \lambda \cdot \tfrac{1}{\lambda - t} = \tfrac{\lambda}{\lambda - t}$, valid for $t < \lambda$`,
+        String.raw`Step 4: Matches Gamma(1, $\lambda$) with MGF $(1 - \lambda t)^{-1}$`,
+      ],
+      ans: 3,
+      exp: String.raw`Step 4 swaps $\lambda$ and $\beta$. Under this parametrization, $\text{Exp}(\lambda) = \text{Gamma}(1, \beta = 1/\lambda)$, and the MGF matches Gamma$(1, 1/\lambda)$: $(1 - t/\lambda)^{-1} = \lambda/(\lambda - t)$. The textbook's $\text{Exp}(\beta)$ uses $\beta = 1/\lambda$ — these two conventions disagree on what the parameter means. Always check which convention you're in.`,
+    },
+    {
+      id: 'r4-q6',
+      type: 'spotErr',
+      cat: 'Beta variance calculation',
+      stem: String.raw`For Beta(2,2), $f(x) = 6x(1-x)$, $E(X) = 1/2$. Student computes $\mathrm{Var}(X)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $E(X^2) = \int_0^1 x^2 \cdot 6x(1-x)\,dx = 6\int_0^1 (x^3 - x^4)\,dx$`,
+        String.raw`Step 2: $= 6\!\left[\tfrac{x^4}{4} - \tfrac{x^5}{5}\right]_0^1 = 6\!\left(\tfrac{1}{4} - \tfrac{1}{5}\right) = 6 \cdot \tfrac{1}{20} = \tfrac{3}{10}$`,
+        String.raw`Step 3: $\mathrm{Var}(X) = E(X^2) - E(X) = 3/10 - 1/2 = -1/5$`,
+        String.raw`Step 4: Negative variance — must recheck work`,
+      ],
+      ans: 2,
+      exp: String.raw`Step 3 forgets to square $E(X)$. Correct: $\mathrm{Var}(X) = E(X^2) - [E(X)]^2 = 3/10 - 1/4 = 6/20 - 5/20 = 1/20$. Student got a negative variance — should have noticed the impossibility, but instead of fixing the formula, just wrote "must recheck." The formula is the bug.`,
+    },
+
+    // ========== IDENTIFY (6) ==========
+    {
+      id: 'r4-q7',
+      type: 'identify',
+      cat: 'Exponential recognition',
+      stem: String.raw`The pdf $f(x) = 2e^{-2x}$ for $x > 0$ is $\text{Exp}(\beta)$ with:`,
+      opts: [
+        String.raw`$\beta = 1/2$`,
+        String.raw`$\beta = 2$`,
+        String.raw`$\beta = -2$`,
+        String.raw`$\beta = 1/e^2$`,
+      ],
+      ans: 0,
+      exp: String.raw`The pdf form is $(1/\beta) e^{-x/\beta}$. Match: $1/\beta = 2 \Rightarrow \beta = 1/2$, and $1/\beta = 2 \Rightarrow x/\beta = 2x$. Both consistent. Option B reads the coefficient as $\beta$ directly (ignoring the reciprocal). Option C imports a sign error. Option D confuses $e$-parameters.`,
+    },
+    {
+      id: 'r4-q8',
+      type: 'identify',
+      cat: 'Exponential recognition',
+      stem: String.raw`The pdf $f(x) = \tfrac{1}{3}e^{-x/3}$ for $x > 0$ is $\text{Exp}(\beta)$ with:`,
+      opts: [
+        String.raw`$\beta = 3$`,
+        String.raw`$\beta = 1/3$`,
+        String.raw`$\beta = -3$`,
+        String.raw`$\beta = -1/3$`,
+      ],
+      ans: 0,
+      exp: String.raw`Direct match: $\beta = 3$ gives $1/\beta = 1/3$ and $x/\beta = x/3$. Exp has $E(X) = \beta = 3$ and $\mathrm{Var}(X) = \beta^2 = 9$.`,
+    },
+    {
+      id: 'r4-q9',
+      type: 'identify',
+      cat: 'Chi-squared as Gamma',
+      stem: String.raw`$\chi^2(6)$ equals which Gamma distribution?`,
+      opts: [
+        String.raw`$\text{Gamma}(3, 2)$`,
+        String.raw`$\text{Gamma}(6, 2)$`,
+        String.raw`$\text{Gamma}(3, 1/2)$`,
+        String.raw`$\text{Gamma}(6, 1/2)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\chi^2(\nu) = \text{Gamma}(\nu/2, 2)$. With $\nu = 6$: $\alpha = 3$, $\beta = 2$. So $E(X) = 6, \mathrm{Var}(X) = 12$. Sanity check: for $\chi^2(\nu)$, $E = \nu$ and $\mathrm{Var} = 2\nu$ — check.`,
+    },
+    {
+      id: 'r4-q10',
+      type: 'identify',
+      cat: 'Beta recognition',
+      stem: String.raw`The pdf $f(x) = 12x^2(1-x)$ for $x \in [0,1]$ is Beta$(\alpha, \beta)$ with:`,
+      opts: [
+        String.raw`$\alpha = 3, \beta = 2$`,
+        String.raw`$\alpha = 2, \beta = 1$`,
+        String.raw`$\alpha = 2, \beta = 3$`,
+        String.raw`$\alpha = 3, \beta = 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`Beta pdf shape is $x^{\alpha-1}(1-x)^{\beta-1}$. Match: $\alpha - 1 = 2 \Rightarrow \alpha = 3$, $\beta - 1 = 1 \Rightarrow \beta = 2$. Verify: $E(X) = 3/(3+2) = 3/5$ (reasonable — skewed right of 1/2 since $\alpha > \beta$).`,
+    },
+    {
+      id: 'r4-q11',
+      type: 'identify',
+      cat: 'MGF to chi-squared',
+      stem: String.raw`A RV has MGF $M_X(t) = (1 - 2t)^{-5}$ for $t < 1/2$. Identify $X$.`,
+      opts: [
+        String.raw`$\chi^2(10)$ (equivalently, Gamma(5, 2))`,
+        String.raw`$\chi^2(5)$`,
+        String.raw`Gamma(2, 5)`,
+        String.raw`Exp(2)`,
+      ],
+      ans: 0,
+      exp: String.raw`Gamma MGF is $(1 - \beta t)^{-\alpha}$; match $\beta = 2$ and $\alpha = 5$. Convert to $\chi^2$: $\nu = 2\alpha = 10$. Option B forgets the $\nu = 2\alpha$ conversion. Option C swaps parameters. Option D requires $\alpha = 1$, not 5.`,
+    },
+    {
+      id: 'r4-q12',
+      type: 'identify',
+      cat: 'Beta(1,1) = Uniform',
+      stem: String.raw`A random variable has pdf $f(x) = 1$ for $x \in [0,1]$, 0 elsewhere. This is:`,
+      opts: [
+        String.raw`Beta(1, 1), i.e., Uniform(0, 1)`,
+        String.raw`Beta(0, 0)`,
+        String.raw`Beta(2, 2)`,
+        String.raw`Not a Beta distribution`,
+      ],
+      ans: 0,
+      exp: String.raw`Beta$(\alpha, \beta)$ with $\alpha = \beta = 1$ gives $f(x) = x^0(1-x)^0/B(1,1) = 1/1 = 1$ — the Uniform(0,1). Beta is more general than students sometimes realize; it subsumes the uniform as a special case.`,
+    },
+
+    // ========== TRUE / FALSE (5) ==========
+    {
+      id: 'r4-q13',
+      type: 'tf',
+      cat: 'Memorylessness',
+      stem: String.raw`The exponential distribution satisfies the memoryless property: $P(X > s+t \mid X > s) = P(X > t)$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. This is the exponential's defining property — it's the only continuous distribution with memorylessness. Intuition: if a light bulb has lasted $s$ hours, its future is distributed as if it were brand new. Key to Poisson-process reasoning.`,
+    },
+    {
+      id: 'r4-q14',
+      type: 'tf',
+      cat: 'Chi-squared MGF',
+      stem: String.raw`The chi-squared distribution has MGF $(1 - 2t)^{-\nu/2}$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Since $\chi^2(\nu) = \text{Gamma}(\nu/2, 2)$, plug into $(1 - \beta t)^{-\alpha}$: $(1 - 2t)^{-\nu/2}$. Valid for $t < 1/2$. Essential for sum-of-squares arguments in sampling distributions.`,
+    },
+    {
+      id: 'r4-q15',
+      type: 'tf',
+      cat: 'Beta MGF',
+      stem: String.raw`The Beta distribution has a closed-form MGF.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE. $M(t) = E(e^{tX})$ for Beta reduces to a confluent hypergeometric function ($_1F_1$), which is not a simple elementary expression. In this class, we compute Beta moments by direct integration: $E(X) = \alpha/(\alpha+\beta)$, $\mathrm{Var}(X) = \alpha\beta/[(\alpha+\beta)^2(\alpha+\beta+1)]$.`,
+    },
+    {
+      id: 'r4-q16',
+      type: 'tf',
+      cat: 'Beta mean formula',
+      stem: String.raw`For $X \sim \text{Beta}(\alpha, \beta)$, $E(X) = \alpha/(\alpha+\beta)$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Derived via direct integration: $E(X) = \tfrac{1}{B(\alpha,\beta)}\int_0^1 x^{\alpha}(1-x)^{\beta-1}dx = B(\alpha+1, \beta)/B(\alpha, \beta) = \alpha/(\alpha+\beta)$. Intuition: the mean tilts toward whichever parameter is larger.`,
+    },
+    {
+      id: 'r4-q17',
+      type: 'tf',
+      cat: 'Exponential mean',
+      stem: String.raw`For $X \sim \text{Exp}(\beta)$ with pdf $(1/\beta)e^{-x/\beta}$, $E(X) = \beta$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Either direct integration by parts or via Gamma: since $\text{Exp}(\beta) = \text{Gamma}(1, \beta)$, $E(X) = \alpha\beta = 1 \cdot \beta = \beta$. Variance is $\alpha\beta^2 = \beta^2$. The parameter $\beta$ IS the mean.`,
+    },
+
+    // ========== SETUP (3) ==========
+    {
+      id: 'r4-q18',
+      type: 'setup',
+      cat: 'Beta E(X) setup',
+      stem: String.raw`To find $E(X)$ for Beta(2, 3) with $f(x) = 12x(1-x)^2$, which setup is correct?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^1 x \cdot 12x(1-x)^2\,dx$`,
+        String.raw`$\displaystyle \int_0^1 12x(1-x)^2\,dx$`,
+        String.raw`$\displaystyle \int_0^1 x^2 \cdot 12(1-x)^2\,dx$`,
+        String.raw`$\displaystyle \int_0^\infty x \cdot 12x(1-x)^2\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`Multiply pdf by $x$ and integrate over support $[0,1]$. Option B computes $\int f$. Option C pulls the $x$ into the wrong factor. Option D uses infinite bounds (Beta support is finite). Shortcut to check: $\alpha/(\alpha+\beta) = 2/5$ — any honest setup should give this.`,
+    },
+    {
+      id: 'r4-q19',
+      type: 'setup',
+      cat: 'Memoryless setup',
+      stem: String.raw`To verify the memoryless property for $X \sim \text{Exp}(\beta)$, which computation do you set up?`,
+      opts: [
+        String.raw`$\dfrac{P(X > s+t)}{P(X > s)}$ and show it equals $P(X > t)$`,
+        String.raw`$P(X > s+t) - P(X > s)$ and show it equals $P(X > t)$`,
+        String.raw`$P(X > s+t) + P(X > s)$ and show it equals $P(X > t)$`,
+        String.raw`$P(X > s+t) \cdot P(X > s)$ and show it equals $P(X > t)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Conditional probability is a ratio: $P(A \mid B) = P(A \cap B)/P(B)$. Since $\{X > s+t\} \subset \{X > s\}$, the intersection is just $\{X > s+t\}$. Options B–D use wrong operations for conditioning.`,
+    },
+    {
+      id: 'r4-q20',
+      type: 'setup',
+      cat: 'Exponential MGF setup',
+      stem: String.raw`To derive the MGF of $X \sim \text{Exp}(\beta)$, which integrand do you start with?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^\infty e^{tx} \cdot \tfrac{1}{\beta}e^{-x/\beta}\,dx$`,
+        String.raw`$\displaystyle \int_0^\infty t \cdot \tfrac{1}{\beta}e^{-x/\beta}\,dx$`,
+        String.raw`$\displaystyle \int_0^\infty e^{tx}\,dx$`,
+        String.raw`$\displaystyle \int_{-\infty}^\infty e^{tx} \cdot \tfrac{1}{\beta}e^{-x/\beta}\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`$M(t) = E(e^{tX}) = \int e^{tx} f(x)\,dx$ over the support. Exp support is $(0, \infty)$. Option B has $t$ instead of $e^{tx}$. Option C forgets $f$ altogether. Option D uses the wrong support (integrand would diverge for $x < 0$ if $f$ were extended).`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r4-q21',
+      type: 'intuition',
+      cat: 'Memorylessness',
+      stem: String.raw`A lightbulb has an $\text{Exp}(\beta = 1000)$-hour lifetime. It has already lasted 500 hours. What is the expected REMAINING lifetime?`,
+      opts: [
+        String.raw`1000 hours — memorylessness means the 500 hours already lived tell you nothing about the future`,
+        String.raw`500 hours — half of the expected lifetime has already been "used up"`,
+        String.raw`750 hours — some fraction of the expected lifetime remains`,
+        String.raw`Cannot determine — depends on usage conditions`,
+      ],
+      ans: 0,
+      exp: String.raw`This is the defining property of exponential. $P(X > s+t \mid X > s) = P(X > t)$. So given $X > 500$, the distribution of $X - 500$ is again $\text{Exp}(1000)$ with mean 1000. A 500-hour-old bulb is probabilistically indistinguishable from a brand-new one. This is NOT true for normal or gamma lifetimes — exponential is special.`,
+    },
+    {
+      id: 'r4-q22',
+      type: 'intuition',
+      cat: 'Beta as model',
+      stem: String.raw`A coin is flipped 10 times. You want to model the TRUE bias $p$ (the unknown probability of heads). Which distribution is a natural choice for $p$?`,
+      opts: [
+        String.raw`Beta — because $p \in [0,1]$ and Beta is supported on $[0,1]$`,
+        String.raw`Exponential — because $p$ is a continuous quantity`,
+        String.raw`Normal — because $p$ should be centered around $0.5$`,
+        String.raw`Chi-squared — because $p$ relates to counts`,
+      ],
+      ans: 0,
+      exp: String.raw`Beta's support is exactly $[0,1]$, which matches the range of any probability or proportion. This is why Beta is the standard choice for modeling unknown probabilities and is the "conjugate prior" for the binomial in Bayesian statistics. Normal has the wrong support (all of $\mathbb{R}$); exponential is for waiting times.`,
+    },
+    {
+      id: 'r4-q23',
+      type: 'intuition',
+      cat: 'Chi-squared origin',
+      stem: String.raw`The chi-squared distribution $\chi^2(\nu)$ arises as the distribution of:`,
+      opts: [
+        String.raw`The sum of squares of $\nu$ independent standard normal RVs`,
+        String.raw`The product of $\nu$ independent Poisson RVs`,
+        String.raw`The reciprocal of an exponential RV`,
+        String.raw`The integral of a pdf over an interval of length $\nu$`,
+      ],
+      ans: 0,
+      exp: String.raw`If $Z_1, \ldots, Z_\nu \overset{\text{iid}}{\sim} N(0,1)$, then $Z_1^2 + \cdots + Z_\nu^2 \sim \chi^2(\nu)$. This is the genesis of $\chi^2$ and why it shows up everywhere in variance estimation: $(n-1)S^2/\sigma^2 \sim \chi^2(n-1)$ for a normal sample, since $S^2$ is a sum of squared standardized deviations.`,
+    },
+
+  ],
+};
+
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 5: THE MGF TOOLKIT
+// =============================================================
+// 20 questions · MGF uniqueness, linear transformations via MGF,
+// sum of independent RVs (product of MGFs), pattern matching.
+// Distribution: 4 pickSoln | 3 spotErr | 3 identify | 5 nextLine
+// | 3 tf | 2 setup
+// =============================================================
+
+const ROUND_5 = {
+  id: 'r5',
+  name: 'The MGF Toolkit',
+  title: 'Act V — The Generator and the Engine',
+  desc: 'The MGF uniquely names a distribution. Multiply for independent sums, substitute for linear transforms. One tool, many answers.',
+  pick: 5,
+  pool: [
+
+    // ========== PICK-SOLN (4) ==========
+    {
+      id: 'r5-q1',
+      type: 'pickSoln',
+      cat: 'MGF linear transformation',
+      stem: String.raw`$X \sim N(\mu, \sigma^2)$, and $Y = aX + b$. Show $Y \sim N(a\mu + b, a^2\sigma^2)$ via MGF. Which work is correct?`,
+      opts: [
+        String.raw`$M_Y(t) = E(e^{t(aX+b)}) = e^{bt}M_X(at) = e^{bt}\exp\{\mu(at) + \sigma^2(at)^2/2\} = \exp\{(a\mu+b)t + (a^2\sigma^2)t^2/2\}$`,
+        String.raw`$M_Y(t) = E(e^{taX})\cdot E(e^{tb}) = M_X(at) \cdot e^{bt}$  (stops here)`,
+        String.raw`$M_Y(t) = M_X(t) + e^{bt} = \exp\{\mu t + \sigma^2 t^2/2\} + e^{bt}$`,
+        String.raw`$M_Y(t) = e^{bt}M_X(at) = e^{bt}\exp\{\mu t + \sigma^2 t^2/2\}$ (substitutes $t$ instead of $at$ in $M_X$)`,
+      ],
+      ans: 0,
+      exp: String.raw`Key move: substitute $at$ for the argument of $M_X$, not $t$. Option B is incomplete — doesn't substitute. Option C treats the constant as an additive MGF piece (wrong algebra entirely). Option D forgets to substitute $at$ into $M_X$'s formula — a very common error when the book gives $M_X$ as a formula in $t$.`,
+    },
+    {
+      id: 'r5-q2',
+      type: 'pickSoln',
+      cat: 'Sum of independent exponentials',
+      stem: String.raw`$X_1, \ldots, X_n$ are iid $\text{Exp}(\beta)$. Show $W = X_1 + \cdots + X_n \sim \text{Gamma}(n, \beta)$.`,
+      opts: [
+        String.raw`$M_W(t) = \prod_{i=1}^n M_{X_i}(t) = \prod_{i=1}^n (1-\beta t)^{-1} = (1-\beta t)^{-n}$, which is the Gamma$(n,\beta)$ MGF`,
+        String.raw`$M_W(t) = \sum_{i=1}^n M_{X_i}(t) = n(1-\beta t)^{-1}$`,
+        String.raw`$M_W(t) = M_{X_1}(t) = (1-\beta t)^{-1}$, so $W \sim \text{Exp}(\beta)$`,
+        String.raw`$M_W(t) = [M_{X_1}(t)]^{1/n} = (1-\beta t)^{-1/n}$`,
+      ],
+      ans: 0,
+      exp: String.raw`For independent sums, MGFs MULTIPLY. Option B adds them — wrong. Option C ignores the others. Option D takes a root (backward operation). Multiplication works because $E(e^{t(X_1+\ldots+X_n)}) = \prod E(e^{tX_i})$ when the $X_i$'s are independent.`,
+    },
+    {
+      id: 'r5-q3',
+      type: 'pickSoln',
+      cat: 'MGF to distribution',
+      stem: String.raw`A RV has MGF $M_X(t) = (1 - 3t)^{-5}$, $t < 1/3$. Identify $X$.`,
+      opts: [
+        String.raw`$X \sim \text{Gamma}(5, 3)$, so $E(X) = 15$, $\mathrm{Var}(X) = 45$`,
+        String.raw`$X \sim \text{Gamma}(3, 5)$, so $E(X) = 15$, $\mathrm{Var}(X) = 75$`,
+        String.raw`$X \sim \text{Exp}(3)$, so $E(X) = 3$, $\mathrm{Var}(X) = 9$`,
+        String.raw`$X \sim N(5, 9)$, so $E(X) = 5$, $\mathrm{Var}(X) = 9$`,
+      ],
+      ans: 0,
+      exp: String.raw`Compare to $(1-\beta t)^{-\alpha}$: $\beta = 3$ (from $3t$) and $\alpha = 5$ (from exponent). Then $E(X) = \alpha\beta = 15$, $\mathrm{Var}(X) = \alpha\beta^2 = 45$. Option B swaps $\alpha$ and $\beta$. Option C would require $\alpha = 1$. Option D confuses Gamma MGF with normal MGF.`,
+    },
+    {
+      id: 'r5-q4',
+      type: 'pickSoln',
+      cat: 'Moments via MGF',
+      stem: String.raw`Given $M_X(t) = e^{3t + 4t^2}$ for all $t$, find $E(X^2)$.`,
+      opts: [
+        String.raw`$M_X'(t) = (3 + 8t)e^{3t + 4t^2}$; $M_X''(t) = (8 + (3+8t)^2)e^{3t+4t^2}$; $E(X^2) = M_X''(0) = 8 + 9 = 17$`,
+        String.raw`$E(X^2) = [M_X(0)]^2 = 1$`,
+        String.raw`$E(X^2) = M_X'(0) = 3$`,
+        String.raw`From the MGF, $X \sim N(3, 4)$, so $E(X^2) = 4$ (the variance)`,
+      ],
+      ans: 0,
+      exp: String.raw`Compute second derivative at 0. Option B uses $[M(0)]^2$ — not a moment formula. Option C gives $E(X)$, not $E(X^2)$. Option D: $X \sim N(3, 8)$ (not 4) since $\sigma^2 t^2/2 = 4t^2$ means $\sigma^2 = 8$. Even then, $E(X^2) = \mathrm{Var}(X) + [E(X)]^2 = 8 + 9 = 17$ — same answer A gets, through the normal pdf rather than via differentiation.`,
+    },
+
+    // ========== SPOT-ERROR (3) ==========
+    {
+      id: 'r5-q5',
+      type: 'spotErr',
+      cat: 'Linear transformation MGF',
+      stem: String.raw`$X \sim N(\mu, \sigma^2)$, $Y = 3X - 5$. Derive $M_Y(t)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_Y(t) = E(e^{tY}) = E(e^{t(3X-5)})$`,
+        String.raw`Step 2: $= e^{-5t} \cdot E(e^{3tX}) = e^{-5t} \cdot M_X(3t)$`,
+        String.raw`Step 3: $= e^{-5t} \cdot \exp\{\mu t + \sigma^2 t^2/2\}$`,
+        String.raw`Step 4: $= \exp\{(\mu - 5)t + \sigma^2 t^2/2\}$`,
+      ],
+      ans: 2,
+      exp: String.raw`Step 3 substitutes $t$ into $M_X$ instead of $3t$. Correct: $M_X(3t) = \exp\{\mu(3t) + \sigma^2(3t)^2/2\} = \exp\{3\mu t + 9\sigma^2 t^2/2\}$. The fix propagates: $M_Y(t) = \exp\{(3\mu - 5)t + 9\sigma^2 t^2/2\}$, so $Y \sim N(3\mu - 5, 9\sigma^2)$ — not $N(\mu - 5, \sigma^2)$ from the broken Step 3.`,
+    },
+    {
+      id: 'r5-q6',
+      type: 'spotErr',
+      cat: 'Sum of independent',
+      stem: String.raw`$X \sim \text{Gamma}(2, \beta)$ and $Y \sim \text{Gamma}(3, \beta)$ are independent. Find the distribution of $X + Y$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_{X+Y}(t) = M_X(t) + M_Y(t)$`,
+        String.raw`Step 2: $M_X(t) = (1-\beta t)^{-2}$, $M_Y(t) = (1-\beta t)^{-3}$`,
+        String.raw`Step 3: The result should match a Gamma MGF $(1-\beta t)^{-\alpha}$`,
+        String.raw`Step 4: $\therefore X+Y \sim \text{Gamma}(5, \beta)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Step 1 adds instead of multiplying. For independent sum: $M_{X+Y}(t) = M_X(t) \cdot M_Y(t) = (1-\beta t)^{-5}$. The final answer (Step 4) happens to be correct — the $\alpha$'s add when Gammas with same $\beta$ combine — but the intermediate reasoning is broken. Don't trust right answers from wrong work.`,
+    },
+    {
+      id: 'r5-q7',
+      type: 'spotErr',
+      cat: 'Substitution in MGF',
+      stem: String.raw`$X \sim \text{Gamma}(\alpha, \beta)$, $Y = 2X$. Find $M_Y(t)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $M_Y(t) = E(e^{tY}) = E(e^{2tX}) = M_X(2t)$`,
+        String.raw`Step 2: $M_X(s) = (1 - \beta s)^{-\alpha}$`,
+        String.raw`Step 3: $M_Y(t) = (1 - \beta \cdot 2t)^{-\alpha} = (1 - 2\beta t)^{-\alpha}$`,
+        String.raw`Step 4: Since this is Gamma MGF form, $Y \sim \text{Gamma}(\alpha, \beta/2)$`,
+      ],
+      ans: 3,
+      exp: String.raw`Step 4 mis-reads off the parameters. The new MGF is $(1 - (2\beta) t)^{-\alpha}$, so the new $\beta$ is $2\beta$, not $\beta/2$. Therefore $Y \sim \text{Gamma}(\alpha, 2\beta)$. Sanity check via means: $E(Y) = 2E(X) = 2\alpha\beta$, which matches Gamma$(\alpha, 2\beta)$ with $E = \alpha \cdot 2\beta = 2\alpha\beta$ $\checkmark$; but Gamma$(\alpha, \beta/2)$ would give $E = \alpha\beta/2$, a contradiction.`,
+    },
+
+    // ========== IDENTIFY (3) ==========
+    {
+      id: 'r5-q8',
+      type: 'identify',
+      cat: 'MGF to normal',
+      stem: String.raw`A RV has MGF $M_X(t) = \exp(2t + 9t^2/2)$. Identify $X$.`,
+      opts: [
+        String.raw`$X \sim N(2, 9)$`,
+        String.raw`$X \sim N(2, 3)$`,
+        String.raw`$X \sim N(9, 2)$`,
+        String.raw`$X \sim \text{Gamma}(2, 9)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Normal MGF: $\exp\{\mu t + \sigma^2 t^2/2\}$. Match: $\mu = 2$, $\sigma^2 = 9$. Option B takes $\sigma$ from the $t^2$ coefficient (forgets the square). Option C swaps $\mu$ and $\sigma^2$. Option D confuses MGF families.`,
+    },
+    {
+      id: 'r5-q9',
+      type: 'identify',
+      cat: 'MGF to Gamma',
+      stem: String.raw`A RV has MGF $M_X(t) = (1 - 4t)^{-3}$ for $t < 1/4$. Identify $X$.`,
+      opts: [
+        String.raw`$\text{Gamma}(3, 4)$, $E(X) = 12$, $\mathrm{Var}(X) = 48$`,
+        String.raw`$\text{Gamma}(4, 3)$, $E(X) = 12$, $\mathrm{Var}(X) = 36$`,
+        String.raw`$\text{Gamma}(3, 1/4)$, $E(X) = 3/4$, $\mathrm{Var}(X) = 3/16$`,
+        String.raw`$\text{Exp}(4)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$(1-\beta t)^{-\alpha}$: $\beta = 4$, $\alpha = 3$. Option B swaps $\alpha$ and $\beta$. Option C flips $\beta$. Option D requires $\alpha = 1$.`,
+    },
+    {
+      id: 'r5-q10',
+      type: 'identify',
+      cat: 'MGF to chi-squared',
+      stem: String.raw`A RV has MGF $M_X(t) = (1 - 2t)^{-7/2}$ for $t < 1/2$. Identify $X$.`,
+      opts: [
+        String.raw`$\chi^2(7)$`,
+        String.raw`$\chi^2(14)$`,
+        String.raw`$\chi^2(7/2)$`,
+        String.raw`$\text{Gamma}(2, 7/2)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\chi^2(\nu)$ MGF is $(1-2t)^{-\nu/2}$. Match: $\nu/2 = 7/2 \Rightarrow \nu = 7$. Option B doubles instead of matching. Option C forgets the $/2$. Option D swaps parameters and doesn't recognize the special $\beta = 2$.`,
+    },
+
+    // ========== NEXT-LINE (5) ==========
+    {
+      id: 'r5-q11',
+      type: 'nextLine',
+      cat: 'MGF linear — extract constant',
+      stem: String.raw`$Y = aX + b$. Next step in deriving $M_Y$:`,
+      given: [
+        String.raw`$M_Y(t) = E(e^{tY}) = E(e^{t(aX+b)})$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= E(e^{taX} \cdot e^{tb}) = e^{tb} \cdot E(e^{taX})$`,
+        String.raw`$= E(e^{taX}) + e^{tb}$`,
+        String.raw`$= E(e^{taX+tb}) = e^{taX+tb}$`,
+        String.raw`$= E(e^{taX}) \cdot E(e^{tb}) = M_X(at) \cdot M_{b}(t)$`,
+      ],
+      ans: 0,
+      exp: String.raw`$b$ is a constant, so $e^{tb}$ pulls out of the expectation as a constant factor. Option B adds incorrectly. Option C drops expectation on $X$. Option D treats a constant as a random variable with its own MGF.`,
+    },
+    {
+      id: 'r5-q12',
+      type: 'nextLine',
+      cat: 'MGF linear — substitute',
+      stem: String.raw`Next step given $X \sim N(\mu, \sigma^2)$:`,
+      given: [
+        String.raw`$M_Y(t) = e^{bt} \cdot E(e^{(at)X}) = e^{bt} \cdot M_X(at)$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= e^{bt} \cdot \exp\{\mu(at) + \sigma^2(at)^2/2\}$`,
+        String.raw`$= e^{bt} \cdot \exp\{\mu t + \sigma^2 t^2/2\}$`,
+        String.raw`$= e^{bt} \cdot \exp\{at + \sigma^2 t^2/2\}$`,
+        String.raw`$= e^{bt} \cdot \exp\{\mu(at) + \sigma(at)^2/2\}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Substitute $s = at$ into $M_X(s) = \exp\{\mu s + \sigma^2 s^2/2\}$. Option B forgets to substitute. Option C puts $a$ where $\mu$ should be. Option D uses $\sigma$ instead of $\sigma^2$.`,
+    },
+    {
+      id: 'r5-q13',
+      type: 'nextLine',
+      cat: 'Independent sum — product',
+      stem: String.raw`$X_1, \ldots, X_n$ iid, $W = \sum X_i$. Next step in $M_W(t)$:`,
+      given: [
+        String.raw`$M_W(t) = E(e^{tW}) = E(e^{t \sum X_i}) = E(\prod_i e^{tX_i})$`,
+        String.raw`$?$  (using independence)`,
+      ],
+      opts: [
+        String.raw`$= \prod_i E(e^{tX_i}) = \prod_i M_{X_i}(t)$`,
+        String.raw`$= \sum_i E(e^{tX_i}) = \sum_i M_{X_i}(t)$`,
+        String.raw`$= \prod_i E(e^{tX_i})$ — only valid in certain cases`,
+        String.raw`$= [E(e^{tX_1})]^n = [M_{X_1}(t)]^n$ — skip straight to iid form`,
+      ],
+      ans: 0,
+      exp: String.raw`Independence: $E(\prod Y_i) = \prod E(Y_i)$. Option B adds. Option C correct but hedges without reason. Option D jumps to iid form correctly but skips showing the independence step — this question asks for the NEXT line, not the final line.`,
+    },
+    {
+      id: 'r5-q14',
+      type: 'nextLine',
+      cat: 'Combine exponentials',
+      stem: String.raw`Next step:`,
+      given: [
+        String.raw`$M_Y(t) = e^{bt} \cdot \exp\{\mu(at) + \sigma^2(at)^2/2\}$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= \exp\{bt + a\mu t + a^2 \sigma^2 t^2/2\} = \exp\{(a\mu + b)t + (a^2 \sigma^2) t^2/2\}$`,
+        String.raw`$= \exp\{bt\} \cdot \exp\{\mu t + \sigma^2 t^2/2\}$`,
+        String.raw`$= \exp\{bt + \mu t + \sigma^2 t^2/2\}$`,
+        String.raw`$= \exp\{(a\mu + b)t + \sigma^2 t^2/2\}$`,
+      ],
+      ans: 0,
+      exp: String.raw`Combine exponentials: $e^A \cdot e^B = e^{A+B}$, then group by powers of $t$. Option B un-substitutes. Option C drops the $a$'s. Option D drops the $a^2$ in the variance piece.`,
+    },
+    {
+      id: 'r5-q15',
+      type: 'nextLine',
+      cat: 'Identify final MGF',
+      stem: String.raw`Final step to name the distribution:`,
+      given: [
+        String.raw`$M_Y(t) = \exp\!\left\{(a\mu + b)t + \tfrac{a^2 \sigma^2 \cdot t^2}{2}\right\}$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`This matches the $N(\mu', \sigma'^2)$ MGF with $\mu' = a\mu+b$ and $\sigma'^2 = a^2\sigma^2$; by MGF uniqueness, $Y \sim N(a\mu+b, a^2\sigma^2)$.`,
+        String.raw`This matches Gamma$(a\mu+b, a^2\sigma^2)$`,
+        String.raw`$Y$ is not named — the MGF has the wrong form for any standard distribution`,
+        String.raw`$Y \sim N(\mu, \sigma^2)$ (unchanged)`,
+      ],
+      ans: 0,
+      exp: String.raw`MGF uniqueness theorem: if two RVs have the same MGF in a neighborhood of 0, they have the same distribution. Matching the coefficient of $t$ with $\mu$ and coefficient of $t^2/2$ with $\sigma^2$ gives the parameters. Option B is the wrong family. Option C denies a clear match. Option D ignores the transformation.`,
+    },
+
+    // ========== TRUE / FALSE (3) ==========
+    {
+      id: 'r5-q16',
+      type: 'tf',
+      cat: 'MGF at zero',
+      stem: String.raw`For any valid MGF, $M_X(0) = 1$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. $M_X(0) = E(e^{0 \cdot X}) = E(1) = 1$. This is a sanity check: if your derived MGF doesn't equal 1 at $t=0$, you made an algebra mistake. Memorize — it's free debugging.`,
+    },
+    {
+      id: 'r5-q17',
+      type: 'tf',
+      cat: 'MGF uniqueness',
+      stem: String.raw`If two random variables have the same MGF on an open interval containing 0, they have the same distribution.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE — this is the MGF uniqueness theorem, and it's the reason the MGF method works at all. It's why matching your derived MGF to a known one IDENTIFIES the distribution instead of just suggesting one.`,
+    },
+    {
+      id: 'r5-q18',
+      type: 'tf',
+      cat: 'MGF of linear transformation',
+      stem: String.raw`If $Y = aX + b$, then $M_Y(t) = e^{bt} M_X(at)$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. $M_Y(t) = E(e^{t(aX+b)}) = e^{bt} E(e^{(at)X}) = e^{bt} M_X(at)$. The constant factors out with the $b \cdot t$ in the exponent; the coefficient $a$ rescales $t$ in the MGF argument. This is the template for most MGF transformation problems.`,
+    },
+
+    // ========== SETUP (2) ==========
+    {
+      id: 'r5-q19',
+      type: 'setup',
+      cat: 'MGF definition',
+      stem: String.raw`The MGF of a continuous RV $X$ with pdf $f(x)$ is defined by:`,
+      opts: [
+        String.raw`$M_X(t) = E(e^{tX}) = \int e^{tx} f(x)\,dx$ over the support`,
+        String.raw`$M_X(t) = E(e^{X}) = \int e^x f(x)\,dx$`,
+        String.raw`$M_X(t) = \int t \cdot f(x)\,dx$`,
+        String.raw`$M_X(t) = \int x^t f(x)\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`MGF definition is $E(e^{tX})$. The $t$ multiplies $x$ in the exponent. Option B drops $t$ from the exponent (just gives $E(e^X)$, a constant). Option C puts $t$ where it doesn't belong. Option D uses a power instead of an exponential — that's a Mellin transform.`,
+    },
+    {
+      id: 'r5-q20',
+      type: 'setup',
+      cat: 'Sum of independent',
+      stem: String.raw`For independent $X$ and $Y$, which identity is the KEY tool for finding the distribution of $X+Y$ via MGF?`,
+      opts: [
+        String.raw`$M_{X+Y}(t) = M_X(t) \cdot M_Y(t)$`,
+        String.raw`$M_{X+Y}(t) = M_X(t) + M_Y(t)$`,
+        String.raw`$M_{X+Y}(t) = M_X(t+Y)$`,
+        String.raw`$M_{X+Y}(t) = \max\{M_X(t), M_Y(t)\}$`,
+      ],
+      ans: 0,
+      exp: String.raw`MGFs multiply for independent sums, because $E(e^{t(X+Y)}) = E(e^{tX}e^{tY}) = E(e^{tX})E(e^{tY})$ by independence. Option B is what pdfs convolve as — not MGFs. Option C is nonsensical (RV inside a function argument). Option D is unrelated.`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r5-q21',
+      type: 'intuition',
+      cat: 'MGF uniqueness',
+      stem: String.raw`Suppose $X$ and $Y$ are two random variables with the same MGF on an open interval around $t=0$. What can you conclude?`,
+      opts: [
+        String.raw`$X$ and $Y$ have the same distribution`,
+        String.raw`$X = Y$ with probability 1`,
+        String.raw`$E(X) = E(Y)$, but the distributions may still differ`,
+        String.raw`Nothing — same MGF says nothing about the distributions`,
+      ],
+      ans: 0,
+      exp: String.raw`The UNIQUENESS theorem: the MGF (when it exists in a neighborhood of 0) uniquely determines the distribution. This is WHY the MGF method works — if you compute an MGF and recognize it as a known form, you can conclude the distribution. Option B is wrong because "same distribution" $\ne$ "pointwise equal" as random variables.`,
+    },
+    {
+      id: 'r5-q22',
+      type: 'intuition',
+      cat: 'When MGFs multiply',
+      stem: String.raw`Under what condition does $M_{X+Y}(t) = M_X(t) \cdot M_Y(t)$?`,
+      opts: [
+        String.raw`When $X$ and $Y$ are independent`,
+        String.raw`Always — this is a general identity`,
+        String.raw`When $X$ and $Y$ have the same distribution`,
+        String.raw`When $X + Y$ has a known closed-form distribution`,
+      ],
+      ans: 0,
+      exp: String.raw`Independence is the key. $M_{X+Y}(t) = E(e^{t(X+Y)}) = E(e^{tX} e^{tY})$. Only when $X \perp Y$ does this split as $E(e^{tX}) \cdot E(e^{tY})$. Without independence, the expectation of a product is NOT the product of expectations.`,
+    },
+    {
+      id: 'r5-q23',
+      type: 'intuition',
+      cat: 'Why MGF beats pdf for sums',
+      stem: String.raw`For a sum of 10 independent random variables, the MGF approach multiplies 10 MGFs. What would the direct pdf approach require?`,
+      opts: [
+        String.raw`A 10-fold convolution integral`,
+        String.raw`Multiplication of the 10 pdfs`,
+        String.raw`Addition of the 10 pdfs`,
+        String.raw`The 10th power of a single pdf`,
+      ],
+      ans: 0,
+      exp: String.raw`Sums convolve pdfs: $f_{X+Y}(z) = \int f_X(s) f_Y(z - s)\,ds$. For 10 summands, that's nine nested convolutions — a nightmare. MGFs turn convolution into MULTIPLICATION, which is why the MGF method is so powerful for sums. Same final distribution, vastly easier algebra.`,
+    },
+
+  ],
+};
+
+// =============================================================
+// ACTS OF THE CONTINUOUS — a study in six acts
+// ROUND 6: TWO-VARIABLE WORLD
+// =============================================================
+// 20 questions · Joint pdf, marginals (esp. tricky bounds on
+// triangles), independence, Cov, conditional, E(XY).
+// Distribution: 4 pickSoln | 2 spotErr | 0 identify | 2 nextLine
+// | 4 tf | 8 setup  (setup-heavy because bivariate is all about
+// getting the integration right)
+// =============================================================
+
+const ROUND_6 = {
+  id: 'r6',
+  name: 'Two-Variable World',
+  title: 'Act VI — It Takes Two',
+  desc: 'Joint density. Marginals via integration. Independence, covariance, conditionals. Getting the bounds right is half the battle.',
+  pick: 5,
+  pool: [
+
+    // ========== PICK-SOLN (4) ==========
+    {
+      id: 'r6-q1',
+      type: 'pickSoln',
+      cat: 'Joint pdf validity',
+      stem: String.raw`Verify $f(x,y) = x + y$ on $0 < x < 1$, $0 < y < 1$ is a valid joint pdf. Which work is correct?`,
+      opts: [
+        String.raw`$\int_0^1\int_0^1 (x+y)\,dy\,dx = \int_0^1 [xy + y^2/2]_0^1 dx = \int_0^1 (x + 1/2)\,dx = [x^2/2 + x/2]_0^1 = 1$ $\checkmark$`,
+        String.raw`$\int_0^1\int_0^1 (x+y)\,dy\,dx = \int_0^1 (x + 1)\,dx = 3/2 \ne 1$`,
+        String.raw`$\int_0^1\int_0^1 (x+y)\,dy\,dx = [x^2/2][y^2/2]_0^1 = 1/4 \ne 1$`,
+        String.raw`$f(x,y) = x + y > 0$ on support — automatically a valid pdf`,
+      ],
+      ans: 0,
+      exp: String.raw`Double integral evaluates to 1 and $f \ge 0$ everywhere on the support — both conditions check. Option B uses $y + 1$ instead of $y + 1/2$ in the inner integral ($\int_0^1 y\,dy = 1/2$, not 1). Option C factors the integrand as separable (it's not: $x+y \ne g(x)h(y)$). Option D forgets that non-negative isn't enough — integral must equal 1.`,
+    },
+    {
+      id: 'r6-q2',
+      type: 'pickSoln',
+      cat: 'Marginal density',
+      stem: String.raw`For the joint $f(x,y) = x+y$ on $(0,1)^2$, find $f_X(x)$.`,
+      opts: [
+        String.raw`$f_X(x) = \int_0^1 (x+y)\,dy = [xy + y^2/2]_0^1 = x + 1/2$, for $0 < x < 1$`,
+        String.raw`$f_X(x) = \int_0^1 (x+y)\,dx = x^2/2 + xy$, a function of $y$`,
+        String.raw`$f_X(x) = x + y$ (set $y=0$ since we want only $x$-part)`,
+        String.raw`$f_X(x) = \int_{-\infty}^{\infty}(x+y)\,dy$ — diverges, so no valid marginal`,
+      ],
+      ans: 0,
+      exp: String.raw`Marginal of $X$ integrates the OTHER variable out over its full support. Option B integrates $x$ out — gives $f_Y(y)$, not $f_X(x)$. Option C just drops $y$, which is not a valid operation. Option D uses infinite bounds where the joint is zero outside $(0,1)^2$ — correct in principle but needs to recognize $f = 0$ outside support, giving 0-contribution there.`,
+    },
+    {
+      id: 'r6-q3',
+      type: 'pickSoln',
+      cat: 'Independence test',
+      stem: String.raw`For $f(x,y) = x+y$ on $(0,1)^2$ with $f_X(x) = x + 1/2$ and $f_Y(y) = y + 1/2$, are $X$ and $Y$ independent?`,
+      opts: [
+        String.raw`$f_X(x) f_Y(y) = (x+1/2)(y+1/2) = xy + x/2 + y/2 + 1/4 \ne x+y$ — NOT independent`,
+        String.raw`Yes — both marginals exist, so they're independent`,
+        String.raw`Yes — $f_X(x) + f_Y(y) = (x+1/2) + (y+1/2) = x + y + 1 \approx x+y$ — close enough`,
+        String.raw`Cannot determine without $\mathrm{Cov}(X,Y)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Independence definition: $f(x,y) = f_X(x) f_Y(y)$ everywhere. If the PRODUCT of marginals does not match the joint, NOT independent. Option B has no basis. Option C uses addition (wrong operation) and "close enough" is not a math rule. Option D confuses $\mathrm{Cov} = 0$ (necessary but not sufficient) with independence (stronger).`,
+    },
+    {
+      id: 'r6-q4',
+      type: 'pickSoln',
+      cat: 'Covariance',
+      stem: String.raw`Given $E(X) = E(Y) = 7/12$ and $E(XY) = 1/3$ for joint $f(x,y) = x+y$ on $(0,1)^2$, compute $\mathrm{Cov}(X,Y)$.`,
+      opts: [
+        String.raw`$\mathrm{Cov}(X,Y) = 1/3 - (7/12)^2 = 1/3 - 49/144 = 48/144 - 49/144 = -1/144$`,
+        String.raw`$\mathrm{Cov}(X,Y) = 1/3 - (7/12) \cdot (7/12) \cdot 2 = 1/3 - 49/72$`,
+        String.raw`$\mathrm{Cov}(X,Y) = 1/3 - 7/12 = -1/4$`,
+        String.raw`$\mathrm{Cov}(X,Y) = E(XY) + E(X)E(Y) = 1/3 + 49/144$`,
+      ],
+      ans: 0,
+      exp: String.raw`$\mathrm{Cov}(X,Y) = E(XY) - E(X)E(Y)$. Option B doubles. Option C subtracts $E(X)$ instead of $E(X)E(Y)$. Option D adds instead of subtracts. Tiny negative covariance here makes sense — joint with $x+y$ forces a mild anti-alignment when both variables lie in $(0,1)$.`,
+    },
+
+    // ========== SPOT-ERROR (2) ==========
+    {
+      id: 'r6-q5',
+      type: 'spotErr',
+      cat: 'Triangular marginal',
+      stem: String.raw`Joint $f(x,y) = 6(1-y)$ on $0 < x < y < 1$. Find $f_X(x)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: For fixed $x$, the support in $y$ is $y \in (x, 1)$`,
+        String.raw`Step 2: $f_X(x) = \int_0^x 6(1-y)\,dy$`,
+        String.raw`Step 3: $= 6[y - y^2/2]_0^x = 6(x - x^2/2) = 3x(2-x)$`,
+        String.raw`Step 4: So $f_X(x) = 3x(2-x)$ for $0 < x < 1$`,
+      ],
+      ans: 1,
+      exp: String.raw`Step 2 uses the wrong bounds. Step 1 correctly identifies $y \in (x, 1)$, but Step 2 then integrates from 0 to $x$ — the opposite region. Correct: $\int_x^1 6(1-y)\,dy = 6[y - y^2/2]_x^1 = 6[(1 - 1/2) - (x - x^2/2)] = 3(1-x)^2$. The error propagates everywhere downstream. Drawing the support region saves many errors here.`,
+    },
+    {
+      id: 'r6-q6',
+      type: 'spotErr',
+      cat: 'E(XY) on triangle',
+      stem: String.raw`Joint $f(x,y) = 2$ on $0 < y < x < 1$. Find $E(XY)$. Which step is WRONG?`,
+      steps: [
+        String.raw`Step 1: $E(XY) = \iint xy \cdot f(x,y)\,dy\,dx = \int_0^1\int_0^1 xy \cdot 2\,dy\,dx$`,
+        String.raw`Step 2: $= 2\int_0^1 x\!\left[\tfrac{y^2}{2}\right]_0^1 dx$`,
+        String.raw`Step 3: $= 2\int_0^1 \tfrac{x}{2}\,dx = \int_0^1 x\,dx = 1/2$`,
+        String.raw`Step 4: So $E(XY) = 1/2$`,
+      ],
+      ans: 0,
+      exp: String.raw`Step 1 uses the wrong support. The region is $0 < y < x < 1$ (below the diagonal), NOT the full unit square. Correct setup: $\int_0^1 \int_0^x 2xy\,dy\,dx = \int_0^1 x \cdot x^2\,dx = \int_0^1 x^3\,dx = 1/4$. Getting the support wrong on a triangle is the most common bivariate error.`,
+    },
+
+    // ========== NEXT-LINE (2) ==========
+    {
+      id: 'r6-q7',
+      type: 'nextLine',
+      cat: 'Marginal on triangle',
+      stem: String.raw`For joint $f(x,y) = 3x$ on $0 < y < x < 1$, what is $f_Y(y)$? Next step:`,
+      given: [
+        String.raw`For fixed $y \in (0,1)$, the support in $x$ is $x \in (y, 1)$`,
+        String.raw`$f_Y(y) = \int_y^1 3x\,dx$`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`$= 3\!\left[\tfrac{x^2}{2}\right]_y^1 = \tfrac{3}{2}(1 - y^2)$, for $0 < y < 1$`,
+        String.raw`$= 3\!\left[\tfrac{x^2}{2}\right]_0^1 = \tfrac{3}{2}$, for $0 < y < 1$`,
+        String.raw`$= 3[x]_y^1 = 3(1 - y)$, for $0 < y < 1$`,
+        String.raw`$= 3\!\left[\tfrac{x^2}{2}\right]_y^1 = \tfrac{3}{2}(1 - y^2)$, for $0 < y < x$`,
+      ],
+      ans: 0,
+      exp: String.raw`Antiderivative of $3x$ is $3x^2/2$; evaluate at $y$ and 1. Option B evaluates at 0 (drops the lower $y$ bound). Option C uses wrong antiderivative. Option D gives the right formula but wrong support statement — after integrating out $x$, $f_Y(y)$ is a function of $y$ only, valid on $0 < y < 1$, not on $y < x$.`,
+    },
+    {
+      id: 'r6-q8',
+      type: 'nextLine',
+      cat: 'Covariance — next step',
+      stem: String.raw`For $f(x,y) = 4xy$ on $(0,1)^2$, compute $\mathrm{Cov}(X,Y)$. Next step:`,
+      given: [
+        String.raw`$f_X(x) = \int_0^1 4xy\,dy = 2x$`,
+        String.raw`$f_Y(y) = 2y$ by symmetry`,
+        String.raw`$f_X(x) \cdot f_Y(y) = 2x \cdot 2y = 4xy = f(x,y)$, so $X, Y$ are INDEPENDENT`,
+        String.raw`$?$`,
+      ],
+      opts: [
+        String.raw`Since $X, Y$ are independent, $\mathrm{Cov}(X,Y) = 0$ immediately`,
+        String.raw`Need to compute $E(XY)$, $E(X)$, $E(Y)$ and plug into $E(XY) - E(X)E(Y)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = \mathrm{Var}(X) + \mathrm{Var}(Y)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = 1$ since support is $[0,1]^2$`,
+      ],
+      ans: 0,
+      exp: String.raw`Independence $\Rightarrow \mathrm{Cov}(X,Y) = 0$. Saves all the integration. Option B is the general-case approach — still works, but you'd arrive at 0 the long way. Option C is an invented formula. Option D is nonsense.`,
+    },
+
+    // ========== TRUE / FALSE (4) ==========
+    {
+      id: 'r6-q9',
+      type: 'tf',
+      cat: 'Independence implies Cov = 0',
+      stem: String.raw`If $X$ and $Y$ are independent, then $\mathrm{Cov}(X,Y) = 0$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Independence gives $E(XY) = E(X)E(Y)$ directly, so the covariance is zero. This is the standard one-way implication.`,
+    },
+    {
+      id: 'r6-q10',
+      type: 'tf',
+      cat: 'Cov = 0 implies independence',
+      stem: String.raw`If $\mathrm{Cov}(X,Y) = 0$, then $X$ and $Y$ are independent.`,
+      ans: 1, // FALSE
+      exp: String.raw`FALSE — the implication goes one direction only. Covariance captures LINEAR dependence; two variables can have zero covariance yet be strongly (nonlinearly) dependent. Classic counterexample: $X \sim N(0,1)$ and $Y = X^2$ have $\mathrm{Cov} = 0$ but $Y$ is a deterministic function of $X$.`,
+    },
+    {
+      id: 'r6-q11',
+      type: 'tf',
+      cat: 'Linearity of expectation',
+      stem: String.raw`$E(X + Y) = E(X) + E(Y)$ holds for any $X$ and $Y$, regardless of independence.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. Linearity of expectation is unconditional. Contrast with $\mathrm{Var}(X+Y)$, which equals $\mathrm{Var}(X) + \mathrm{Var}(Y)$ ONLY under independence (or more generally, zero covariance). Expectations are forgiving; variances are not.`,
+    },
+    {
+      id: 'r6-q12',
+      type: 'tf',
+      cat: 'Marginal definition',
+      stem: String.raw`For continuous $(X,Y)$, $f_X(x) = \int f(x,y)\,dy$ integrated over the support of $Y$ given that $X = x$.`,
+      ans: 0, // TRUE
+      exp: String.raw`TRUE. To get the marginal of $X$, integrate the joint over all $y$-values for which $(x,y)$ is in the support. The exact bounds depend on the shape of the support — especially on triangles or non-rectangles. Drawing the region first saves headaches.`,
+    },
+
+    // ========== SETUP (8) ==========
+    {
+      id: 'r6-q13',
+      type: 'setup',
+      cat: 'Marginal — triangle',
+      stem: String.raw`For $f(x,y)$ on $0 < y < x < 1$, which sets up $f_X(x)$ correctly?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^x f(x,y)\,dy$, for $0 < x < 1$`,
+        String.raw`$\displaystyle \int_x^1 f(x,y)\,dy$, for $0 < x < 1$`,
+        String.raw`$\displaystyle \int_0^1 f(x,y)\,dy$, for $0 < x < 1$`,
+        String.raw`$\displaystyle \int_y^1 f(x,y)\,dy$, for $0 < x < 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`Fix $x \in (0,1)$. The support says $y < x$, so $y$ ranges from $0$ to $x$. Option B swaps the region (above the diagonal). Option C uses full unit interval, ignoring the triangular restriction. Option D mixes $y$ into the bounds of an integral in $dy$ (nonsensical — bounds must be constants or functions of $x$).`,
+    },
+    {
+      id: 'r6-q14',
+      type: 'setup',
+      cat: 'Marginal — different triangle',
+      stem: String.raw`For $f(x,y)$ on $0 < x < y < 1$, which sets up $f_Y(y)$ correctly?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^y f(x,y)\,dx$, for $0 < y < 1$`,
+        String.raw`$\displaystyle \int_y^1 f(x,y)\,dx$, for $0 < y < 1$`,
+        String.raw`$\displaystyle \int_0^1 f(x,y)\,dx$, for $0 < y < 1$`,
+        String.raw`$\displaystyle \int_x^1 f(x,y)\,dx$, for $0 < y < 1$`,
+      ],
+      ans: 0,
+      exp: String.raw`Fix $y$, integrate $x$ over its allowed range. Support says $x < y$, so $x$ runs from $0$ to $y$. Option B sends $x$ above $y$ — the wrong half. Option C uses the full unit interval. Option D has a free $x$ in the bounds of an $x$-integral.`,
+    },
+    {
+      id: 'r6-q15',
+      type: 'setup',
+      cat: 'Joint validity on triangle',
+      stem: String.raw`To verify a joint pdf $f(x,y)$ on $0 < y < x < 1$ integrates to 1, which double integral do you compute?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^1\int_0^x f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_0^1 f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_x^1 f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_y^1 f(x,y)\,dy\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`Outer $x$ from 0 to 1; inner $y$ from 0 to $x$ (the diagonal constraint). Equivalent: $\int_0^1 \int_y^1 f\,dx\,dy$. Option B uses the full square. Option C covers the OTHER half. Option D has $y$ in the bounds of a $y$-integral.`,
+    },
+    {
+      id: 'r6-q16',
+      type: 'setup',
+      cat: 'E(XY) on unit square',
+      stem: String.raw`For joint $f(x,y)$ on $(0,1)^2$, which sets up $E(XY)$?`,
+      opts: [
+        String.raw`$\displaystyle \int_0^1\int_0^1 xy\,f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_0^1 (x+y)\,f(x,y)\,dy\,dx$`,
+        String.raw`$E(X) \cdot E(Y)$`,
+        String.raw`$\displaystyle \int_0^1\int_0^1 f(x,y)\,dy\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`$E(g(X,Y)) = \iint g(x,y) f(x,y)\,dA$. Here $g(x,y) = xy$. Option B would compute $E(X+Y)$. Option C is only valid when $X \perp Y$, and even then only equals $E(XY)$ by independence. Option D computes $\iint f = 1$.`,
+    },
+    {
+      id: 'r6-q17',
+      type: 'setup',
+      cat: 'Cov formula',
+      stem: String.raw`Which is the formula for $\mathrm{Cov}(X, Y)$?`,
+      opts: [
+        String.raw`$\mathrm{Cov}(X,Y) = E(XY) - E(X)E(Y)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = E(X)E(Y) - E(XY)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = E(X+Y) - E(X)E(Y)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = E(X^2) - [E(X)]^2$`,
+      ],
+      ans: 0,
+      exp: String.raw`Standard formula. Option B is the negative. Option C confuses $E(XY)$ with $E(X+Y)$. Option D is $\mathrm{Var}(X)$.`,
+    },
+    {
+      id: 'r6-q18',
+      type: 'setup',
+      cat: 'Conditional density',
+      stem: String.raw`For continuous $(X,Y)$ with joint $f(x,y)$ and marginal $f_X(x) > 0$, the conditional density of $Y$ given $X = x$ is:`,
+      opts: [
+        String.raw`$f_{Y\mid X}(y \mid x) = \dfrac{f(x,y)}{f_X(x)}$`,
+        String.raw`$f_{Y\mid X}(y \mid x) = f(x,y) \cdot f_X(x)$`,
+        String.raw`$f_{Y\mid X}(y \mid x) = \dfrac{f_X(x)}{f(x,y)}$`,
+        String.raw`$f_{Y\mid X}(y \mid x) = f(x,y) + f_X(x)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Definition: $f_{Y|X}(y \mid x) = f(x,y)/f_X(x)$, for $f_X(x) > 0$. Direct analog of $P(A \mid B) = P(A \cap B)/P(B)$. Option B multiplies. Option C inverts the ratio. Option D adds.`,
+    },
+    {
+      id: 'r6-q19',
+      type: 'setup',
+      cat: 'Probability over region',
+      stem: String.raw`For joint $f(x,y)$, the probability $P(X+Y \le 1)$ on support $(0,1)^2$ is set up as:`,
+      opts: [
+        String.raw`$\displaystyle \int_0^1\int_0^{1-x} f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_0^1 f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^1\int_0^{x+y} f(x,y)\,dy\,dx$`,
+        String.raw`$\displaystyle \int_0^{1-x}\int_0^{1-y} f(x,y)\,dy\,dx$`,
+      ],
+      ans: 0,
+      exp: String.raw`Integrate over $\{(x,y) : x+y \le 1, 0<x<1, 0<y<1\}$. Fix $x \in (0,1)$; allowed $y$ is $0 < y < 1 - x$. Option B integrates over the whole square (ignores the constraint). Option C has a free $y$ in the bound. Option D has a free $x$ in the outer bound.`,
+    },
+    {
+      id: 'r6-q20',
+      type: 'setup',
+      cat: 'Independence check formula',
+      stem: String.raw`To check independence of $X$ and $Y$ from the joint pdf, which must hold for ALL $(x,y)$ in the support?`,
+      opts: [
+        String.raw`$f(x,y) = f_X(x) \cdot f_Y(y)$`,
+        String.raw`$f(x,y) = f_X(x) + f_Y(y)$`,
+        String.raw`$E(XY) = E(X) \cdot E(Y)$`,
+        String.raw`$\mathrm{Cov}(X,Y) = 0$`,
+      ],
+      ans: 0,
+      exp: String.raw`Independence is exactly factorization of the joint into marginals. Option B adds — wrong operation. Options C and D are NECESSARY consequences of independence, but not SUFFICIENT: covariance can be zero with dependence (see the $Y = X^2$ example earlier).`,
+    },
+
+    // ========== INTUITION (3) ==========
+    {
+      id: 'r6-q21',
+      type: 'intuition',
+      cat: 'Uncorrelated vs independent',
+      stem: String.raw`Let $X \sim N(0,1)$ and $Y = X^2$. Then $\mathrm{Cov}(X, Y) = 0$. Are $X$ and $Y$ independent?`,
+      opts: [
+        String.raw`No — knowing $X$ determines $Y$ exactly, so they are strongly dependent`,
+        String.raw`Yes — zero covariance implies independence`,
+        String.raw`Yes — because $X$ is symmetric around 0`,
+        String.raw`Only independent if we also have $\mathrm{Var}(Y) = \mathrm{Var}(X)$`,
+      ],
+      ans: 0,
+      exp: String.raw`Classic counterexample. $\mathrm{Cov}(X, X^2) = E(X^3) - E(X)E(X^2) = 0 - 0 \cdot 1 = 0$ (odd moments of $N(0,1)$ vanish). But $Y$ is a DETERMINISTIC function of $X$ — maximally dependent. Moral: covariance detects LINEAR dependence only. Independence $\Rightarrow$ zero covariance; the converse is false.`,
+    },
+    {
+      id: 'r6-q22',
+      type: 'intuition',
+      cat: 'Sign of covariance',
+      stem: String.raw`A positive covariance $\mathrm{Cov}(X, Y) > 0$ means:`,
+      opts: [
+        String.raw`When $X$ is above its mean, $Y$ tends to be above its mean as well (and vice versa)`,
+        String.raw`Both $X$ and $Y$ take only positive values`,
+        String.raw`$E(X + Y) > E(X) + E(Y)$`,
+        String.raw`$X$ and $Y$ are independent`,
+      ],
+      ans: 0,
+      exp: String.raw`$\mathrm{Cov}(X,Y) = E[(X - \mu_X)(Y - \mu_Y)]$ is an expected product of deviations. Positive when deviations tend to share sign (both above or both below their means), negative when deviations typically have opposite signs. $E(X+Y) = E(X)+E(Y)$ ALWAYS by linearity — never affected by covariance.`,
+    },
+    {
+      id: 'r6-q23',
+      type: 'intuition',
+      cat: 'Support region',
+      stem: String.raw`For $f(x,y) = c$ on the triangle $0 < y < x < 1$, the marginal $f_X(x)$ is computed as:`,
+      opts: [
+        String.raw`$\int f(x,y)\,dy$ with $y$ ranging over $(0, x)$ — the valid range of $y$ for each $x$`,
+        String.raw`$\int f(x,y)\,dy$ with $y$ ranging over $(0, 1)$ — always the full square`,
+        String.raw`$\int f(x,y)\,dx$ with $x$ ranging over $(y, 1)$ — that's $f_Y$, not $f_X$`,
+        String.raw`$c \cdot (1 - x)$ — the length of the horizontal slice`,
+      ],
+      ans: 0,
+      exp: String.raw`On a non-rectangular region, the inner bounds depend on the outer variable. For $0 < y < x < 1$, FIX $x$: then $y$ can only range over $(0, x)$, not $(0,1)$. Drawing the triangle is the single most important step for every bivariate problem. Get the support wrong and every integral afterwards will be wrong.`,
+    },
+
+  ],
+};
+// ========= END BANK DATA =========
+
+const BANK = {
+  title: 'Acts of the Continuous',
+  tagline: 'a study in six acts',
+  course: 'MATH 3200 · Exam 2',
+  grandmaster_threshold: 0.90,
+  grandmaster_title: 'Grandmaster of the Continuum',
+  rounds: [ROUND_1, ROUND_2, ROUND_3, ROUND_4, ROUND_5, ROUND_6],
+};
+
+// short alias (matches Trial of the Null conventions)
+const D = BANK.rounds;
+
+// ========= UTILITIES =========
+const $ = (id) => document.getElementById(id);
+function sw(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');$(id).scrollTop=0}
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]]}return b}
+function oM(){$('mo').classList.add('on')}
+function cM(){$('mo').classList.remove('on')}
+
+// ========= KaTeX rendering =========
+function rm(el){
+  if(!el) return;
+  if(window.renderMathInElement){
+    try{
+      window.renderMathInElement(el,{
+        delimiters:[
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ],
+        throwOnError:false,
+        trust:false,
+        strict:false
+      });
+    }catch(e){console.warn('KaTeX render error',e)}
+  } else {
+    // KaTeX not ready yet — retry shortly
+    setTimeout(()=>rm(el),150);
+  }
+}
+
+// ========= AUDIO =========
+const AC=window.AudioContext||window.webkitAudioContext;let ac;
+function iA(){if(!ac)try{ac=new AC()}catch(e){}}
+function nt(f,t,d,v,dl){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(0,ac.currentTime+dl);g.gain.linearRampToValueAtTime(v,ac.currentTime+dl+.015);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+dl+d);o.start(ac.currentTime+dl);o.stop(ac.currentTime+dl+d)}
+function sOk(){nt(523,'sine',.25,.08,0);nt(659,'sine',.25,.07,.06);nt(784,'sine',.3,.07,.12);nt(1047,'sine',.35,.05,.18)}
+function sNo(){nt(330,'sine',.28,.05,0);nt(262,'sine',.32,.04,.07)}
+function sDn(){[523,587,659,698,784].forEach((f,i)=>nt(f,'sine',.28,.06,i*.08))}
+function sGv(){nt(262,'sine',.5,.06,0);nt(330,'sine',.5,.06,0);nt(392,'sine',.5,.06,0);nt(523,'sine',.55,.05,.12)}
+
+function cfti(n=30){const c=$('ccn');c.innerHTML='';const cs=['#3b82f6','#10b981','#ef4444','#f59e0b','#8b5cf6','#06b6d4'];for(let i=0;i<n;i++){const p=document.createElement('div');p.className='cfi';p.style.left=Math.random()*100+'%';p.style.background=cs[0|Math.random()*cs.length];p.style.animationDelay=Math.random()+'s';p.style.animationDuration=(2+Math.random()*1.5)+'s';const s=4+Math.random()*6;p.style.width=s+'px';p.style.height=s+'px';c.appendChild(p)}setTimeout(()=>c.innerHTML='',4500)}
+
+function showFeedbackIcon(ok){
+  const el=$('fbi');el.className='fb-icon vi '+(ok?'ok-i':'no-i');
+  if(ok){el.innerHTML='<svg viewBox="0 0 50 50"><circle class="circle" cx="25" cy="25" r="23"/><path class="mark" d="M15 26l7 7 13-14"/></svg>'}
+  else{el.innerHTML='<svg viewBox="0 0 50 50"><circle class="circle" cx="25" cy="25" r="23"/><path class="mark" d="M17 17l16 16M33 17l-16 16"/></svg>'}
+}
+
+// Round icon (Act N roman numeral in a colored badge)
+const ROMAN=['I','II','III','IV','V','VI'];
+const ACT_COLORS=['var(--blue-l)','var(--em-l)','var(--co-l)','var(--am-l)','var(--vi-l)','var(--bg2)'];
+const ACT_FG=['var(--blue)','var(--emerald)','var(--coral)','var(--amber)','var(--violet)','var(--navy)'];
+function actIconHTML(i){
+  return '<div style="width:58px;height:58px;border-radius:16px;background:'+ACT_COLORS[i]+';display:inline-flex;align-items:center;justify-content:center;font-family:var(--f);font-weight:900;font-size:1.25rem;color:'+ACT_FG[i]+';letter-spacing:-.02em;box-shadow:var(--sh)">Act '+ROMAN[i]+'</div>';
+}
+
+// ========= STATE & ADAPTIVE =========
+const STORE_KEY='actsContinuous_v1';
+let LS=null;
+function ldSt(){try{const r=localStorage.getItem(STORE_KEY);if(r)LS=JSON.parse(r)}catch(e){}
+  if(!LS)LS={v:1,qs:{},rounds:{},sess:0,last:0,bestScore:{}}}
+function svSt(){try{localStorage.setItem(STORE_KEY,JSON.stringify(LS))}catch(e){}}
+function gQS(id){if(!LS.qs[id])LS.qs[id]={s:0,c:0,sk:0,ef:2.5,iv:0,rp:0,ls:0,nd:0};return LS.qs[id]}
+
+// simplified SM-2
+function sm2(q,reps,ef,iv){
+  let nI,nR,nE;
+  if(q>=3){nR=reps+1;nI=reps===0?1:reps===1?6:Math.round(iv*ef)}
+  else{nR=0;nI=1}
+  nE=ef+(0.1-(5-q)*(0.08+(5-q)*0.02));
+  if(nE<1.3)nE=1.3;
+  return{interval:nI,repetitions:nR,easeFactor:nE}
+}
+function updAdapt(id,ok,timeRemaining){
+  const q=gQS(id);q.s++;if(ok){q.c++;q.sk++}else q.sk=0;q.ls=Date.now();
+  const qual=ok?(timeRemaining>=15?5:4):1;
+  const r=sm2(qual,q.rp,q.ef,q.iv);
+  q.ef=r.easeFactor;q.iv=r.interval;q.rp=r.repetitions;
+  q.nd=Date.now()+r.interval*864e5;svSt()
+}
+
+// priority score: err rate × 0.3, due × 0.2, streak-broken × 0.15, unseen × 0.2, age × 0.15
+function calcPri(id){
+  const q=gQS(id),now=Date.now();
+  const err=q.s>0?1-(q.c/q.s):.5;
+  const due=q.nd>0?Math.min(Math.max((now-q.nd)/6048e5,0),2):1;
+  const age=q.ls>0?1-Math.exp(-.1*((now-q.ls)/864e5)):1;
+  const unseen=q.s===0?.35:0;
+  const skP=q.sk>=3?0:(3-q.sk)/3;
+  return .30*err+.20*due+.15*skP+.20*unseen+.15*age;
+}
+function selPri(pool,n){
+  const sc=pool.map(q=>({q,p:calcPri(q.id)}));sc.sort((a,b)=>b.p-a.p);
+  const cand=sc.slice(0,Math.min(n*3,sc.length)),out=[];
+  while(out.length<n&&cand.length>0){
+    const tot=cand.reduce((s,c)=>s+c.p+.01,0);let r=Math.random()*tot;
+    for(let i=0;i<cand.length;i++){r-=cand[i].p+.01;if(r<=0){out.push(cand[i].q);cand.splice(i,1);break}}
+  }
+  return out;
+}
+
+// ========= SEQUENTIAL UNLOCK =========
+function roundUnlocked(i){
+  if(i===0) return true;
+  const prev=LS.rounds[D[i-1].id];
+  return prev && prev.cleared;
+}
+function roundStatus(i){
+  // 'locked' | 'available' | 'cleared'
+  if(!roundUnlocked(i)) return 'locked';
+  const r=LS.rounds[D[i].id];
+  if(r && r.cleared) return 'cleared';
+  return 'available';
+}
+
+// ========= RENDER TITLE DASHBOARD =========
+function renderDash(){
+  const list=$('acts-list');if(!list)return;list.innerHTML='';
+  D.forEach((r,i)=>{
+    const status=roundStatus(i);
+    const row=document.createElement('div');
+    row.className='act-row'+(status==='locked'?' lock':'')+(status==='cleared'?' done':'');
+    const stats=LS.rounds[r.id]||{};
+    const best=stats.bestPct!==undefined?stats.bestPct:null;
+    const plays=stats.plays||0;
+    const attempt=best!==null
+      ? best+'%'+(plays>1?' · '+plays+'x':'')
+      : (status==='locked'?'':'Play');
+    row.innerHTML='<div class="act-idx">'+ROMAN[i]+'</div>'
+      +'<div class="act-info">'
+        +'<div class="act-name">'+r.name+'</div>'
+        +'<div class="act-sub">'+r.title.replace(/\$\\Gamma\$/g,'Γ')+'</div>'
+        +(best!==null?'<div class="act-bar"><div class="act-bar-f" style="width:'+best+'%;background:'+ACT_FG[i]+'"></div></div>':'')
+      +'</div>'
+      +'<div class="act-rt">'+attempt+'</div>';
+    if(status!=='locked') row.onclick=()=>{iA();pickAct(i)};
+    list.appendChild(row);
+  });
+  // Reset button visible if there's any progress
+  const anyProg=Object.keys(LS.rounds).length>0 || Object.keys(LS.qs).length>0;
+  $('reset-btn').style.display=anyProg?'inline-flex':'none';
+  // Main button label: name the next unlocked unplayed round, else replay
+  const nextIdx=D.findIndex((_,i)=>roundStatus(i)==='available');
+  if(nextIdx>=0){
+    $('main-play-btn').textContent='Enter Act '+ROMAN[nextIdx]+': '+D[nextIdx].name;
+  } else {
+    $('main-play-btn').textContent='Replay All Acts';
+  }
+}
+
+function confirmReset(){
+  if(!confirm('Reset all progress? This clears mastery, best scores, and unlock state.')) return;
+  try{localStorage.removeItem(STORE_KEY)}catch(e){}
+  LS=null;ldSt();renderDash();
+}
+
+// ========= GAME STATE =========
+const QS_PER_ROUND=5;
+let cr=0, cq=0, sc=0, tot=0, bon=0, stk=0, bstk=0, hist=[], rqs=[], rC=0, rB=0, rScores=[];
+let tI=null, tL=0, curPct=0;
+const TIMER_SEC=30;
+const SPEED_THRESHOLD=15;
+
+function goPlay(){
+  iA();
+  // Find next unlocked unplayed, else start at 0 (replay)
+  const nextIdx=D.findIndex((_,i)=>roundStatus(i)==='available');
+  pickAct(nextIdx>=0?nextIdx:0);
+}
+function pickAct(i){
+  if(roundStatus(i)==='locked') return;
+  cr=i;sc=0;tot=0;bon=0;stk=0;bstk=0;hist=[];rScores=[];
+  $('str').classList.remove('vi');
+  LS.sess++;LS.last=Date.now();svSt();
+  sRI();
+}
+
+function sRI(){
+  const r=D[cr];
+  $('ri-icon').innerHTML=actIconHTML(cr);
+  $('rn').textContent='Act '+ROMAN[cr];
+  // Split round.title for visual: "Act X — Subtitle" → show Subtitle, render LaTeX
+  const fullTitle=r.title||r.name;
+  // strip "Act X — " prefix if present
+  const cleaned=fullTitle.replace(/^Act\s+[IVX]+\s*[—-]\s*/,'');
+  $('r-title').innerHTML=cleaned;rm($('r-title'));
+  $('rt').textContent=r.name;
+  $('rd').innerHTML=r.desc;rm($('rd'));
+  const prior=LS.rounds[r.id];
+  if(prior && prior.plays){
+    $('rp').innerHTML='Previous best: <span>'+(prior.bestPct||0)+'%</span> · '+prior.plays+' play'+(prior.plays>1?'s':'');
+  } else {
+    $('rp').innerHTML='First time through. <span>5 questions</span> from the pool of '+r.pool.length+'.';
+  }
+  sw('s-r');
+}
+
+function sR(){
+  rqs=selPri(D[cr].pool,QS_PER_ROUND);cq=0;rC=0;rB=0;
+  sw('s-g');rQ();
+}
+
+function sT(){
+  clearInterval(tI);tL=TIMER_SEC;const b=$('tb'),l=$('tl');
+  b.style.width='100%';b.classList.remove('urg');l.textContent=tL;l.classList.remove('urg');
+  b.style.transition='none';b.offsetHeight;b.style.transition='width 1s linear';
+  tI=setInterval(()=>{
+    tL--;l.textContent=Math.max(0,tL);b.style.width=Math.max(0,tL/TIMER_SEC*100)+'%';
+    if(tL<=5&&tL>0){b.classList.add('urg');l.classList.add('urg')}
+    if(tL<=0){clearInterval(tI);l.classList.remove('urg');
+      // time's up — treat as wrong
+      if(!$('fb').classList.contains('fo')&&!$('fb').classList.contains('fn')){
+        const q=rqs[cq];
+        fA(false,'Time ran out. '+(q.exp||''));
+        // lock all buttons
+        document.querySelectorAll('.ab:not(.lk), .tfb:not(.lk)').forEach(b=>b.classList.add('lk'));
+        // highlight correct option
+        const correctEls=document.querySelectorAll('[data-oi="'+q.ans+'"]');
+        correctEls.forEach(el=>el.classList.add('ok'));
+      }
+    }
+  },1000);
+}
+
+// ========= RENDER QUESTION =========
+const TYPE_LABEL={
+  pickSoln:'Pick Solution',
+  spotErr:'Spot the Error',
+  identify:'Identify',
+  nextLine:'Next Line',
+  tf:'True / False',
+  setup:'Setup',
+  intuition:'Intuition'
+};
+
+function rQ(){
+  const q=rqs[cq];
+  const r=D[cr];
+  const tQ=rqs.length;
+  $('gl').textContent='Act '+ROMAN[cr]+': '+r.name;
+  $('gs').textContent=sc;$('pf').style.width=(tot/tQ*100)+'%';
+  const tp=q.type;
+  $('qca').innerHTML='<span class="lbl">'+q.cat+'</span><span class="typ '+tp+'">'+TYPE_LABEL[tp]+'</span>';
+  $('qt').textContent=q.stem;rm($('qt'));
+  // given[] for nextLine
+  const qg=$('qg');
+  qg.innerHTML='';
+  if(tp==='nextLine' && Array.isArray(q.given)){
+    q.given.forEach(g=>{
+      const row=document.createElement('div');
+      if(g==='?'||g==='$?$'||g==='_?_'){
+        row.className='gl-row gl-q';
+        row.textContent='? ← your move';
+      } else {
+        row.className='gl-row';
+        row.textContent=g;
+      }
+      qg.appendChild(row);
+    });
+    qg.style.display='block';rm(qg);
+  } else {
+    qg.style.display='none';
+  }
+  $('qc').className='qc r'+cr;
+  const az=$('az');az.innerHTML='';
+  if(tp==='tf') rTF(az,q);
+  else if(tp==='spotErr') rSpotErr(az,q);
+  else rMC(az,q); // pickSoln, identify, nextLine, setup
+  $('fbi').className='fb-icon';$('fbi').innerHTML='';
+  // Adaptive badge (seen before? accuracy?)
+  let adapt='';const qs=gQS(q.id);
+  if(qs.s>0){const acc=Math.round(qs.c/qs.s*100);adapt=' · Seen '+qs.s+'×, '+acc+'%';if(qs.sk>=3)adapt+=' · 🔥';}
+  $('qn').textContent='Question '+(tot+1)+' of '+tQ+adapt;
+  $('fb').style.display='none';$('fb').className='fb';$('fbo').textContent='';$('nw').classList.remove('vi');
+  const c=$('qc');c.classList.remove('sk','pp');c.style.animation='none';c.offsetHeight;c.style.animation='';
+  $('s-g').scrollTo({top:0,behavior:'smooth'});sT();
+}
+
+function rMC(az,q){
+  const d=document.createElement('div');d.className='ans';
+  const idx=q.opts.map((_,i)=>i);
+  // shuffle
+  for(let i=idx.length-1;i>0;i--){const j=0|Math.random()*(i+1);[idx[i],idx[j]]=[idx[j],idx[i]]}
+  const mk=['A','B','C','D'];
+  idx.forEach((oi,di)=>{
+    const b=document.createElement('button');b.className='ab';b.dataset.oi=oi;
+    const mkSpan=document.createElement('span');mkSpan.className='mk';mkSpan.textContent=mk[di]+'.';
+    const ctSpan=document.createElement('span');ctSpan.className='ct';ctSpan.textContent=q.opts[oi];
+    b.appendChild(mkSpan);b.appendChild(ctSpan);
+    b.onclick=()=>dA(oi===q.ans,q.exp,b,d.querySelectorAll('.ab'),q.ans);
+    d.appendChild(b);
+  });
+  az.appendChild(d);rm(d);
+}
+
+function rSpotErr(az,q){
+  const d=document.createElement('div');d.className='ans';
+  // Do NOT shuffle — steps are in derivation order
+  q.steps.forEach((txt,oi)=>{
+    const b=document.createElement('button');b.className='ab step';b.dataset.oi=oi;
+    const mkSpan=document.createElement('span');mkSpan.className='mk';mkSpan.textContent='Step '+(oi+1);
+    const ctSpan=document.createElement('span');ctSpan.className='ct';
+    ctSpan.textContent=txt.replace(/^Step \d+:\s*/,'');
+    b.appendChild(mkSpan);b.appendChild(ctSpan);
+    b.onclick=()=>dA(oi===q.ans,q.exp,b,d.querySelectorAll('.ab'),q.ans);
+    d.appendChild(b);
+  });
+  az.appendChild(d);rm(d);
+}
+
+function rTF(az,q){
+  const d=document.createElement('div');d.className='tfr';
+  ['✓ True','✗ False'].forEach((l,i)=>{
+    const b=document.createElement('button');b.className='tfb';b.textContent=l;b.dataset.oi=i;
+    b.onclick=()=>dA(i===q.ans,q.exp,b,d.querySelectorAll('.tfb'),q.ans);
+    d.appendChild(b);
+  });
+  az.appendChild(d);
+}
+
+function dA(ok,exp,btn,all,correctIdx){
+  clearInterval(tI);
+  all.forEach(b=>{
+    b.classList.add('lk');
+    const oi=+b.dataset.oi;
+    if(oi===correctIdx) b.classList.add('ok');
+  });
+  if(!ok) btn.classList.add('no');
+  fA(ok,exp);
+}
+
+function fA(ok,exp){
+  tot++;let eb=0;
+  if(ok){sc++;rC++;stk++;if(stk>bstk)bstk=stk;
+    if(tL>=SPEED_THRESHOLD){eb=1;bon++;rB++;sc++}
+    sOk();$('qc').classList.add('pp')}
+  else{stk=0;sNo();$('qc').classList.add('sk')}
+  const sEl=$('gs');sEl.textContent=sc;sEl.classList.remove('pop');sEl.offsetHeight;sEl.classList.add('pop');
+  const se=$('str');if(stk>=3){se.textContent='🔥 '+stk+' Streak';se.classList.add('vi')}else se.classList.remove('vi');
+  showFeedbackIcon(ok);
+  const fb=$('fb');fb.style.display='block';fb.className='fb '+(ok?'fo':'fn');
+  $('fh').textContent=ok?'Correct.':'Not quite.';$('ft').textContent=exp||'';rm($('ft'));
+  $('fbo').textContent=eb?'⚡ Speed bonus! +1 pt ('+tL+'s left)':'';
+  const q=rqs[cq];
+  updAdapt(q.id,ok,tL);
+  // re-insert missed questions ~3 later (within same session)
+  if(!ok && cq+3<rqs.length+3){
+    const insertAt=Math.min(cq+3,rqs.length);
+    if(!rqs.slice(cq+1).some(x=>x.id===q.id)) rqs.splice(insertAt,0,q);
+  }
+  // record in history for review
+  let correctAnsText;
+  if(q.type==='tf') correctAnsText=(q.ans===0?'TRUE':'FALSE');
+  else if(q.type==='spotErr') correctAnsText='Step '+(q.ans+1)+' is wrong: '+(q.steps[q.ans]||'').replace(/^Step \d+:\s*/,'');
+  else correctAnsText=q.opts[q.ans];
+  hist.push({
+    round:cr, qid:q.id, type:q.type, cat:q.cat,
+    stem:q.stem, correct:ok,
+    correctAns:correctAnsText,
+    exp:exp||''
+  });
+  $('nw').classList.add('vi');
+  setTimeout(()=>$('fb').scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+
+function nQ(){
+  cq++;
+  if(cq>=rqs.length) sRC();
+  else rQ();
+}
+
+function sRC(){
+  sDn();
+  const r=D[cr];
+  const totalAnswered=hist.filter(h=>h.round===cr).length;
+  const correctCount=hist.filter(h=>h.round===cr && h.correct).length;
+  const p=totalAnswered>0?Math.round(100*correctCount/totalAnswered):0;
+  curPct=p;
+  let e='📖';
+  if(p===100) e='⚔️';
+  else if(p>=80) e='🎭';
+  else if(p>=60) e='📜';
+  $('rce').textContent=e;
+  $('rct').textContent='Act '+ROMAN[cr]+': '+r.name+' — Complete';
+  $('rcs').textContent=rC+'/'+QS_PER_ROUND+' correct · '+p+'%';
+  $('rcb').textContent=rB>0?'⚡ '+rB+' speed bonus!':'';
+  if(p===100) cfti(25);
+  rScores.push({name:r.name,c:rC,t:QS_PER_ROUND,pct:p});
+  // Save round progress
+  if(!LS.rounds[r.id]) LS.rounds[r.id]={plays:0,bestPct:0,cleared:false};
+  LS.rounds[r.id].plays++;
+  LS.rounds[r.id].bestPct=Math.max(LS.rounds[r.id].bestPct||0,p);
+  if(p>=60) LS.rounds[r.id].cleared=true;
+  svSt();
+  // Button label: use CURRENT performance (not historical) to match action
+  const lastRound=cr>=D.length-1;
+  if(p<60){
+    $('rcbt').textContent='Retry Act '+ROMAN[cr];
+  } else if(lastRound){
+    $('rcbt').textContent='See Final Verdict';
+  } else {
+    $('rcbt').textContent='Act '+ROMAN[cr+1]+': '+D[cr+1].name+' →';
+  }
+  sw('s-rc');
+}
+
+function aRC(){
+  if(curPct<60){
+    // retry: drop the failed attempt's history entries for this round
+    hist=hist.filter(h=>h.round!==cr);
+    rScores=rScores.filter(r=>r.name!==D[cr].name);
+    // re-select 5 new questions from the pool and replay
+    rqs=selPri(D[cr].pool,QS_PER_ROUND);
+    cq=0;rC=0;rB=0;
+    sw('s-g');rQ();
+  } else if(cr>=D.length-1){
+    sRes();
+  } else {
+    cr++;sRI();
+  }
+}
+
+function goTitle(){renderDash();sw('s-t')}
+
+// module-level: captured on final results so submit can reference them
+let finalStats={pct:0,correct:0,total:0,sc:0,bstk:0};
+
+function sRes(){
+  const tQ=hist.length,cc=hist.filter(h=>h.correct).length,p=tQ>0?0|cc/tQ*100:0;
+  finalStats={pct:p,correct:cc,total:tQ,sc:sc,bstk:bstk};
+  let em,ti,su;
+  if(p>=90){em='👑';ti='<em>Grandmaster of the Continuum</em>';su="You've bent the integral sign to your will.";cfti(60)}
+  else if(p>=80){em='⚔️';ti='Master Tactician';su='Strong control. A small handful escaped.'}
+  else if(p>=70){em='🎭';ti='Journeyman of Acts';su='Solid foundation — tune up the weak spots.'}
+  else if(p>=50){em='📜';ti='Apprentice Scholar';su='Rebuild the basics and attack again.'}
+  else{em='📖';ti='Novice';su='Start with Act I and work up slowly.'}
+  sGv();
+  $('re').textContent=em;$('rtl').innerHTML=ti;rm($('rtl'));$('rst').textContent=su;
+  $('rsc').innerHTML=sc+' <small>pts</small>';
+  $('rpc').textContent=cc+'/'+tQ+' ('+p+'%) · '+bon+' speed bonus';
+  $('z1').textContent=cc;$('z2').textContent=bon;$('z3').textContent=bstk;$('z4').textContent=sc;
+  const rb=$('rnd-bars');rb.innerHTML='';
+  rScores.forEach((r,i)=>{
+    const pct=r.pct;
+    const row=document.createElement('div');row.className='rb';
+    row.innerHTML='<div class="rb-name">'+ROMAN[i]+'. '+r.name+'</div>'
+      +'<div class="rb-track"><div class="rb-fill" style="width:0%;background:'+ACT_FG[i]+'"></div></div>'
+      +'<div class="rb-score">'+r.c+'/'+r.t+'</div>';
+    rb.appendChild(row);setTimeout(()=>{row.querySelector('.rb-fill').style.width=pct+'%'},100+i*80);
+  });
+  sw('s-rs');
+}
+
+// ========= LEADERBOARD (Firebase Realtime Database) =========
+const FIREBASE_DB='https://revenge-of-the-basco-default-rtdb.firebaseio.com';
+const LB_PATH='/acts-of-the-continuous-leaderboard';
+const LB_LOCAL='aoc_lb_cache';
+const NAME_LOCAL='aoc_last_name';
+let leaderboard=[];let lbLoading=false;let lastSubmittedId=null;
+
+async function loadLB(){
+  if(lbLoading) return;
+  lbLoading=true;
+  try{
+    const res=await fetch(FIREBASE_DB+LB_PATH+'.json?orderBy=%22pct%22&limitToLast=50',{cache:'no-store'});
+    if(res.ok){
+      const data=await res.json();
+      if(data && typeof data==='object'){
+        leaderboard=Object.entries(data).map(function(e){return Object.assign({_id:e[0]},e[1])});
+        leaderboard.sort(function(a,b){return (b.pct||0)-(a.pct||0) || (b.sc||0)-(a.sc||0)});
+        leaderboard=leaderboard.slice(0,25);
+        try{localStorage.setItem(LB_LOCAL,JSON.stringify(leaderboard))}catch(e){}
+        lbLoading=false;return;
+      } else {
+        leaderboard=[];lbLoading=false;return;
+      }
+    }
+  }catch(e){}
+  try{const stored=localStorage.getItem(LB_LOCAL);if(stored){leaderboard=JSON.parse(stored)||[]}}catch(e){leaderboard=[]}
+  lbLoading=false;
+}
+
+async function saveScore(name){
+  const entry={
+    name:String(name||'').trim().substring(0,12)||'Anonymous',
+    pct:finalStats.pct,
+    sc:finalStats.sc,
+    correct:finalStats.correct,
+    total:finalStats.total,
+    streak:finalStats.bstk,
+    date:new Date().toISOString().slice(0,10)
+  };
+  let savedId=null;
+  try{
+    const res=await fetch(FIREBASE_DB+LB_PATH+'.json',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(entry)
+    });
+    if(res.ok){const j=await res.json();savedId=(j&&j.name)||null}
+  }catch(e){}
+  lastSubmittedId=savedId;
+  try{localStorage.setItem(NAME_LOCAL,entry.name)}catch(e){}
+  await loadLB();
+  return savedId;
+}
+
+function sLB(){
+  sw('s-lb');
+  $('lb-st').textContent='Loading global rankings…';
+  $('lb-ls').innerHTML='';
+  loadLB().then(renderLB);
+}
+function refreshLB(){$('lb-st').textContent='Refreshing…';$('lb-ls').innerHTML='';loadLB().then(renderLB)}
+
+function renderLB(){
+  const l=$('lb-ls');l.innerHTML='';
+  if(!leaderboard.length){
+    $('lb-st').textContent='';
+    l.innerHTML='<div class="lb-em">No scores yet.<br>Be the first to finish a run and submit!</div>';
+    return;
+  }
+  $('lb-st').textContent=leaderboard.length+(leaderboard.length===1?' run':' runs')+' recorded · sorted by % then points';
+  leaderboard.forEach(function(e,i){
+    const row=document.createElement('div');
+    row.className='lb-rw'+(e._id && e._id===lastSubmittedId?' me':'');
+    row.style.animationDelay=(i*30)+'ms';
+    const medal=i===0?'🥇':(i===1?'🥈':(i===2?'🥉':'#'+(i+1)));
+    const mc=i===0?'g':(i===1?'s':(i===2?'b':''));
+    const nm=(e.name||'—').replace(/[<>&]/g,'');
+    const pct=(e.pct||0);
+    const sc=(e.sc||0);
+    const dt=(e.date||'').slice(5); // MM-DD
+    row.innerHTML='<div class="lb-rk '+mc+'">'+medal+'</div>'
+      +'<div class="lb-nm">'+nm+'</div>'
+      +'<div class="lb-pct">'+pct+'%</div>'
+      +'<div class="lb-sc">'+sc+'pts</div>'
+      +'<div class="lb-dt">'+dt+'</div>';
+    l.appendChild(row);
+  });
+}
+
+function openSubmitModal(){
+  const mo=$('mo-nm');
+  const inp=$('nm-in');
+  const err=$('nm-err');err.style.display='none';err.textContent='';
+  try{const last=localStorage.getItem(NAME_LOCAL);if(last)inp.value=last}catch(e){}
+  $('nm-preview').textContent='Your run: '+finalStats.pct+'% · '+finalStats.sc+' pts · streak '+finalStats.bstk;
+  mo.classList.add('on');
+  setTimeout(function(){inp.focus();inp.select()},60);
+}
+function closeSubmitModal(){$('mo-nm').classList.remove('on')}
+async function confirmSubmit(){
+  const inp=$('nm-in');
+  const err=$('nm-err');
+  const btn=$('nm-sb');
+  const name=(inp.value||'').trim();
+  if(!name){err.textContent='Please enter a name.';err.style.display='block';inp.focus();return}
+  if(!/^[\x20-\x7E]{1,12}$/.test(name)){err.textContent='Use 1–12 standard characters (letters, digits, basic punctuation).';err.style.display='block';inp.focus();return}
+  btn.disabled=true;btn.textContent='Submitting…';
+  try{await saveScore(name)}catch(e){}
+  btn.disabled=false;btn.textContent='Submit';
+  closeSubmitModal();
+  sLB();
+}
+
+// kick off a quiet background load so the leaderboard feels instant when opened
+setTimeout(function(){loadLB()},1200);
+
+// ========= REVIEW =========
+let rvF='w';
+function sRv(f){rvF=f||'w';uT();rRv();sw('s-rv')}
+function fR(f){rvF=f;uT();rRv()}
+function uT(){$('tw2').classList.toggle('ac',rvF==='w');$('ta2').classList.toggle('ac',rvF==='a')}
+function rRv(){
+  const l=$('rvl');l.innerHTML='';
+  const its=rvF==='w'?hist.filter(h=>!h.correct):hist;
+  if(!its.length){
+    l.innerHTML='<div style="text-align:center;color:var(--emerald);padding:2rem;font-size:.88rem">🎉 Perfect score!</div>';
+    return;
+  }
+  its.forEach(h=>{
+    const c=document.createElement('div');c.className='rv-c '+(h.correct?'rr':'rw');
+    // header row
+    const head=document.createElement('div');head.className='q-c';head.style.marginBottom='.3rem';
+    const lblSpan=document.createElement('span');lblSpan.className='lbl';
+    lblSpan.textContent='Act '+ROMAN[h.round]+' · '+D[h.round].name;
+    const typSpan=document.createElement('span');typSpan.className='typ '+h.type;
+    typSpan.textContent=TYPE_LABEL[h.type];
+    head.appendChild(lblSpan);head.appendChild(typSpan);
+    // stem
+    const stemDiv=document.createElement('div');stemDiv.className='rv-q';
+    stemDiv.textContent=h.stem;
+    // answer block
+    const ansDiv=document.createElement('div');ansDiv.className='rv-a';
+    const tagSpan=document.createElement('span');
+    tagSpan.className='tag '+(h.correct?'c':'w');
+    tagSpan.textContent=h.correct?'✓ Correct':'✗ Missed';
+    const correctStrong=document.createElement('strong');correctStrong.textContent=h.correctAns;
+    const expSpan=document.createElement('span');expSpan.className='exp';
+    expSpan.textContent=h.exp;
+    ansDiv.appendChild(tagSpan);ansDiv.appendChild(correctStrong);ansDiv.appendChild(expSpan);
+    // assemble
+    c.appendChild(head);c.appendChild(stemDiv);c.appendChild(ansDiv);
+    l.appendChild(c);
+  });
+  rm(l);
+}
+
+// ========= KEYBOARD =========
+document.addEventListener('keydown',e=>{
+  if(!$('s-g').classList.contains('on')) return;
+  const bs=document.querySelectorAll('.ab:not(.lk), .tfb:not(.lk)');
+  const nv=$('nw').classList.contains('vi');
+  const km={'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3,'t':0,'f':1};
+  const k=e.key.toLowerCase();
+  if(k in km && bs.length>0 && km[k]<bs.length) bs[km[k]].click();
+  if((e.key==='Enter'||e.key===' ') && nv){e.preventDefault();nQ()}
+});
+
+// ========= BOOT =========
+(function(){
+  ldSt();
+  renderDash();
+})();
+</script>
+</body>
+</html>
