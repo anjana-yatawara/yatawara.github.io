@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /_template.html
+Disallow: /_BRIEF.md
+Disallow: /_BRIEF-COSMOS.md
+Disallow: /_BRIEF-WHITE.md
+Disallow: /_BRIEF-ENTROPY.md
+Disallow: /_BRIEF-KANDINSKY.md
+Disallow: /_BRIEF-APPLE.md
+Disallow: /_YATTA-SETUP.md
+
+Sitemap: https://www.yatawara.com/sitemap.xml

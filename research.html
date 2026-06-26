@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<!-- =========================================================================
+     CANONICAL PAGE TEMPLATE — yatawara.com
+     Every page MUST start from this skeleton. Replace the 4 PER-PAGE marks:
+       (1) <title> + <meta name="description">  (2) <link rel="canonical">
+       (3) og:/twitter: url+title+description    (4) <main> content
+     Keep <head> resource order, the theme-flash inline script, the <header>,
+     the <footer>, and the <script> includes identical across pages.
+     Use root-absolute asset paths ("/assets/...") so subdirectory pages work.
+     ========================================================================= -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+
+  <title>Research — Anjana Yatawara</title>
+  <meta name="description" content="Dr. Anjana Yatawara's research program: volatility memory and GARCH-family econometrics, hybrid time series &amp; machine learning, environmental justice and air quality, and AI in statistics education.">
+  <meta name="author" content="Anjana Yatawara">
+
+  <link rel="canonical" href="https://www.yatawara.com/research.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Anjana Yatawara">
+  <meta property="og:url" content="https://www.yatawara.com/research.html">
+  <meta property="og:title" content="Research — Anjana Yatawara">
+  <meta property="og:description" content="Four research pillars sharing one core: volatility memory &amp; GARCH, machine learning, environmental justice, and AI in education.">
+  <meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Research — Anjana Yatawara">
+  <meta name="twitter:description" content="Volatility memory &amp; GARCH, machine learning, environmental justice, and AI in education.">
+  <meta name="twitter:image" content="https://www.yatawara.com/assets/img/og.png">
+
+  <!-- favicon -->
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/favicon.svg">
+
+  <!-- theme flash guard: run BEFORE paint -->
+  <script>
+    (function(){try{var t=localStorage.getItem('ay-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+  </script>
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/css/core.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+
+  <style>
+    /* research.html — page-unique layout only; reuse core/components tokens */
+
+    /* pillar index strip under the lead */
+    .pillar-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--space-6); }
+    .pillar-nav a {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--dim);
+      padding: 0.45rem 0.8rem; border-radius: var(--r-pill);
+      background: var(--surface); border: 1px solid var(--border);
+      transition: all var(--t-fast) var(--ease);
+    }
+    .pillar-nav a:hover { color: var(--text); border-color: var(--border-2); background: var(--surface-2); transform: translateY(-2px); }
+    .pillar-nav a .pn-num { color: var(--cyan); }
+
+    /* research project entry — card variant with header row + body */
+    .proj { display: flex; flex-direction: column; gap: var(--space-3); }
+    .proj-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); }
+    .proj-title { font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; color: var(--text); line-height: 1.35; letter-spacing: -0.01em; }
+    .proj-title em { color: var(--text); font-style: italic; }
+    .proj p { font-size: var(--fs-sm); color: var(--dim); line-height: 1.62; margin: 0; }
+    .proj-meta { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--dimmer); }
+    .proj-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--space-1); }
+    .proj-links a {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-family: var(--font-mono); font-size: 0.66rem; color: var(--cyan);
+      padding: 0.22rem 0.6rem; border: 1px solid var(--border); border-radius: 5px;
+      transition: all var(--t-fast) var(--ease);
+    }
+    .proj-links a:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+    .proj-links a svg { width: 12px; height: 12px; }
+    .badge-wrap { flex-shrink: 0; }
+
+    /* compact "additional models" inline list */
+    .model-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: var(--space-2); }
+
+    /* lead-in line for a pillar section */
+    .pillar-lead { color: var(--text-soft); font-size: var(--fs-lead); line-height: 1.55; max-width: 70ch; margin-bottom: var(--space-6); }
+
+    /* spacing between consecutive pillar sections */
+    .pillar + .pillar { margin-top: var(--space-2); }
+
+    @media (max-width: 560px) {
+      .proj-head { flex-direction: column; gap: var(--space-2); }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===================== HEADER (identical on every page) ===================== -->
+  <header class="site-header">
+    <div class="wrap-wide">
+      <a class="brand" href="/index.html" aria-label="Anjana Yatawara — home">
+        <span class="glyph">AY</span>
+        <span class="name"><b>anjana</b> <span>yatawara</span></span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav-link" href="/research.html">research</a>
+        <a class="nav-link" href="/publications.html">publications</a>
+        <a class="nav-link" href="/teaching.html">teaching</a>
+        <a class="nav-link" href="/consulting.html">consulting</a>
+        <a class="nav-link" href="/kernelstats.html">kernelstats</a>
+        <a class="nav-link" href="/games/index.html">games</a>
+        <a class="nav-link" href="/cv.html">cv</a>
+        <a class="nav-link" href="/blog.html">blog</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><span data-theme-icon></span></button>
+        <button class="cmdk-trigger" data-cmdk-open aria-label="Open command palette">
+          <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="label">search</span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <button class="icon-btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN (4) PER-PAGE ===================== -->
+  <main id="main">
+
+    <!-- ---------- page head ---------- -->
+    <section class="page-head">
+      <div class="wrap">
+        <p class="kicker"><span class="dot">◆</span> yatawara.com / research</p>
+        <h1>Research</h1>
+        <p class="lead">
+          A single research program along four pillars that share one core: modeling complex
+          temporal and spatial patterns — how systems encode, persist, and forget information —
+          to produce <span class="gradient-text">actionable insight</span>.
+        </p>
+        <nav class="pillar-nav" aria-label="Research pillars">
+          <a href="#volatility"><span class="pn-num">01</span> volatility &amp; memory</a>
+          <a href="#ml"><span class="pn-num">02</span> time series + ML</a>
+          <a href="#environment"><span class="pn-num">03</span> environmental justice</a>
+          <a href="#education"><span class="pn-num">04</span> AI in education</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- 01 — FINANCIAL VOLATILITY & TIME-SERIES ECONOMETRICS          -->
+    <!-- ============================================================= -->
+    <section class="section pillar" id="volatility">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">01</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Financial Volatility &amp; Time-Series Econometrics</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// primary</span>
+        </div>
+
+        <p class="pillar-lead" data-reveal>
+          How do markets remember? My primary line of work develops new econometric models for
+          volatility persistence — measuring the shape of market memory directly from data instead
+          of assuming it. The central finding: that memory decays
+          <strong>sub-exponentially</strong> — fast at first, then a long, faint tail.
+        </p>
+
+        <!-- kernel-playground centerpiece -->
+        <div data-reveal>
+          <p class="term-ln"><span class="prompt">$</span> kernel --plot stretched-exponential <span class="flag">--alpha</span> 0.27 <span class="flag">--live</span></p>
+          <div data-component="kernel-playground"></div>
+        </div>
+
+        <div class="grid cols-2 mt-6">
+
+          <article class="card glow-cyan proj" data-reveal>
+            <div class="proj-head">
+              <span class="proj-title"><em>The Shape of Volatility Memory</em></span>
+              <span class="badge-wrap"><span class="badge badge-inprogress">In progress</span></span>
+            </div>
+            <p>
+              Volatility memory kernels across 100+ assets — equities, FX, commodities, fixed
+              income, crypto, and the VIX — follow sub-exponential (stretched-exponential) decay,
+              fitting markedly better than GARCH and FIGARCH. Introduces the <strong>GMARCH</strong>
+              and <strong>SEARCH</strong> modeling frameworks.
+            </p>
+            <p class="proj-meta">In production — target: Journal of Business &amp; Economic Statistics</p>
+          </article>
+
+          <article class="card glow-cyan proj" data-reveal data-delay="1">
+            <div class="proj-head">
+              <span class="proj-title"><em>MF2V-GARCH</em></span>
+              <span class="badge-wrap"><span class="badge badge-inprogress">In progress</span></span>
+            </div>
+            <p>
+              Augments Conrad &amp; Engle's (2025) Multiplicative Factor Multi-Frequency GARCH with
+              smoothed trading volume. Evaluated on 15 US assets with rolling out-of-sample
+              forecasts; ships with a MATLAB toolbox.
+            </p>
+            <p class="proj-meta">Target: Journal of Forecasting</p>
+            <div class="proj-links">
+              <a href="https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg>
+                MATLAB Toolbox ↗
+              </a>
+            </div>
+          </article>
+
+          <article class="card glow-cyan proj" data-reveal>
+            <div class="proj-head">
+              <span class="proj-title"><em>MF2-GARCH-A</em></span>
+              <span class="badge-wrap"><span class="badge badge-inprogress">In progress</span></span>
+            </div>
+            <p>
+              A sign-sensitive long-run component, giving the long-run variance an asymmetric
+              response to positive versus negative shocks — bad news and good news leave different
+              marks on market memory.
+            </p>
+            <p class="proj-meta">Target: International Journal of Forecasting</p>
+          </article>
+
+          <article class="card glow-cyan proj" data-reveal data-delay="1">
+            <div class="proj-head">
+              <span class="proj-title"><em>MF2-EGARCH</em></span>
+              <span class="badge-wrap"><span class="badge badge-inprogress">In progress</span></span>
+            </div>
+            <p>
+              An exponential-GARCH version of the multiplicative-factor multi-frequency framework,
+              including asymmetric MEM and logarithmic MEM long-term variants.
+            </p>
+            <p class="proj-meta">Target: International Journal of Forecasting</p>
+          </article>
+
+        </div>
+
+        <!-- additional models + software -->
+        <div class="card mt-5" data-reveal>
+          <h3 style="font-size:1.05rem;margin-bottom:var(--space-3)">Additional volatility models</h3>
+          <div class="model-row">
+            <span class="tag violet">MR-HYGARCH</span>
+            <span class="tag violet">FI-GJRGARCH</span>
+            <span class="tag violet">ST-FI-GJRGARCH</span>
+          </div>
+          <p class="text-dim" style="font-size:var(--fs-sm);margin-top:var(--space-3)">
+            Multiple Regime Hyperbolic GARCH (MR-HYGARCH), Fractionally Integrated GJR-GARCH
+            (FI-GJRGARCH), and Smooth-Transition FI-GJRGARCH — extending long-memory and asymmetric
+            volatility modeling.
+          </p>
+          <div class="divider"></div>
+          <h3 style="font-size:1.05rem;margin-bottom:var(--space-3)">Software</h3>
+          <p class="text-dim" style="font-size:var(--fs-sm);margin-bottom:var(--space-3)">
+            <strong style="color:var(--text)">MF2V-GARCH Toolbox for MATLAB</strong> — open-source
+            implementation of the multiplicative-factor multi-frequency framework with smoothed
+            trading volume.
+          </p>
+          <a class="btn btn-sm" href="https://github.com/anjana-yatawara/MF2V-GARCH-Toolbox-for-MATLAB" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg>
+            View on GitHub ↗
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- 02 — HYBRID TIME SERIES & MACHINE LEARNING                    -->
+    <!-- ============================================================= -->
+    <section class="section pillar" id="ml">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">02</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Hybrid Time Series &amp; Machine Learning</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// forecasting</span>
+        </div>
+
+        <p class="pillar-lead" data-reveal>
+          Explainable machine-learning forecasting, grounded in statistics — pairing the structure
+          of classical time-series models with the flexibility of deep learning, without giving up
+          interpretability.
+        </p>
+
+        <article class="card glow-violet proj" data-reveal>
+          <div class="proj-head">
+            <span class="proj-title"><em>GRU-CNN Hybrid for Influenza Forecasting</em></span>
+            <span class="badge-wrap"><span class="badge badge-inprogress">In progress</span></span>
+          </div>
+          <p>
+            A hybrid GRU-CNN architecture with Yeo-Johnson scaling for forecasting influenza-like
+            illness — combining recurrent memory and convolutional feature extraction for more
+            accurate, explainable public-health forecasts.
+          </p>
+          <p class="proj-meta">Presented at JSM 2025 · with student Noah Gallego and Prof. Isuru Ratnayake (KUMC) · manuscript in preparation</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- 03 — ENVIRONMENTAL JUSTICE & AIR QUALITY                      -->
+    <!-- ============================================================= -->
+    <section class="section pillar" id="environment">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">03</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Environmental Justice &amp; Air Quality</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// spatial</span>
+        </div>
+
+        <p class="pillar-lead" data-reveal>
+          Statistical frameworks for measuring who breathes what — quantifying multi-pollutant
+          exposure, its fine-scale spatial structure, and how it tracks with income across
+          communities.
+        </p>
+
+        <div class="grid cols-3">
+
+          <article class="card glow-cyan proj" data-reveal>
+            <div class="proj-head">
+              <span class="proj-title"><em>Income-Based Exposure Disparities in California</em></span>
+              <span class="badge-wrap"><span class="badge badge-published">Published</span></span>
+            </div>
+            <p>
+              A county-level, multi-pollutant framework (PM<sub>2.5</sub>, NO₂, O₃, SO₂, CO)
+              quantifying income-based air-quality disparities across California.
+            </p>
+            <p class="proj-meta">Environmental Research: Health, 2025 · with students Kayla Ko &amp; Christian Rodriguez · CES Mini-Grant</p>
+            <div class="proj-links">
+              <a href="https://iopscience.iop.org/article/10.1088/2752-5309/ae4134/meta" target="_blank" rel="noopener">Paper ↗</a>
+            </div>
+          </article>
+
+          <article class="card glow-cyan proj" data-reveal data-delay="1">
+            <div class="proj-head">
+              <span class="proj-title"><em>Fine-Scale Air-Quality Heterogeneity in Twin Cities</em></span>
+              <span class="badge-wrap"><span class="badge badge-published">Published</span></span>
+            </div>
+            <p>
+              Evaluating fine-scale air-quality heterogeneity using a network of 45 low-cost
+              multi-pollutant sensors across Minneapolis–St. Paul.
+            </p>
+            <p class="proj-meta">ACS ES&amp;T Air, 2025</p>
+            <div class="proj-links">
+              <a href="https://pubs.acs.org/doi/abs/10.1021/acsestair.5c00439" target="_blank" rel="noopener">Paper ↗</a>
+            </div>
+          </article>
+
+          <article class="card glow-cyan proj" data-reveal data-delay="2">
+            <div class="proj-head">
+              <span class="proj-title"><em>Air Pollution &amp; Fertility Patterns</em></span>
+              <span class="badge-wrap"><span class="badge badge-inprogress">Ongoing</span></span>
+            </div>
+            <p>
+              An ongoing study of the relationship between air pollution and fertility patterns
+              across California counties.
+            </p>
+            <p class="proj-meta">CV Pathway 2025 apprenticeship</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- 04 — AI IN STATISTICS EDUCATION                               -->
+    <!-- ============================================================= -->
+    <section class="section pillar" id="education">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">04</span>
+          <h2 class="s-title"><span class="arrow">▸</span>AI in Statistics Education</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// elevate</span>
+        </div>
+
+        <p class="pillar-lead" data-reveal>
+          Building and studying AI-powered tools that help students learn statistics — turning
+          large language models from answer generators into thinking partners. Supported by the
+          California Learning Lab <strong>ELEVATE</strong> grant.
+        </p>
+
+        <div class="grid cols-3">
+
+          <article class="card glow-violet proj" data-reveal>
+            <div class="proj-head">
+              <span class="proj-title"><em>Scaffolded LLM Tutors</em></span>
+              <span class="badge-wrap"><span class="badge badge-submitted">Submitted</span></span>
+            </div>
+            <p>
+              Lead author. "From Answer Generators to Thinking Partners" — a Custom GPT framework
+              for tutoring, prompting, and ethics in statistics education.
+            </p>
+            <p class="proj-meta">Submitted to JSDSE</p>
+          </article>
+
+          <article class="card glow-violet proj" data-reveal data-delay="1">
+            <div class="proj-head">
+              <span class="proj-title"><em>Structured AI Tutoring in Engineering Education</em></span>
+              <span class="badge-wrap"><span class="badge badge-published">Published</span></span>
+            </div>
+            <p>
+              Co-author. A work-in-progress study of structured AI tutoring in engineering
+              education.
+            </p>
+            <p class="proj-meta">IEEE FIE 2025</p>
+            <div class="proj-links">
+              <a href="https://ieeexplore.ieee.org/abstract/document/11328293" target="_blank" rel="noopener">Paper ↗</a>
+            </div>
+          </article>
+
+          <article class="card glow-violet proj" data-reveal data-delay="2">
+            <div class="proj-head">
+              <span class="proj-title"><em>Computer-Aided Instruction for K–12 Teachers</em></span>
+              <span class="badge-wrap"><span class="badge badge-published">Published</span></span>
+            </div>
+            <p>
+              A cognitive-apprenticeship approach to integrating large language models into
+              instruction for K–12 teachers.
+            </p>
+            <p class="proj-meta">IEEE FIE 2025</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap"><hr class="divider"></div>
+
+    <!-- ============================================================= -->
+    <!-- COLLABORATORS                                                 -->
+    <!-- ============================================================= -->
+    <section class="section-sm" id="collaborators">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">05</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Collaborators</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// network</span>
+        </div>
+        <div class="chips" data-reveal>
+          <span class="chip">V.A. Samaranayake · Missouri S&amp;T <span class="text-dim">(PhD advisor)</span></span>
+          <span class="chip">Isuru Ratnayake · KUMC</span>
+          <span class="chip">Alberto Cruz · CSUB ECE <span class="text-dim">(ELEVATE PI)</span></span>
+          <span class="chip">Jianjun Wang · CSUB Math</span>
+          <span class="chip">Maruti Mishra · CSUB</span>
+          <span class="chip">Eduardo Montoya · CSUB Math</span>
+          <span class="chip">Bilin Zeng · CSUB Math</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- GRANTS                                                        -->
+    <!-- ============================================================= -->
+    <section class="section-sm" id="grants">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-num">06</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Grants &amp; Funding</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// funded</span>
+        </div>
+        <div class="table-wrap" data-reveal>
+          <table class="data">
+            <thead>
+              <tr>
+                <th scope="col">Year</th>
+                <th scope="col">Project</th>
+                <th scope="col">Role</th>
+                <th scope="col">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">2025</td>
+                <td>Air Pollution Disparities in California 2000–2025</td>
+                <td>PI</td>
+                <td>CES Mini-Grant, CSUB</td>
+              </tr>
+              <tr>
+                <td class="mono">2024–25</td>
+                <td>ELEVATE: Enhancing Learning Experiences Via AI Techniques</td>
+                <td>Co-PI</td>
+                <td>California Learning Lab AI FAST Challenge</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-6" data-reveal>
+          <a class="link-arrow" href="/publications.html">See the full publication list <span class="arr">→</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER (identical on every page) ===================== -->
+  <footer class="site-footer">
+    <div class="wrap-wide">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <div class="name">Anjana Yatawara</div>
+          <p>Statistician &amp; applied mathematician studying how complex systems encode and forget information. Assistant Professor, CSU Bakersfield.</p>
+          <div class="foot-socials">
+            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&hl=en&oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
+            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <div class="foot-links">
+            <a href="/research.html">Research</a>
+            <a href="/publications.html">Publications</a>
+            <a href="/teaching.html">Teaching</a>
+            <a href="/consulting.html">Consulting</a>
+            <a href="/games/index.html">Games</a>
+          </div>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <div class="foot-links">
+            <a href="https://kernelstats.com" target="_blank" rel="noopener">KernelStats ↗</a>
+            <a href="/cv.html">Curriculum Vitae</a>
+            <a href="/blog.html">Blog</a>
+            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+            <button class="foot-link-btn" data-cmdk-open style="background:none;border:0;padding:0;color:var(--dim);font:inherit;text-align:left;cursor:pointer">Command palette ⌘K</button>
+          </div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Anjana Yatawara · built as a living interface<span class="caret"></span></span>
+        <span>designed &amp; engineered from the future · <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener">source</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="/assets/js/cosmos.js" defer></script>
+  <script src="/assets/js/shell.js" defer></script>
+  <script src="/assets/js/kernel-playground.js" defer></script>
+</body>
+</html>
