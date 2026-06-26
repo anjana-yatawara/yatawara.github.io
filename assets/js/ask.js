@@ -151,32 +151,32 @@
     {
       title: "Overview",
       tags: [
-        "who is anjana", "who is she", "who is dr yatawara", "about anjana",
-        "about her", "tell me about", "introduce", "introduction", "summary",
-        "what does she do", "her work", "overview", "bio", "biography"
+        "who is anjana", "who is he", "who is dr yatawara", "about anjana",
+        "about his", "tell me about", "introduce", "introduction", "summary",
+        "what does he do", "his work", "overview", "bio", "biography"
       ],
       text:
         "Dr. Anjana Yatawara is a statistician and applied mathematician, " +
         "Assistant Professor of Mathematics & Statistics at California State " +
-        "University, Bakersfield (since Aug 2023). She studies how financial " +
+        "University, Bakersfield (since Aug 2023). He studies how financial " +
         "markets encode and forget information, builds explainable ML models " +
         "for public health, investigates income-based environmental-exposure " +
         "disparities, and creates AI-powered tools that help students learn " +
-        "statistics (supported by the California Learning Lab). She also builds " +
+        "statistics (supported by the California Learning Lab). He also builds " +
         "KernelStats, a free open-source stats platform, plus Custom GPT tutors " +
         "and browser games.",
       answer:
         "**Dr. Anjana Yatawara** is a statistician and applied mathematician — " +
         "**Assistant Professor of Mathematics & Statistics at California State " +
-        "University, Bakersfield** (since Aug 2023). She studies **how financial " +
+        "University, Bakersfield** (since Aug 2023). He studies **how financial " +
         "markets encode and forget information**, builds explainable machine-" +
         "learning models for public health, investigates income-based " +
         "environmental-exposure disparities, and creates **AI-powered tools that " +
         "help students learn statistics** (supported by the California Learning " +
-        "Lab). She also builds **KernelStats**, a free open-source stats platform, " +
+        "Lab). He also builds **KernelStats**, a free open-source stats platform, " +
         "plus Custom GPT tutors and browser games.\n\n" +
-        "Ask me about her **research**, **the volatility-memory finding**, " +
-        "**KernelStats**, **teaching**, **consulting**, or **how to reach her**.",
+        "Ask me about his **research**, **the volatility-memory finding**, " +
+        "**KernelStats**, **teaching**, **consulting**, or **how to reach him**.",
       links: [
         { label: "Research →", url: "/research.html" },
         { label: "KernelStats →", url: "/kernelstats.html" }
@@ -186,7 +186,7 @@
     {
       title: "Research program",
       tags: [
-        "research", "research areas", "research interests", "what does she research",
+        "research", "research areas", "research interests", "what does he research",
         "what do you research", "areas of research", "fields", "topics",
         "what does anjana research", "study", "studies", "focus", "program",
         "four pillars", "pillars"
@@ -229,7 +229,7 @@
         "subexponential", "what is the finding", "main finding", "central finding",
         "headline finding", "nothing ever fully goes away", "alpha 0.27", "alpha",
         "shape of volatility memory", "decay", "explain simply", "in plain english",
-        "how do markets remember", "volatility persistence", "what did she find"
+        "how do markets remember", "volatility persistence", "what did he find"
       ],
       text:
         "Standard finance models assume markets forget exponentially — a shock " +
@@ -239,7 +239,7 @@
         "Vivid version: the first half of a memory disappears in about five days, " +
         "but the last one percent can linger for a year. The curve has a shape " +
         "parameter alpha; at alpha=1 memory is exponential, at alpha<1 the past " +
-        "sticks around longer than it should. Across 100+ financial assets she " +
+        "sticks around longer than it should. Across 100+ financial assets he " +
         "found alpha approximately 0.27. A stretched exponential is a mixture of " +
         "many decay rates running at once (day traders and pension funds processing " +
         "the same crash on different timescales). Nothing ever fully goes away — " +
@@ -255,7 +255,7 @@
         "days — but the last one percent can linger for a year.**\n\n" +
         "The curve has a shape parameter **α**. At **α = 1** memory is exponential " +
         "(things fade on schedule); at **α < 1** the past sticks around longer than " +
-        "it should. Across **100+ financial assets** she found **α ≈ 0.27** — " +
+        "it should. Across **100+ financial assets** he found **α ≈ 0.27** — " +
         "nowhere near 1. Why? A stretched exponential is really a *mixture* of many " +
         "decay rates running at once (day traders and pension funds processing the " +
         "same crash on different timescales). **Nothing ever fully goes away — it " +
@@ -375,7 +375,7 @@
       ],
       text:
         "Anjana's fourth pillar is AI in statistics education, anchored by the " +
-        "California Learning Lab ELEVATE grant (she's Co-PI): Scaffolded LLM Tutors " +
+        "California Learning Lab ELEVATE grant (he's Co-PI): Scaffolded LLM Tutors " +
         "— lead author of 'From Answer Generators to Thinking Partners,' a " +
         "Custom-GPT tutoring/prompt/ethics framework (submitted to JSDSE); " +
         "Structured AI Tutoring in Engineering Education — co-author (published, " +
@@ -385,7 +385,7 @@
         "master the fundamentals — never a shortcut around them.",
       answer:
         "Anjana's fourth pillar is **AI in statistics education**, anchored by the " +
-        "**California Learning Lab ELEVATE** grant (she's **Co-PI**):\n\n" +
+        "**California Learning Lab ELEVATE** grant (he's **Co-PI**):\n\n" +
         "• **Scaffolded LLM Tutors** — lead author of *\"From Answer Generators to " +
         "Thinking Partners,\"* a Custom-GPT tutoring / prompt / ethics framework. " +
         "*(Submitted to JSDSE.)*\n" +
@@ -421,7 +421,7 @@
         "**KernelStats** is Anjana's **free, open-source statistical analysis " +
         "platform** — it runs **entirely in your browser** (no install, no " +
         "license) and is built to replace expensive tools like Minitab (~$1,700/" +
-        "yr), JMP (~$1,785/yr) and SAS (~$8,700/yr). She built it because powerful " +
+        "yr), JMP (~$1,785/yr) and SAS (~$8,700/yr). He built it because powerful " +
         "analysis should be accessible to students, budget researchers and small " +
         "organizations.\n\n" +
         "Highlights: a **Variable Doctor** (15 automated diagnostics with one-click " +
@@ -440,24 +440,24 @@
     {
       title: "Teaching & courses",
       tags: [
-        "teach", "teaches", "teaching", "what does she teach", "what do you teach",
+        "teach", "teaches", "teaching", "what does he teach", "what do you teach",
         "courses", "course", "classes", "class", "math 2200", "math 3200",
         "math 4200", "math 4230", "statistics course", "elementary statistics",
         "mathematical statistics", "probability", "data science course", "subjects"
       ],
       text:
         "At CSUB Anjana teaches from elementary statistics to mathematical " +
-        "statistics and applied data science. Her courses include MATH 2200 " +
+        "statistics and applied data science. His courses include MATH 2200 " +
         "Elementary Statistics (OER, AI-assisted tools); MATH 3200 Probability " +
         "Theory; MATH 3209 Statistical Measures of Inequality in Society (GE); " +
         "MATH 3210 Applied Statistical Computing & Multivariate Methods (graduate, " +
         "R & SAS); MATH 4200 Mathematical Statistics (proof-based); MATH 4210 " +
         "Regression Modeling & Analysis; and MATH 4230 Applied Statistical Methods " +
-        "for Data Science (ISLR, R & Python). She teaches with real data, active " +
+        "for Data Science (ISLR, R & Python). He teaches with real data, active " +
         "learning, and AI introduced deliberately after the fundamentals.",
       answer:
         "At CSUB Anjana teaches **from elementary statistics to mathematical " +
-        "statistics and applied data science**. Her courses include:\n\n" +
+        "statistics and applied data science**. His courses include:\n\n" +
         "• **MATH 2200** — Elementary Statistics *(OER, AI-assisted tools)*\n" +
         "• **MATH 3200** — Probability Theory\n" +
         "• **MATH 3209** — Statistical Measures of Inequality in Society *(GE)*\n" +
@@ -467,8 +467,8 @@
         "• **MATH 4210** — Regression Modeling & Analysis\n" +
         "• **MATH 4230** — Applied Statistical Methods for Data Science " +
         "*(ISLR, R & Python)*\n\n" +
-        "She teaches with real data, active learning, and AI introduced " +
-        "deliberately **after** the fundamentals. Ask about her **teaching " +
+        "He teaches with real data, active learning, and AI introduced " +
+        "deliberately **after** the fundamentals. Ask about his **teaching " +
         "philosophy** for more.",
       links: [{ label: "Teaching page →", url: "/teaching.html" }]
     },
@@ -476,30 +476,30 @@
     {
       title: "Teaching philosophy",
       tags: [
-        "teaching philosophy", "philosophy", "approach to teaching", "her mother",
+        "teaching philosophy", "philosophy", "approach to teaching", "his mother",
         "mother", "sri lanka", "sri lankan", "rural", "why teach", "beliefs",
         "values", "pedagogy", "student centered", "active learning", "google the steps"
       ],
       text:
         "Anjana's teaching philosophy is rooted in the belief that education " +
-        "transforms lives — shaped by her mother, who taught for 35 years in rural " +
-        "Sri Lanka. She builds four kinds of interaction: student-teacher (learn " +
+        "transforms lives — shaped by his mother, who taught for 35 years in rural " +
+        "Sri Lanka. He builds four kinds of interaction: student-teacher (learn " +
         "names, stay approachable, treat every question as equal), student-subject " +
         "(motivate why statistics matters with real examples — markets, crypto, the " +
         "environment), peer-to-peer (group projects and collaborative analyses), and " +
         "student-real-world (presentations, reports, careers). AI is used ethically " +
-        "and only after fundamentals. As she puts it: 'Anyone can google the steps " +
+        "and only after fundamentals. As he puts it: 'Anyone can google the steps " +
         "to a hypothesis test, but you need to understand the basics to interpret " +
         "the result and make inferences.'",
       answer:
         "Anjana's teaching philosophy is rooted in the belief that **education " +
-        "transforms lives** — shaped by her mother, who taught for **35 years in " +
-        "rural Sri Lanka**. She builds four kinds of interaction: student–teacher " +
+        "transforms lives** — shaped by his mother, who taught for **35 years in " +
+        "rural Sri Lanka**. He builds four kinds of interaction: student–teacher " +
         "(learn names, stay approachable, treat every question as equal), student–" +
         "subject (motivate *why* statistics matters with real examples — markets, " +
         "crypto, the environment), peer-to-peer (group projects and collaborative " +
         "analyses), and student–real-world (presentations, reports, careers). AI " +
-        "is used ethically and only after fundamentals. As she puts it: *\"Anyone " +
+        "is used ethically and only after fundamentals. As he puts it: *\"Anyone " +
         "can google the steps to a hypothesis test, but you need to understand the " +
         "basics to interpret the result and make inferences.\"*",
       links: [{ label: "Teaching page →", url: "/teaching.html" }]
@@ -509,31 +509,31 @@
       title: "Consulting & advisory",
       weight: 1.05,
       tags: [
-        "consulting", "consult", "hire", "work with her", "work with you",
+        "consulting", "consult", "hire", "work with him", "work with you",
         "how do i work with", "how can i work with", "data science advisory",
         "advisory", "dashboards", "analytics dashboard", "freelance", "project",
         "services", "business", "data strategy", "for my company", "engagement",
-        "can she help"
+        "can he help"
       ],
       text:
         "Anjana offers statistical consulting & data-science advisory through CSU " +
-        "Bakersfield — all engagements run via CSUB's institutional framework. Her " +
+        "Bakersfield — all engagements run via CSUB's institutional framework. His " +
         "flagship service is AI-Automated Data Analytics Dashboards: custom " +
         "AI-powered dashboards built to your KPIs, automated reporting with " +
         "AI-generated interpretations, real-time pipelines, and production R/Python " +
         "deployed to your infrastructure (powered by the engine behind KernelStats). " +
-        "She also offers time series & forecasting (GARCH + hybrid ML), machine " +
+        "He also offers time series & forecasting (GARCH + hybrid ML), machine " +
         "learning & prediction, study design & analysis, environmental & health " +
         "analytics, AI strategy & implementation, and training & workshops. Process: " +
         "Discovery, Proposal, Engagement, Delivery. To start, email " + EMAIL + ".",
       answer:
         "Anjana offers **statistical consulting & data-science advisory through CSU " +
         "Bakersfield** — all engagements run via CSUB's institutional framework. " +
-        "Her flagship service is **AI-Automated Data Analytics Dashboards**: " +
+        "His flagship service is **AI-Automated Data Analytics Dashboards**: " +
         "custom AI-powered dashboards built to your KPIs, automated reporting with " +
         "AI-generated interpretations, real-time pipelines, and production R/Python " +
         "deployed to your infrastructure (powered by the engine behind " +
-        "KernelStats). She also offers **time series & forecasting** (GARCH + " +
+        "KernelStats). He also offers **time series & forecasting** (GARCH + " +
         "hybrid ML), **machine learning & prediction**, **study design & " +
         "analysis**, **environmental & health analytics**, **AI strategy & " +
         "implementation**, and **training & workshops** (R, Python, SAS, ML, AI).\n\n" +
@@ -551,7 +551,7 @@
       tags: [
         "taking students", "take students", "accepting students", "mentor",
         "mentorship", "undergraduate research", "research opportunities",
-        "join her lab", "work in her lab", "student researcher", "research assistant",
+        "join his lab", "work in his lab", "student researcher", "research assistant",
         "can i do research", "sure program", "cv pathway", "scholars",
         "opportunities for students"
       ],
@@ -560,17 +560,17 @@
         "funded programs (SURE/Chevron, the CV Pathway apprenticeship, and Student " +
         "Research Scholars). Past projects span local-LLM applications for " +
         "education, air-pollution & fertility patterns, and 'How Present is ChatGPT " +
-        "at CSUB?'. The best move is to email her with your interests at " + EMAIL +
-        ". For recommendation letters she asks for at least 3 weeks notice plus your " +
+        "at CSUB?'. The best move is to email him with your interests at " + EMAIL +
+        ". For recommendation letters he asks for at least 3 weeks notice plus your " +
         "CV, the program description, and your emphasis note.",
       answer:
         "Yes — Anjana **actively mentors undergraduate researchers** across several " +
         "funded programs (SURE/Chevron, the CV Pathway apprenticeship, and Student " +
         "Research Scholars). Past projects span local-LLM applications for " +
         "education, air-pollution & fertility patterns, and *\"How Present is " +
-        "ChatGPT at CSUB?\"*. The best move is to **email her** with your " +
+        "ChatGPT at CSUB?\"*. The best move is to **email him** with your " +
         "interests at **[" + EMAIL + "](mailto:" + EMAIL + ")**. (For " +
-        "recommendation letters she asks for **≥3 weeks notice** plus your CV, the " +
+        "recommendation letters he asks for **≥3 weeks notice** plus your CV, the " +
         "program description, and your emphasis note.)",
       links: [
         { label: "Teaching & mentorship →", url: "/teaching.html" },
@@ -602,8 +602,8 @@
       title: "Publications",
       tags: [
         "publications", "papers", "published", "articles", "preprints",
-        "working papers", "journal", "what has she published", "list of papers",
-        "her papers", "dissertation", "thesis", "proceedings", "google scholar",
+        "working papers", "journal", "what has he published", "list of papers",
+        "his papers", "dissertation", "thesis", "proceedings", "google scholar",
         "scholar", "orcid", "citations papers"
       ],
       text:
@@ -613,7 +613,7 @@
         "disparities framework (Environmental Research: Health, 2025), and two IEEE " +
         "FIE 2025 education papers. Working papers include The Shape of Volatility " +
         "Memory (target JBES), MF2V-GARCH, MF2-GARCH-A, and the GRU-CNN influenza " +
-        "model. Her Ph.D. dissertation is The Multiplicative Factor Multi-Frequency " +
+        "model. His Ph.D. dissertation is The Multiplicative Factor Multi-Frequency " +
         "Exponential GARCH ((MF)2EGARCH) (Missouri S&T, 2023).",
       answer:
         "Anjana's peer-reviewed and working papers span volatility, environmental " +
@@ -622,7 +622,7 @@
         "exposure disparities** framework (Environmental Research: Health, 2025), " +
         "and two **IEEE FIE 2025** education papers. Working papers include *The " +
         "Shape of Volatility Memory* (target: JBES), *MF2V-GARCH*, *MF2-GARCH-A*, " +
-        "and the GRU-CNN influenza model. Her **Ph.D. dissertation** is *The " +
+        "and the GRU-CNN influenza model. His **Ph.D. dissertation** is *The " +
         "Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)²EGARCH)* " +
         "(Missouri S&T, 2023).",
       links: [
@@ -634,26 +634,26 @@
     {
       title: "Education & background",
       tags: [
-        "where did she study", "where did you study", "education background",
+        "where did he study", "where did you study", "education background",
         "phd", "ph d", "doctorate", "degree", "degrees", "university",
         "missouri", "missouri s t", "missouri science", "peradeniya",
-        "advisor", "samaranayake", "where did she get her phd", "alma mater",
+        "advisor", "samaranayake", "where did he get his phd", "alma mater",
         "studied", "school", "graduate"
       ],
       text:
-        "Anjana earned her Ph.D. in Mathematics (Statistics emphasis) from Missouri " +
+        "Anjana earned his Ph.D. in Mathematics (Statistics emphasis) from Missouri " +
         "University of Science & Technology (2017-2023), advised by Dr. V.A. " +
         "Samaranayake, with a focus on time series with conditional heteroscedastic " +
-        "structure. Before that she completed a B.Sc. Special Degree in Statistics " +
-        "at the University of Peradeniya, Sri Lanka (2012-2016). She has been an " +
+        "structure. Before that he completed a B.Sc. Special Degree in Statistics " +
+        "at the University of Peradeniya, Sri Lanka (2012-2016). He has been an " +
         "Assistant Professor at CSU Bakersfield since August 2023.",
       answer:
-        "Anjana earned her **Ph.D. in Mathematics (Statistics emphasis) from " +
+        "Anjana earned his **Ph.D. in Mathematics (Statistics emphasis) from " +
         "Missouri University of Science & Technology (2017–2023)**, advised by " +
         "**Dr. V.A. Samaranayake**, with a focus on time series with conditional " +
-        "heteroscedastic structure. Before that she completed a **B.Sc. Special " +
+        "heteroscedastic structure. Before that he completed a **B.Sc. Special " +
         "Degree in Statistics at the University of Peradeniya, Sri Lanka (2012–" +
-        "2016)**. She has been an **Assistant Professor at CSU Bakersfield since " +
+        "2016)**. He has been an **Assistant Professor at CSU Bakersfield since " +
         "August 2023**.",
       links: [{ label: "Curriculum vitae →", url: "/cv.html" }]
     },
@@ -666,21 +666,21 @@
         "positions", "experience", "background", "asa", "ams"
       ],
       text:
-        "Anjana's CV covers her education (Ph.D., Missouri S&T; B.Sc., Peradeniya), " +
+        "Anjana's CV covers his education (Ph.D., Missouri S&T; B.Sc., Peradeniya), " +
         "academic positions (Assistant Professor, CSUB, 2023-present), and funded " +
         "grants — including the CES Mini-Grant (PI) for air-pollution disparities " +
-        "and the California Learning Lab ELEVATE challenge (Co-PI). Her technical " +
+        "and the California Learning Lab ELEVATE challenge (Co-PI). His technical " +
         "toolkit spans R, Python, MATLAB, SAS, SQL, LaTeX, Git, and TensorFlow, " +
         "across GARCH-family modeling, Bayesian inference, machine learning, and " +
-        "Custom GPT / LLM development. She's a member of the ASA and AMS.",
+        "Custom GPT / LLM development. He's a member of the ASA and AMS.",
       answer:
-        "Anjana's CV covers her education (Ph.D., Missouri S&T; B.Sc., Peradeniya), " +
+        "Anjana's CV covers his education (Ph.D., Missouri S&T; B.Sc., Peradeniya), " +
         "academic positions (Assistant Professor, CSUB, 2023–present), and funded " +
         "grants — including the **CES Mini-Grant** (PI) for air-pollution " +
         "disparities and the **California Learning Lab ELEVATE** challenge (Co-PI). " +
-        "Her technical toolkit spans **R, Python, MATLAB, SAS, SQL, LaTeX, Git, " +
+        "His technical toolkit spans **R, Python, MATLAB, SAS, SQL, LaTeX, Git, " +
         "and TensorFlow**, across GARCH-family modeling, Bayesian inference, " +
-        "machine learning, and Custom GPT / LLM development. She's a member of the " +
+        "machine learning, and Custom GPT / LLM development. He's a member of the " +
         "**ASA** and **AMS**.",
       links: [
         { label: "Curriculum vitae →", url: "/cv.html" },
@@ -712,21 +712,21 @@
       title: "Contact",
       tags: [
         "contact", "email", "reach", "get in touch", "how do i contact",
-        "how to reach", "linkedin", "github", "social", "connect", "message her",
-        "phone", "call", "where is she", "find her", "her email"
+        "how to reach", "linkedin", "github", "social", "connect", "message him",
+        "phone", "call", "where is he", "find him", "his email"
       ],
       text:
-        "The best way to reach Anjana is email: " + EMAIL + ". You can also find her " +
+        "The best way to reach Anjana is email: " + EMAIL + ". You can also find him " +
         "on GitHub (github.com/anjana-yatawara), Google Scholar, ORCID " +
-        "(0009-0007-8506-7763), and LinkedIn (in/anjana-yatawara). Her phone number " +
+        "(0009-0007-8506-7763), and LinkedIn (in/anjana-yatawara). His phone number " +
         "isn't published — email is the way to go.",
       answer:
         "The best way to reach Anjana is **email: [" + EMAIL + "](mailto:" + EMAIL +
-        ")**. You can also find her on **[GitHub](https://github.com/anjana-yatawara)**, " +
+        ")**. You can also find him on **[GitHub](https://github.com/anjana-yatawara)**, " +
         "**[Google Scholar](https://scholar.google.com/citations?user=n5WtVd0AAAAJ)**, " +
         "**[ORCID](https://orcid.org/0009-0007-8506-7763)**, and " +
         "**[LinkedIn](https://www.linkedin.com/in/anjana-yatawara)**. " +
-        "*(Her phone number isn't published — email is the way to go.)*",
+        "*(His phone number isn't published — email is the way to go.)*",
       links: [
         { label: "Email →", url: "mailto:" + EMAIL },
         { label: "GitHub ↗", url: "https://github.com/anjana-yatawara" },
@@ -738,18 +738,18 @@
       title: "Collaborators",
       tags: [
         "collaborators", "collaborate", "co authors", "coauthors",
-        "who does she work with", "team", "colleagues", "partners", "works with"
+        "who does he work with", "team", "colleagues", "partners", "works with"
       ],
       text:
-        "Anjana collaborates widely. Her PhD advisor V.A. Samaranayake (Missouri " +
+        "Anjana collaborates widely. His PhD advisor V.A. Samaranayake (Missouri " +
         "S&T) is a frequent co-author on the volatility work; Isuru Ratnayake (KUMC) " +
-        "on the influenza forecasting; and at CSUB she works with Alberto Cruz (ECE, " +
+        "on the influenza forecasting; and at CSUB he works with Alberto Cruz (ECE, " +
         "ELEVATE PI), Jianjun Wang, Maruti Mishra, Eduardo Montoya, and Bilin Zeng, " +
         "among others.",
       answer:
-        "Anjana collaborates widely. Her PhD advisor **V.A. Samaranayake** " +
+        "Anjana collaborates widely. His PhD advisor **V.A. Samaranayake** " +
         "(Missouri S&T) is a frequent co-author on the volatility work; **Isuru " +
-        "Ratnayake** (KUMC) on the influenza forecasting; and at CSUB she works " +
+        "Ratnayake** (KUMC) on the influenza forecasting; and at CSUB he works " +
         "with **Alberto Cruz** (ECE, ELEVATE PI), **Jianjun Wang**, **Maruti " +
         "Mishra**, **Eduardo Montoya**, and **Bilin Zeng**, among others.",
       links: [{ label: "Research →", url: "/research.html" }]
@@ -764,13 +764,13 @@
       ],
       text:
         "Yatta Jr. is Anjana's friendly website assistant. It answers questions " +
-        "about her research, teaching, and tools using a hybrid engine: a curated " +
+        "about his research, teaching, and tools using a hybrid engine: a curated " +
         "knowledge base that always works, an optional private AI that can run " +
         "entirely in your browser via WebGPU, and an optional hosted 'smart' mode. " +
         "It only speaks about Anjana, in the third person.",
       answer:
         "I'm **Yatta Jr.**, Anjana's friendly AI assistant. I answer questions " +
-        "about her **research**, **teaching**, and **tools** — always in the third " +
+        "about his **research**, **teaching**, and **tools** — always in the third " +
         "person.\n\n" +
         "Under the hood I run a **hybrid engine**: a curated knowledge base that " +
         "always works (*instant* mode), an optional **private AI that runs entirely " +
@@ -788,9 +788,9 @@
     "What does Anjana research?",
     "Explain volatility memory simply",
     "What is KernelStats?",
-    "What does she teach?",
-    "How can I work with her?",
-    "Where did she study?"
+    "What does he teach?",
+    "How can I work with him?",
+    "Where did he study?"
   ];
 
   // Precompute normalised tag tokens for each chunk.
@@ -809,7 +809,7 @@
   var STOP = {
     the: 1, a: 1, an: 1, is: 1, are: 1, do: 1, does: 1, did: 1, what: 1,
     who: 1, how: 1, "of": 1, to: 1, "in": 1, on: 1, for: 1, with: 1, and: 1,
-    her: 1, she: 1, his: 1, he: 1, you: 1, your: 1, i: 1, me: 1, my: 1,
+    his: 1, he: 1, his: 1, he: 1, you: 1, your: 1, i: 1, me: 1, my: 1,
     about: 1, tell: 1, can: 1, "this": 1, that: 1, it: 1, "or": 1, "as": 1,
     please: 1, anjana: 1, yatawara: 1, dr: 1
   };
@@ -886,8 +886,8 @@
     var msg =
       "I'm not certain I have that in my knowledge base. I can speak to " +
       "Anjana's **research**, the **volatility-memory finding**, " +
-      "**KernelStats**, her **teaching** and **consulting**, her **background**, " +
-      "and **how to reach her**.";
+      "**KernelStats**, his **teaching** and **consulting**, his **background**, " +
+      "and **how to reach him**.";
     var links = [];
     if (hint && hint.links && hint.links.length) {
       msg += "\n\nThe closest topic looked like **" + hint.title +
@@ -1220,7 +1220,7 @@
       '<div class="ayk-bar">' +
       '<span class="ayk-ava">' + svgAvatar(22) + "</span>" +
       '<span class="ayk-id"><b>Yatta Jr.</b>' +
-      "<span>Anjana's AI · ask about her research, teaching &amp; tools</span></span>" +
+      "<span>Anjana's AI · ask about his research, teaching &amp; tools</span></span>" +
       '<span class="ayk-mode" data-mode="instant" title="Active engine">instant</span>' +
       "</div>" +
       '<div class="ayk-scroll" aria-live="polite"></div>' +
@@ -1269,9 +1269,9 @@
 
     // greeting
     this.botMessage(
-      "**Hi — I'm Yatta Jr.**, Anjana's AI assistant. Ask me about her " +
+      "**Hi — I'm Yatta Jr.**, Anjana's AI assistant. Ask me about his " +
       "research, the volatility-memory finding, KernelStats, teaching, " +
-      "consulting, or how to reach her. Tap a suggestion below to start.",
+      "consulting, or how to reach him. Tap a suggestion below to start.",
       [], "instant"
     );
   };
