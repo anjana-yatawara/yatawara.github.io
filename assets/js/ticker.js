@@ -7,7 +7,7 @@
 
    Cells:
      • a few assets (SPX, BTC, VIX, EUR) — value, colored delta (▲/▼), sparkline
-     • a pulsing "memory α ≈ 0.27" cell  (her central finding)
+     • a pulsing "memory α ≈ 0.27" cell  (his central finding)
      • a "regime" label  (calm · clustering · shock)
 
    DEFAULT = elegant SIMULATED data. Each asset evolves on a ~1.5s interval via
@@ -303,7 +303,7 @@
       };
     });
 
-    // memory-α cell — her signature
+    // memory-α cell — his signature
     var alphaCell = document.createElement("div");
     alphaCell.className = "ay-tkr-cell ay-tkr-alpha";
     alphaCell.innerHTML =
@@ -381,7 +381,7 @@
       });
 
       // memory α — gently jitter around 0.27 so it feels "measured live",
-      // but it's her finding, so keep it tightly pinned.
+      // but it's his finding, so keep it tightly pinned.
       alphaPhase += 0.6;
       var aJit = 0.270 + Math.sin(alphaPhase) * 0.004 + (Math.random() - 0.5) * 0.002;
       alphaValEl.textContent = "≈ " + aJit.toFixed(3);
@@ -517,7 +517,7 @@
       ".ay-tkr-val{font-size:var(--fs-xs);color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;",
         "font-feature-settings:'tnum' 1;min-width:4.6ch;text-align:right;transition:color var(--t-fast) var(--ease);}",
 
-      // memory-α — her signature, a soft glass pill tinted accent blue
+      // memory-α — his signature, a soft glass pill tinted accent blue
       ".ay-tkr-cell.ay-tkr-alpha{background:var(--accent-dim);border:1px solid var(--hair-2);border-radius:var(--r-md);",
         "box-shadow:var(--shadow-1);margin:.28rem .55rem;padding:.34rem .8rem;}",
       ".ay-tkr-cell.ay-tkr-alpha + .ay-tkr-cell::before,.ay-tkr-cell + .ay-tkr-cell.ay-tkr-alpha::before{display:none;}",
@@ -640,6 +640,6 @@
      provider's terms, cache aggressively (30–60s), and never ship secrets to
      the client (that's exactly why the proxy exists). Markets are mostly closed
      on weekends/overnight — the simulator keeps the HUD feeling alive 24/7,
-     which is the whole point: *her research, live.*
+     which is the whole point: *his research, live.*
      ========================================================================== */
 })();
