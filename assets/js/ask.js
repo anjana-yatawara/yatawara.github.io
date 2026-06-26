@@ -196,7 +196,7 @@
         "complex temporal and spatial patterns to produce actionable insight): " +
         "(1) Financial volatility & time-series econometrics (primary) — GARCH " +
         "models and how markets remember; (2) Hybrid time series + machine " +
-        "learning — explainable ML forecasting (e.g. a GRU-CNN influenza model); " +
+        "learning — explainable ML forecasting (e.g. a Hybrid LSTM influenza model); " +
         "(3) Environmental justice & air quality — income-based pollution-exposure " +
         "disparities and low-cost sensor networks; (4) AI in statistics education " +
         "— scaffolded LLM tutors (California Learning Lab ELEVATE grant, Co-PI).",
@@ -207,7 +207,7 @@
         "**1. Financial volatility & time-series econometrics** (primary) — GARCH-" +
         "family models and *how markets remember* (the volatility-memory finding).\n" +
         "**2. Hybrid time series + machine learning** — explainable ML forecasting, " +
-        "e.g. a GRU-CNN model for influenza.\n" +
+        "e.g. a Hybrid LSTM model for influenza.\n" +
         "**3. Environmental justice & air quality** — income-based pollution-" +
         "exposure disparities and low-cost sensor networks.\n" +
         "**4. AI in statistics education** — scaffolded LLM tutors (California " +
@@ -316,14 +316,14 @@
       text:
         "Anjana's second pillar is hybrid time series + machine learning — " +
         "explainable ML forecasting grounded in statistics. The flagship project " +
-        "is a GRU-CNN hybrid model for influenza forecasting (with Yeo-Johnson " +
+        "is a Hybrid LSTM model for influenza forecasting (with Yeo-Johnson " +
         "scaling), built with student Noah Gallego and Prof. Isuru Ratnayake " +
         "(KUMC) and presented at JSM 2025 (manuscript in preparation). The theme " +
         "throughout: interpretable models, not black boxes.",
       answer:
         "Anjana's second pillar is **hybrid time series + machine learning** — " +
         "explainable ML forecasting grounded in statistics. The flagship project " +
-        "is a **GRU-CNN hybrid model for influenza forecasting** (with Yeo-Johnson " +
+        "is a **Hybrid LSTM model for influenza forecasting** (with Yeo-Johnson " +
         "scaling), built with student **Noah Gallego** and Prof. **Isuru " +
         "Ratnayake** (KUMC) and presented at **JSM 2025**. *(Manuscript in " +
         "preparation.)* The theme throughout: models you can actually interpret, " +
@@ -612,7 +612,7 @@
         "low-cost sensor study (ACS ES&T Air, 2025), the income-based exposure " +
         "disparities framework (Environmental Research: Health, 2025), and two IEEE " +
         "FIE 2025 education papers. Working papers include The Shape of Volatility " +
-        "Memory (target JBES), MF2V-GARCH, MF2-GARCH-A, and the GRU-CNN influenza " +
+        "Memory (target JBES), MF2V-GARCH, MF2-GARCH-A, and the Hybrid LSTM influenza " +
         "model. His Ph.D. dissertation is The Multiplicative Factor Multi-Frequency " +
         "Exponential GARCH ((MF)2EGARCH) (Missouri S&T, 2023).",
       answer:
@@ -622,7 +622,7 @@
         "exposure disparities** framework (Environmental Research: Health, 2025), " +
         "and two **IEEE FIE 2025** education papers. Working papers include *The " +
         "Shape of Volatility Memory* (target: JBES), *MF2V-GARCH*, *MF2-GARCH-A*, " +
-        "and the GRU-CNN influenza model. His **Ph.D. dissertation** is *The " +
+        "and the Hybrid LSTM influenza model. His **Ph.D. dissertation** is *The " +
         "Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)²EGARCH)* " +
         "(Missouri S&T, 2023).",
       links: [
