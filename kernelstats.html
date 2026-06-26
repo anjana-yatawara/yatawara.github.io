@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<!-- =========================================================================
+     CANONICAL PAGE TEMPLATE — yatawara.com
+     Every page MUST start from this skeleton. Replace the 4 PER-PAGE marks:
+       (1) <title> + <meta name="description">  (2) <link rel="canonical">
+       (3) og:/twitter: url+title+description    (4) <main> content
+     Keep <head> resource order, the theme-flash inline script, the <header>,
+     the <footer>, and the <script> includes identical across pages.
+     Use root-absolute asset paths ("/assets/...") so subdirectory pages work.
+     ========================================================================= -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+
+  <title>KernelStats — Free Statistical Analysis Platform</title>
+  <meta name="description" content="KernelStats — a free, open-source statistical analysis platform that runs entirely in your browser. A no-install, no-license replacement for Minitab, JMP, and SAS, built by Dr. Anjana Yatawara.">
+  <meta name="author" content="Anjana Yatawara">
+
+  <link rel="canonical" href="https://www.yatawara.com/kernelstats.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Anjana Yatawara">
+  <meta property="og:url" content="https://www.yatawara.com/kernelstats.html">
+  <meta property="og:title" content="KernelStats — Free Statistical Analysis Platform">
+  <meta property="og:description" content="A free, open-source, browser-based statistics platform that replaces Minitab, JMP, and SAS. No install. No license. 132 methods, R + Shiny, MIT-licensed.">
+  <meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="KernelStats — Free Statistical Analysis Platform">
+  <meta name="twitter:description" content="Free, open-source, browser-based statistics. Replaces Minitab, JMP, and SAS.">
+  <meta name="twitter:image" content="https://www.yatawara.com/assets/img/og.png">
+
+  <!-- favicon -->
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/img/favicon.svg">
+
+  <!-- theme flash guard: run BEFORE paint -->
+  <script>
+    (function(){try{var t=localStorage.getItem('ay-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+  </script>
+
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- styles -->
+  <link rel="stylesheet" href="/assets/css/core.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+
+  <style>
+    /* ---- KernelStats page-specific layout (reuses core/components tokens) ---- */
+
+    /* Hero */
+    .ks-hero { padding: calc(var(--header-h) + var(--space-8)) 0 var(--space-7); position: relative; }
+    .ks-hero .ks-logo {
+      width: min(420px, 78vw); height: auto; margin-bottom: var(--space-5);
+      filter: drop-shadow(0 0 40px rgba(0, 229, 255, 0.18));
+    }
+    .ks-hero .lead { max-width: 64ch; }
+    .ks-pitch-grid { margin-top: var(--space-6); }
+    .ks-replace {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+      margin-top: var(--space-5);
+    }
+    .ks-replace .repl {
+      font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-soft);
+      padding: 0.4rem 0.75rem; border-radius: var(--r-sm);
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .ks-replace .repl s { color: var(--dimmer); text-decoration-color: var(--red); }
+    .ks-replace .repl b { color: var(--text); font-weight: 600; }
+    .ks-cta { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+
+    /* hero quick stats */
+    .ks-hero-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5);
+      margin-top: var(--space-8); border-top: 1px solid var(--border); padding-top: var(--space-6);
+    }
+    @media (max-width: 640px) { .ks-hero-stats { grid-template-columns: repeat(2, 1fr); gap: var(--space-5); } }
+
+    /* feature group block */
+    .ks-group { margin-top: var(--space-7); }
+    .ks-group:first-of-type { margin-top: 0; }
+
+    /* feature card list styling */
+    .ks-feat-list { list-style: none; padding: 0; margin: var(--space-3) 0 0; }
+    .ks-feat-list li {
+      position: relative; padding-left: 1.4rem; margin-top: 0.5rem;
+      font-size: var(--fs-sm); color: var(--dim); line-height: 1.55;
+    }
+    .ks-feat-list li::before {
+      content: "›"; position: absolute; left: 0.1rem; top: -0.02rem;
+      color: var(--cyan); font-family: var(--font-mono); font-weight: 600;
+    }
+    .ks-feat-list li b { color: var(--text-soft); font-weight: 600; }
+
+    /* comparison table polish */
+    .ks-table .ks-col-us { color: var(--cyan); }
+    table.data .price-free { color: var(--green); font-weight: 600; font-family: var(--font-mono); }
+    table.data .price { color: var(--text-soft); font-family: var(--font-mono); }
+    table.data tbody th[scope="row"] {
+      font-family: var(--font-body); font-weight: 500; color: var(--text-soft);
+      text-transform: none; letter-spacing: 0; background: transparent;
+    }
+    table.data thead th.center { text-align: center; }
+
+    /* technology stat row */
+    .ks-tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+    @media (max-width: 760px) { .ks-tech-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 380px) { .ks-tech-grid { grid-template-columns: 1fr; } }
+
+    /* coming soon / pro card */
+    .ks-pro {
+      position: relative; overflow: hidden;
+      border: 1px solid var(--border-2); border-radius: var(--r-xl);
+      padding: clamp(var(--space-6), 5vw, var(--space-8));
+      background: var(--surface);
+    }
+    .ks-pro::before {
+      content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.55; pointer-events: none;
+      background:
+        radial-gradient(55% 80% at 18% 0%, rgba(191,90,242,0.20), transparent 60%),
+        radial-gradient(55% 80% at 85% 100%, rgba(0,229,255,0.16), transparent 60%);
+    }
+    .ks-pro > * { position: relative; z-index: 1; }
+    .ks-pro h2 { font-size: var(--fs-h2); margin: var(--space-3) 0 var(--space-3); }
+    .ks-pro p { max-width: 60ch; color: var(--text-soft); }
+    .ks-pro .ks-pro-list { margin-top: var(--space-5); }
+    .ks-pro .ks-pro-list .chip { background: var(--surface-2); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ===================== HEADER (identical on every page) ===================== -->
+  <header class="site-header">
+    <div class="wrap-wide">
+      <a class="brand" href="/index.html" aria-label="Anjana Yatawara — home">
+        <span class="glyph">AY</span>
+        <span class="name"><b>anjana</b> <span>yatawara</span></span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav-link" href="/research.html">research</a>
+        <a class="nav-link" href="/publications.html">publications</a>
+        <a class="nav-link" href="/teaching.html">teaching</a>
+        <a class="nav-link" href="/consulting.html">consulting</a>
+        <a class="nav-link active" href="/kernelstats.html">kernelstats</a>
+        <a class="nav-link" href="/games/index.html">games</a>
+        <a class="nav-link" href="/cv.html">cv</a>
+        <a class="nav-link" href="/blog.html">blog</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><span data-theme-icon></span></button>
+        <button class="cmdk-trigger" data-cmdk-open aria-label="Open command palette">
+          <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="label">search</span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <button class="icon-btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN (4) PER-PAGE ===================== -->
+  <main id="main">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="ks-hero">
+      <div class="wrap">
+        <p class="kicker" data-reveal><span class="dot">◆</span> yatawara.com / kernelstats</p>
+
+        <img class="ks-logo" src="/assets/img/kernelstats.svg" alt="KernelStats" width="420" height="120" data-reveal data-delay="1">
+
+        <h1 class="gradient-text" data-reveal data-delay="1">Powerful statistics. Free. In your browser.</h1>
+
+        <p class="lead mt-4" data-reveal data-delay="2">
+          KernelStats is a free, open-source statistical analysis platform built to replace
+          expensive desktop software. It runs entirely in your browser — no install, no license,
+          no waiting on IT. Built because powerful analysis should be accessible to students,
+          budget-constrained researchers, and small organizations.
+        </p>
+
+        <div class="ks-replace" data-reveal data-delay="2" aria-label="Tools KernelStats replaces and their annual cost">
+          <span class="repl">replaces <b>Minitab</b> <s>~$1,700/yr</s></span>
+          <span class="repl">replaces <b>JMP</b> <s>~$1,785/yr</s></span>
+          <span class="repl">replaces <b>SAS</b> <s>~$8,700/yr</s></span>
+        </div>
+
+        <div class="ks-cta" data-reveal data-delay="3">
+          <a class="btn btn-primary btn-lg" href="https://kernelstats.com" target="_blank" rel="noopener">
+            Open kernelstats.com
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+          <a class="btn btn-lg" href="https://github.com/anjana-yatawara/kernel" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg>
+            GitHub
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+          </a>
+        </div>
+
+        <dl class="ks-hero-stats" data-reveal data-delay="3">
+          <div class="stat">
+            <dd class="stat-num">$0</dd>
+            <dt class="stat-label">cost, forever</dt>
+          </div>
+          <div class="stat">
+            <dd class="stat-num">132</dd>
+            <dt class="stat-label">statistical methods</dt>
+          </div>
+          <div class="stat">
+            <dd class="stat-num">0</dd>
+            <dt class="stat-label">installs required</dt>
+          </div>
+          <div class="stat">
+            <dd class="stat-num">MIT</dd>
+            <dt class="stat-label">open-source license</dt>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="wrap"><hr class="divider"></div>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section class="section" aria-labelledby="features-head">
+      <div class="wrap">
+        <div class="section-head" data-reveal id="features-head">
+          <span class="s-num">01</span>
+          <h2 class="s-title"><span class="arrow">▸</span>What's inside</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// capabilities</span>
+        </div>
+
+        <p class="lead mb-6" data-reveal style="max-width:60ch;">
+          A complete analysis workflow — from cleaning a messy spreadsheet to a publication-ready
+          report — grouped into three stages.
+        </p>
+
+        <!-- Group: Data Quality -->
+        <div class="ks-group">
+          <p class="term-ln" data-reveal><span class="prompt">$</span> kernelstats <span class="flag">--stage</span> data-quality</p>
+          <div class="grid cols-2">
+            <article class="card glow-cyan" data-reveal>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 3v6h-6"/></svg>
+              </div>
+              <h3>Variable Doctor</h3>
+              <p>15 automated diagnostics scan every column the moment your data lands — then fix issues with one click (and undo).</p>
+              <ul class="ks-feat-list">
+                <li>Detects <b>coded missing</b> values, <b>numeric-as-text</b>, malformed <b>dates</b>, and <b>outliers</b></li>
+                <li>Flags <b>ID columns</b> that shouldn't be modeled</li>
+                <li><b>One-click fixes</b> with full <b>undo</b> history</li>
+              </ul>
+            </article>
+
+            <article class="card glow-cyan" data-reveal data-delay="1">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m8 11 4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              </div>
+              <h3>Import from anywhere</h3>
+              <p>Bring data in from the formats you already use — no conversion, no fuss.</p>
+              <ul class="ks-feat-list">
+                <li>Files: <b>CSV</b>, <b>Excel</b>, <b>SPSS</b>, <b>Stata</b>, <b>SAS</b>, <b>RDS</b></li>
+                <li>Quick paths: direct <b>paste</b> or load straight from a <b>URL</b></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <!-- Group: Analysis -->
+        <div class="ks-group">
+          <p class="term-ln" data-reveal><span class="prompt">$</span> kernelstats <span class="flag">--stage</span> analysis</p>
+          <div class="grid cols-3">
+            <article class="card glow-violet" data-reveal>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 16l3-5 3 3 4-7"/></svg>
+              </div>
+              <h3>Hypothesis testing</h3>
+              <p><b>20+ tests</b> plus a guided <b>Test Finder wizard</b> that recommends the right test for your question and data.</p>
+            </article>
+
+            <article class="card glow-violet" data-reveal data-delay="1">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="7" r="2"/><path d="M7.5 16.5 16.5 8.5"/><path d="M3 21 21 3"/></svg>
+              </div>
+              <h3>Regression</h3>
+              <p><b>10 families:</b> linear, logistic, probit, multinomial, ordinal, Poisson, negative binomial, zero-inflated, hurdle, and bias-reduced.</p>
+            </article>
+
+            <article class="card glow-violet" data-reveal data-delay="2">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h3l2 6 4-14 2 8 2-4h5"/></svg>
+              </div>
+              <h3>Time series &amp; GARCH</h3>
+              <p>Auto <b>ARIMA</b>, <b>GARCH(1,1)</b>, <b>GJR-GARCH</b>, and <b>EGARCH</b> — with news-impact curves and forecasting.</p>
+            </article>
+
+            <article class="card glow-violet" data-reveal>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M19 5c-4 0-7 3-7 8v4"/><path d="M12 13c-3 0-5 2-5 4"/></svg>
+              </div>
+              <h3>Survival analysis</h3>
+              <p><b>Kaplan-Meier</b> curves, <b>Cox proportional hazards</b>, hazard forests, and <b>Schoenfeld</b> residual checks.</p>
+            </article>
+
+            <article class="card glow-violet" data-reveal data-delay="1">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+              </div>
+              <h3>Machine learning pipeline</h3>
+              <p><b>7 algorithms</b> with auto classify/regress, model comparison, <b>ROC</b> curves, and variable importance.</p>
+            </article>
+
+            <article class="card glow-violet" data-reveal data-delay="2">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/></svg>
+              </div>
+              <h3>Test Finder wizard</h3>
+              <p>Not sure where to start? Answer a few plain-language questions and KernelStats points you to the correct procedure.</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- Group: Output -->
+        <div class="ks-group">
+          <p class="term-ln" data-reveal><span class="prompt">$</span> kernelstats <span class="flag">--stage</span> output</p>
+          <div class="grid cols-3">
+            <article class="card glow-cyan" data-reveal>
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+              </div>
+              <h3>Plain-English results</h3>
+              <p>Every analysis comes with a clear, plain-English interpretation — so you know what the numbers actually mean.</p>
+            </article>
+
+            <article class="card glow-cyan" data-reveal data-delay="1">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+              </div>
+              <h3>Word &amp; HTML reports</h3>
+              <p>Export polished, shareable <b>Word</b> and <b>HTML</b> reports directly from your session.</p>
+            </article>
+
+            <article class="card glow-cyan" data-reveal data-delay="2">
+              <div class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 16l3-4 2 2 3-5"/></svg>
+              </div>
+              <h3>Industry templates</h3>
+              <p>One-click reports built for real work: <b>SPC</b> (Cp/Cpk), <b>RFM</b>, <b>Pareto</b>, heatmaps, and <b>volcano plots</b>.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COMPARISON ===================== -->
+    <section class="section" aria-labelledby="compare-head">
+      <div class="wrap">
+        <div class="section-head" data-reveal id="compare-head">
+          <span class="s-num">02</span>
+          <h2 class="s-title"><span class="arrow">▸</span>How it compares</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// vs. the incumbents</span>
+        </div>
+
+        <p class="lead mb-6" data-reveal style="max-width:58ch;">
+          The same core capabilities you'd pay thousands for each year — at no cost, in the browser.
+        </p>
+
+        <div class="table-wrap ks-table" data-reveal>
+          <table class="data">
+            <caption class="sr-only">Feature and cost comparison between KernelStats, Minitab, JMP, and SAS</caption>
+            <thead>
+              <tr>
+                <th scope="col">Capability</th>
+                <th scope="col" class="center ks-col-us">KernelStats</th>
+                <th scope="col" class="center">Minitab</th>
+                <th scope="col" class="center">JMP</th>
+                <th scope="col" class="center">SAS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Annual cost</th>
+                <td class="center price-free">Free</td>
+                <td class="center price">$1,700</td>
+                <td class="center price">$1,785</td>
+                <td class="center price">$8,700</td>
+              </tr>
+              <tr>
+                <th scope="row">Open source</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+              </tr>
+              <tr>
+                <th scope="row">Runs in browser</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+              </tr>
+              <tr>
+                <th scope="row">Variable Doctor</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+              </tr>
+              <tr>
+                <th scope="row">Test Finder wizard</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+              </tr>
+              <tr>
+                <th scope="row">GARCH models</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center check" aria-label="Yes">✓</td>
+              </tr>
+              <tr>
+                <th scope="row">ML pipeline</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center check" aria-label="Yes">✓</td>
+              </tr>
+              <tr>
+                <th scope="row">Plain-English output</th>
+                <td class="center check" aria-label="Yes">✓</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+                <td class="center cross" aria-label="No">✕</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-4 text-dim" data-reveal style="font-family:var(--font-mono);font-size:var(--fs-xs);">
+          // Listed prices are approximate annual licensing costs and are for comparison only.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== TECHNOLOGY ===================== -->
+    <section class="section" aria-labelledby="tech-head">
+      <div class="wrap">
+        <div class="section-head" data-reveal id="tech-head">
+          <span class="s-num">03</span>
+          <h2 class="s-title"><span class="arrow">▸</span>Under the hood</h2>
+          <span class="s-rule"></span>
+          <span class="s-tag">// technology</span>
+        </div>
+
+        <p class="lead mb-6" data-reveal style="max-width:62ch;">
+          KernelStats is built on the same open-source stack trusted by working statisticians —
+          every procedure maps to a peer-reviewed R package, so results are reproducible and
+          auditable.
+        </p>
+
+        <div class="ks-tech-grid">
+          <article class="card" data-reveal>
+            <div class="stat">
+              <div class="stat-num">R + Shiny</div>
+              <div class="stat-label">reactive analysis engine</div>
+            </div>
+          </article>
+          <article class="card" data-reveal data-delay="1">
+            <div class="stat">
+              <div class="stat-num">ggplot2</div>
+              <div class="stat-label">publication-grade graphics</div>
+            </div>
+          </article>
+          <article class="card" data-reveal data-delay="2">
+            <div class="stat">
+              <div class="stat-num">132</div>
+              <div class="stat-label">methods → peer-reviewed R packages</div>
+            </div>
+          </article>
+          <article class="card" data-reveal data-delay="3">
+            <div class="stat">
+              <div class="stat-num">MIT</div>
+              <div class="stat-label">licensed &amp; open on GitHub</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-6" data-reveal>
+          <a class="link-arrow" href="https://github.com/anjana-yatawara/kernel" target="_blank" rel="noopener">
+            Read the source on GitHub <span class="arr">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== COMING SOON: PRO ===================== -->
+    <section class="section" aria-labelledby="pro-head">
+      <div class="wrap">
+        <div class="ks-pro" data-reveal>
+          <span class="live-pill">Coming soon</span>
+          <h2 id="pro-head" class="gradient-text">KernelStats Pro</h2>
+          <p>
+            The next chapter: an AI-powered layer that turns KernelStats from a tool you operate into a
+            thinking partner. Pro reads your data, runs the right analysis, and explains the result in
+            language anyone on your team can understand.
+          </p>
+          <div class="chips ks-pro-list">
+            <span class="chip">AI-powered analysis</span>
+            <span class="chip">Claude integration</span>
+            <span class="chip">Automated interpretation</span>
+            <span class="chip">Enterprise deployment</span>
+          </div>
+          <div class="ks-cta">
+            <a class="btn btn-primary" href="https://kernelstats.com" target="_blank" rel="noopener">
+              Open kernelstats.com
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+            </a>
+            <a class="btn" href="mailto:ayatawara@csub.edu?subject=KernelStats%20Pro">
+              Get notified
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER (identical on every page) ===================== -->
+  <footer class="site-footer">
+    <div class="wrap-wide">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <div class="name">Anjana Yatawara</div>
+          <p>Statistician &amp; applied mathematician studying how complex systems encode and forget information. Assistant Professor, CSU Bakersfield.</p>
+          <div class="foot-socials">
+            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&hl=en&oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
+            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+          </div>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <div class="foot-links">
+            <a href="/research.html">Research</a>
+            <a href="/publications.html">Publications</a>
+            <a href="/teaching.html">Teaching</a>
+            <a href="/consulting.html">Consulting</a>
+            <a href="/games/index.html">Games</a>
+          </div>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <div class="foot-links">
+            <a href="https://kernelstats.com" target="_blank" rel="noopener">KernelStats ↗</a>
+            <a href="/cv.html">Curriculum Vitae</a>
+            <a href="/blog.html">Blog</a>
+            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+            <button class="foot-link-btn" data-cmdk-open style="background:none;border:0;padding:0;color:var(--dim);font:inherit;text-align:left;cursor:pointer">Command palette ⌘K</button>
+          </div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© 2026 Anjana Yatawara · built as a living interface<span class="caret"></span></span>
+        <span>designed &amp; engineered from the future · <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener">source</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="/assets/js/cosmos.js" defer></script>
+  <script src="/assets/js/shell.js" defer></script>
+</body>
+</html>
