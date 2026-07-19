@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MATH 4210 Game 6: Matrix algebra for regression</title>
+<!-- ==========================================================================
+     MATH 4210 GAME ENGINE TEMPLATE
+     Single file. Zero external requests. Vanilla HTML/CSS/JS.
+     Touch-first (Pointer Events) with mouse fallback in the same code path.
+     Design mirrors the book skin (styles/apple.css): system font stack,
+     #0071e3 accent, #1d1d1f text, rounded cards, dark mode via
+     prefers-color-scheme. See _planning/09-game-spec.md for the full schema,
+     design tokens, and the recursive 7+3 round rule.
+
+     ------------------------------------------------------------------------
+     HOW TO BUILD A CHAPTER GAME
+     ------------------------------------------------------------------------
+     1. Copy this file to games/chNN.html.
+     2. Edit the GAME object (title, chapter number, language).
+     3. Replace the ROUNDS array with 10 rounds: 7 on chapter N (own) and 3
+        review rounds sampled from the chNN pools of chapters 1..N-1. Mark the
+        3 review rounds with "review": true. Chapter 1 uses 10 own rounds.
+     4. Copy every one of your 7 own rounds into games/pool/chNN.json so later
+        chapters can sample them as review rounds.
+     Nothing else needs to change: the engine renders every round type below.
+
+     ------------------------------------------------------------------------
+     ROUND SCHEMA (every object in ROUNDS)
+     ------------------------------------------------------------------------
+     Shared fields (ALL round types):
+       id        string   unique within the file, e.g. "ch03-anova-read"
+       type      string   one of the six types documented below
+       chapter   integer  the chapter this round tests (1..16)
+       anchor    string   a registry anchor WITHOUT the "#", e.g.
+                          "ch03-anova-table". Used to build the reread link
+                          ../chNN/#anchor on the final recap screen.
+       prompt    string   the question / instruction shown above the round
+       why       string   ONE paragraph shown after answering (correct OR
+                          wrong): the reason the answer is what it is. Required.
+       review    boolean  optional. true => this round was sampled from an
+                          earlier chapter's pool; the engine shows a
+                          "Review: Chapter N" / "Repaso: Capitulo N" badge.
+
+     Type-specific fields:
+
+     type "tap-choice"  (tap the one correct card)
+       options   [string, ...]  2..6 answer cards
+       correct   integer        0-based index of the correct card
+
+     type "tap-on-plot"  (canvas scatterplot; tap the correct point)
+       points    [{x, y, target}]  data coordinates; target:true marks the
+                                    point(s) the player must tap (e.g. the
+                                    high-leverage point). >=1 target allowed.
+       xlabel    string  optional axis label
+       ylabel    string  optional axis label
+
+     type "slider-fit"  (drag slope + intercept sliders to fit the points)
+       points        [{x, y}]      data to fit
+       slopeRange    [min, max]    slope slider bounds
+       interceptRange[min, max]    intercept slider bounds
+       tolerance     number        success when SSE <= tolerance
+       start         {slope, intercept}  optional initial slider values
+
+     type "order-steps"  (tap the shuffled steps into the correct order)
+       steps     [string, ...]  the steps IN CORRECT ORDER (engine shuffles)
+
+     type "match-pairs"  (tap a term, then tap its meaning)
+       pairs     [{term, meaning}, ...]  2..5 pairs (engine shuffles columns)
+
+     type "spot-error"  (tap the one wrong sentence in a short analysis)
+       sentences [{text, wrong}, ...]  exactly one has wrong:true
+
+     ------------------------------------------------------------------------
+     GAME METADATA
+     ------------------------------------------------------------------------
+       GAME.chapter  integer  the chapter this whole game belongs to
+       GAME.title    string   shown on the start screen
+       GAME.lang     "en"|"es"  UI language for engine chrome (badges, buttons)
+     ========================================================================== -->
+<style>
+/* ---------- Design tokens (mirrors styles/apple.css) ---------- */
+:root{
+  --bg:#ffffff;
+  --surface:#f5f5f7;
+  --surface-raised:#ffffff;
+  --text:#1d1d1f;
+  --text-secondary:#6e6e73;
+  --hairline:#d2d2d7;
+  --accent:#0071e3;
+  --accent-contrast:#ffffff;
+  --good:#1c7430;
+  --good-bg:rgba(52,199,89,0.12);
+  --bad:#c0362c;
+  --bad-bg:rgba(255,59,48,0.10);
+  --review:#8944ab;
+  --review-bg:rgba(175,82,222,0.10);
+  --shadow-card:0 1px 2px rgba(0,0,0,0.04),0 6px 20px rgba(0,0,0,0.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#161617;
+    --surface:#1d1d1f;
+    --surface-raised:#2a2a2c;
+    --text:#f5f5f7;
+    --text-secondary:#a1a1a6;
+    --hairline:#424245;
+    --accent:#2997ff;
+    --accent-contrast:#0b0b0c;
+    --good:#30d158;
+    --good-bg:rgba(48,209,88,0.14);
+    --bad:#ff6961;
+    --bad-bg:rgba(255,69,58,0.14);
+    --review:#bf5af2;
+    --review-bg:rgba(191,90,242,0.14);
+    --shadow-card:0 1px 2px rgba(0,0,0,0.3),0 6px 20px rgba(0,0,0,0.35);
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important;}
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+/* ---------- App shell ---------- */
+#app{
+  display:flex;flex-direction:column;
+  min-height:100%;
+  max-width:640px;margin:0 auto;
+  padding:0 16px;
+}
+/* Top bar: progress dots + score + streak */
+#topbar{
+  position:sticky;top:0;z-index:5;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:saturate(150%) blur(12px);
+  -webkit-backdrop-filter:saturate(150%) blur(12px);
+  padding:calc(env(safe-area-inset-top) + 10px) 2px 10px;
+  display:flex;flex-direction:column;gap:8px;
+}
+#topbar.hidden{display:none;}
+#dots{display:flex;flex-wrap:wrap;gap:6px;}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--hairline);transition:background .2s,transform .2s;}
+.dot.current{transform:scale(1.5);background:var(--accent);}
+.dot.correct{background:var(--good);}
+.dot.wrong{background:var(--bad);}
+#stats{display:flex;justify-content:space-between;font-size:14px;color:var(--text-secondary);}
+#stats b{color:var(--text);font-variant-numeric:tabular-nums;}
+
+/* Scrollable stage; action bar is fixed so content never hides behind it */
+#stage{flex:1;padding:14px 2px 140px;}
+
+/* ---------- Cards & buttons (44px+ targets) ---------- */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:600;
+  color:var(--review);background:var(--review-bg);
+  border-radius:999px;padding:5px 12px;margin-bottom:12px;
+}
+.chip{
+  display:inline-block;font-size:12px;font-weight:600;letter-spacing:.02em;
+  text-transform:uppercase;color:var(--text-secondary);
+  margin-bottom:10px;
+}
+.prompt{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:2px 0 18px;}
+.hint{color:var(--text-secondary);font-size:15px;margin:-8px 0 16px;}
+
+.choice-list{display:flex;flex-direction:column;gap:10px;}
+.card{
+  display:flex;align-items:center;gap:12px;
+  min-height:56px;width:100%;text-align:left;
+  padding:14px 16px;
+  background:var(--surface-raised);
+  color:var(--text);
+  border:1px solid var(--hairline);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);
+  font-size:16px;font-family:inherit;
+  cursor:pointer;transition:transform .12s,border-color .12s,background .12s;
+  touch-action:manipulation;
+}
+.card:active{transform:scale(.98);}
+.card.selected{border-color:var(--accent);}
+.card.correct{border-color:var(--good);background:var(--good-bg);}
+.card.wrong{border-color:var(--bad);background:var(--bad-bg);}
+.card.dim{opacity:.5;}
+.card .mark{margin-left:auto;font-weight:700;font-size:18px;}
+.card.correct .mark{color:var(--good);}
+.card.wrong .mark{color:var(--bad);}
+
+/* order-steps */
+.slot-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.slot{
+  display:flex;align-items:center;gap:10px;min-height:48px;
+  padding:10px 14px;border:1px dashed var(--hairline);border-radius:12px;
+  color:var(--text-secondary);font-size:15px;
+}
+.slot .num{width:22px;height:22px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--text-secondary);flex:none;}
+.slot.filled{border-style:solid;color:var(--text);background:var(--surface-raised);box-shadow:var(--shadow-card);}
+.slot.correct{border-color:var(--good);}
+.slot.wrong{border-color:var(--bad);}
+
+/* match-pairs */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.match-col{display:flex;flex-direction:column;gap:10px;}
+.match-item{
+  min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:10px 12px;border:1px solid var(--hairline);border-radius:12px;
+  background:var(--surface-raised);box-shadow:var(--shadow-card);
+  font-size:15px;cursor:pointer;transition:transform .12s,border-color .12s,opacity .2s;
+  touch-action:manipulation;
+}
+.match-item:active{transform:scale(.98);}
+.match-item.selected{border-color:var(--accent);}
+.match-item.matched{border-color:var(--good);background:var(--good-bg);opacity:.7;pointer-events:none;}
+.match-item.flash-wrong{border-color:var(--bad);background:var(--bad-bg);}
+
+/* slider-fit */
+.sliders{display:flex;flex-direction:column;gap:16px;margin-top:14px;}
+.slider-row label{display:flex;justify-content:space-between;font-size:14px;color:var(--text-secondary);margin-bottom:6px;}
+.slider-row label b{color:var(--text);font-variant-numeric:tabular-nums;}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;touch-action:pan-y;
+}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--hairline);}
+input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(--hairline);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--accent);margin-top:-12px;box-shadow:var(--shadow-card);cursor:pointer;}
+input[type=range]::-moz-range-thumb{width:30px;height:30px;border:none;border-radius:50%;background:var(--accent);box-shadow:var(--shadow-card);cursor:pointer;}
+.sse-meter{margin-top:6px;}
+.sse-meter .label{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;}
+.sse-meter .label b{font-variant-numeric:tabular-nums;}
+.sse-track{height:10px;border-radius:5px;background:var(--surface);overflow:hidden;border:1px solid var(--hairline);}
+.sse-fill{height:100%;background:var(--bad);transition:width .1s,background .2s;}
+.sse-fill.good{background:var(--good);}
+
+canvas{display:block;width:100%;border-radius:var(--radius);border:1px solid var(--hairline);background:var(--surface-raised);box-shadow:var(--shadow-card);touch-action:none;}
+
+/* ---------- Fixed action bar ---------- */
+#actionbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:6;
+  display:flex;justify-content:center;
+  padding:12px 16px calc(env(safe-area-inset-bottom) + 12px);
+  background:linear-gradient(to top,var(--bg) 70%,transparent);
+  pointer-events:none;
+}
+#actionbar.hidden{display:none;}
+.btn{
+  pointer-events:auto;
+  min-height:52px;width:100%;max-width:608px;
+  border:none;border-radius:14px;
+  background:var(--accent);color:var(--accent-contrast);
+  font-size:17px;font-weight:600;font-family:inherit;
+  cursor:pointer;transition:transform .12s,opacity .2s;
+  box-shadow:var(--shadow-card);touch-action:manipulation;
+}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.4;cursor:default;}
+.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--hairline);}
+
+/* ---------- Feedback panel ---------- */
+#feedback{margin-top:18px;padding:16px;border-radius:var(--radius);border:1px solid var(--hairline);background:var(--surface);box-shadow:var(--shadow-card);}
+#feedback.good{border-color:var(--good);}
+#feedback.bad{border-color:var(--bad);}
+#feedback .verdict{font-weight:700;font-size:17px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+#feedback.good .verdict{color:var(--good);}
+#feedback.bad .verdict{color:var(--bad);}
+#feedback .why{font-size:15px;color:var(--text);line-height:1.55;}
+
+/* ---------- Start & recap screens ---------- */
+.screen{padding:28px 4px 160px;text-align:center;}
+.screen h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px;}
+.screen .sub{color:var(--text-secondary);font-size:16px;margin:0 auto 22px;max-width:34ch;}
+.screen .emoji{font-size:52px;line-height:1;margin-bottom:6px;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
+.stat-box{background:var(--surface);border:1px solid var(--hairline);border-radius:12px;padding:14px 8px;}
+.stat-box .n{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;}
+.stat-box .k{font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
+.reread{text-align:left;margin:18px 0;}
+.reread h3{font-size:16px;margin:0 0 10px;}
+.reread a{
+  display:flex;align-items:center;gap:8px;min-height:48px;
+  padding:12px 14px;margin-bottom:8px;
+  border:1px solid var(--hairline);border-radius:12px;background:var(--surface-raised);
+  color:var(--accent);text-decoration:none;font-size:15px;font-weight:500;box-shadow:var(--shadow-card);
+}
+.reread a .ch{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;}
+.reread a:active{transform:scale(.99);}
+.perfect{color:var(--good);font-weight:600;margin:16px 0;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar" class="hidden">
+    <div id="dots" aria-hidden="true"></div>
+    <div id="stats">
+      <span>Score <b id="score">0</b></span>
+      <span>Streak <b id="streak">0</b></span>
+    </div>
+  </header>
+  <main id="stage" aria-live="polite"></main>
+</div>
+<div id="actionbar" class="hidden">
+  <button id="action" class="btn" type="button"></button>
+</div>
+
+<script>
+"use strict";
+/* ==========================================================================
+   GAME METADATA  (edit per chapter)
+   ========================================================================== */
+const GAME = {
+  chapter: 6,
+  title: "MATH 4210 Game 6: Matrix algebra for regression",
+  lang: "en"           // "en" or "es" for the engine chrome
+};
+
+/* ==========================================================================
+   ROUNDS  (7 own rounds on Chapter 6 + 3 review slots filled later)
+   All data below are the real 21-city Dwaine Studios numbers from the chapter.
+   Review rounds carry "review": true and an earlier chapter number.
+   ========================================================================== */
+const ROUNDS = [
+  /* -------- 7 own rounds on Chapter 6 -------- */
+  {
+    id: "ch06-dims",
+    type: "tap-choice",
+    chapter: 6,
+    anchor: "ch06",
+    prompt: "The Dwaine model uses one intercept and two predictors (targtpop, dispoinc) on n = 21 cities. What is the dimension of the design matrix X?",
+    options: [
+      "21 by 2",
+      "21 by 3",
+      "3 by 21",
+      "3 by 3"
+    ],
+    correct: 1,
+    why: "By Definition 6.2 in Section 6.1, X has one row per observation and one column per parameter, counting the leading column of ones for the intercept. With n = 21 rows and p = 3 columns (ones, targtpop, dispoinc), X is 21 by 3. The 2-column answer forgets the ones column that carries the intercept."
+  },
+  {
+    id: "ch06-xtx-entry",
+    type: "tap-choice",
+    chapter: 6,
+    anchor: "ch06-matrix-mult",
+    prompt: "For Dwaine, X'X is the 3 by 3 table [[21, 1302.4, 360.0], [1302.4, 87707.94, 22609.19], [360.0, 22609.19, 6190.26]]. Its top-left entry is 21. What is that number?",
+    options: [
+      "The sum of all 21 sales figures",
+      "The sample size n, from summing 1 times 1 down the ones column",
+      "The sum of the squared populations",
+      "The determinant of X'X"
+    ],
+    correct: 1,
+    why: "In Example 6.2 (Section 6.2) the entry (X'X)_11 is the ones column dotted with itself, sum of 1 times 1 over all rows, which equals n = 21. The rest of the first row and column are the plain predictor sums, and the diagonal entries below are sums of squared predictor values, not the sample size."
+  },
+  {
+    id: "ch06-pipeline-order",
+    type: "order-steps",
+    chapter: 6,
+    anchor: "ch06-inverse",
+    prompt: "Put the matrix regression pipeline in the order the chapter runs it.",
+    steps: [
+      "Form the cross-products X'X and X'Y from the data",
+      "Invert the square matrix X'X",
+      "Solve b = (X'X)^-1 X'Y for the coefficients",
+      "Build the hat matrix H and the residuals e = (I - H)Y",
+      "Scale (X'X)^-1 by MSE to get the standard errors"
+    ],
+    why: "The Section 6.9 pipeline forms two summaries, inverts one, then reads everything else off in a fixed order: the coefficients from Theorem 6.12, the fitted values and residuals from the hat matrix (Section 6.5), and the standard errors from MSE times (X'X)^-1 (Section 6.7). One inverse drives the whole fit."
+  },
+  {
+    id: "ch06-object-match",
+    type: "match-pairs",
+    chapter: 6,
+    anchor: "ch06-projection",
+    prompt: "Match each matrix object in the Dwaine fit to what it does.",
+    pairs: [
+      {term:"X", meaning:"design matrix, ones plus the two predictors"},
+      {term:"(X'X)^-1 X'Y", meaning:"least squares coefficient vector b"},
+      {term:"H = X(X'X)^-1 X'", meaning:"hat matrix that makes the fitted values"},
+      {term:"I - H", meaning:"projection that turns Y into residuals"}
+    ],
+    why: "These are the four workhorses of Sections 6.4 and 6.5. X holds the data; b = (X'X)^-1 X'Y solves the normal equations (Theorem 6.12); H projects Y onto the fitted values (Definition 6.13); and I - H projects onto the residual space. Both H and I - H are symmetric and idempotent (Theorem 6.16)."
+  },
+  {
+    id: "ch06-leverage-plot",
+    type: "tap-on-plot",
+    chapter: 6,
+    anchor: "ch06-projection",
+    prompt: "This scatter shows the two Dwaine predictors for seven real cities. Tap the city with the highest disposable income, which in the full data also carries the largest leverage value h_ii.",
+    xlabel: "targtpop (thousands under 16)",
+    ylabel: "dispoinc (per-capita income)",
+    points: [
+      {x:68.5,y:16.7},{x:45.2,y:16.8},{x:91.3,y:18.2},{x:46.9,y:17.3},
+      {x:52.5,y:17.8},{x:88.4,y:17.4},{x:82.7,y:19.1,target:true}
+    ],
+    why: "The topmost city is city 20 at income 19.1, the highest in the data, and Section 6.5 (echoed in exam problem EP 6.3) reports it has the largest leverage value, h = 0.2788. Leverage is the diagonal of the hat matrix H: it measures how far a city's predictor values sit from the center of the cloud, and that city's response has the biggest say in its own fitted value."
+  },
+  {
+    id: "ch06-rank-spot",
+    type: "spot-error",
+    chapter: 6,
+    anchor: "ch06-inverse",
+    prompt: "A student adds a fourth column equal to targtpop + dispoinc, refits, and sees det(X'X) print as -3.7e-05 while Python's inv still returns numbers. One sentence is wrong. Tap it.",
+    sentences: [
+      {text:"The new column is targtpop + dispoinc, so the four columns are linearly dependent and X has rank 3, not 4."},
+      {text:"With rank 3 under 4 columns, X'X is singular and has no genuine inverse (Theorem 6.9)."},
+      {text:"The -3.7e-05 determinant is floating-point dust around a true value of zero."},
+      {text:"Because Python returned an inverse and coefficients, the augmented model is fine and can be trusted.", wrong:true}
+    ],
+    why: "This is exam problem EP 6.4 and Section 6.3. The redundant column makes X rank deficient, so X'X is singular and its true determinant is zero; the tiny -3.7e-05 is numerical noise. Python's inv skips the conditioning check and returns meaningless huge entries, so code running is no proof the fit means anything. R honestly refuses with 'computationally singular.'"
+  },
+  {
+    id: "ch06-cov-sign",
+    type: "tap-choice",
+    chapter: 6,
+    anchor: "ch06-random-vectors",
+    prompt: "The estimated covariance matrix of b has -0.6724 between the two slope estimates. A student says: both slopes are positive, so their estimates must be positively correlated. What is the correct reading?",
+    options: [
+      "The student is right: positive slopes force a positive covariance.",
+      "The -0.6724 is negative, so overestimating one slope tends to come with underestimating the other.",
+      "The sign of the covariance cannot be told from the matrix.",
+      "A negative covariance means one of the slopes is really negative."
+    ],
+    correct: 1,
+    why: "Exam problem EP 6.1 and Section 6.7 (Theorem 6.21): the sign of a coefficient and the sign of the covariance between estimators are unrelated. The off-diagonal -0.6724 is negative because the two predictor columns are themselves correlated across the 21 cities, so the fit trades one slope off against the other. It says nothing about the slopes both being positive."
+  }
+  /* -------- 3 review slots: a later weaver fills these from earlier chapters' pools -------- */
+  /* REVIEW_SLOT_1 */
+  /* REVIEW_SLOT_2 */
+  /* REVIEW_SLOT_3 */
+];
+
+/* ==========================================================================
+   UI STRINGS
+   ========================================================================== */
+const T = {
+  en: {
+    start:"Start", next:"Next", check:"Check", playAgain:"Play again",
+    correct:"Correct", nice:"Nice fit", ordered:"Correct order",
+    matched:"All matched", notQuite:"Not quite", tryFit:"Keep adjusting",
+    review:n=>"Review: Chapter "+n, ownChip:n=>"Chapter "+n,
+    finalTitle:"Game complete", scoreK:"Score", streakK:"Best streak", correctK:"Correct",
+    rereadHead:"Reread before the next game:", perfect:"Perfect run. Nothing to reread.",
+    of:"of", sse:"SSE", target:"target", tapNext:"Tap Next to continue",
+    startSub:"Ten quick rounds. Tap, fit, and diagnose. You get the reason after every answer."
+  },
+  es: {
+    start:"Empezar", next:"Siguiente", check:"Comprobar", playAgain:"Jugar de nuevo",
+    correct:"Correcto", nice:"Buen ajuste", ordered:"Orden correcto",
+    matched:"Todo emparejado", notQuite:"No del todo", tryFit:"Sigue ajustando",
+    review:n=>"Repaso: Capitulo "+n, ownChip:n=>"Capitulo "+n,
+    finalTitle:"Juego completo", scoreK:"Puntos", streakK:"Mejor racha", correctK:"Aciertos",
+    rereadHead:"Repasa antes del proximo juego:", perfect:"Ronda perfecta. Nada que repasar.",
+    of:"de", sse:"SSE", target:"objetivo", tapNext:"Toca Siguiente para continuar",
+    startSub:"Diez rondas rapidas. Toca, ajusta y diagnostica. Recibes la razon tras cada respuesta."
+  }
+}[GAME.lang] || {};
+
+/* ==========================================================================
+   ENGINE STATE
+   ========================================================================== */
+const state = { i:0, score:0, streak:0, bestStreak:0, results:[], answered:false };
+
+const el = {
+  stage: document.getElementById("stage"),
+  topbar: document.getElementById("topbar"),
+  dots: document.getElementById("dots"),
+  score: document.getElementById("score"),
+  streak: document.getElementById("streak"),
+  actionbar: document.getElementById("actionbar"),
+  action: document.getElementById("action")
+};
+
+function chNum(n){ return "ch" + String(n).padStart(2,"0"); }
+function rereadLink(r){ return "../" + chNum(r.chapter) + "/#" + r.anchor; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function setAction(label, handler, {disabled=false, ghost=false}={}){
+  el.actionbar.classList.remove("hidden");
+  el.action.textContent = label;
+  el.action.disabled = disabled;
+  el.action.className = "btn" + (ghost?" ghost":"");
+  el.action.onclick = handler;
+}
+function hideAction(){ el.actionbar.classList.add("hidden"); }
+
+/* ==========================================================================
+   SCREENS
+   ========================================================================== */
+function renderStart(){
+  el.topbar.classList.add("hidden");
+  hideAction();
+  el.stage.innerHTML =
+    '<div class="screen">' +
+      '<div class="emoji">&#128200;</div>' +
+      '<h1>'+esc(GAME.title)+'</h1>' +
+      '<p class="sub">'+esc(T.startSub)+'</p>' +
+    '</div>';
+  setAction(T.start, ()=>{ state.i=0; state.score=0; state.streak=0; state.bestStreak=0; state.results=[]; renderRound(); });
+}
+
+function updateTopbar(){
+  el.topbar.classList.remove("hidden");
+  el.score.textContent = state.score;
+  el.streak.textContent = state.streak;
+  let html="";
+  for(let k=0;k<ROUNDS.length;k++){
+    let cls="dot";
+    if(k===state.i) cls+=" current";
+    else if(state.results[k]===true) cls+=" correct";
+    else if(state.results[k]===false) cls+=" wrong";
+    html+='<span class="'+cls+'"></span>';
+  }
+  el.dots.innerHTML=html;
+}
+
+function roundHeaderHTML(r){
+  if(r.review) return '<span class="badge">&#8635; '+esc(T.review(r.chapter))+'</span>';
+  return '<span class="chip">'+esc(T.ownChip(r.chapter))+'</span>';
+}
+
+function renderRound(){
+  state.answered=false;
+  const r=ROUNDS[state.i];
+  updateTopbar();
+  el.stage.scrollTop=0;
+  window.scrollTo(0,0);
+  const head=roundHeaderHTML(r);
+  const prompt='<div class="prompt">'+esc(r.prompt)+'</div>';
+  el.stage.innerHTML='<div>'+head+prompt+'<div id="body"></div><div id="fb-slot"></div></div>';
+  const body=document.getElementById("body");
+  RENDERERS[r.type](r, body);
+}
+
+/* Instant feedback after every round */
+function showFeedback(correct, verdictText){
+  state.answered=true;
+  const r=ROUNDS[state.i];
+  state.results[state.i]=correct;
+  if(correct){
+    const gain = 10 + state.streak*2;
+    state.score += gain;
+    state.streak += 1;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+  } else {
+    state.streak = 0;
+  }
+  el.score.textContent=state.score;
+  el.streak.textContent=state.streak;
+  updateTopbar();
+  const slot=document.getElementById("fb-slot");
+  slot.innerHTML=
+    '<div id="feedback" class="'+(correct?"good":"bad")+'">' +
+      '<div class="verdict">'+(correct?"&#10003; ":"&#10007; ")+esc(verdictText)+'</div>' +
+      '<div class="why">'+esc(r.why)+'</div>' +
+    '</div>';
+  slot.querySelector("#feedback").scrollIntoView({behavior:"smooth",block:"nearest"});
+  const last = state.i===ROUNDS.length-1;
+  setAction(last?T.finalTitle:T.next, ()=>{ state.i++; last?renderRecap():renderRound(); });
+}
+
+function renderRecap(){
+  hideAction();
+  const nCorrect=state.results.filter(x=>x===true).length;
+  const missed=ROUNDS.filter((r,k)=>state.results[k]===false);
+  // Deduplicate reread targets by chapter+anchor
+  const seen={}; const targets=[];
+  missed.forEach(r=>{ const key=r.chapter+"#"+r.anchor; if(!seen[key]){ seen[key]=1; targets.push(r); } });
+  let reread="";
+  if(targets.length===0){
+    reread='<p class="perfect">&#10003; '+esc(T.perfect)+'</p>';
+  } else {
+    reread='<div class="reread"><h3>'+esc(T.rereadHead)+'</h3>';
+    targets.forEach(r=>{
+      reread+='<a href="'+esc(rereadLink(r))+'"><span class="ch">'+esc(chNum(r.chapter))+'</span> '+esc(r.anchor)+' &rarr;</a>';
+    });
+    reread+='</div>';
+  }
+  el.stage.innerHTML=
+    '<div class="screen">' +
+      '<div class="emoji">'+(missed.length===0?"&#127942;":"&#128218;")+'</div>' +
+      '<h1>'+esc(T.finalTitle)+'</h1>' +
+      '<div class="stat-grid">' +
+        '<div class="stat-box"><div class="n">'+state.score+'</div><div class="k">'+esc(T.scoreK)+'</div></div>' +
+        '<div class="stat-box"><div class="n">'+nCorrect+"/"+ROUNDS.length+'</div><div class="k">'+esc(T.correctK)+'</div></div>' +
+        '<div class="stat-box"><div class="n">'+state.bestStreak+'</div><div class="k">'+esc(T.streakK)+'</div></div>' +
+      '</div>' +
+      reread +
+    '</div>';
+  setAction(T.playAgain, renderStart);
+}
+
+/* ==========================================================================
+   ROUND RENDERERS (one per type)
+   ========================================================================== */
+const RENDERERS = {};
+
+/* ---- tap-choice ---- */
+RENDERERS["tap-choice"] = function(r, body){
+  hideAction();
+  const list=document.createElement("div");
+  list.className="choice-list";
+  r.options.forEach((opt,idx)=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="card"; b.innerHTML=esc(opt)+'<span class="mark"></span>';
+    b.addEventListener("click",()=>{
+      if(state.answered) return;
+      const cards=list.querySelectorAll(".card");
+      cards.forEach((c,ci)=>{
+        c.classList.add("dim");
+        if(ci===r.correct){ c.classList.remove("dim"); c.classList.add("correct"); c.querySelector(".mark").textContent="✓"; }
+      });
+      const correct = idx===r.correct;
+      if(!correct){ b.classList.remove("dim"); b.classList.add("wrong"); b.querySelector(".mark").textContent="✗"; }
+      showFeedback(correct, correct?T.correct:T.notQuite);
+    });
+    list.appendChild(b);
+  });
+  body.appendChild(list);
+};
+
+/* ---- spot-error ---- */
+RENDERERS["spot-error"] = function(r, body){
+  hideAction();
+  const list=document.createElement("div");
+  list.className="choice-list";
+  r.sentences.forEach(s=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="card"; b.innerHTML=esc(s.text)+'<span class="mark"></span>';
+    b.addEventListener("click",()=>{
+      if(state.answered) return;
+      const cards=list.querySelectorAll(".card");
+      cards.forEach((c,ci)=>{
+        c.classList.add("dim");
+        if(r.sentences[ci].wrong){ c.classList.remove("dim"); c.classList.add("correct"); c.querySelector(".mark").textContent="✗ wrong"; }
+      });
+      const correct = !!s.wrong;
+      if(!correct){ b.classList.remove("dim"); b.classList.add("wrong"); b.querySelector(".mark").textContent="✗"; }
+      showFeedback(correct, correct?T.correct:T.notQuite);
+    });
+    list.appendChild(b);
+  });
+  body.appendChild(list);
+};
+
+/* ---- order-steps ---- */
+RENDERERS["order-steps"] = function(r, body){
+  hideAction();
+  const correctOrder=r.steps.slice();
+  let pool=shuffle(correctOrder.map((s,i)=>({s,i})));
+  const placed=[]; // indices into correctOrder in the order the player taps
+  const slots=document.createElement("div"); slots.className="slot-list";
+  const poolWrap=document.createElement("div"); poolWrap.className="choice-list";
+
+  function draw(){
+    slots.innerHTML="";
+    for(let k=0;k<correctOrder.length;k++){
+      const div=document.createElement("div");
+      const filledIdx=placed[k];
+      if(filledIdx!==undefined){
+        div.className="slot filled";
+        div.innerHTML='<span class="num">'+(k+1)+'</span>'+esc(correctOrder[filledIdx]);
+      } else {
+        div.className="slot";
+        div.innerHTML='<span class="num">'+(k+1)+'</span>';
+      }
+      slots.appendChild(div);
+    }
+    poolWrap.innerHTML="";
+    pool.forEach(item=>{
+      const b=document.createElement("button");
+      b.type="button"; b.className="card"; b.textContent=item.s;
+      b.addEventListener("click",()=>{
+        if(state.answered) return;
+        placed.push(item.i);
+        pool=pool.filter(p=>p!==item);
+        draw();
+        if(placed.length===correctOrder.length) evaluate();
+      });
+      poolWrap.appendChild(b);
+    });
+  }
+  function evaluate(){
+    let allRight=true;
+    const slotEls=slots.querySelectorAll(".slot");
+    placed.forEach((idx,k)=>{
+      const right = idx===k;
+      slotEls[k].classList.add(right?"correct":"wrong");
+      if(!right) allRight=false;
+    });
+    showFeedback(allRight, allRight?T.ordered:T.notQuite);
+  }
+  body.appendChild(slots);
+  body.appendChild(poolWrap);
+  draw();
+};
+
+/* ---- match-pairs ---- */
+RENDERERS["match-pairs"] = function(r, body){
+  hideAction();
+  const grid=document.createElement("div"); grid.className="match-grid";
+  const left=document.createElement("div"); left.className="match-col";
+  const right=document.createElement("div"); right.className="match-col";
+  const terms=shuffle(r.pairs.map((p,i)=>({t:p.term,i})));
+  const means=shuffle(r.pairs.map((p,i)=>({m:p.meaning,i})));
+  let selTerm=null, matched=0, wrongTries=0;
+
+  function mkItem(text, key){
+    const d=document.createElement("div"); d.className="match-item"; d.textContent=text; d.dataset.key=key; return d;
+  }
+  terms.forEach(o=>left.appendChild(mkItem(o.t,o.i)));
+  means.forEach(o=>right.appendChild(mkItem(o.m,o.i)));
+
+  function clearSel(){ if(selTerm){ selTerm.classList.remove("selected"); selTerm=null; } }
+
+  left.querySelectorAll(".match-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      if(state.answered||item.classList.contains("matched")) return;
+      clearSel(); selTerm=item; item.classList.add("selected");
+    });
+  });
+  right.querySelectorAll(".match-item").forEach(item=>{
+    item.addEventListener("click",()=>{
+      if(state.answered||!selTerm||item.classList.contains("matched")) return;
+      if(item.dataset.key===selTerm.dataset.key){
+        item.classList.add("matched"); selTerm.classList.add("matched"); clearSel();
+        matched++;
+        if(matched===r.pairs.length) showFeedback(wrongTries===0, wrongTries===0?T.matched:T.notQuite);
+      } else {
+        wrongTries++;
+        const t=selTerm; item.classList.add("flash-wrong"); t.classList.add("flash-wrong");
+        setTimeout(()=>{ item.classList.remove("flash-wrong"); t.classList.remove("flash-wrong"); },400);
+        clearSel();
+      }
+    });
+  });
+  grid.appendChild(left); grid.appendChild(right);
+  body.appendChild(grid);
+};
+
+/* ---- Canvas helpers (shared by tap-on-plot and slider-fit) ---- */
+function makePlot(body, points, opts={}){
+  const canvas=document.createElement("canvas");
+  canvas.setAttribute("role","img");
+  body.appendChild(canvas);
+  const pad={l:44,r:16,t:16,b:40};
+  const xs=points.map(p=>p.x), ys=points.map(p=>p.y);
+  let xmin=Math.min(...xs), xmax=Math.max(...xs), ymin=Math.min(...ys), ymax=Math.max(...ys);
+  if(opts.yFromLine){ ymin=Math.min(ymin,opts.yFromLine.min); ymax=Math.max(ymax,opts.yFromLine.max); }
+  const xr=(xmax-xmin)||1, yr=(ymax-ymin)||1;
+  xmin-=xr*0.08; xmax+=xr*0.08; ymin-=yr*0.12; ymax+=yr*0.12;
+  const plot={canvas,ctx:canvas.getContext("2d"),W:0,H:0};
+  function css(v){ return getComputedStyle(document.body).getPropertyValue(v).trim(); }
+  plot.dx=x=>pad.l+(x-xmin)/(xmax-xmin)*(plot.W-pad.l-pad.r);
+  plot.dy=y=>plot.H-pad.b-(y-ymin)/(ymax-ymin)*(plot.H-pad.t-pad.b);
+  plot.resize=function(){
+    const dpr=window.devicePixelRatio||1;
+    const w=canvas.clientWidth;
+    const h=Math.max(220, Math.min(w*0.72, 340));
+    canvas.style.height=h+"px";
+    plot.W=w; plot.H=h;
+    canvas.width=w*dpr; canvas.height=h*dpr;
+    plot.ctx.setTransform(dpr,0,0,dpr,0,0);
+  };
+  plot.draw=function(drawExtra){
+    const c=plot.ctx;
+    c.clearRect(0,0,plot.W,plot.H);
+    const hair=css("--hairline"), sec=css("--text-secondary"), acc=css("--accent"), txt=css("--text");
+    // axes
+    c.strokeStyle=hair; c.lineWidth=1;
+    c.beginPath(); c.moveTo(pad.l,pad.t); c.lineTo(pad.l,plot.H-pad.b); c.lineTo(plot.W-pad.r,plot.H-pad.b); c.stroke();
+    c.fillStyle=sec; c.font="12px -apple-system,Segoe UI,sans-serif";
+    if(opts.xlabel){ c.textAlign="center"; c.fillText(opts.xlabel, (pad.l+plot.W-pad.r)/2, plot.H-10); }
+    if(opts.ylabel){ c.save(); c.translate(12,(pad.t+plot.H-pad.b)/2); c.rotate(-Math.PI/2); c.textAlign="center"; c.fillText(opts.ylabel,0,0); c.restore(); }
+    if(drawExtra) drawExtra(c,{acc,txt,sec,hair});
+    // points
+    points.forEach(p=>{
+      const isT=p.target && opts.showTarget;
+      c.beginPath(); c.arc(plot.dx(p.x),plot.dy(p.y), isT?9:7, 0, Math.PI*2);
+      c.fillStyle=isT?acc:txt; c.globalAlpha=isT?1:0.82; c.fill(); c.globalAlpha=1;
+    });
+  };
+  return plot;
+}
+
+/* ---- tap-on-plot ---- */
+RENDERERS["tap-on-plot"] = function(r, body){
+  hideAction();
+  const plot=makePlot(body, r.points, {xlabel:r.xlabel, ylabel:r.ylabel, showTarget:false});
+  function render(){ plot.resize(); plot.draw(); }
+  render();
+  const onResize=()=>render(); window.addEventListener("resize",onResize);
+  plot.canvas.addEventListener("pointerdown",ev=>{
+    if(state.answered) return;
+    const rect=plot.canvas.getBoundingClientRect();
+    const px=ev.clientX-rect.left, py=ev.clientY-rect.top;
+    // nearest point within a generous radius
+    let best=null, bestD=1e9;
+    r.points.forEach(p=>{
+      const d=Math.hypot(plot.dx(p.x)-px, plot.dy(p.y)-py);
+      if(d<bestD){ bestD=d; best=p; }
+    });
+    if(bestD>34) return; // ignore taps on empty space
+    const correct=!!best.target;
+    plot.draw(); // redraw base then annotate
+    const c=plot.ctx;
+    // highlight all true targets in green
+    r.points.filter(p=>p.target).forEach(p=>{
+      c.beginPath(); c.arc(plot.dx(p.x),plot.dy(p.y),11,0,Math.PI*2);
+      c.strokeStyle=getComputedStyle(document.body).getPropertyValue("--good").trim(); c.lineWidth=3; c.stroke();
+    });
+    if(!correct){
+      c.beginPath(); c.arc(plot.dx(best.x),plot.dy(best.y),11,0,Math.PI*2);
+      c.strokeStyle=getComputedStyle(document.body).getPropertyValue("--bad").trim(); c.lineWidth=3; c.stroke();
+    }
+    window.removeEventListener("resize",onResize);
+    showFeedback(correct, correct?T.correct:T.notQuite);
+  });
+};
+
+/* ---- slider-fit ---- */
+RENDERERS["slider-fit"] = function(r, body){
+  const start=r.start||{slope:(r.slopeRange[0]+r.slopeRange[1])/2, intercept:(r.interceptRange[0]+r.interceptRange[1])/2};
+  let slope=start.slope, intercept=start.intercept;
+  const xs=r.points.map(p=>p.x);
+  const xmin=Math.min(...xs), xmax=Math.max(...xs);
+  function lineY(x){ return intercept+slope*x; }
+  function sse(){ let s=0; r.points.forEach(p=>{ const e=p.y-lineY(p.x); s+=e*e; }); return s; }
+  // worst-case SSE for meter scaling: use the starting line's error, floored sensibly
+  const plot=makePlot(body, r.points, {
+    yFromLine:{ min: Math.min(lineY(xmin),lineY(xmax), intercept+r.slopeRange[0]*xmax),
+                max: Math.max(lineY(xmin),lineY(xmax), intercept+r.slopeRange[1]*xmax) }
+  });
+
+  const controls=document.createElement("div"); controls.className="sliders";
+  controls.innerHTML=
+    '<div class="slider-row"><label>Slope <b id="sv">'+slope.toFixed(2)+'</b></label>' +
+      '<input type="range" id="sl" min="'+r.slopeRange[0]+'" max="'+r.slopeRange[1]+'" step="0.01" value="'+slope+'"></div>' +
+    '<div class="slider-row"><label>Intercept <b id="iv">'+intercept.toFixed(2)+'</b></label>' +
+      '<input type="range" id="il" min="'+r.interceptRange[0]+'" max="'+r.interceptRange[1]+'" step="0.01" value="'+intercept+'"></div>' +
+    '<div class="sse-meter"><div class="label"><span>'+esc(T.sse)+'</span><b id="sseVal">0</b></div>' +
+      '<div class="sse-track"><div class="sse-fill" id="sseFill"></div></div></div>';
+  body.appendChild(controls);
+
+  const sv=controls.querySelector("#sv"), iv=controls.querySelector("#iv");
+  const sl=controls.querySelector("#sl"), il=controls.querySelector("#il");
+  const sseVal=controls.querySelector("#sseVal"), sseFill=controls.querySelector("#sseFill");
+  const sseStart=sse();
+
+  function drawLine(c,cols){
+    c.strokeStyle=cols.acc; c.lineWidth=2.5;
+    c.beginPath(); c.moveTo(plot.dx(xmin),plot.dy(lineY(xmin))); c.lineTo(plot.dx(xmax),plot.dy(lineY(xmax))); c.stroke();
+    // residual sticks
+    c.strokeStyle=cols.sec; c.lineWidth=1; c.globalAlpha=0.6;
+    r.points.forEach(p=>{ c.beginPath(); c.moveTo(plot.dx(p.x),plot.dy(p.y)); c.lineTo(plot.dx(p.x),plot.dy(lineY(p.x))); c.stroke(); });
+    c.globalAlpha=1;
+  }
+  function render(){ plot.resize(); plot.draw(drawLine); updateMeter(); }
+  function updateMeter(){
+    const e=sse();
+    sseVal.textContent=e.toFixed(2);
+    const frac=Math.max(0, Math.min(1, e/(sseStart*1.05||1)));
+    sseFill.style.width=(frac*100).toFixed(1)+"%";
+    const ok=e<=r.tolerance;
+    sseFill.classList.toggle("good", ok);
+    setAction(ok?T.nice:T.check, ()=>{ if(!state.answered) finish(); }, {disabled:false, ghost:!ok});
+  }
+  function finish(){
+    const ok=sse()<=r.tolerance;
+    window.removeEventListener("resize",onResize);
+    sl.disabled=true; il.disabled=true;
+    showFeedback(ok, ok?T.nice:T.tryFit);
+  }
+  sl.addEventListener("input",()=>{ slope=parseFloat(sl.value); sv.textContent=slope.toFixed(2); plot.draw(drawLine); updateMeter(); });
+  il.addEventListener("input",()=>{ intercept=parseFloat(il.value); iv.textContent=intercept.toFixed(2); plot.draw(drawLine); updateMeter(); });
+  const onResize=()=>render(); window.addEventListener("resize",onResize);
+  render();
+};
+
+/* ==========================================================================
+   BOOT
+   ========================================================================== */
+renderStart();
+</script>
+</body>
+</html>

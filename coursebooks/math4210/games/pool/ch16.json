@@ -1,0 +1,106 @@
+[
+  {
+    "id": "ch16-exogenous-pick",
+    "type": "tap-choice",
+    "chapter": 16,
+    "anchor": "ch16-path-diagrams",
+    "prompt": "In the Duncan model education -> income -> prestige, with a direct arrow education -> prestige, which variable is exogenous?",
+    "options": [
+      "education",
+      "income",
+      "prestige",
+      "the disturbance d_P on prestige"
+    ],
+    "correct": 0,
+    "why": "A variable is exogenous when no arrow points into it, so the model takes it as given and never tries to explain it. Education has no incoming arrow; income and prestige each have at least one, so both are endogenous. See Section 16.1, Drawing a causal story: path diagrams (Definition 16.4)."
+  },
+  {
+    "id": "ch16-grammar-match",
+    "type": "match-pairs",
+    "chapter": 16,
+    "anchor": "ch16-path-diagrams",
+    "prompt": "Match each path-diagram term to its meaning.",
+    "pairs": [
+      {"term": "exogenous variable", "meaning": "no arrow points into it"},
+      {"term": "endogenous variable", "meaning": "at least one arrow points into it"},
+      {"term": "disturbance", "meaning": "stub arrow for every unmeasured influence"},
+      {"term": "recursive model", "meaning": "the arrows form no loop"},
+      {"term": "path coefficient", "meaning": "standardized slope on an arrow"}
+    ],
+    "why": "These five terms carry the whole grammar of a path diagram: exogenous and endogenous split variables by whether an arrow points in, the disturbance stands for everything unmeasured, recursive means no feedback loop, and a path coefficient is a standardized regression slope. See Section 16.1 (Definitions 16.2 through 16.6)."
+  },
+  {
+    "id": "ch16-decompose-order",
+    "type": "order-steps",
+    "chapter": 16,
+    "anchor": "ch16-effects",
+    "prompt": "Order the steps that estimate the paths and decompose education's total effect.",
+    "steps": [
+      "Standardize education, income, and prestige to mean 0 and sd 1",
+      "Regress income on education: the slope is the arrow into income",
+      "Regress prestige on education and income: the two slopes are the arrows into prestige",
+      "Multiply the coefficients along the education-income-prestige route: the indirect effect",
+      "Add the direct path and the indirect effect: education's total effect"
+    ],
+    "why": "Because the model is recursive, each endogenous variable's equation is fit on its own by least squares, and the standardized slopes are the path coefficients. Effects then multiply along a route and add across routes, so the indirect piece is p_IE times p_PI and the total is direct plus indirect. See Section 16.2 and Section 16.3."
+  },
+  {
+    "id": "ch16-fit-education-prestige",
+    "type": "slider-fit",
+    "chapter": 16,
+    "anchor": "ch16-path-diagrams",
+    "prompt": "Six of Duncan's occupations. Drag the line to predict prestige from education (percent finishing high school). Get the SSE meter into the green.",
+    "xlabel": "education",
+    "ylabel": "prestige",
+    "points": [
+      {"x": 7, "y": 15}, {"x": 19, "y": 10}, {"x": 23, "y": 33}, {"x": 86, "y": 82}, {"x": 92, "y": 90}, {"x": 93, "y": 93}
+    ],
+    "slopeRange": [0, 1.5],
+    "interceptRange": [-15, 20],
+    "tolerance": 300,
+    "start": {"slope": 0.3, "intercept": 0},
+    "why": "The education-to-prestige arrow is just the slope of this regression, read in standardized units as a path coefficient. Least squares picks the slope and intercept that make the sum of squared vertical gaps smallest; across these occupations prestige rises close to one point per education point. See Section 16.2 and Theorem 16.7 (standardized coefficient)."
+  },
+  {
+    "id": "ch16-minister-influence",
+    "type": "tap-on-plot",
+    "chapter": 16,
+    "anchor": "ch16-limits",
+    "prompt": "Income against prestige for six Duncan occupations. Tap the high-influence case whose prestige sits far above what its income would predict.",
+    "xlabel": "income",
+    "ylabel": "prestige",
+    "points": [
+      {"x": 55, "y": 76}, {"x": 62, "y": 82}, {"x": 72, "y": 83}, {"x": 75, "y": 90}, {"x": 64, "y": 93}, {"x": 21, "y": 87, "target": true}
+    ],
+    "why": "That point is the minister: only 21 percent cleared the income line, yet the job is rated highly, because a well-schooled, modestly paid calling still earns respect. Its unusual predictor value and contrary residual give it large leverage and a big Cook's distance, enough to shift the path coefficients. See Section 16.5 and @ch09-cooks-distance."
+  },
+  {
+    "id": "ch16-causation-error",
+    "type": "spot-error",
+    "chapter": 16,
+    "anchor": "ch16-limits",
+    "prompt": "One sentence about what path analysis can claim is wrong. Tap it.",
+    "sentences": [
+      {"text": "The direction of each arrow is an assumption justified from outside the data, not something the correlations reveal."},
+      {"text": "An unmeasured common cause of two modeled variables can bias every path coefficient."},
+      {"text": "Because the model reproduces all three correlations almost exactly, it proves education causes prestige.", "wrong": true},
+      {"text": "Two models that differ only by a reversed arrow can fit the same correlations equally well."}
+    ],
+    "why": "Good fit means the data do not contradict the story, never that the story is right. An equivalent model with a reversed arrow fits the same correlations just as well, and an omitted common cause could bias every number. See Section 16.4, What path analysis cannot claim about causation."
+  },
+  {
+    "id": "ch16-spurious-read",
+    "type": "tap-choice",
+    "chapter": 16,
+    "anchor": "ch16-effects",
+    "prompt": "Income correlates with prestige at 0.84, but income's direct path to prestige is only 0.46. The remaining 0.37, which equals 0.72 times 0.52, is best called the...",
+    "options": [
+      "indirect effect of income on prestige",
+      "spurious part, manufactured by education as a common cause",
+      "direct effect of income on prestige",
+      "measurement error in the prestige survey"
+    ],
+    "correct": 1,
+    "why": "Income and prestige share a common cause, education, which lifts both. The product of the two paths through education (0.72 times 0.52 = 0.37) is spurious: it reflects education, not income acting on prestige. An indirect effect, by contrast, runs forward through a mediator. See Section 16.3 (Definition 16.10, spurious correlation)."
+  }
+]

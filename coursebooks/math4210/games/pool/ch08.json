@@ -1,0 +1,123 @@
+[
+  {
+    "id": "ch08-partial-slope-read",
+    "type": "tap-choice",
+    "chapter": 8,
+    "anchor": "ch08-interpret",
+    "prompt": "The Dwaine fit is sales-hat = -68.86 + 1.45 targtpop + 9.37 dispoinc. Which reading of the 9.37 coefficient on disposable income is correct?",
+    "options": [
+      "Raise a city's income by one unit and its sales rise 9.37, whatever else moves.",
+      "Among cities with the SAME target population, one with 1 unit more disposable income is predicted to sell about 9.37 thousand dollars more.",
+      "Disposable income explains 9.37 percent of the variation in sales.",
+      "The simple regression of sales on income alone has slope 9.37."
+    ],
+    "correct": 1,
+    "why": "A multiple regression coefficient is a partial slope (Section 8.1): the change in mean sales per one-unit rise in income with the other predictor, target population, held fixed. It is not a causal promise about intervening, not a percent of variation, and not the simple-regression slope, which is the much steeper 31.17."
+  },
+  {
+    "id": "ch08-companions-spot",
+    "type": "spot-error",
+    "chapter": 8,
+    "anchor": "ch08-holding-fixed",
+    "prompt": "The income coefficient falls from 31.17 to 9.37 when target population joins the model. One sentence about this is wrong. Tap it.",
+    "sentences": [
+      {"text": "The simple slope of sales on disposable income alone is 31.17."},
+      {"text": "Adding target population changes the income coefficient to 9.37."},
+      {"text": "The coefficient shrank because income and population are positively correlated (r = 0.78)."},
+      {"text": "The shrinkage proves the original 31.17 slope was computed incorrectly.", "wrong": true}
+    ],
+    "why": "Nothing was miscomputed: a coefficient belongs to a predictor and the company it keeps (Section 8.2). The question changed, not the arithmetic. The simple slope 31.17 lets population ride along with income; the partial slope 9.37 holds population fixed, and the two differ precisely because the predictors are correlated."
+  },
+  {
+    "id": "ch08-extra-ss-read",
+    "type": "tap-choice",
+    "chapter": 8,
+    "anchor": "ch08-extra-ss",
+    "prompt": "Body-fat sequential ANOVA (order triceps, thigh, midarm): triceps 352.27, thigh 33.17, midarm 11.55, Residuals 98.40. What is the 33.17 on the thigh row?",
+    "options": [
+      "The variation thigh explains on its own, ignoring triceps.",
+      "SSR(thigh | triceps): the extra variation thigh removes AFTER triceps is already in the model.",
+      "The residual sum of squares left after all three predictors.",
+      "The total sum of squares of body fat."
+    ],
+    "correct": 1,
+    "why": "A sequential (Type I) table gives each predictor the extra sum of squares it earns given the ones listed before it (Section 8.3). Here 33.17 = SSE(triceps) - SSE(triceps, thigh) = 143.12 - 109.95. Because triceps and thigh overlap, thigh entering second gets only its own crescent, far less than the 381.97 it would claim entering first."
+  },
+  {
+    "id": "ch08-glt-order",
+    "type": "order-steps",
+    "chapter": 8,
+    "anchor": "ch08-general-linear-test",
+    "prompt": "Order the steps of the general linear test for dropping a set of coefficients.",
+    "steps": [
+      "Fit the reduced model (the dropped terms forced to zero), record SSE(R)",
+      "Fit the full model (the terms kept), record SSE(F)",
+      "Form the extra sum of squares SSE(R) - SSE(F)",
+      "Divide by q, the number of coefficients set to zero",
+      "Divide by MSE(F), then compare F* to F(q, n - pF)"
+    ],
+    "why": "The general linear test scores the extra sum of squares the full model explains, per dropped coefficient, against the full model's noise estimate MSE(F) (Section 8.4). The result F* = ([SSE(R) - SSE(F)]/q) / (SSE(F)/(n - pF)) follows F(q, n - pF) when the reduced model is true, and a large F* is evidence the dropped terms are not all zero."
+  },
+  {
+    "id": "ch08-avplot-match",
+    "type": "match-pairs",
+    "chapter": 8,
+    "anchor": "ch08-avplots",
+    "prompt": "Added-variable plot for income in the Dwaine model. Match each piece to what it is.",
+    "pairs": [
+      {"term": "e_Y (vertical axis)", "meaning": "sales with target population removed"},
+      {"term": "e_X (horizontal axis)", "meaning": "income with target population removed"},
+      {"term": "slope of e_Y on e_X", "meaning": "the full-model coefficient, exactly 9.37"},
+      {"term": "scatter about the line", "meaning": "how cleanly income's unique part predicts sales"}
+    ],
+    "why": "An added-variable plot purges the other predictors from BOTH axes, then plots the leftovers (Section 8.5). By the Frisch-Waugh result its least-squares slope equals the multiple regression coefficient exactly, which is why the slope prints as 9.37. Cleaning only one axis breaks that equality and yields an uninterpretable hybrid slope."
+  },
+  {
+    "id": "ch08-hidden-extrap-plot",
+    "type": "tap-on-plot",
+    "chapter": 8,
+    "anchor": "ch08-dangers",
+    "prompt": "Each dot is one of the 21 Dwaine cities (target population, disposable income). Tap the query point that is a hidden extrapolation: inside each variable's own range but outside the joint cloud.",
+    "xlabel": "target population",
+    "ylabel": "disposable income",
+    "points": [
+      {"x": 68.5, "y": 16.7},
+      {"x": 45.2, "y": 16.8},
+      {"x": 91.3, "y": 18.2},
+      {"x": 47.8, "y": 16.3},
+      {"x": 46.9, "y": 17.3},
+      {"x": 66.1, "y": 18.2},
+      {"x": 49.5, "y": 15.9},
+      {"x": 52.0, "y": 17.2},
+      {"x": 48.9, "y": 16.6},
+      {"x": 38.4, "y": 16.0},
+      {"x": 87.9, "y": 18.3},
+      {"x": 72.8, "y": 17.1},
+      {"x": 88.4, "y": 17.4},
+      {"x": 42.9, "y": 15.8},
+      {"x": 52.5, "y": 17.8},
+      {"x": 85.7, "y": 18.4},
+      {"x": 41.3, "y": 16.5},
+      {"x": 51.7, "y": 16.3},
+      {"x": 89.6, "y": 18.1},
+      {"x": 82.7, "y": 19.1},
+      {"x": 52.3, "y": 16.0},
+      {"x": 75.0, "y": 16.0, "target": true}
+    ],
+    "why": "Target population 75 is inside the observed 38 to 91 range, and income 16 is inside the observed 15.8 to 19.1 range, yet no real city pairs a population that large with income that low: the predictors are correlated (r = 0.78), so the cloud is a tilted ellipse. The query point sits in its empty lower-right corner. That is hidden extrapolation (Section 8.7), invisible to any one-variable range check."
+  },
+  {
+    "id": "ch08-r2-adj-spot",
+    "type": "spot-error",
+    "chapter": 8,
+    "anchor": "ch08-r2-adj",
+    "prompt": "One sentence about R-squared and adjusted R-squared is wrong. Tap it.",
+    "sentences": [
+      {"text": "R-squared never falls when a predictor is added, even a column of pure noise."},
+      {"text": "Adjusted R-squared can fall when a predictor does not earn its degree of freedom."},
+      {"text": "For the savings model, adjusted R-squared (0.2797) is below R-squared (0.3385)."},
+      {"text": "A higher in-sample R-squared always means better prediction on new data.", "wrong": true}
+    ],
+    "why": "R-squared = 1 - SSE/SSTO can only rise as predictors are added, so it cannot tell a real gain from overfitting (Section 8.6). Adjusted R-squared charges a degrees-of-freedom rent through (n-1)/(n-p) and can fall, which is why it sits below R-squared here. A larger in-sample R-squared often reflects noise the model soaked up, and it can predict worse out of sample."
+  }
+]

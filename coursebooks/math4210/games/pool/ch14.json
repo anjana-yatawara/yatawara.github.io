@@ -1,0 +1,112 @@
+[
+  {
+    "id": "ch14-rate-ratio-read",
+    "type": "tap-choice",
+    "chapter": 14,
+    "anchor": "ch14-loglinear",
+    "prompt": "In the Galapagos Poisson fit the Elevation coefficient is b = 0.003541 per metre (log scale). What does 100 more metres of elevation do to the expected species count?",
+    "options": [
+      "Adds about 0.35 species.",
+      "Multiplies it by about 1.42, a 42% rise.",
+      "Adds about 100 species.",
+      "Multiplies it by about 0.35."
+    ],
+    "correct": 1,
+    "why": "A Poisson log-linear coefficient is a rate ratio, not an additive count. For a c-unit rise the mean is multiplied by e^(c*b): here e^(100*0.003541) = e^0.3541 = 1.42. Reading it additively ('0.35 more species') is the classic mistake, because on the count scale the effect multiplies. See section 14.2 on the log-linear model and rate ratios."
+  },
+  {
+    "id": "ch14-exposure-spot",
+    "type": "tap-on-plot",
+    "chapter": 14,
+    "anchor": "ch14-offset",
+    "prompt": "Each dot is a ship type (mean months of service on X, total damage incidents on Y). Tap the type whose big raw incident count is really just huge exposure.",
+    "xlabel": "mean months of service",
+    "ylabel": "total incidents",
+    "points": [
+      {"x": 1356, "y": 42},
+      {"x": 19760, "y": 253, "target": true},
+      {"x": 885, "y": 12},
+      {"x": 635, "y": 17},
+      {"x": 855, "y": 32}
+    ],
+    "why": "Type B logged 253 incidents, far more than any other type, but it also sat at sea about 19,760 months on average, roughly fifteen times type A. Raw counts reward exposure, not danger. Putting log(service) in as an offset divides that exposure out, and type B's damage rate turns out below the baseline. See section 14.3 on offsets."
+  },
+  {
+    "id": "ch14-loglinear-fit",
+    "type": "slider-fit",
+    "chapter": 14,
+    "anchor": "ch14-loglinear",
+    "prompt": "On the log scale the Poisson model is a straight line. These points are log(expected species) against elevation (in hundreds of metres) for the gala fit. Drag the sliders into the green.",
+    "points": [
+      {"x": 1, "y": 3.5},
+      {"x": 2, "y": 3.9},
+      {"x": 3, "y": 4.2},
+      {"x": 4, "y": 4.6},
+      {"x": 5, "y": 4.9},
+      {"x": 6, "y": 5.3}
+    ],
+    "slopeRange": [0, 0.8],
+    "interceptRange": [2.5, 4],
+    "tolerance": 0.12,
+    "start": {"slope": 0.1, "intercept": 3.0},
+    "why": "The log link makes the model linear in the predictors: log(mean) = b0 + b1*x. Fitting these points gives slope about 0.35 per hundred metres and intercept about 3.16, exactly the gala Elevation coefficient (0.003541 per metre) and intercept (3.155). Adding on this log scale becomes multiplying on the count scale. See section 14.2."
+  },
+  {
+    "id": "ch14-overdispersion-order",
+    "type": "order-steps",
+    "chapter": 14,
+    "anchor": "ch14-overdispersion",
+    "prompt": "Order the steps for diagnosing and fixing overdispersion in a Poisson fit.",
+    "steps": [
+      "Fit the Poisson log-linear model by maximum likelihood",
+      "Compute the Pearson dispersion phi-hat = X^2 / (n - p)",
+      "See phi-hat far above 1: the counts are overdispersed",
+      "Refit as quasi-Poisson to rescale the variance",
+      "Inflate each standard error by the square root of phi-hat"
+    ],
+    "why": "First fit the Poisson model, then check its one strong promise (variance equals mean) with the Pearson dispersion phi-hat. For gala phi-hat = 31.7, so the counts scatter about 32 times more than Poisson allows. Quasi-Poisson keeps the same coefficients but multiplies every standard error by sqrt(phi-hat) to make them honest. See section 14.4."
+  },
+  {
+    "id": "ch14-glm-match",
+    "type": "match-pairs",
+    "chapter": 14,
+    "anchor": "ch14-glm",
+    "prompt": "Match each generalized linear model choice to what it fixes.",
+    "pairs": [
+      {"term": "Poisson family", "meaning": "variance equals the mean"},
+      {"term": "Binomial family", "meaning": "variance is mu(1 - mu)"},
+      {"term": "Normal family", "meaning": "constant variance sigma^2"},
+      {"term": "Offset log t", "meaning": "coefficient pinned at 1 for exposure"}
+    ],
+    "why": "A GLM is one engine with two dials: the response distribution (which sets how the variance depends on the mean) and the link function. Poisson gives variance equal to the mean, binomial gives mu(1-mu), normal gives a constant sigma^2. An offset is not a dial but a term entered with a fixed coefficient of one for exposure. See section 14.6 on the GLM family."
+  },
+  {
+    "id": "ch14-quasi-spot",
+    "type": "spot-error",
+    "chapter": 14,
+    "anchor": "ch14-overdispersion",
+    "prompt": "The Galapagos fit has Pearson dispersion phi-hat = 31.7. One sentence about the quasi-Poisson fix is wrong. Tap it.",
+    "sentences": [
+      {"text": "Overdispersion barely changes the coefficient estimates but inflates their standard errors."},
+      {"text": "Each Poisson standard error is multiplied by sqrt(31.7), about 5.6."},
+      {"text": "Quasi-Poisson changes the coefficient estimates to correct the fit.", "wrong": true},
+      {"text": "After the correction, weak predictors like Nearest and Scruz are no longer significant."}
+    ],
+    "why": "The coefficients solve the score equations sum (y_i - mu_i) x_i = 0, which never mention the variance, so quasi-Poisson leaves the estimates identical. It only rescales the standard errors by sqrt(phi-hat), which is what pulls the weak predictors below significance. Only the uncertainty moves, not the estimates. See section 14.4."
+  },
+  {
+    "id": "ch14-offset-choice",
+    "type": "tap-choice",
+    "chapter": 14,
+    "anchor": "ch14-offset",
+    "prompt": "Type B ships: 253 incidents over ~19,760 mean months of service. Type A: 42 incidents over ~1,356 months. Why does the offset model rank type B as SAFER than type A?",
+    "options": [
+      "Because 253 is much larger than 42.",
+      "Because type B simply has more ships in the fleet.",
+      "Because per month of service, B's damage rate is lower once exposure is divided out.",
+      "Because the offset drops type B from the data."
+    ],
+    "correct": 2,
+    "why": "The offset log(service) turns the count model into a rate model: coefficients describe incidents per month of service, not raw totals. Type B's rate ratio is e^(-0.5433) = 0.58, about 58% of the type A rate, even though its raw count is highest, because it accumulated far more exposure. Volume and rate are different questions. See section 14.3 on offsets."
+  }
+]

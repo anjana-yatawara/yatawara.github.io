@@ -1,0 +1,106 @@
+[
+  {
+    "id": "ch04-read-r",
+    "type": "tap-choice",
+    "chapter": 4,
+    "anchor": "ch04-correlation",
+    "prompt": "On the savings data the correlation between a country's savings rate and its share of population under 15 is r = -0.46. Which reading is correct?",
+    "options": [
+      "Countries with more young dependents tend to save less, and the tie is moderate.",
+      "Having more young dependents causes a country to save less.",
+      "The savings rate drops 0.46 percentage points for each extra young person.",
+      "About 46 percent of the variation in savings is explained by the youth share."
+    ],
+    "correct": 0,
+    "why": "The sign of r fixes the direction: negative means the two move in opposite ways, so more youth goes with less saving. The size, just under a half, is moderate, present but far from a tight line. It is not a slope (r carries no units) and not the share of variance, which is r^2 = 0.21, and correlation alone never shows a cause. See Section 4.1 (ch04-correlation)."
+  },
+  {
+    "id": "ch04-fit-anscombe",
+    "type": "slider-fit",
+    "chapter": 4,
+    "anchor": "ch04-r-and-slope",
+    "prompt": "These are the 11 points of Anscombe's first dataset (r = 0.816). Drag the line to the least-squares fit and push the SSE meter into the green.",
+    "points": [
+      {"x": 10, "y": 8.04}, {"x": 8, "y": 6.95}, {"x": 13, "y": 7.58}, {"x": 9, "y": 8.81}, {"x": 11, "y": 8.33},
+      {"x": 14, "y": 9.96}, {"x": 6, "y": 7.24}, {"x": 4, "y": 4.26}, {"x": 12, "y": 10.84}, {"x": 7, "y": 4.82}, {"x": 5, "y": 5.68}
+    ],
+    "slopeRange": [0, 1],
+    "interceptRange": [0, 6],
+    "tolerance": 16,
+    "start": {"slope": 0.15, "intercept": 1.5},
+    "why": "The least-squares line for Anscombe I is Y = 3 + 0.5X, and its slope is not free of the correlation: b1 = r (s_y / s_x), so the same fit that gives r = 0.816 gives this slope. Squaring the correlation, r^2 = R^2 = 0.67, is the share of Y's variation the line explains. See Section 4.2 (ch04-r-and-slope)."
+  },
+  {
+    "id": "ch04-fisher-order",
+    "type": "order-steps",
+    "chapter": 4,
+    "anchor": "ch04-rho-inference",
+    "prompt": "Order the steps to build a 95 percent confidence interval for the population correlation rho.",
+    "steps": [
+      "Compute the sample correlation r",
+      "Transform to the z scale: z = arctanh(r)",
+      "Find the standard error there: 1 / sqrt(n - 3)",
+      "Form z plus or minus 1.96 standard errors",
+      "Transform both endpoints back with tanh"
+    ],
+    "why": "The raw r is skewed and its spread depends on rho, so no fixed standard error exists on that scale. Fisher's z = arctanh(r) is nearly normal with variance 1/(n-3), free of rho, so you build the symmetric interval there and bend it back through tanh. That back-transform is why the interval is lopsided about r. See Section 4.3 (ch04-rho-inference)."
+  },
+  {
+    "id": "ch04-bvn-variance",
+    "type": "tap-choice",
+    "chapter": 4,
+    "anchor": "ch04-bivariate-normal",
+    "prompt": "Inside a bivariate normal with rho = 0.8, what fraction of the variance in Y is left after you condition on X?",
+    "options": [
+      "0.80",
+      "0.64",
+      "0.36",
+      "0.20"
+    ],
+    "correct": 2,
+    "why": "Conditioning on X removes the fraction rho^2 of Y's variance and leaves 1 - rho^2. With rho = 0.8 that leftover is 1 - 0.64 = 0.36. Reading 0.80 confuses the correlation with the share of variance, and 0.64 is the part removed, not the part left. See Section 4.4 (ch04-bivariate-normal)."
+  },
+  {
+    "id": "ch04-spearman-error",
+    "type": "spot-error",
+    "chapter": 4,
+    "anchor": "ch04-spearman",
+    "prompt": "For income growth (ddpi) versus savings (sr), Pearson is 0.30 and Spearman is 0.41, and Libya has the highest growth. One sentence is wrong. Tap it.",
+    "sentences": [
+      {"text": "Pearson reads Libya's extreme growth as a far-off point and gets pulled down to 0.30."},
+      {"text": "Spearman sees Libya only as the highest growth rank, so it reports the stronger 0.41."},
+      {"text": "Because Spearman is higher, it is the correct number and Pearson should be discarded.", "wrong": true},
+      {"text": "The gap between the two is a signal to plot the data and look at the outlier."}
+    ],
+    "why": "Neither coefficient is the right one; they answer different questions. Pearson measures straight-line strength and counts Libya's distance, while Spearman measures monotone order and does not. Their disagreement is information: it flags an outlier or a curve and tells you to plot the data before quoting either. See Section 4.5 (ch04-spearman)."
+  },
+  {
+    "id": "ch04-anscombe-outlier",
+    "type": "tap-on-plot",
+    "chapter": 4,
+    "anchor": "ch04-traps",
+    "prompt": "This is Anscombe's third dataset: a near-perfect line spoiled by one point. Tap the outlier that drags the fit off and lowers r from 1 to 0.82.",
+    "xlabel": "x",
+    "ylabel": "y",
+    "points": [
+      {"x": 10, "y": 7.46}, {"x": 8, "y": 6.77}, {"x": 13, "y": 12.74, "target": true}, {"x": 9, "y": 7.11},
+      {"x": 11, "y": 7.81}, {"x": 14, "y": 8.84}, {"x": 6, "y": 6.08}, {"x": 4, "y": 5.39},
+      {"x": 12, "y": 8.15}, {"x": 7, "y": 6.42}, {"x": 5, "y": 5.73}
+    ],
+    "why": "Ten of these points lie exactly on a straight line; the eleventh, high above it at x = 13, is the whole story. Because r squares distances, that one far point tilts the least-squares line and pulls the correlation down from a perfect 1 to 0.82. Plotting the data is the only way to see it. See Section 4.6 (ch04-traps)."
+  },
+  {
+    "id": "ch04-traps-match",
+    "type": "match-pairs",
+    "chapter": 4,
+    "anchor": "ch04-traps",
+    "prompt": "Match each correlation trap to how it fools you.",
+    "pairs": [
+      {"term": "Nonlinearity", "meaning": "a U-shape gives r near zero though Y is fully predictable"},
+      {"term": "Outlier", "meaning": "one far point can manufacture or destroy the correlation"},
+      {"term": "Restriction of range", "meaning": "narrowing the spread of X shrinks r toward zero"},
+      {"term": "Ecological correlation", "meaning": "r on group averages overstates the individual r"}
+    ],
+    "why": "All four traps are invisible in the single number r and obvious in a scatterplot or a question about how the data were collected. A small r means no straight-line link, not no link; a narrow range or a group average changes r without changing the underlying relationship. See Section 4.6 (ch04-traps)."
+  }
+]

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "ch15-trend-growth",
+    "type": "tap-choice",
+    "chapter": 15,
+    "anchor": "ch15-trend-season",
+    "prompt": "The trend-plus-season fit on log airline passengers gives a trend slope of b1 = 0.0101 per month. Which reading is correct?",
+    "options": [
+      "Traffic grows about 1.0 percent per month, roughly 12.8 percent per year.",
+      "Traffic grows about 0.0101 thousand passengers per month.",
+      "Traffic grows about 10.1 percent per month.",
+      "The slope is too small to matter, so there is no trend."
+    ],
+    "correct": 0,
+    "why": "Because Y is logged, the slope is an approximate proportional change: exp(0.0101) - 1 is about 0.010, so 1.0 percent per month, and exp(12 x 0.0101) - 1 is about 0.128, so 12.8 percent per year. A log slope is a growth rate, not a count and not the raw percentage times 100. See section 15.1 (Example 15.2)."
+  },
+  {
+    "id": "ch15-trend-fit",
+    "type": "slider-fit",
+    "chapter": 15,
+    "anchor": "ch15-trend-season",
+    "prompt": "Here are the log passenger counts for each January from 1949 (x = 0) to 1960 (x = 11). Drag the sliders to fit the trend. Get the SSE meter into the green.",
+    "points": [
+      {"x":0,"y":4.718},{"x":1,"y":4.745},{"x":2,"y":4.977},{"x":3,"y":5.142},
+      {"x":4,"y":5.278},{"x":5,"y":5.318},{"x":6,"y":5.489},{"x":7,"y":5.649},
+      {"x":8,"y":5.753},{"x":9,"y":5.829},{"x":10,"y":5.886},{"x":11,"y":6.033}
+    ],
+    "slopeRange": [0, 0.25],
+    "interceptRange": [4.3, 5.2],
+    "tolerance": 0.06,
+    "start": {"slope":0.04, "intercept":4.5},
+    "why": "Least squares picks the slope and intercept that minimize the summed squared vertical gaps. These Januarys rise about 0.12 in log units per year, so a slope near 0.12 with an intercept near 4.73 drives SSE to its minimum, matching the monthly trend of 0.0101 times 12. That per-year climb is the growth rate of section 15.1."
+  },
+  {
+    "id": "ch15-season-peak",
+    "type": "tap-on-plot",
+    "chapter": 15,
+    "anchor": "ch15-trend-season",
+    "prompt": "These are the real monthly passenger counts for 1958 (x = 1..12) and 1959 (x = 13..24). Tap a summer peak: the tallest month of one yearly cycle.",
+    "xlabel": "month index (Jan 1958 to Dec 1959)",
+    "ylabel": "passengers (thousands)",
+    "points": [
+      {"x":1,"y":340},{"x":2,"y":318},{"x":3,"y":362},{"x":4,"y":348},{"x":5,"y":363},{"x":6,"y":435},
+      {"x":7,"y":491},{"x":8,"y":505,"target":true},{"x":9,"y":404},{"x":10,"y":359},{"x":11,"y":310},{"x":12,"y":337},
+      {"x":13,"y":360},{"x":14,"y":342},{"x":15,"y":406},{"x":16,"y":396},{"x":17,"y":420},{"x":18,"y":472},
+      {"x":19,"y":548},{"x":20,"y":559,"target":true},{"x":21,"y":463},{"x":22,"y":407},{"x":23,"y":362},{"x":24,"y":405}
+    ],
+    "why": "Each year the series peaks in the summer, at August here (x = 8 and x = 20), when vacation travel is highest, then dips to a winter trough. That repeating hump is the seasonality the month indicators capture, and its constant shape from year to year on this scale is why one set of month offsets fits every year. See section 15.1."
+  },
+  {
+    "id": "ch15-autocorr-error",
+    "type": "spot-error",
+    "chapter": 15,
+    "anchor": "ch15-autocorrelation",
+    "prompt": "One sentence about autocorrelation in the airline residuals is wrong. Tap it.",
+    "sentences": [
+      {"text":"The residuals plotted in time order form long runs of the same sign."},
+      {"text":"Positive autocorrelation makes the reported standard errors too small."},
+      {"text":"Autocorrelation biases the least-squares slope away from its true value.", "wrong":true},
+      {"text":"The AR(1) model writes each error as rho times the previous error plus a fresh shock."}
+    ],
+    "why": "Autocorrelation does not bias the least-squares estimate; the slope stays unbiased. What it corrupts is the stated precision: with positive autocorrelation the reported standard errors come out too small, so intervals look tighter and p-values smaller than the data justify. The point estimate is fine, the error bars lie. See section 15.2 (Theorem 15.4)."
+  },
+  {
+    "id": "ch15-dw-read",
+    "type": "tap-choice",
+    "chapter": 15,
+    "anchor": "ch15-durbin-watson",
+    "prompt": "The airline model has a Durbin-Watson statistic of D = 0.43. Using D is about 2(1 - r1), what does this say?",
+    "options": [
+      "r1 is about 0.78: strong positive autocorrelation.",
+      "r1 is about 0: the errors look uncorrelated.",
+      "r1 is about -0.78: strong negative autocorrelation.",
+      "The model explains about 43 percent of the variation."
+    ],
+    "correct": 0,
+    "why": "Solving D is about 2(1 - r1) for r1 gives r1 is about 1 - D/2 = 1 - 0.215 = 0.78, a strong positive lag-one autocorrelation. D near 0 means positive autocorrelation, D near 2 means none, D near 4 means negative. D says nothing about R-squared. See section 15.3 (Theorem 15.7)."
+  },
+  {
+    "id": "ch15-co-order",
+    "type": "order-steps",
+    "chapter": 15,
+    "anchor": "ch15-cochrane-orcutt",
+    "prompt": "Put the Cochrane-Orcutt procedure in order.",
+    "steps": [
+      "Fit the model by least squares and keep the residuals",
+      "Estimate rho by regressing each residual on the one before it",
+      "Quasi-difference Y and every predictor using rho-hat",
+      "Refit by least squares to get new coefficients",
+      "Repeat until rho-hat stops changing"
+    ],
+    "why": "Cochrane-Orcutt removes AR(1) autocorrelation iteratively: fit and keep residuals, estimate rho from those residuals, quasi-difference the response and predictors with rho-hat, refit, and loop until rho-hat settles. Each pass strips out more of the correlated part and leaves independent innovations. See section 15.4."
+  },
+  {
+    "id": "ch15-forecast-match",
+    "type": "match-pairs",
+    "chapter": 15,
+    "anchor": "ch15-forecasting",
+    "prompt": "Match each forecasting idea to what it means.",
+    "pairs": [
+      {"term":"out-of-time split", "meaning":"train on earlier years, test on later ones"},
+      {"term":"RMSE", "meaning":"typical forecast miss in passengers"},
+      {"term":"MAPE", "meaning":"average miss as a percent of the actual"},
+      {"term":"coverage", "meaning":"fraction of test months inside the interval"}
+    ],
+    "why": "An out-of-time split trains on the earlier years and tests on the later ones, so the score mimics real forecasting. RMSE reports the typical miss in passengers, MAPE the miss as a percent, and coverage the fraction of held-out months that fall inside the 95 percent interval (only 19 percent for the airline model). See section 15.5."
+  },
+  {
+    "id": "ch15-forecast-lesson",
+    "type": "tap-choice",
+    "chapter": 15,
+    "anchor": "ch15-forecasting",
+    "prompt": "Trained on 1949 to 1957, the model's 95 percent prediction interval covered only 7 of 36 test months (19 percent). What is the right lesson?",
+    "options": [
+      "A high in-sample R-squared does not guarantee good forecasts or honest intervals.",
+      "The model needs a higher R-squared to forecast the future well.",
+      "Nineteen percent rounds up close enough to the promised 95 percent.",
+      "Splitting the months at random would have fixed the coverage."
+    ],
+    "correct": 0,
+    "why": "In-sample fit and out-of-time forecast accuracy are different things. The model explains 98 percent of the past yet its 95 percent interval covered one test month in five, because the errors are autocorrelated and the trend is extrapolated. A high R-squared certifies description, never forecasting, and random splitting would let the model peek at the future. See section 15.5."
+  },
+  {
+    "id": "ch15-ar1-match",
+    "type": "match-pairs",
+    "chapter": 15,
+    "anchor": "ch15-autocorrelation",
+    "prompt": "Match each piece of the AR(1) error model to its meaning.",
+    "pairs": [
+      {"term":"rho", "meaning":"correlation between an error and the one before it"},
+      {"term":"innovation u_t", "meaning":"the fresh independent shock each month"},
+      {"term":"|rho| < 1", "meaning":"keeps the error process stable"},
+      {"term":"positive rho", "meaning":"consecutive errors tend to share sign"}
+    ],
+    "why": "The AR(1) model says each error is rho times the previous error plus an independent innovation u_t. The parameter rho is the correlation between consecutive errors, |rho| < 1 keeps the series from blowing up, and a positive rho makes errors cluster by sign, the long runs seen in the airline residuals. See section 15.2 (Definition 15.3)."
+  }
+]

@@ -1,0 +1,105 @@
+[
+  {
+    "id": "ch10-menu-funnel",
+    "type": "tap-choice",
+    "chapter": 10,
+    "anchor": "ch10-remedies",
+    "prompt": "The residual-versus-fitted plot for the cars stopping-distance fit fans out into a funnel: little scatter for slow cars, wide scatter for fast ones, but the mean looks straight. Which remedy does the menu point to?",
+    "options": [
+      "Add more predictors to push R-squared up.",
+      "Transform the response Y, or use weighted least squares, to stabilize the variance.",
+      "Delete the fast cars as outliers and refit.",
+      "Nothing: a funnel does not violate any assumption."
+    ],
+    "correct": 1,
+    "why": "In the remedy menu of Section 10.1, a funnel is the nonconstant-variance signal: the model assumes one sigma-squared but the noise grows across the plot. The fix is a variance-stabilizing transformation of Y or weighted least squares, not more predictors and not deleting data. A curve would call for transforming X or Y; a lone large residual would call for robust regression."
+  },
+  {
+    "id": "ch10-mammal-elasticity",
+    "type": "tap-choice",
+    "chapter": 10,
+    "anchor": "ch10-log-interpretation",
+    "prompt": "The mammal log-log fit of brain weight on body weight has slope b1 = 0.752. Across species, a body 10% heavier goes with a brain about how much heavier?",
+    "options": [
+      "About 0.75% heavier.",
+      "About 7.5% heavier.",
+      "About 75% heavier.",
+      "Exactly 10% heavier, since both are logged."
+    ],
+    "correct": 1,
+    "why": "On the log-log scale the slope is an elasticity (Definition 10.1, Example 10.1): the approximate percent change in Y per one-percent change in X. A 10% heavier body multiplies brain weight by 1.10^0.752, an exact rise of 7.43%, and the quick 'b1 percent per percent' shortcut gives 7.52%; both round to about 7.5%. Because the elasticity is below one, brains grow less than proportionally."
+  },
+  {
+    "id": "ch10-boxcox-order",
+    "type": "order-steps",
+    "chapter": 10,
+    "anchor": "ch10-box-cox",
+    "prompt": "Put the Box-Cox procedure for choosing a response transformation in order.",
+    "steps": [
+      "Assume the transformed response Y^(lambda) obeys the normal linear model in X",
+      "For each lambda, fit Y^(lambda) on X by least squares and read off RSS(lambda)",
+      "Add the Jacobian term (lambda - 1) times the sum of log Y to make powers comparable",
+      "Take lambda-hat as the maximizer of the profile log-likelihood",
+      "Form the likelihood-ratio interval, and round to a nearby interpretable power if it is inside"
+    ],
+    "why": "This is the profile-likelihood recipe of Section 10.3 (Theorem 10.6). You fit the transformed response for each candidate power, penalize by the log-Jacobian so different powers are comparable, and maximize. For the cars data lambda-hat = 0.43 with interval [0.23, 0.66], which contains 0.5, so the round-number square root is the defensible choice."
+  },
+  {
+    "id": "ch10-strongx-fit",
+    "type": "slider-fit",
+    "chapter": 10,
+    "anchor": "ch10-wls",
+    "prompt": "These ten points are the real strongx physics measurements (beam energy on X, scattering cross-section on Y). Drag the sliders to fit a straight line and push the SSE meter into the green.",
+    "points": [
+      {"x": 0.345, "y": 367}, {"x": 0.287, "y": 311}, {"x": 0.251, "y": 295}, {"x": 0.225, "y": 268}, {"x": 0.207, "y": 253},
+      {"x": 0.186, "y": 239}, {"x": 0.161, "y": 220}, {"x": 0.132, "y": 213}, {"x": 0.084, "y": 193}, {"x": 0.060, "y": 192}
+    ],
+    "slopeRange": [400, 850],
+    "interceptRange": [80, 200],
+    "tolerance": 1600,
+    "start": {"slope": 500, "intercept": 110},
+    "why": "Ordinary least squares fits this line at intercept 135 and slope 620 (Section 10.4). But each strongx point carries its own known standard deviation, so weighted least squares with w_i = 1/sd_i^2 leans on the precise low-energy points and shifts the fit to intercept 148, slope 531, tightening the intercept's standard error from 10.08 to 8.08. Weighting throws away no information you already have."
+  },
+  {
+    "id": "ch10-terms-match",
+    "type": "match-pairs",
+    "chapter": 10,
+    "anchor": "ch10-log-interpretation",
+    "prompt": "Match each remedy quantity to what it means.",
+    "pairs": [
+      {"term": "Elasticity (log-log slope)", "meaning": "percent change in Y per one-percent change in X"},
+      {"term": "Semi-elasticity (log-linear slope)", "meaning": "percent change in Y per one-unit change in X"},
+      {"term": "Weight w_i in WLS", "meaning": "inverse of that point's error variance"},
+      {"term": "Huber weight min(1, c/|u|)", "meaning": "full for small residuals, shrinking for large ones"}
+    ],
+    "why": "These four are the load-bearing definitions of the chapter: elasticity (Definition 10.1) and semi-elasticity (Definition 10.2) read logged slopes as percents, the WLS weight (Definition 10.7) is inverse variance so precise points count more, and the Huber weight (Theorem 10.11) caps how hard any one residual can pull. Keeping them straight is what lets you match a fix to a diagnostic."
+  },
+  {
+    "id": "ch10-huber-outlier",
+    "type": "tap-on-plot",
+    "chapter": 10,
+    "anchor": "ch10-huber",
+    "prompt": "Huber regression downweights points with large vertical residuals. Tap the point Huber would downweight most: the one that misses the rising trend by the largest vertical gap.",
+    "xlabel": "X (predictor)",
+    "ylabel": "Y (response)",
+    "points": [
+      {"x": 1, "y": 2.1}, {"x": 2, "y": 3.0}, {"x": 3, "y": 3.9}, {"x": 4, "y": 5.1},
+      {"x": 5, "y": 13.0, "target": true}, {"x": 6, "y": 7.0}, {"x": 7, "y": 8.1}, {"x": 8, "y": 8.9}
+    ],
+    "why": "Huber weights depend only on the residual, through w(u) = min(1, c/|u|) (Section 10.6): a point inside the central band keeps full weight, a far-off vertical miss gets weight c/|u| that shrinks as the miss grows. The point sitting far above the line here is the vertical outlier Huber tames. Its blind spot is a high-leverage point, which can sit near the line with a small residual and never be downweighted."
+  },
+  {
+    "id": "ch10-gala-limit",
+    "type": "spot-error",
+    "chapter": 10,
+    "anchor": "ch10-transform-limits",
+    "prompt": "Four sentences about the Galapagos species counts. One is wrong. Tap it.",
+    "sentences": [
+      {"text": "The plain linear fit predicts a negative species count for several small islands, which is impossible."},
+      {"text": "Squaring the square-root prediction for Isabela overshoots its actual count, a back-transformation bias."},
+      {"text": "Taking the square root of the count removes Isabela's high leverage value.", "wrong": true},
+      {"text": "Because the response is a bounded count, the honest fix is a Poisson model, not another transformation."}
+    ],
+    "why": "Transforming the response Y does nothing about a predictor value that is extreme, so Isabela's leverage stays at about 0.97 on the square-root fit (Section 10.5). The other three sentences are the real warning signs that no power of Y can save the normal model: negative predicted counts, back-transformation bias, and a bounded count whose distribution calls for the Poisson model of Chapter 14."
+  }
+]

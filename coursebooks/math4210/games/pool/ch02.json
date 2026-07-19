@@ -1,0 +1,143 @@
+[
+  {
+    "id": "ch02-workflow-order",
+    "type": "order-steps",
+    "chapter": 2,
+    "anchor": "ch02-workflow",
+    "prompt": "Put the modeling workflow in order, the five-stage loop every chapter of this book follows.",
+    "steps": [
+      "ASK: fix the question and the data",
+      "EXPLORE: plot and summarize before fitting",
+      "FIT: estimate the least-squares line",
+      "CHECK: read the residuals and assumptions",
+      "USE: interpret the slope, predict, decide"
+    ],
+    "why": "The course spine is ASK, EXPLORE, FIT, CHECK, USE (Section 2.0, the modeling workflow). You explore before fitting so the line matches what the scatter shows, and you check the residuals before trusting any slope or prediction. A failed check sends you back to FIT, not forward to USE."
+  },
+  {
+    "id": "ch02-fit-mini",
+    "type": "slider-fit",
+    "chapter": 2,
+    "anchor": "ch02-least-squares",
+    "prompt": "These are six real Toluca runs (lot size, work hours). Drag the sliders to fit the least-squares line and push the SSE meter into the green.",
+    "points": [
+      {"x": 60, "y": 224},
+      {"x": 70, "y": 252},
+      {"x": 110, "y": 435},
+      {"x": 100, "y": 420},
+      {"x": 80, "y": 342},
+      {"x": 70, "y": 323}
+    ],
+    "slopeRange": [0, 8],
+    "interceptRange": [-150, 200],
+    "tolerance": 5000,
+    "start": {"slope": 1, "intercept": 100},
+    "why": "Least squares picks the slope and intercept that make the sum of squared vertical gaps as small as possible (Section 2.2). For this six-run slice the best line is about hours = -9.6 + 4.19 * lotsize, so a slope near 4 with a small intercept drives SSE down toward its minimum of about 3515. Every other line leaves more squared error."
+  },
+  {
+    "id": "ch02-mean-not-response",
+    "type": "tap-choice",
+    "chapter": 2,
+    "anchor": "ch02-slr-model",
+    "prompt": "In the model Y = beta0 + beta1 X + error, what does the straight line beta0 + beta1 X describe?",
+    "options": [
+      "Each observed run's exact work hours.",
+      "The mean work hours at a given lot size.",
+      "The most hours any run took at each lot size.",
+      "The error left over after fitting."
+    ],
+    "correct": 1,
+    "why": "The line is the regression function E{Y} = beta0 + beta1 X, the mean response at each lot size (Section 2.1). Any single run sits off the line by its random error, which is why two lots of the same size took different hours. Reading the line as exact hours quietly drops the error term."
+  },
+  {
+    "id": "ch02-worst-residual",
+    "type": "tap-on-plot",
+    "chapter": 2,
+    "anchor": "ch02-residuals",
+    "prompt": "This is a residual plot: residual (hours) against lot size for seven Toluca runs. Tap the run the fitted line fits worst, the point farthest from zero.",
+    "xlabel": "lot size",
+    "ylabel": "residual (hours)",
+    "points": [
+      {"x": 20, "y": -20.8},
+      {"x": 30, "y": 103.5, "target": true},
+      {"x": 50, "y": -83.9},
+      {"x": 70, "y": 48.7},
+      {"x": 90, "y": 84.3},
+      {"x": 100, "y": 0.6},
+      {"x": 120, "y": 55.2}
+    ],
+    "why": "A residual is the signed vertical gap from a run to the fitted line (Section 2.3). The run at lot size 30 lands 103.5 hours above the line, the largest residual in the whole Toluca data set, so the model fits it worst. Away from that point the residuals scatter in a flat band around zero, with no funnel, which is the picture the constant-variance assumption predicts."
+  },
+  {
+    "id": "ch02-sigma-match",
+    "type": "match-pairs",
+    "chapter": 2,
+    "anchor": "ch02-sigma",
+    "prompt": "Match each error-variance quantity to what it is.",
+    "pairs": [
+      {"term": "SSE", "meaning": "sum of the squared residuals"},
+      {"term": "MSE = SSE/(n-2)", "meaning": "unbiased estimate of the error variance"},
+      {"term": "s = sqrt(MSE)", "meaning": "typical residual size, in hours"},
+      {"term": "n - 2", "meaning": "error degrees of freedom"}
+    ],
+    "why": "SSE adds up the squared residuals; dividing by the n-2 error degrees of freedom gives MSE, which estimates sigma^2 with no bias; its square root s is the typical miss in the units of Y (Section 2.4). Two degrees of freedom are spent estimating b0 and b1, which is why the divisor is n-2, not n."
+  },
+  {
+    "id": "ch02-blue-sense",
+    "type": "tap-choice",
+    "chapter": 2,
+    "anchor": "ch02-gauss-markov-slr",
+    "prompt": "The Gauss-Markov theorem says the least-squares slope b1 is best. Best in exactly what sense?",
+    "options": [
+      "Smallest variance among every possible estimator of the slope.",
+      "Smallest variance among linear, unbiased estimators of the slope.",
+      "The only unbiased estimator of the slope.",
+      "Unbiased only when the errors are normal."
+    ],
+    "correct": 1,
+    "why": "Gauss-Markov says b1 is BLUE: best, meaning smallest variance, among estimators that are linear in the Y values and unbiased (Section 2.5). A biased estimator, such as a shrinkage slope, can beat it on variance, and nonlinear rules sit outside the theorem. The result needs only mean-zero, constant-variance, uncorrelated errors, with no normality assumed."
+  },
+  {
+    "id": "ch02-mle-error",
+    "type": "spot-error",
+    "chapter": 2,
+    "anchor": "ch02-mle",
+    "prompt": "One sentence about maximum likelihood under normal errors is wrong. Tap it.",
+    "sentences": [
+      {"text": "With normal errors, the MLE slope and intercept equal the least-squares b0 and b1."},
+      {"text": "Maximum likelihood picks the parameters that make the observed data most probable."},
+      {"text": "The MLE of sigma^2 divides SSE by n, so it is unbiased for sigma^2.", "wrong": true},
+      {"text": "The normal model adds independence and a bell shape to the earlier error conditions."}
+    ],
+    "why": "Under normal errors the MLE coefficients do match least squares, but the MLE variance divides SSE by n, not n-2, so it comes out biased low (Section 2.6). That is exactly why the book estimates sigma^2 with the unbiased MSE = SSE/(n-2) for all the inference in Chapter 3."
+  },
+  {
+    "id": "ch02-slope-interpret",
+    "type": "tap-choice",
+    "chapter": 2,
+    "anchor": "ch02-least-squares",
+    "prompt": "The Toluca least-squares fit is hours = 62.37 + 3.57 * lotsize. What does the slope 3.57 mean?",
+    "options": [
+      "Each extra unit in a lot adds about 3.57 work hours on average.",
+      "A lot of one unit takes 3.57 work hours.",
+      "The model explains 3.57 percent of the variation.",
+      "Work hours fall by 3.57 for each extra unit."
+    ],
+    "correct": 0,
+    "why": "The slope b1 is the change in the mean response for a one-unit rise in the predictor (Section 2.2). Here each extra unit of lot size adds about 3.57 work hours on average, over the observed range of 20 to 120 units. It is a rate of change, not the hours for a single-unit lot."
+  },
+  {
+    "id": "ch02-resid-identities",
+    "type": "spot-error",
+    "chapter": 2,
+    "anchor": "ch02-residuals",
+    "prompt": "One sentence about least-squares residuals is wrong. Tap it.",
+    "sentences": [
+      {"text": "For a fit with an intercept, the residuals sum to exactly zero."},
+      {"text": "The residuals are orthogonal to the predictor: the sum of X_i times e_i is zero."},
+      {"text": "A residual e_i is the same thing as the unknown error epsilon_i.", "wrong": true},
+      {"text": "The fitted line passes through the point of means (Xbar, Ybar)."}
+    ],
+    "why": "Residuals are observable estimates of the unseen errors epsilon_i; they are not the errors themselves (Section 2.3). The error is the gap to the true line we never see, while the residual is the gap to the fitted line we compute. The other three statements are exact algebraic properties of any least-squares fit with an intercept."
+  }
+]

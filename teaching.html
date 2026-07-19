@@ -52,6 +52,17 @@
       background: var(--surface-2); border: 1px solid var(--border); }
     .course .course-meta .m.live { color: var(--green); border-color: rgba(34,255,136,0.3); background: var(--green-dim); }
 
+    /* coursebook link on a course card */
+    .course.has-book { border-color: var(--cyan); }
+    .course .coursebook { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); }
+    .course .coursebook-desc { font-size: var(--fs-xs); color: var(--dim); line-height: 1.5; margin: 0 0 0.5rem; }
+    .course a.coursebook-link { display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font-display); font-size: var(--fs-sm); font-weight: 600; color: var(--cyan);
+      text-decoration: none; transition: color var(--t-fast) var(--ease); }
+    .course a.coursebook-link:hover { color: var(--violet); }
+    .course a.coursebook-link .ar { font-family: var(--font-mono); transition: transform var(--t-fast) var(--ease); }
+    .course a.coursebook-link:hover .ar { transform: translateX(3px); }
+
     /* AI tools as small cards */
     .ai-tools { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
     .ai-tool { display: flex; gap: var(--space-3); align-items: flex-start; }
@@ -193,7 +204,7 @@
             </div>
           </article>
 
-          <article class="course" data-reveal data-delay="1">
+          <article class="course has-book" data-reveal data-delay="1">
             <div class="course-code">MATH 4210</div>
             <h3>Regression Modeling &amp; Analysis</h3>
             <p>Building, diagnosing, and interpreting regression models — from simple linear regression through multiple, model selection, and diagnostics — with an emphasis on applied, real-world modeling.</p>
@@ -201,6 +212,11 @@
               <span class="m">Upper-division</span>
               <span class="m">Applied</span>
               <span class="m">4 units</span>
+              <span class="m live">Fall 2026</span>
+            </div>
+            <div class="coursebook">
+              <p class="coursebook-desc">Full interactive coursebook: lessons in English and Spanish, R and Python, chapter games.</p>
+              <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/math4210/">Open the MATH 4210 coursebook <span class="ar" aria-hidden="true">-&gt;</span></a>
             </div>
           </article>
 

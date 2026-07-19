@@ -1,0 +1,136 @@
+[
+  {
+    "id": "ch12-vif-plot",
+    "type": "tap-on-plot",
+    "chapter": 12,
+    "anchor": "ch12-vif",
+    "prompt": "Each point is a body-fat predictor at its auxiliary R-squared (x) and its variance inflation factor (y). Tap the predictor whose coefficient is least trustworthy.",
+    "xlabel": "auxiliary R-squared",
+    "ylabel": "VIF",
+    "points": [
+      {"x": 0.556, "y": 2.25},
+      {"x": 0.894, "y": 9.46},
+      {"x": 0.915, "y": 11.77},
+      {"x": 0.932, "y": 14.80},
+      {"x": 0.970, "y": 33.51, "target": true}
+    ],
+    "why": "The VIF is 1/(1 - R_k^2), so it explodes as the other predictors close in on reproducing X_k. Weight sits at auxiliary R-squared 0.970 and VIF 33.5, meaning its coefficient's variance is inflated 33-fold and its standard error is about 5.8 times what it would be if weight stood alone. That is the least trustworthy coefficient in the fit. See Section 12.1 (ch12-vif)."
+  },
+  {
+    "id": "ch12-vif-match",
+    "type": "match-pairs",
+    "chapter": 12,
+    "anchor": "ch12-vif",
+    "prompt": "Match each body-fat predictor to its variance inflation factor from the full model.",
+    "pairs": [
+      {"term": "weight", "meaning": "VIF = 33.5"},
+      {"term": "hip", "meaning": "VIF = 14.8"},
+      {"term": "chest", "meaning": "VIF = 9.5"},
+      {"term": "height", "meaning": "VIF = 1.7"}
+    ],
+    "why": "Weight, hip, and abdomen are the tangled size measurements, so their VIFs run high (weight 33.5, hip 14.8). Height is nearly uncorrelated with the girths, so its VIF sits near 1.7, close to the clean floor of 1. A VIF above 10 flags a coefficient the data cannot pin down. See Example 12.2 in Section 12.1 (ch12-vif)."
+  },
+  {
+    "id": "ch12-vif-meaning",
+    "type": "tap-choice",
+    "chapter": 12,
+    "anchor": "ch12-vif",
+    "prompt": "A predictor has VIF = 25. What does that say about it?",
+    "options": [
+      "It is the most important predictor in the model.",
+      "The other predictors explain R_k^2 = 0.96 of it, so its coefficient is poorly estimated.",
+      "Its coefficient is biased upward by a factor of 25.",
+      "It is uncorrelated with the other predictors."
+    ],
+    "correct": 1,
+    "why": "VIF = 1/(1 - R_k^2), so VIF = 25 means R_k^2 = 1 - 1/25 = 0.96: the other predictors reproduce 96 percent of this one. That inflates its coefficient's variance 25-fold without biasing it. VIF measures redundancy, not importance, and warns that this coefficient is unstable. See Section 12.1 (ch12-vif)."
+  },
+  {
+    "id": "ch12-cp-size",
+    "type": "tap-choice",
+    "chapter": 12,
+    "anchor": "ch12-criteria",
+    "prompt": "Best-subset search gives the smallest Mallows Cp at each size: 1:72.4, 2:20.7, 3:14.3, 4:9.2, 7:6.3, 8:6.2, 9:7.3. Which model size does Cp prefer?",
+    "options": [
+      "Size 1, because Cp is largest there.",
+      "Size 4, the first value below 10.",
+      "Size 8, where Cp reaches its minimum.",
+      "Size 13, the full model, because more predictors always help."
+    ],
+    "correct": 2,
+    "why": "For Mallows Cp smaller is better, and it bottoms out at eight predictors (Cp = 6.19), which is also close to p = 9, the mark of a near-unbiased model. Adding the last five predictors raises Cp again, so they are deadweight. See Example 12.3 in Section 12.2 (ch12-criteria)."
+  },
+  {
+    "id": "ch12-criteria-error",
+    "type": "spot-error",
+    "chapter": 12,
+    "anchor": "ch12-criteria",
+    "prompt": "One sentence about model-selection criteria is wrong. Tap it.",
+    "sentences": [
+      {"text": "Adjusted R-squared, unlike R-squared, can fall when you add a useless predictor."},
+      {"text": "BIC's penalty p ln(n) is heavier than AIC's 2p when n is large, so BIC prefers smaller models."},
+      {"text": "Plain R-squared is a good criterion for choosing model size because it rewards prediction.", "wrong": true},
+      {"text": "PRESS predicts each case from a model refit without it, so a junk predictor can raise it."}
+    ],
+    "why": "Plain R-squared never decreases when you add a predictor, so it always picks the biggest model and cannot choose among sizes. It measures in-sample fit, not prediction. Every good criterion instead charges for complexity (adjusted R-squared, Cp, AIC, BIC) or scores held-out cases (PRESS). See Section 12.2 (ch12-criteria)."
+  },
+  {
+    "id": "ch12-press-shortcut",
+    "type": "tap-choice",
+    "chapter": 12,
+    "anchor": "ch12-criteria",
+    "prompt": "The PRESS deleted-residual shortcut is PRESS = sum of (e_i / (1 - h_ii))^2. Why is it useful?",
+    "options": [
+      "It makes PRESS decrease whenever you add a predictor.",
+      "It gives every leave-one-out prediction error from a single fit of the full data.",
+      "It proves the model's residuals are normal.",
+      "It replaces cross-validation with a training-error measure."
+    ],
+    "correct": 1,
+    "why": "Brute-force PRESS refits the model n times, once per deleted case. The shortcut shows each deleted residual is just the ordinary residual e_i divided by 1 - h_ii, so all n leave-one-out errors follow from one fit. High-leverage points, with large h_ii, get their residuals magnified. See Theorem 12.6 in Section 12.2 (ch12-criteria)."
+  },
+  {
+    "id": "ch12-cv-order",
+    "type": "order-steps",
+    "chapter": 12,
+    "anchor": "ch12-cross-validation",
+    "prompt": "Put the steps of k-fold cross-validation in order.",
+    "steps": [
+      "Split the data into k equal folds",
+      "Hold out fold 1 as the test set and train on the other folds",
+      "Predict the held-out fold and record its squared errors",
+      "Rotate so every fold serves as the test set exactly once",
+      "Average the k test errors into one cross-validated RMSE"
+    ],
+    "why": "k-fold cross-validation splits the data into k folds and rotates, letting each fold be the test set once while the rest train the model. Because every case is predicted by a model that never trained on it, the averaged error is an honest out-of-sample estimate. See Section 12.4 (ch12-cross-validation)."
+  },
+  {
+    "id": "ch12-train-test-read",
+    "type": "tap-choice",
+    "chapter": 12,
+    "anchor": "ch12-cross-validation",
+    "prompt": "The full model has training RMSE 3.89 and 10-fold CV RMSE 4.13. The eight-predictor model has training RMSE 3.95 and CV RMSE 4.04. Which model do you report, and on which number?",
+    "options": [
+      "The full model, because its training RMSE (3.89) is lower.",
+      "The eight-predictor model, because its cross-validated RMSE (4.04) is lower.",
+      "Either one; training and CV RMSE always agree.",
+      "The full model, because more predictors always predict better."
+    ],
+    "correct": 1,
+    "why": "Training RMSE can only fall as predictors are added, because the model is scored on the very data it fit, so the full model's lower training RMSE is guaranteed by its size, not by better prediction. Cross-validated RMSE scores each man with a model that did not train on him, and by that honest measure the eight-predictor model wins. See Section 12.4 (ch12-cross-validation)."
+  },
+  {
+    "id": "ch12-shrinkage-match",
+    "type": "match-pairs",
+    "chapter": 12,
+    "anchor": "ch12-shrinkage",
+    "prompt": "Match each shrinkage idea to what it does.",
+    "pairs": [
+      {"term": "Ridge (L2 penalty)", "meaning": "shrinks every coefficient but rarely to exactly zero"},
+      {"term": "Lasso (L1 penalty)", "meaning": "can set coefficients exactly to zero, selecting variables"},
+      {"term": "lambda = 0", "meaning": "no penalty: ordinary least squares"},
+      {"term": "lambda to infinity", "meaning": "all slopes crushed to zero"}
+    ],
+    "why": "Ridge adds a squared penalty and shrinks smoothly; lasso adds an absolute-value penalty whose corners on the axes let it zero coefficients, doing selection and shrinkage at once. The tuning parameter lambda sets the strength: at 0 both are least squares, and as it grows the coefficients are crushed toward zero. See Section 12.5 (ch12-shrinkage)."
+  }
+]

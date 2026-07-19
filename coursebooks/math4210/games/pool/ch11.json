@@ -1,0 +1,130 @@
+[
+  {
+    "id": "ch11-refcell-mean",
+    "type": "tap-choice",
+    "chapter": 11,
+    "anchor": "ch11-dummy-coding",
+    "prompt": "Salary on rank (Assistant as reference) gives intercept 80,776, rankAssocProf 13,100, and rankProf 45,996. What is the fitted mean salary for a full professor?",
+    "options": [
+      "45,996",
+      "80,776",
+      "126,772",
+      "139,872"
+    ],
+    "correct": 2,
+    "why": "In reference-cell coding (Section 11.1, Example 11.1) the intercept is the reference mean and each coefficient is a gap above it, so the full-professor mean is 80,776 + 45,996 = 126,772, exactly that group's sample mean. The coefficient 45,996 by itself is only the Full-minus-Assistant difference, not the full mean."
+  },
+  {
+    "id": "ch11-encode-order",
+    "type": "order-steps",
+    "chapter": 11,
+    "anchor": "ch11-dummy-coding",
+    "prompt": "Put the steps for encoding a k-level factor with reference-cell coding in order.",
+    "steps": [
+      "Pick one level as the reference (baseline)",
+      "Make an indicator column for each of the other k-1 levels",
+      "Set each indicator to 1 in its level and 0 everywhere else",
+      "Keep the intercept; the reference level is coded by all-zero indicators",
+      "Read each coefficient as that level's mean minus the reference mean"
+    ],
+    "why": "This is reference-cell coding (Section 11.1). You use k-1 indicators, not k, because the intercept plus all k indicators are linearly dependent and make X'X singular (Theorem 11.4). The left-out level becomes the baseline, and every coefficient is a contrast against it."
+  },
+  {
+    "id": "ch11-interaction-match",
+    "type": "match-pairs",
+    "chapter": 11,
+    "anchor": "ch11-interactions",
+    "prompt": "In the interaction model salary ~ service * discipline, match each term to what it means.",
+    "pairs": [
+      {"term": "beta_1 (slope on service)", "meaning": "per-year effect for the reference discipline"},
+      {"term": "beta_2 (discipline indicator)", "meaning": "group gap only at X = 0 years"},
+      {"term": "beta_3 (service x discipline)", "meaning": "extra dollars per year for discipline B"},
+      {"term": "beta_2 + beta_3 X", "meaning": "the discipline gap at service level X"}
+    ],
+    "why": "In the interaction model of Section 11.3, beta_2 is only the gap at zero years of service, beta_3 is the difference in slopes, and the actual gap at any service X is beta_2 + beta_3 X. Reading beta_2 as the whole discipline effect is the trap the section warns about."
+  },
+  {
+    "id": "ch11-interaction-trap",
+    "type": "spot-error",
+    "chapter": 11,
+    "anchor": "ch11-interactions",
+    "prompt": "For salary ~ service * discipline (discipline coef 857 with p = 0.86, interaction 695 with p = 0.0014), one sentence is wrong. Tap it.",
+    "sentences": [
+      {"text": "The interaction coefficient 695 (p = 0.0014) says applied salaries rise about 695 dollars per year faster."},
+      {"text": "The applied slope is 527 + 695 = 1,222 dollars per year."},
+      {"text": "The discipline coefficient 857 (p = 0.86) shows discipline has no effect on salary.", "wrong": true},
+      {"text": "Because the slopes differ, the discipline gap grows with years of service."}
+    ],
+    "why": "The wrong sentence is the interaction trap of Section 11.3: beta_2 = 857 is only the gap at zero years of service, not the effect of discipline. Because the slopes differ, the gap widens with experience, reaching about 25,000 dollars at 35 years. A small, non-significant main effect never means the groups are alike."
+  },
+  {
+    "id": "ch11-anova-is-regression",
+    "type": "tap-choice",
+    "chapter": 11,
+    "anchor": "ch11-dummy-coding",
+    "prompt": "Salary is regressed on rank alone (a 3-level factor) and the overall F is 128.22 on 2 and 394 df. What classic test does this F equal?",
+    "options": [
+      "A two-sample t test of Assistant versus Full",
+      "The one-way ANOVA F test for equal rank means",
+      "A test that the residuals are normal",
+      "A test of a quadratic term in rank"
+    ],
+    "correct": 1,
+    "why": "Section 11.5 shows one-way ANOVA is exactly regression on the factor's indicators, so the regression overall F equals the ANOVA F, 128.22 on 2 and 394 df (Theorem 11.12). The between-groups sum of squares is the regression SSR and the within-groups is SSE. There is one machine here, not two."
+  },
+  {
+    "id": "ch11-cars-fit",
+    "type": "slider-fit",
+    "chapter": 11,
+    "anchor": "ch11-polynomial",
+    "prompt": "These six cars are real rows from the stopping-distance data (speed, dist). Drag the sliders to fit a straight line and push the SSE meter into the green.",
+    "points": [
+      {"x": 10, "y": 26},
+      {"x": 12, "y": 20},
+      {"x": 14, "y": 36},
+      {"x": 16, "y": 40},
+      {"x": 18, "y": 56},
+      {"x": 20, "y": 64}
+    ],
+    "slopeRange": [2, 6],
+    "interceptRange": [-45, 5],
+    "tolerance": 165,
+    "start": {"slope": 3, "intercept": -10},
+    "why": "A straight line fits these six points reasonably, but the full cars data bends upward because stopping distance grows with the square of speed (Section 11.4). That upward curve is why the chapter adds a squared term. Least squares picks the slope and intercept that minimize the summed squared vertical gaps drawn as residual sticks."
+  },
+  {
+    "id": "ch11-cars-curve",
+    "type": "tap-on-plot",
+    "chapter": 11,
+    "anchor": "ch11-polynomial",
+    "prompt": "Stopping distance curves upward with speed, so a straight line underpredicts at the high end. Tap the car that sits farthest above a straight-line trend.",
+    "xlabel": "Speed (mph)",
+    "ylabel": "Stopping distance (ft)",
+    "points": [
+      {"x": 4, "y": 10},
+      {"x": 7, "y": 22},
+      {"x": 11, "y": 28},
+      {"x": 14, "y": 36},
+      {"x": 18, "y": 42},
+      {"x": 20, "y": 64},
+      {"x": 24, "y": 120, "target": true},
+      {"x": 25, "y": 85}
+    ],
+    "why": "In the cars data (Section 11.4) stopping distance rises faster than a straight line because braking distance grows with the square of speed. The fastest car sits far above any straight-line trend, the signal that a quadratic term is needed. This is why the chapter fits dist on speed and speed-squared."
+  },
+  {
+    "id": "ch11-centering-effect",
+    "type": "tap-choice",
+    "chapter": 11,
+    "anchor": "ch11-polynomial",
+    "prompt": "Centering speed before squaring drops the correlation between speed and speed-squared from 0.98 to about -0.10. What does centering change?",
+    "options": [
+      "The fitted curve and the predictions change",
+      "R-squared improves",
+      "Only the meaning and stability of the linear and intercept terms; the fit is identical",
+      "The curvature coefficient beta_2 changes"
+    ],
+    "correct": 2,
+    "why": "Centering is a change of coordinates, not of model (Section 11.4, Definition 11.8). Every fitted value, residual, and R-squared is unchanged, and the curvature beta_2 stays 0.0999. Only the intercept and linear term change meaning, becoming the height and slope at the mean speed, and their standard errors shrink because the near-collinearity is gone."
+  }
+]
