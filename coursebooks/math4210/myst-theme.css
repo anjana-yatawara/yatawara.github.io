@@ -698,3 +698,161 @@ figure.fig-figure figcaption {
 .myst-footer-link:hover {
   border-color: var(--accent) !important;
 }
+
+/* -------------------------------------------------------------------------
+   11. UI-surgeon polish (2026-07-19)  --  see _planning/08-site-design.md
+   -------------------------------------------------------------------------
+   Six professor-requested changes. Where a native book-theme option covered
+   the request it was used in myst.yml instead of CSS; the rules here are for
+   the items with no native option (language-toggle styling, source-download
+   removal, sidebar breathing room, header-title fit, mobile tuning).
+   ------------------------------------------------------------------------- */
+
+/* (Item 1) Right-hand CONTENTS outline is removed natively via
+   site.options.hide_outline: true. That leaves the theme's outline margin
+   track (`minmax(5rem,13rem)` on the right) empty, so the reading column is
+   nudged right into the reclaimed space at desktop widths for balance -- see
+   the sidebar-breathing-room rule (Item 4) below, which does double duty. */
+
+/* -------------------------------------------------------------------------
+   (Item 2) Language toggle -- compact corner pill
+   -------------------------------------------------------------------------
+   The old big {admonition}.tip banner is replaced in all 32 chapter files by
+   a {div}.lang-toggle holding a single link. MyST renders it as
+   <div class="lang-toggle">...<a>...</a></div>. Float it to the top-right
+   corner of the article so it reads as a quiet button and does not push the
+   opening paragraph down. */
+.article.content .lang-toggle {
+  float: right;
+  margin: 0 0 0.35rem 1rem;
+  max-width: none;          /* escape the 70ch paragraph measure */
+}
+
+.article.content .lang-toggle a,
+.article.content .lang-toggle a:not(.no-underline):not(.hover-link):not(.myst-toc-item) {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--hairline));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.article.content .lang-toggle a:hover {
+  text-decoration: none !important;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: var(--accent);
+}
+
+html.dark .article.content .lang-toggle a {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--hairline));
+}
+
+/* Clear the float so the following heading/paragraph is not wrapped beside a
+   short toggle on very wide screens. */
+.article.content .lang-toggle::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* -------------------------------------------------------------------------
+   (Item 6) Remove the source/download button
+   -------------------------------------------------------------------------
+   book-theme's template.yml exposes no option to disable the frontmatter
+   download control, so the dropdown (which here only offers the raw source
+   .md) is hidden in CSS. The raw .md is not linked anywhere else in the
+   rendered UI. */
+.myst-fm-downloads-dropdown {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------
+   (Item 4) Sidebar breathing room + (Item 1) reclaimed width
+   -------------------------------------------------------------------------
+   The left navigator's dividing line sits at the col-margin-left boundary;
+   this pads the article's own subgrid inward at the widths where the fixed
+   sidebar is shown (>=1280px), giving a clean gap between the divider and the
+   text and letting the column drift into the space the outline vacated. The
+   70ch paragraph measure still caps line length, so text does not sprawl. */
+@media (min-width: 1280px) {
+  .article.content {
+    padding-left: 3rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   (Item 3) Header title fit at mobile widths
+   -------------------------------------------------------------------------
+   logo_text is now "Reg Mod and Ana (MATH 4210)". Shrink it on small screens
+   so it stays on one line without crowding the theme toggle / search icons. */
+@media (max-width: 640px) {
+  .myst-home-link {
+    font-size: 0.9rem;
+    line-height: 1.2;
+  }
+}
+@media (max-width: 400px) {
+  .myst-home-link {
+    font-size: 0.8rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   (Item 5) Mobile optimization
+   -------------------------------------------------------------------------
+   The theme's grid already gives ~1.25rem body side padding and wraps tables
+   (`div.overflow-auto`) and code (`div.block.overflow-auto`) in their own
+   horizontal-scroll containers. These rules reinforce that contract: comfy
+   body text, images capped to their column, scroll containers that never
+   push the page sideways, and a language pill that stays small and visible. */
+@media (max-width: 640px) {
+  .article.content {
+    font-size: 16px;
+  }
+
+  /* Guarantee a comfortable reading gutter even if the fluid grid track
+     collapses to zero on the narrowest phones. */
+  .article.content > * {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  /* Keep the toggle pill in the corner and finger-friendly. */
+  .article.content .lang-toggle a {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Tables and code: own-container horizontal scroll, never the page. The
+   theme wraps both in an overflow-auto div; make that contract explicit and
+   robust so a wide table or long code line scrolls inside its box. */
+[aria-label="table content"],
+[aria-label="code block content"] {
+  overflow-x: auto !important;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Figures and any inline image never exceed their column. */
+.article.content img,
+figure.fig-figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Comfortable tap targets in the left navigator on touch screens. */
+@media (max-width: 1024px) {
+  .myst-toc-item {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+}
