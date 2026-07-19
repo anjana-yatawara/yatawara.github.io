@@ -1,0 +1,124 @@
+[
+  {
+    "id": "ch06-dims",
+    "type": "tap-choice",
+    "chapter": 6,
+    "anchor": "ch06",
+    "prompt": "The Dwaine model uses one intercept and two predictors (targtpop, dispoinc) on n = 21 cities. What is the dimension of the design matrix X?",
+    "options": [
+      "21 by 2",
+      "21 by 3",
+      "3 by 21",
+      "3 by 3"
+    ],
+    "correct": 1,
+    "why": "By Definition 6.2 in Section 6.1, X has one row per observation and one column per parameter, counting the leading column of ones for the intercept. With n = 21 rows and p = 3 columns (ones, targtpop, dispoinc), X is 21 by 3. The 2-column answer forgets the ones column that carries the intercept."
+  },
+  {
+    "id": "ch06-xtx-entry",
+    "type": "tap-choice",
+    "chapter": 6,
+    "anchor": "ch06-matrix-mult",
+    "prompt": "For Dwaine, X'X is the 3 by 3 table [[21, 1302.4, 360.0], [1302.4, 87707.94, 22609.19], [360.0, 22609.19, 6190.26]]. Its top-left entry is 21. What is that number?",
+    "options": [
+      "The sum of all 21 sales figures",
+      "The sample size n, from summing 1 times 1 down the ones column",
+      "The sum of the squared populations",
+      "The determinant of X'X"
+    ],
+    "correct": 1,
+    "why": "In Example 6.2 (Section 6.2) the entry (X'X)_11 is the ones column dotted with itself, sum of 1 times 1 over all rows, which equals n = 21. The rest of the first row and column are the plain predictor sums, and the diagonal entries below are sums of squared predictor values, not the sample size."
+  },
+  {
+    "id": "ch06-pipeline-order",
+    "type": "order-steps",
+    "chapter": 6,
+    "anchor": "ch06-inverse",
+    "prompt": "Put the matrix regression pipeline in the order the chapter runs it.",
+    "steps": [
+      "Form the cross-products X'X and X'Y from the data",
+      "Invert the square matrix X'X",
+      "Solve b = (X'X)^-1 X'Y for the coefficients",
+      "Build the hat matrix H and the residuals e = (I - H)Y",
+      "Scale (X'X)^-1 by MSE to get the standard errors"
+    ],
+    "why": "The Section 6.9 pipeline forms two summaries, inverts one, then reads everything else off in a fixed order: the coefficients from Theorem 6.12, the fitted values and residuals from the hat matrix (Section 6.5), and the standard errors from MSE times (X'X)^-1 (Section 6.7). One inverse drives the whole fit."
+  },
+  {
+    "id": "ch06-object-match",
+    "type": "match-pairs",
+    "chapter": 6,
+    "anchor": "ch06-projection",
+    "prompt": "Match each matrix object in the Dwaine fit to what it does.",
+    "pairs": [
+      {"term": "X", "meaning": "design matrix, ones plus the two predictors"},
+      {"term": "(X'X)^-1 X'Y", "meaning": "least squares coefficient vector b"},
+      {"term": "H = X(X'X)^-1 X'", "meaning": "hat matrix that makes the fitted values"},
+      {"term": "I - H", "meaning": "projection that turns Y into residuals"}
+    ],
+    "why": "These are the four workhorses of Sections 6.4 and 6.5. X holds the data; b = (X'X)^-1 X'Y solves the normal equations (Theorem 6.12); H projects Y onto the fitted values (Definition 6.13); and I - H projects onto the residual space. Both H and I - H are symmetric and idempotent (Theorem 6.16)."
+  },
+  {
+    "id": "ch06-leverage-plot",
+    "type": "tap-on-plot",
+    "chapter": 6,
+    "anchor": "ch06-projection",
+    "prompt": "This scatter shows the two Dwaine predictors for seven real cities. Tap the city with the highest disposable income, which in the full data also carries the largest leverage value h_ii.",
+    "xlabel": "targtpop (thousands under 16)",
+    "ylabel": "dispoinc (per-capita income)",
+    "points": [
+      {"x": 68.5, "y": 16.7},
+      {"x": 45.2, "y": 16.8},
+      {"x": 91.3, "y": 18.2},
+      {"x": 46.9, "y": 17.3},
+      {"x": 52.5, "y": 17.8},
+      {"x": 88.4, "y": 17.4},
+      {"x": 82.7, "y": 19.1, "target": true}
+    ],
+    "why": "The topmost city is city 20 at income 19.1, the highest in the data, and Section 6.5 (echoed in exam problem EP 6.3) reports it has the largest leverage value, h = 0.2788. Leverage is the diagonal of the hat matrix H: it measures how far a city's predictor values sit from the center of the cloud, and that city's response has the biggest say in its own fitted value."
+  },
+  {
+    "id": "ch06-rank-spot",
+    "type": "spot-error",
+    "chapter": 6,
+    "anchor": "ch06-inverse",
+    "prompt": "A student adds a fourth column equal to targtpop + dispoinc, refits, and sees det(X'X) print as -3.7e-05 while Python's inv still returns numbers. One sentence is wrong. Tap it.",
+    "sentences": [
+      {"text": "The new column is targtpop + dispoinc, so the four columns are linearly dependent and X has rank 3, not 4."},
+      {"text": "With rank 3 under 4 columns, X'X is singular and has no genuine inverse (Theorem 6.9)."},
+      {"text": "The -3.7e-05 determinant is floating-point dust around a true value of zero."},
+      {"text": "Because Python returned an inverse and coefficients, the augmented model is fine and can be trusted.", "wrong": true}
+    ],
+    "why": "This is exam problem EP 6.4 and Section 6.3. The redundant column makes X rank deficient, so X'X is singular and its true determinant is zero; the tiny -3.7e-05 is numerical noise. Python's inv skips the conditioning check and returns meaningless huge entries, so code running is no proof the fit means anything. R honestly refuses with 'computationally singular.'"
+  },
+  {
+    "id": "ch06-cov-sign",
+    "type": "tap-choice",
+    "chapter": 6,
+    "anchor": "ch06-random-vectors",
+    "prompt": "The estimated covariance matrix of b has -0.6724 between the two slope estimates. A student says: both slopes are positive, so their estimates must be positively correlated. What is the correct reading?",
+    "options": [
+      "The student is right: positive slopes force a positive covariance.",
+      "The -0.6724 is negative, so overestimating one slope tends to come with underestimating the other.",
+      "The sign of the covariance cannot be told from the matrix.",
+      "A negative covariance means one of the slopes is really negative."
+    ],
+    "correct": 1,
+    "why": "Exam problem EP 6.1 and Section 6.7 (Theorem 6.21): the sign of a coefficient and the sign of the covariance between estimators are unrelated. The off-diagonal -0.6724 is negative because the two predictor columns are themselves correlated across the 21 cities, so the fit trades one slope off against the other. It says nothing about the slopes both being positive."
+  },
+  {
+    "id": "ch06-mvn-law",
+    "type": "tap-choice",
+    "chapter": 6,
+    "anchor": "ch06-mvn",
+    "prompt": "Under the normal error model, what is the sampling distribution of the least-squares coefficient vector b for the Dwaine fit?",
+    "options": [
+      "b ~ N(beta, sigma^2 (X'X)^-1)",
+      "b ~ N(0, sigma^2 I)",
+      "b is uniform over the column space of X",
+      "b has no distribution because it is computed, not random"
+    ],
+    "correct": 0,
+    "why": "Theorem 6.23 in Section 6.8: because b = (X'X)^-1 X'Y is a linear map of Y, and normal errors make Y multivariate normal, b is multivariate normal too, centered at the truth beta (unbiased) with covariance sigma^2 (X'X)^-1. That single law is what lets Chapter 7 attach a t distribution to every coefficient."
+  }
+]

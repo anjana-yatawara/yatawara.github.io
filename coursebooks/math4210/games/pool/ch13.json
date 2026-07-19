@@ -1,0 +1,125 @@
+[
+  {
+    "id": "ch13-ols-fails",
+    "type": "tap-choice",
+    "chapter": 13,
+    "anchor": "ch13-logistic-model",
+    "prompt": "You code an O-ring as Y = 1 if damaged, 0 if not, and fit an ordinary straight line. Which statement is a real reason that model breaks?",
+    "options": [
+      "The fitted line can predict probabilities above 1 and below 0, outside the legal range.",
+      "A straight line cannot have a negative slope.",
+      "Least squares cannot be computed when Y is an integer.",
+      "The predictor temperature must first be standardized or the line will not fit."
+    ],
+    "correct": 0,
+    "why": "Section 13.1 lists three ways the straight line fails for a 0/1 response: the line is unbounded so it predicts probabilities outside [0,1], the variance pi(1-pi) is not constant, and the two-valued error cannot be normal. Logistic regression fixes all three by bending the line through the logit so the fitted probability always stays between 0 and 1."
+  },
+  {
+    "id": "ch13-irls-order",
+    "type": "order-steps",
+    "chapter": 13,
+    "anchor": "ch13-mle",
+    "prompt": "Logistic regression has no formula, so glm iterates. Put one IRLS step in order.",
+    "steps": [
+      "Start from the current coefficients beta",
+      "Form the linear predictor eta = X beta and probabilities pi = 1/(1+e^-eta)",
+      "Build the weights w = m pi (1-pi)",
+      "Build the working response z = eta + (Y - m pi)/w",
+      "Solve the weighted least squares fit of z on X for the new beta",
+      "Repeat until the coefficients stop moving"
+    ],
+    "why": "Theorem 13.5: each Newton step for the score equations is a weighted least squares fit of a working response z on X with weights w = m pi(1-pi), so logistic regression is iteratively reweighted least squares. Section 13.2 codes exactly this loop by hand and it matches glm to five decimals in six passes because the log-likelihood is concave with one peak."
+  },
+  {
+    "id": "ch13-extrapolation-spot",
+    "type": "tap-on-plot",
+    "chapter": 13,
+    "anchor": "ch13-logistic-model",
+    "prompt": "These are the fitted O-ring damage probabilities at several temperatures. Tap the prediction you should trust the least.",
+    "xlabel": "Launch temperature (F)",
+    "ylabel": "Predicted P(damage)",
+    "points": [
+      {"x":31,"y":0.993,"target":true},
+      {"x":53,"y":0.551},
+      {"x":57,"y":0.341},
+      {"x":63,"y":0.124},
+      {"x":66,"y":0.069},
+      {"x":70,"y":0.030},
+      {"x":75,"y":0.010}
+    ],
+    "why": "Every flight in the data launched at 53 F or warmer, so the 31 F point sits 22 degrees below all experience. The S-curve is being extended into a region where no data can check its shape, so the tidy 0.99 hides real uncertainty (Section 13.1 and Try it 13.1). The warm-end predictions sit inside the data range and are far safer to quote."
+  },
+  {
+    "id": "ch13-logodds-line",
+    "type": "slider-fit",
+    "chapter": 13,
+    "anchor": "ch13-mle",
+    "prompt": "On the log-odds scale, logistic regression is a straight line. Each point is a temperature and the observed log-odds of O-ring damage. Fit the line.",
+    "points": [
+      {"x":53,"y":0.45},{"x":57,"y":-0.50},{"x":61,"y":-1.70},
+      {"x":66,"y":-2.40},{"x":70,"y":-3.65},{"x":75,"y":-4.40},{"x":79,"y":-5.60}
+    ],
+    "slopeRange": [-0.40, -0.05],
+    "interceptRange": [8, 16],
+    "tolerance": 0.6,
+    "start": {"slope":-0.05, "intercept":8},
+    "why": "The logistic model sets logit(pi) = b0 + b1 X, so on the log-odds scale the relationship is a straight line (the right panel of the sigmoid figure in Section 13.1). The best fit here has slope near -0.22 and intercept near 12, echoing the glm fit logit = 11.66 - 0.2162 temp. Real logistic fitting weights each point by its information (Section 13.2), but the linear-in-log-odds shape is what you just traced."
+  },
+  {
+    "id": "ch13-oddsratio-match",
+    "type": "match-pairs",
+    "chapter": 13,
+    "anchor": "ch13-odds-ratio",
+    "prompt": "Match each odds-ratio number from the fitted models to what it means.",
+    "pairs": [
+      {"term":"e^b1 = 0.806 (temp)", "meaning":"each degree of warming cuts the damage odds by about 19 percent"},
+      {"term":"e^(-10 b1) = 8.69 (temp)", "meaning":"cooling 10 degrees multiplies the damage odds nearly ninefold"},
+      {"term":"e^(10 b1) = 1.50 (glucose)", "meaning":"each 10 glucose units raises the odds of a positive test by 50 percent"},
+      {"term":"odds ratio = 1", "meaning":"the predictor has no effect on the odds"}
+    ],
+    "why": "Section 13.3: exponentiate a logistic coefficient (times the step size) to get an odds ratio, the constant factor by which the odds multiply per step, whatever the starting odds. An odds ratio of 1 is no effect, above 1 raises the odds, below 1 lowers them. These are the exact numbers from Example 13.3 for the O-ring and Pima fits."
+  },
+  {
+    "id": "ch13-oddsratio-error",
+    "type": "spot-error",
+    "chapter": 13,
+    "anchor": "ch13-odds-ratio",
+    "prompt": "The glucose coefficient is 0.0406, so e^0.0406 = 1.04. One sentence about it is wrong. Tap it.",
+    "sentences": [
+      {"text":"Each extra glucose unit multiplies the odds of a positive test by about 1.04."},
+      {"text":"Each extra glucose unit raises the probability of a positive test by 4 percent.", "wrong":true},
+      {"text":"That 1.04 is an odds ratio, a constant multiplier on the odds."},
+      {"text":"How much the probability moves depends on where you sit on the S-curve."}
+    ],
+    "why": "Section 13.3 and Try it 13.3: a logistic coefficient acts on the odds, not the probability. e^0.0406 = 1.04 multiplies the odds by 1.04 per unit, a 4 percent rise in the odds. The change in probability is not constant 4 percent: it is largest in the steep middle of the S-curve and tiny in the flat tails. Saying odds, not chance, avoids the most common error in applied logistic regression."
+  },
+  {
+    "id": "ch13-classification-read",
+    "type": "spot-error",
+    "chapter": 13,
+    "anchor": "ch13-fit",
+    "prompt": "The Pima model at threshold 0.5 gives accuracy 0.77, sensitivity 0.57, specificity 0.88, AUC 0.84. One reading is wrong. Tap it.",
+    "sentences": [
+      {"text":"It clears 88 percent of the true negatives but catches only 57 percent of the true positives."},
+      {"text":"An AUC of 0.84 means the model classifies 84 percent of cases correctly.", "wrong":true},
+      {"text":"Lowering the threshold below 0.5 would catch more positives at the cost of more false alarms."},
+      {"text":"A single accuracy number can hide poor sensitivity, so report both."}
+    ],
+    "why": "Section 13.5, Example 13.5: AUC is not accuracy. AUC 0.84 is the probability that the model gives a random positive a higher predicted probability than a random negative, a ranking-quality measure across all thresholds; accuracy at 0.5 is a separate 0.77. Sensitivity 0.57 and specificity 0.88 come from the classification table, and moving the threshold trades one for the other."
+  },
+  {
+    "id": "ch13-lrt-read",
+    "type": "tap-choice",
+    "chapter": 13,
+    "anchor": "ch13-mle",
+    "prompt": "A five-predictor logistic model has null deviance 974.75 and residual deviance 703.24. What is the whole-model likelihood-ratio test and its conclusion?",
+    "options": [
+      "G2 = 271.5 on 5 df, far into the chi-square tail: reject that all slopes are zero.",
+      "G2 = 703.24 on 746 df: the model fits perfectly.",
+      "G2 = 974.75 on 1 df: the predictors add nothing.",
+      "You cannot test this without the individual standard errors."
+    ],
+    "correct": 0,
+    "why": "Section 13.4: the whole-model likelihood-ratio statistic is the drop in deviance, G2 = null deviance minus residual deviance = 974.75 - 703.24 = 271.5, referred to a chi-square with degrees of freedom equal to the number of slopes set to zero, here 5. A chi-square with 5 df has mean 5, so 271.5 is enormous and we reject the null that all slopes are zero; the predictors together carry real information."
+  }
+]

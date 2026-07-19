@@ -1,0 +1,108 @@
+[
+  {
+    "id": "ch07-coef-read",
+    "type": "tap-choice",
+    "chapter": 7,
+    "anchor": "ch07-ls-matrix",
+    "prompt": "The Dwaine fit is Yhat = -68.86 + 1.4546 X1 + 9.3655 X2, with X1 young population (thousands) and X2 disposable income (thousand dollars). Which reading of the 1.4546 slope is correct?",
+    "options": [
+      "Each extra thousand young residents raises sales by 1.4546, ignoring income entirely.",
+      "Holding income fixed, each extra thousand young residents is associated with about 1.4546 thousand dollars more predicted sales.",
+      "Population explains 1.4546 times as much variation as income.",
+      "A city with 1000 young residents is predicted to sell 1.4546 thousand dollars."
+    ],
+    "correct": 1,
+    "why": "In multiple regression a slope is a partial effect: it is the change in predicted sales for a one-unit rise in that predictor with the OTHER predictors held fixed. So 1.4546 means about 1,455 dollars more sales per extra thousand young residents at a fixed income, not an unconditional effect and not a ratio of importances. See section 7.1 (@ch07-ls-matrix)."
+  },
+  {
+    "id": "ch07-pipeline-order",
+    "type": "order-steps",
+    "chapter": 7,
+    "anchor": "ch07-ls-matrix",
+    "prompt": "Order the steps that turn raw Dwaine data into the coefficient vector b by matrix least squares.",
+    "steps": [
+      "Build the design matrix X: a column of ones, then the two predictor columns",
+      "Form the cross products X'X (3 by 3) and X'Y (3 by 1)",
+      "Invert the small p by p matrix X'X",
+      "Multiply to solve the normal equations: b = (X'X)^-1 X'Y",
+      "Read off the fitted coefficients (-68.86, 1.4546, 9.3655)"
+    ],
+    "why": "Section 7.1 (@ch07-ls-matrix) derives b = (X'X)^-1 X'Y from the normal equations X'X b = X'Y. You build X with its leading ones column, form the two cross products, invert the small 3 by 3 X'X (never the 21 by 21 XX'), and multiply. One formula produces all three coefficients at once."
+  },
+  {
+    "id": "ch07-projection-fit",
+    "type": "slider-fit",
+    "chapter": 7,
+    "anchor": "ch07-geometry",
+    "prompt": "These are the first six Toluca lots (lot size, hours). Drag the line to make total squared error as small as possible: this is exactly what least squares does by projection.",
+    "points": [
+      {"x": 80, "y": 399}, {"x": 30, "y": 121}, {"x": 50, "y": 221}, {"x": 90, "y": 376}, {"x": 70, "y": 361}, {"x": 60, "y": 224}
+    ],
+    "slopeRange": [0, 7],
+    "interceptRange": [-60, 120],
+    "tolerance": 7500,
+    "start": {"slope": 3.5, "intercept": 30},
+    "why": "Least squares picks the fit whose residual vector is shortest, the perpendicular from Y onto the column space of X (section 7.2, @ch07-geometry). Minimizing the sum of squared vertical gaps is that same projection seen from the data. On this six-lot slice the best line even dips slightly below zero at lot size zero: least squares minimizes squared error, not interpretability."
+  },
+  {
+    "id": "ch07-leverage-spot",
+    "type": "tap-on-plot",
+    "chapter": 7,
+    "anchor": "ch07-hat-matrix",
+    "prompt": "Each dot is a Dwaine city in predictor space. Tap the highest-leverage city: the one sitting farthest into the far corner, unusual on population AND income together.",
+    "xlabel": "target population (thousands)",
+    "ylabel": "disposable income (thousand $)",
+    "points": [
+      {"x": 68.5, "y": 16.7}, {"x": 45.2, "y": 16.8}, {"x": 91.3, "y": 18.2}, {"x": 47.8, "y": 16.3},
+      {"x": 46.9, "y": 17.3}, {"x": 66.1, "y": 18.2}, {"x": 49.5, "y": 15.9}, {"x": 52.0, "y": 17.2},
+      {"x": 48.9, "y": 16.6}, {"x": 38.4, "y": 16.0}, {"x": 87.9, "y": 18.3}, {"x": 72.8, "y": 17.1},
+      {"x": 88.4, "y": 17.4}, {"x": 42.9, "y": 15.8}, {"x": 52.5, "y": 17.8}, {"x": 85.7, "y": 18.4},
+      {"x": 41.3, "y": 16.5}, {"x": 51.7, "y": 16.3}, {"x": 89.6, "y": 18.1}, {"x": 82.7, "y": 19.1, "target": true},
+      {"x": 52.3, "y": 16.0}
+    ],
+    "why": "Leverage h_ii is the diagonal of the hat matrix H = X(X'X)^-1 X' (section 7.3, @ch07-hat-matrix); it measures a city's distance from the joint center of the predictor cloud. Row 20 (population 82.7, income 19.1) has the largest h_ii = 0.279, higher than cities with a bigger population alone, because it is extreme on both predictors at once. Reading leverage off one axis is the common mistake."
+  },
+  {
+    "id": "ch07-hat-match",
+    "type": "match-pairs",
+    "chapter": 7,
+    "anchor": "ch07-hat-matrix",
+    "prompt": "Match each hat-matrix object to what it does or equals.",
+    "pairs": [
+      {"term": "H = X(X'X)^-1 X'", "meaning": "makes fitted values: Yhat = HY"},
+      {"term": "I - H", "meaning": "makes residuals: e = (I - H)Y"},
+      {"term": "trace of H", "meaning": "equals p, the number of parameters"},
+      {"term": "trace of I - H", "meaning": "equals n - p, the error degrees of freedom"}
+    ],
+    "why": "The hat matrix H projects Y onto the fitted values and I - H onto the residuals; both are symmetric and idempotent. Its trace counts parameters, tr(H) = p, so tr(I - H) = n - p (section 7.3, @ch07-hat-matrix). Those two facts drive the covariance of b, the n - p divisor, and Gauss-Markov."
+  },
+  {
+    "id": "ch07-blue-error",
+    "type": "spot-error",
+    "chapter": 7,
+    "anchor": "ch07-gauss-markov",
+    "prompt": "One sentence about the least-squares estimator b is wrong. Tap it.",
+    "sentences": [
+      {"text": "b is unbiased: E{b} = beta, so on average it hits the true coefficients."},
+      {"text": "Cov{b} = sigma^2 (X'X)^-1, and the standard errors are square roots of its diagonal times MSE."},
+      {"text": "b needs normal errors to be the best linear unbiased estimator.", "wrong": true},
+      {"text": "Among all linear unbiased estimators, b has the smallest variance."}
+    ],
+    "why": "The Gauss-Markov theorem (section 7.6, @ch07-gauss-markov) proves b is BLUE using only mean-zero, equal-variance, uncorrelated errors. Unbiasedness, the covariance sigma^2 (X'X)^-1, and the BLUE optimality all hold with NO normality assumption. Normality is a separate, stronger claim that buys the exact normal sampling distribution and the t and F tests of Chapter 8."
+  },
+  {
+    "id": "ch07-np-divisor",
+    "type": "tap-choice",
+    "chapter": 7,
+    "anchor": "ch07-sigma2",
+    "prompt": "The Dwaine model has n = 21, p = 3, SSE = 2180.93. A classmate reports s^2 = 2180.93 / 21 = 103.9. What is the correct estimate of sigma^2, and why?",
+    "options": [
+      "103.9: dividing by n is right because there are 21 observations.",
+      "2180.93 / 20 = 109.0: use n - 1, as for a sample variance.",
+      "2180.93 / 18 = 121.16: divide by n - p, the error degrees of freedom, so MSE is unbiased.",
+      "2180.93 / 3 = 726.98: divide by the number of parameters p."
+    ],
+    "correct": 2,
+    "why": "Fitting p = 3 coefficients uses up 3 of the 21 directions in the data, leaving n - p = 18 for the residuals. Only dividing by n - p makes E{MSE} = sigma^2, because tr(I - H) = n - p (section 7.5, @ch07-sigma2). The classmate's 103.9 divides by n and is biased low; the correct MSE is 121.16."
+  }
+]

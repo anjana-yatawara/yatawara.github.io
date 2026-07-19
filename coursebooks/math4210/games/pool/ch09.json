@@ -1,0 +1,105 @@
+[
+  {
+    "id": "ch09-leverage-plot",
+    "type": "tap-on-plot",
+    "chapter": 9,
+    "anchor": "ch09-leverage",
+    "prompt": "Each dot is a Galapagos island in predictor space (area and elevation). Tap the high-leverage island: the one sitting alone, far from the crowd.",
+    "xlabel": "Area (km^2)",
+    "ylabel": "Elevation (m)",
+    "points": [
+      {"x": 4669, "y": 1707, "target": true},
+      {"x": 904, "y": 864}, {"x": 572, "y": 906}, {"x": 552, "y": 716}, {"x": 171, "y": 640},
+      {"x": 129, "y": 343}, {"x": 60, "y": 777}, {"x": 58, "y": 198}, {"x": 25, "y": 346},
+      {"x": 24, "y": 259}, {"x": 17, "y": 76}, {"x": 18, "y": 458}
+    ],
+    "why": "Leverage h_ii is the diagonal of the hat matrix; it measures how far a case's predictors sit from the center of the predictor cloud, and says nothing about the response (Section 9.1, @ch09-leverage). Isabela, at area 4669, is far larger than any other island, so its predictor row is unlike the rest and its leverage is h = 0.9685, past the 2p/n = 0.40 cutoff. A point out here forces the fit to follow it regardless of its species count."
+  },
+  {
+    "id": "ch09-leverage-read",
+    "type": "tap-choice",
+    "chapter": 9,
+    "anchor": "ch09-leverage",
+    "prompt": "In the gala fit (n = 30, p = 6) the leverage values sum to 6.0, and Isabela has h = 0.9685, above the 2p/n = 0.40 cutoff. Which reading is correct?",
+    "options": [
+      "Isabela is fit badly, since a high leverage value means a large residual.",
+      "Isabela sits in an unusual part of predictor space, so it has the potential to distort the fit.",
+      "The leverage values summing to 6 shows the model explains 6 percent of the variation.",
+      "A leverage value above 0.40 proves Isabela should be deleted."
+    ],
+    "correct": 1,
+    "why": "A leverage value is a statement about the predictors only: it measures potential to influence, not whether the response is fit well or badly (Section 9.1, @ch09-leverage). The values sum to p = 6 because tr(H) = p, not because of any R-squared. High leverage is a reason to look closer, never an automatic reason to delete; whether Isabela actually distorts the fit is the separate influence question of Section 9.3."
+  },
+  {
+    "id": "ch09-resid-var-spot",
+    "type": "spot-error",
+    "chapter": 9,
+    "anchor": "ch09-studentized",
+    "prompt": "One sentence about the four residual scales is wrong. Tap it.",
+    "sentences": [
+      {"text": "The raw residual is e_i = Y_i - Yhat_i, the part of Y_i the fit missed."},
+      {"text": "A high-leverage point has a LARGER raw-residual variance, so its residual looks too big.", "wrong": true},
+      {"text": "Var{e_i} = sigma^2 (1 - h_ii), so dividing by sqrt(1 - h_ii) puts residuals on one scale."},
+      {"text": "The studentized deleted residual t_i uses s_(i), the error SD estimated without case i."}
+    ],
+    "why": "Theorem 9.5 gives Var{e_i} = sigma^2 (1 - h_ii), so a high-leverage point has SMALLER residual variance, not larger: the fit bends to meet it, shrinking its raw residual and hiding trouble (Section 9.2, @ch09-studentized). That is exactly why you divide by sqrt(1 - h_ii) to restore a common scale, and why the studentized deleted residual uses s_(i) to avoid a real outlier masking itself."
+  },
+  {
+    "id": "ch09-outlier-read",
+    "type": "tap-choice",
+    "chapter": 9,
+    "anchor": "ch09-studentized",
+    "prompt": "In the gala model Isabela's studentized deleted residual is -5.33, and the Bonferroni cutoff is t(1 - 0.05/(2n); n-p-1) = 3.56. What do you conclude?",
+    "options": [
+      "Nothing: 5.33 is negative, so the test does not apply.",
+      "Isabela is a genuine statistical outlier, since |-5.33| exceeds the 3.56 cutoff.",
+      "Isabela is fine, because -5.33 is less than 3.56.",
+      "The cutoff 3.56 means 3.56 percent of islands are outliers."
+    ],
+    "correct": 1,
+    "why": "You compare the largest |t_i| to the Bonferroni cutoff t(1 - alpha/(2n); n-p-1) (Theorem 9.6, Section 9.2, @ch09-studentized). Here |-5.33| = 5.33 is far past 3.56, so Isabela is fit far worse than any clean model would produce: a real outlier, not just an unusual predictor row. The Bonferroni divisor of 2n corrects for scanning all n cases for the most extreme one, holding the family-wide false-alarm rate below alpha."
+  },
+  {
+    "id": "ch09-bonferroni-order",
+    "type": "order-steps",
+    "chapter": 9,
+    "anchor": "ch09-studentized",
+    "prompt": "Order the steps of the Bonferroni test for a single outlier.",
+    "steps": [
+      "Compute the studentized deleted residual t_i for every case",
+      "Find the most extreme case: the one with the largest |t_i|",
+      "Build the Bonferroni cutoff t(1 - alpha/(2n); n - p - 1)",
+      "Compare that largest |t_i| to the cutoff",
+      "Flag the case as an outlier only if its |t_i| exceeds the cutoff"
+    ],
+    "why": "Because you single out the most extreme of n cases, you are implicitly running n tests, so the cutoff must be corrected (Section 9.2, @ch09-studentized). You compute all t_i, take the largest in absolute value, and test it against t(1 - alpha/(2n); n - p - 1); the 2n divisor keeps the chance of even one false alarm across all cases below alpha. For gala this flags Isabela at -5.33 against 3.56."
+  },
+  {
+    "id": "ch09-influence-match",
+    "type": "match-pairs",
+    "chapter": 9,
+    "anchor": "ch09-cooks-distance",
+    "prompt": "Match each influence measure to what it summarizes.",
+    "pairs": [
+      {"term": "Cook's distance D_i", "meaning": "how far ALL fitted values move when case i is deleted"},
+      {"term": "DFFITS_i", "meaning": "the change in case i's OWN fitted value, rescaled"},
+      {"term": "DFBETAS_k(i)", "meaning": "the change in ONE coefficient b_k, rescaled"},
+      {"term": "h_ii / (1 - h_ii)", "meaning": "the leverage factor inside Cook's distance"}
+    ],
+    "why": "Every influence measure combines a residual with the leverage value (Section 9.3, @ch09-cooks-distance). Cook's distance D_i = (r_i^2/p) h_ii/(1 - h_ii) tracks the whole vector of fitted values; DFFITS localizes to case i's own fitted value; DFBETAS localizes to a single coefficient. The factor h_ii/(1 - h_ii) is the common leverage term that makes influence explode as h_ii approaches 1."
+  },
+  {
+    "id": "ch09-influence-spot",
+    "type": "spot-error",
+    "chapter": 9,
+    "anchor": "ch09-cooks-distance",
+    "prompt": "The savings fit gives Zambia (h = 0.064, studentized residual 2.85, D = 0.097) and Libya (h = 0.531, studentized residual -1.09, D = 0.268). One sentence is wrong. Tap it.",
+    "sentences": [
+      {"text": "Zambia has the largest studentized residual, so it is fit worst by the model."},
+      {"text": "Zambia is the country most distorting the fit, because its residual is the largest.", "wrong": true},
+      {"text": "Libya has the highest leverage value and the largest Cook's distance, 0.268."},
+      {"text": "Influence needs both an unusual predictor row and a poorly fit response, not either alone."}
+    ],
+    "why": "A large residual is not the same as influence (Definition 9.7, Section 9.3, @ch09-cooks-distance). Zambia is fit poorly but sits at an ordinary leverage value (h = 0.064), so the crowd holds the line in place and its Cook's distance is only 0.097. Libya, with the highest leverage value (h = 0.531), bends the fit the most: its Cook's distance 0.268 is the largest in the data. The right question is never who is fit worst, but who would change the answer if they left."
+  }
+]

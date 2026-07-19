@@ -1,0 +1,116 @@
+[
+  {
+    "id": "ch03-slope-read",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-slope-inference",
+    "prompt": "Toluca output: b1 = 3.5702, s{b1} = 0.347, t* = 10.29, 95% CI (2.85, 4.29). Which conclusion is correct?",
+    "options": [
+      "Zero is a plausible slope, so lot size may not affect hours.",
+      "The interval excludes zero, so lot size is significantly related to hours.",
+      "A true slope of 5 hours per unit is consistent with these data.",
+      "The two-sided p-value must be close to 0.05."
+    ],
+    "correct": 1,
+    "why": "The 95% interval (2.85, 4.29) sits entirely above zero, so at the 5% level we reject H0: beta1 = 0 and read lot size as a real predictor of hours (section 3.2). A CI and its two-sided test always agree: zero is outside, so it is rejected. The value 5 lies outside the interval, and t* = 10.29 is far past 2.069, giving a tiny p-value near 4e-10, not 0.05."
+  },
+  {
+    "id": "ch03-t-not-normal",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-sampling",
+    "prompt": "Why does inference for the Toluca slope use a t distribution with 23 df, not the standard normal?",
+    "options": [
+      "Because b1 is not normally distributed.",
+      "Because we estimate sigma by s = sqrt(MSE) instead of knowing it.",
+      "Because the sample size is even.",
+      "Because the slope could be negative."
+    ],
+    "correct": 1,
+    "why": "Under normal errors b1 is exactly normal; if we knew sigma the standardized slope would be standard normal (section 3.1). We do not know sigma and replace it with s = sqrt(MSE). That extra estimation injects uncertainty and turns the reference distribution into a t with n - 2 = 23 degrees of freedom, whose heavier tails need the multiplier 2.069 instead of 1.96. As n grows the t approaches the normal."
+  },
+  {
+    "id": "ch03-pi-vs-ci",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-prediction-interval",
+    "prompt": "At a given lot size, which interval is wider and why?",
+    "options": [
+      "The confidence interval, because it covers the mean response.",
+      "The prediction interval, because it must also cover one new run's own scatter.",
+      "They are the same width at the center of the data.",
+      "The prediction interval, because it uses a larger sample."
+    ],
+    "correct": 1,
+    "why": "A confidence interval covers the mean response at a lot size; a prediction interval must also cover the scatter of a single new run around that mean, so it adds the error variance sigma^2 and comes out wider everywhere (section 3.5). For the Toluca 100-unit run the mean interval is (390, 449) but the prediction interval is (314, 525). Mixing the two up is the most common and most expensive interval error."
+  },
+  {
+    "id": "ch03-mean-band-width",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-mean-response",
+    "prompt": "Toluca has mean lot size Xbar = 70. Where is the 95% confidence interval for the mean hours widest?",
+    "options": [
+      "At Xh = 70, the mean lot size.",
+      "At Xh = 120, the lot size farthest from the mean.",
+      "The width is the same at every lot size.",
+      "At the lot size with the largest hours."
+    ],
+    "correct": 1,
+    "why": "The variance of the fitted mean carries a (Xh - Xbar)^2 / Sxx term, so the interval is narrowest at Xbar = 70 and widens as Xh moves away in either direction (section 3.4). Among the observed lot sizes 120 is farthest from 70, so the mean-response band is widest there. The response value at a point does not affect this width."
+  },
+  {
+    "id": "ch03-anova-order",
+    "type": "order-steps",
+    "chapter": 3,
+    "anchor": "ch03-anova-table",
+    "prompt": "Order the steps that build the Toluca ANOVA F test.",
+    "steps": [
+      "Split each deviation: Yi - Ybar = (Yhat_i - Ybar) + (Yi - Yhat_i)",
+      "Square and sum; the cross term is zero",
+      "SSTO = SSR + SSE: 307,203 = 252,378 + 54,825",
+      "Divide by df: MSR = SSR/1, MSE = SSE/23 = 2384",
+      "Form F* = MSR/MSE = 105.9"
+    ],
+    "why": "The ANOVA identity routes each total deviation through the fitted value, and because the residual identities kill the cross term, the squares split cleanly into SSTO = SSR + SSE (section 3.6). Dividing each sum of squares by its degrees of freedom gives the mean squares, and their ratio MSR/MSE = 105.9 is the F statistic for the slope."
+  },
+  {
+    "id": "ch03-f-equals-tsq",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-f-test",
+    "prompt": "In the Toluca simple regression the slope t statistic is t* = 10.29. What is the ANOVA F statistic?",
+    "options": ["10.29", "105.9", "23.0", "3.21"],
+    "correct": 1,
+    "why": "In simple linear regression the F statistic is exactly the square of the slope t statistic, F* = (t*)^2 (section 3.7). Here 10.29^2 = 105.9, matching the ANOVA table, so the F test and the two-sided t test are one test with the same p-value. The F form earns its keep in later chapters, where it can test several slopes at once."
+  },
+  {
+    "id": "ch03-r2-read",
+    "type": "spot-error",
+    "chapter": 3,
+    "anchor": "ch03-r2",
+    "prompt": "One sentence about R-squared is wrong. Tap it.",
+    "sentences": [
+      {"text": "R-squared is the fraction of variation in Y the model explains."},
+      {"text": "For Toluca, R-squared = SSR/SSTO = 0.82."},
+      {"text": "A high R-squared proves the model's assumptions hold.", "wrong": true},
+      {"text": "In simple regression R-squared equals the square of the correlation r."}
+    ],
+    "why": "R-squared measures explained variation, not correctness (section 3.8). A model can post R-squared = 0.82 and still fail its diagnostics, with curved residuals or nonconstant variance, and it says nothing about causation or single-case prediction accuracy. You check assumptions with residual plots and s, not with R-squared."
+  },
+  {
+    "id": "ch03-working-hotelling",
+    "type": "tap-choice",
+    "chapter": 3,
+    "anchor": "ch03-working-hotelling",
+    "prompt": "You will read the Toluca line at five lot sizes and report all five mean estimates together. Which multiplier?",
+    "options": [
+      "The pointwise t = 2.069, applied five times.",
+      "The Working-Hotelling W = 2.62 for the whole line.",
+      "The normal 1.96, since n is large.",
+      "No multiplier is needed for several points."
+    ],
+    "correct": 1,
+    "why": "Reading the line at five places and claiming all five intervals hold is a simultaneous statement, and stringing pointwise 95% intervals together gives less than 95% joint confidence (section 3.9). The Working-Hotelling band uses the larger multiplier W = sqrt(2 F) = 2.62, a little wider than the pointwise t = 2.069, and buys 95% coverage of the whole true line at once."
+  }
+]
