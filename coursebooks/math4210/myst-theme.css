@@ -58,53 +58,88 @@
    1. Design tokens
    ------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------
+   PALETTE CONTRACT (2026-07-19 color-system pass) -- read before editing
+   -------------------------------------------------------------------------
+   Four colors carry the whole site: WHITE, BLACK(ink), ACCENT 1, ACCENT 2.
+
+     Accent 1 -- INTERACTIVE. Links, active nav item, focus rings, buttons,
+       the language pill, the `note` and `definition` cards. Light #0b5fcc
+       (5.96:1 on white), dark #4c9dff (7.10:1 on #0b0b0c).
+     Accent 2 -- EMPHASIS. Theorem cards (strongest), key-idea cards, tips.
+       A deep amber: light #8a5300 (6.33:1 on white), dark #e8b04b
+       (10.06:1 on #0b0b0c). Amber vs blue is the classic dichromat-safe
+       pair -- no red/green axis is used to carry meaning.
+
+   THERE IS NO GREY TEXT. `--text-secondary` is a dark ink (#2b2b2e light,
+   #d5d5d9 dark), not a wash; secondary material reads as secondary through
+   SIZE and WEIGHT. Grey survives only in `--hairline` (borders, rules) and
+   `--surface` (card/code tints), never as type a student must read --
+   figure captions included.
+
+   WARNING IS THE ONE DELIBERATE EXCEPTION to "exactly two accents".
+   `--adm-warning-fg` is a distinct alert red (#b02318 light / #ff9f96 dark)
+   rather than a warm variant of Accent 2, because a warning that reads as
+   "a slightly different amber than a tip" loses its meaning at a glance.
+   Hue is not its only channel: it also carries the theme's warning icon and
+   the literal word "Warning", so dichromats do not depend on the red.
+
+   Every color below is measured, not assumed. The proof table lives in
+   _planning/reports/color-system.md; regenerate with tools/contrast_check.py.
+   ------------------------------------------------------------------------- */
+
 :root,
 html.light {
   color-scheme: light;
 
-  /* Palette (light) */
+  /* Palette (light) -- white page, near-black ink */
   --bg: #ffffff;
-  --surface: #f5f5f7;       /* subtle section / code background */
+  --surface: #f5f5f7;       /* subtle section / code background (never text) */
   --surface-raised: #ffffff;
-  --text: #1d1d1f;
-  --text-secondary: #6e6e73;
-  --hairline: #d2d2d7;
-  --accent: #0071e3;
+  --text: #111113;          /* body ink, 18.86:1 on white */
+  --text-secondary: #2b2b2e; /* dark secondary ink, 14.12:1 -- NOT grey */
+  --hairline: #d2d2d7;      /* grey is allowed HERE and nowhere else */
+  --accent: #0b5fcc;        /* Accent 1: interactive */
   --accent-contrast: #ffffff;
+  --accent-2: #8a5300;      /* Accent 2: emphasis (deep amber) */
+  --accent-2-contrast: #ffffff;
 
   /* Code */
   --code-bg: #f5f5f7;
-  --code-text: #1d1d1f;
+  --code-text: #111113;
   --code-border: var(--hairline);
 
-  /* Admonition accents */
-  --adm-note-fg: #0071e3;
-  --adm-note-bg: rgba(0, 113, 227, 0.07);
-  --adm-tip-fg: #1c7430;
-  --adm-tip-bg: rgba(52, 199, 89, 0.09);
-  --adm-important-fg: #8944ab;
-  --adm-important-bg: rgba(175, 82, 222, 0.08);
-  --adm-warning-fg: #9a5b00;
-  --adm-warning-bg: rgba(255, 149, 0, 0.1);
-  --adm-definition-fg: #0a7ea3;
-  --adm-definition-bg: rgba(10, 126, 163, 0.06);
-  --adm-theorem-fg: #5856d6;
-  --adm-theorem-bg: rgba(88, 86, 214, 0.1);
-  --adm-keyidea-bg: rgba(110, 110, 115, 0.08);
+  /* Admonition accents -- all drawn from Accent 1 / Accent 2 / ink,
+     except the deliberate warning alert hue documented above. */
+  --adm-note-fg: var(--accent);
+  --adm-note-bg: rgba(11, 95, 204, 0.06);
+  --adm-tip-fg: var(--accent-2);
+  --adm-tip-bg: rgba(138, 83, 0, 0.08);
+  --adm-important-fg: var(--accent);
+  --adm-important-bg: rgba(11, 95, 204, 0.08);
+  --adm-warning-fg: #b02318;
+  --adm-warning-bg: rgba(176, 35, 24, 0.09);
+  --adm-definition-fg: var(--accent);
+  --adm-definition-bg: rgba(11, 95, 204, 0.04);
+  --adm-theorem-fg: var(--accent-2);
+  --adm-theorem-bg: rgba(138, 83, 0, 0.12);
+  --adm-keyidea-fg: var(--accent-2);
+  --adm-keyidea-bg: rgba(138, 83, 0, 0.09);
 
   --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  /* Syntax highlighting (light) */
-  --syn-comment: #6e6e73;
-  --syn-string: #ab3b1f;
-  --syn-number: #1c58c9;
-  --syn-keyword: #8944ab;
-  --syn-type: #0f5c66;
-  --syn-attr: #8a6d1f;
-  --syn-addition-fg: #1d7a34;
-  --syn-addition-bg: rgba(52, 199, 89, 0.14);
-  --syn-deletion-fg: #a3291f;
-  --syn-deletion-bg: rgba(255, 59, 48, 0.14);
+  /* Syntax highlighting (light) -- restricted to ink + the two accents +
+     the declared alert hue. Comments are ink, never grey. */
+  --syn-comment: #2b2b2e;
+  --syn-string: #8a5300;   /* Accent 2 */
+  --syn-number: #8a5300;   /* Accent 2 */
+  --syn-keyword: #0b5fcc;  /* Accent 1 */
+  --syn-type: #111113;     /* ink */
+  --syn-attr: #0b5fcc;     /* Accent 1 */
+  --syn-addition-fg: #0b5fcc;
+  --syn-addition-bg: rgba(11, 95, 204, 0.1);
+  --syn-deletion-fg: #b02318;
+  --syn-deletion-bg: rgba(176, 35, 24, 0.1);
 
   --shadow-figure: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.06);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -113,52 +148,55 @@ html.light {
 html.dark {
   color-scheme: dark;
 
-  /* Palette (dark) */
-  --bg: #161617;
-  --surface: #1d1d1f;
-  --surface-raised: #1d1d1f;
-  --text: #f5f5f7;
-  --text-secondary: #a1a1a6;
-  --hairline: #424245;
-  --accent: #2997ff;
+  /* Palette (dark) -- near-black page, near-white ink */
+  --bg: #0b0b0c;
+  --surface: #161618;
+  --surface-raised: #161618;
+  --text: #f7f7f8;          /* 18.38:1 on the page */
+  --text-secondary: #d5d5d9; /* 13.44:1 -- still ink, not a wash */
+  --hairline: #3a3a3d;
+  --accent: #4c9dff;        /* Accent 1 */
   --accent-contrast: #0b0b0c;
+  --accent-2: #e8b04b;      /* Accent 2 */
+  --accent-2-contrast: #0b0b0c;
 
   /* Code */
-  --code-bg: #1d1d1f;
-  --code-text: #f5f5f7;
+  --code-bg: #161618;
+  --code-text: #f7f7f8;
   --code-border: var(--hairline);
 
   /* Admonition accents */
-  --adm-note-fg: #2997ff;
-  --adm-note-bg: rgba(41, 151, 255, 0.12);
-  --adm-tip-fg: #30d158;
-  --adm-tip-bg: rgba(48, 209, 88, 0.12);
-  --adm-important-fg: #bf5af2;
-  --adm-important-bg: rgba(191, 90, 242, 0.12);
-  --adm-warning-fg: #ff9f0a;
-  --adm-warning-bg: rgba(255, 159, 10, 0.12);
-  --adm-definition-fg: #64d2ff;
-  --adm-definition-bg: rgba(100, 210, 255, 0.1);
-  --adm-theorem-fg: #7d7aff;
-  --adm-theorem-bg: rgba(125, 122, 255, 0.14);
-  --adm-keyidea-bg: rgba(161, 161, 166, 0.1);
+  --adm-note-fg: var(--accent);
+  --adm-note-bg: rgba(76, 157, 255, 0.12);
+  --adm-tip-fg: var(--accent-2);
+  --adm-tip-bg: rgba(232, 176, 75, 0.12);
+  --adm-important-fg: var(--accent);
+  --adm-important-bg: rgba(76, 157, 255, 0.16);
+  --adm-warning-fg: #ff9f96;
+  --adm-warning-bg: rgba(255, 159, 150, 0.12);
+  --adm-definition-fg: var(--accent);
+  --adm-definition-bg: rgba(76, 157, 255, 0.08);
+  --adm-theorem-fg: var(--accent-2);
+  --adm-theorem-bg: rgba(232, 176, 75, 0.16);
+  --adm-keyidea-fg: var(--accent-2);
+  --adm-keyidea-bg: rgba(232, 176, 75, 0.12);
 
-  --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.3);
+  --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 28px rgba(0, 0, 0, 0.45);
 
-  /* Syntax highlighting (dark) */
-  --syn-comment: #a1a1a6;
-  --syn-string: #f0917a;
-  --syn-number: #6ab0ff;
-  --syn-keyword: #bf5af2;
-  --syn-type: #63d9d1;
-  --syn-attr: #d9b64e;
-  --syn-addition-fg: #63e389;
-  --syn-addition-bg: rgba(48, 209, 88, 0.16);
-  --syn-deletion-fg: #ff8079;
-  --syn-deletion-bg: rgba(255, 69, 58, 0.16);
+  /* Syntax highlighting (dark) -- ink + the two accents + the alert hue */
+  --syn-comment: #d5d5d9;
+  --syn-string: #e8b04b;
+  --syn-number: #e8b04b;
+  --syn-keyword: #4c9dff;
+  --syn-type: #f7f7f8;
+  --syn-attr: #4c9dff;
+  --syn-addition-fg: #4c9dff;
+  --syn-addition-bg: rgba(76, 157, 255, 0.16);
+  --syn-deletion-fg: #ff9f96;
+  --syn-deletion-bg: rgba(255, 159, 150, 0.16);
 
-  --shadow-figure: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-figure: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Fallback for the rare no-JS case where the boot script never ran and
@@ -166,40 +204,43 @@ html.dark {
 @media (prefers-color-scheme: dark) {
   html:not(.light):not(.dark) {
     color-scheme: dark;
-    --bg: #161617;
-    --surface: #1d1d1f;
-    --surface-raised: #1d1d1f;
-    --text: #f5f5f7;
-    --text-secondary: #a1a1a6;
-    --hairline: #424245;
-    --accent: #2997ff;
+    --bg: #0b0b0c;
+    --surface: #161618;
+    --surface-raised: #161618;
+    --text: #f7f7f8;
+    --text-secondary: #d5d5d9;
+    --hairline: #3a3a3d;
+    --accent: #4c9dff;
     --accent-contrast: #0b0b0c;
-    --code-bg: #1d1d1f;
-    --code-text: #f5f5f7;
-    --adm-note-fg: #2997ff;
-    --adm-note-bg: rgba(41, 151, 255, 0.12);
-    --adm-tip-fg: #30d158;
-    --adm-tip-bg: rgba(48, 209, 88, 0.12);
-    --adm-important-fg: #bf5af2;
-    --adm-important-bg: rgba(191, 90, 242, 0.12);
-    --adm-warning-fg: #ff9f0a;
-    --adm-warning-bg: rgba(255, 159, 10, 0.12);
-    --adm-definition-fg: #64d2ff;
-    --adm-definition-bg: rgba(100, 210, 255, 0.1);
-    --adm-theorem-fg: #7d7aff;
-    --adm-theorem-bg: rgba(125, 122, 255, 0.14);
-    --adm-keyidea-bg: rgba(161, 161, 166, 0.1);
-    --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.3);
-    --syn-comment: #a1a1a6;
-    --syn-string: #f0917a;
-    --syn-number: #6ab0ff;
-    --syn-keyword: #bf5af2;
-    --syn-type: #63d9d1;
-    --syn-attr: #d9b64e;
-    --syn-addition-fg: #63e389;
-    --syn-addition-bg: rgba(48, 209, 88, 0.16);
-    --syn-deletion-fg: #ff8079;
-    --syn-deletion-bg: rgba(255, 69, 58, 0.16);
+    --accent-2: #e8b04b;
+    --accent-2-contrast: #0b0b0c;
+    --code-bg: #161618;
+    --code-text: #f7f7f8;
+    --adm-note-fg: var(--accent);
+    --adm-note-bg: rgba(76, 157, 255, 0.12);
+    --adm-tip-fg: var(--accent-2);
+    --adm-tip-bg: rgba(232, 176, 75, 0.12);
+    --adm-important-fg: var(--accent);
+    --adm-important-bg: rgba(76, 157, 255, 0.16);
+    --adm-warning-fg: #ff9f96;
+    --adm-warning-bg: rgba(255, 159, 150, 0.12);
+    --adm-definition-fg: var(--accent);
+    --adm-definition-bg: rgba(76, 157, 255, 0.08);
+    --adm-theorem-fg: var(--accent-2);
+    --adm-theorem-bg: rgba(232, 176, 75, 0.16);
+    --adm-keyidea-fg: var(--accent-2);
+    --adm-keyidea-bg: rgba(232, 176, 75, 0.12);
+    --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 28px rgba(0, 0, 0, 0.45);
+    --syn-comment: #d5d5d9;
+    --syn-string: #e8b04b;
+    --syn-number: #e8b04b;
+    --syn-keyword: #4c9dff;
+    --syn-type: #f7f7f8;
+    --syn-attr: #4c9dff;
+    --syn-addition-fg: #4c9dff;
+    --syn-addition-bg: rgba(76, 157, 255, 0.16);
+    --syn-deletion-fg: #ff9f96;
+    --syn-deletion-bg: rgba(255, 159, 150, 0.16);
   }
 }
 
@@ -415,40 +456,40 @@ html.dark .myst-admonition {
 .myst-admonition-note {
   border-color: color-mix(in srgb, var(--adm-note-fg) 30%, var(--hairline)) !important;
 }
-.myst-admonition-note .myst-admonition-header {
+.myst-admonition-note > .myst-admonition-header {
   background: var(--adm-note-bg) !important;
 }
-.myst-admonition-note .myst-admonition-header-icon {
+.myst-admonition-note > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-note-fg) !important;
 }
 
 .myst-admonition-tip {
   border-color: color-mix(in srgb, var(--adm-tip-fg) 30%, var(--hairline)) !important;
 }
-.myst-admonition-tip .myst-admonition-header {
+.myst-admonition-tip > .myst-admonition-header {
   background: var(--adm-tip-bg) !important;
 }
-.myst-admonition-tip .myst-admonition-header-icon {
+.myst-admonition-tip > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-tip-fg) !important;
 }
 
 .myst-admonition-important {
   border-color: color-mix(in srgb, var(--adm-important-fg) 30%, var(--hairline)) !important;
 }
-.myst-admonition-important .myst-admonition-header {
+.myst-admonition-important > .myst-admonition-header {
   background: var(--adm-important-bg) !important;
 }
-.myst-admonition-important .myst-admonition-header-icon {
+.myst-admonition-important > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-important-fg) !important;
 }
 
 .myst-admonition-warning {
   border-color: color-mix(in srgb, var(--adm-warning-fg) 30%, var(--hairline)) !important;
 }
-.myst-admonition-warning .myst-admonition-header {
+.myst-admonition-warning > .myst-admonition-header {
   background: var(--adm-warning-bg) !important;
 }
-.myst-admonition-warning .myst-admonition-header-icon {
+.myst-admonition-warning > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-warning-fg) !important;
 }
 
@@ -463,14 +504,15 @@ html.dark .myst-admonition {
    so no extra `!important` fight is needed beyond matching the ones
    already in place. */
 
-/* definition: quiet card, subtle accent-tinted header row. */
+/* definition: the quietest card in the system -- black/white with a plain
+   hairline and only a whisper (4%) of Accent 1 in the header row. */
 .myst-admonition.definition {
-  border-color: color-mix(in srgb, var(--adm-definition-fg) 22%, var(--hairline)) !important;
+  border-color: var(--hairline) !important;
 }
-.myst-admonition.definition .myst-admonition-header {
+.myst-admonition.definition > .myst-admonition-header {
   background: var(--adm-definition-bg) !important;
 }
-.myst-admonition.definition .myst-admonition-header-icon {
+.myst-admonition.definition > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-definition-fg) !important;
 }
 
@@ -481,28 +523,28 @@ html.dark .myst-admonition {
   border-color: color-mix(in srgb, var(--adm-theorem-fg) 45%, var(--hairline)) !important;
   box-shadow: var(--shadow-theorem) !important;
 }
-.myst-admonition.theorem .myst-admonition-header {
+.myst-admonition.theorem > .myst-admonition-header {
   background: var(--adm-theorem-bg) !important;
   border-bottom-color: color-mix(in srgb, var(--adm-theorem-fg) 35%, var(--hairline));
 }
-.myst-admonition.theorem .myst-admonition-header-icon {
+.myst-admonition.theorem > .myst-admonition-header .myst-admonition-header-icon {
   color: var(--adm-theorem-fg) !important;
 }
-.myst-admonition.theorem .myst-admonition-header-text {
+.myst-admonition.theorem > .myst-admonition-header .myst-admonition-header-text {
   font-weight: 700 !important;
   color: var(--text) !important;
 }
 
-/* keyidea: soft gray card -- neutral header tint, no color accent, the
-   quietest of the three. */
+/* keyidea: Accent 2, used lightly -- the theorem card's quiet sibling. Same
+   hue, weaker tint, no extra shadow, regular-weight title. */
 .myst-admonition.keyidea {
-  border-color: var(--hairline) !important;
+  border-color: color-mix(in srgb, var(--adm-keyidea-fg) 25%, var(--hairline)) !important;
 }
-.myst-admonition.keyidea .myst-admonition-header {
+.myst-admonition.keyidea > .myst-admonition-header {
   background: var(--adm-keyidea-bg) !important;
 }
-.myst-admonition.keyidea .myst-admonition-header-icon {
-  color: var(--text-secondary) !important;
+.myst-admonition.keyidea > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-keyidea-fg) !important;
 }
 
 /* Dropdown admonitions render as <details>/<summary> and share the classes
@@ -644,8 +686,29 @@ figure.fig-figure img {
   border: 1px solid var(--hairline);
 }
 
+/* The 200+ generated figures are opaque WHITE plates (figstyle.py sets
+   figure/axes/savefig.facecolor = white; figtheme.R sets bg = "white").
+   Their palette is validated colorblind-safe and is NOT touched here.
+
+   Light mode: the plate is the same white as the page, so the hairline is
+   what defines the edge -- ideal, nothing to do.
+
+   Dark mode: a white plate on the new #0b0b0c page is a 19.67:1 step, up
+   from 18.08:1 on the old #161617 -- about 8.8% brighter relative to its
+   surround. Not a clash, but the edge should read as a deliberate printed
+   plate rather than a glare, so dark mode gets a slightly brighter hairline
+   and a deeper shadow to seat it. This is a BORDER treatment only: no
+   filter, opacity, or blend mode touches the pixels, so every validated
+   figure color renders exactly as generated. */
+html.dark figure.fig-figure img {
+  border-color: #4a4a4e;
+}
+
+/* Captions are dark ink (--text-secondary is #2b2b2e / #d5d5d9), NOT grey.
+   They read as secondary through size (15px vs 17px body) alone.
+   `!important` beats the theme's own grey utility class on <figcaption>. */
 figure.fig-figure figcaption {
-  color: var(--text-secondary);
+  color: var(--text-secondary) !important;
   font-size: 15px;
   line-height: 1.5;
   margin-top: 0.75rem;
@@ -715,25 +778,75 @@ figure.fig-figure figcaption {
    the sidebar-breathing-room rule (Item 4) below, which does double duty. */
 
 /* -------------------------------------------------------------------------
-   (Item 2) Language toggle -- compact corner pill
+   (Item 2, REWRITTEN 2026-07-19) Language toggle -- lifted out of the
+   reading flow into the page chrome's top-right corner
    -------------------------------------------------------------------------
-   The old big {admonition}.tip banner is replaced in all 32 chapter files by
-   a {div}.lang-toggle holding a single link. MyST renders it as
-   <div class="lang-toggle">...<a>...</a></div>. Float it to the top-right
-   corner of the article so it reads as a quiet button and does not push the
-   opening paragraph down. */
+   MECHANISM: pure CSS re-ordering of the existing per-page grid item.
+   No JavaScript, no theme part. See _planning/reports/chrome-structure.md
+   for the full writeup and for why the book-theme `navbar_end` part (a real
+   slot in the header bar) was investigated and REJECTED.
+
+   Short version of the rejection: `navbar_end` exists in book-theme v1.10.1
+   and does render into `.myst-navbar-end` in the top nav, but it is a single
+   SITE-WIDE part -- it cannot vary per chapter -- and MyST gives it no way to
+   become per-page:
+     * <script> is stripped at parse time (it never reaches the AST), and
+       a ```{raw} html``` block is escaped to visible literal text, so there
+       is no JS channel to compute a per-chapter href client-side; and
+     * a relative <a href="es/"> written into the part is rewritten by MyST's
+       link resolver to a root-relative "/es/", which 404s.
+   All three were confirmed empirically with probe builds.
+
+   So the per-page markdown element stays the single source of truth (its
+   href is resolved by MyST itself, which keeps it correct under BASE_URL),
+   and CSS alone moves it.
+
+   HOW IT MOVES: `.lang-toggle` is a direct child of the `article.content`
+   CSS grid, so it already inherits the content column and therefore already
+   shares its exact right edge (verified: toggle right === frontmatter-block
+   right at 320/390/768/1024/1280/1440px). Two declarations do the work:
+     * `order: -1` promotes it to the first grid item, above the title block;
+     * `height: 0` makes that first grid row collapse, so it consumes no
+       vertical space and cannot push content down.
+   The inner <p> is then absolutely positioned into the frontmatter block's
+   own 2.25rem (`pt-9`) top padding -- dead space that already existed -- so
+   the pill floats in the top-right corner of the page chrome, above the
+   title row and clear of the github icon that occupies the right end of
+   `.myst-fm-block-header`.
+
+   Measured result (Chromium, ch01/ch02/ch05/ch12, EN + ES, 320-1440px):
+   pill box is y=70..100 with its right edge flush to the content column at
+   every width; zero overlap with the h1, subtitle, github icon, frontmatter
+   header row, or first paragraph; and the first paragraph moved UP from
+   y=334 to y=258 (the old in-flow pill had been eating 71px of vertical
+   space). Content is never shifted down. */
 .article.content .lang-toggle {
-  float: right;
-  margin: 0 0 0.35rem 1rem;
+  order: -1;                /* hoist above the frontmatter/title block */
+  position: relative;
+  height: 0;                /* collapse the grid row -> zero content shift */
+  margin: 0;
+  padding: 0;
+  float: none;
   max-width: none;          /* escape the 70ch paragraph measure */
+  z-index: 5;
+}
+
+.article.content .lang-toggle > p {
+  position: absolute;
+  right: 0;                 /* flush to the content column's right edge */
+  top: 0.3rem;              /* sits inside the frontmatter block's pt-9 */
+  margin: 0;
+  max-width: none;
+  line-height: 1;
 }
 
 .article.content .lang-toggle a,
 .article.content .lang-toggle a:not(.no-underline):not(.hover-link):not(.myst-toc-item) {
-  display: inline-block;
-  padding: 0.2rem 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;         /* comfortable tap target; WCAG 2.2 AA min is 24 */
+  padding: 0 0.85rem;
   font-size: 0.8125rem;
-  line-height: 1.3;
   font-weight: 500;
   color: var(--accent);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--hairline));
@@ -755,12 +868,10 @@ html.dark .article.content .lang-toggle a {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--hairline));
 }
 
-/* Clear the float so the following heading/paragraph is not wrapped beside a
-   short toggle on very wide screens. */
+/* The old float-clearing ::after is no longer needed (the element is no
+   longer floated) and would add a stray box inside a zero-height item. */
 .article.content .lang-toggle::after {
-  content: "";
-  display: block;
-  clear: both;
+  content: none;
 }
 
 /* -------------------------------------------------------------------------
@@ -789,20 +900,54 @@ html.dark .article.content .lang-toggle a {
 }
 
 /* -------------------------------------------------------------------------
-   (Item 3) Header title fit at mobile widths
+   (Item 3, revised 2026-07-19) Header title: full string on desktop,
+   graceful single-line ellipsis on phones
    -------------------------------------------------------------------------
-   logo_text is now "Reg Mod and Ana (MATH 4210)". Shrink it on small screens
-   so it stays on one line without crowding the theme toggle / search icons. */
-@media (max-width: 640px) {
-  .myst-home-link {
-    font-size: 0.9rem;
-    line-height: 1.2;
-  }
+   logo_text is now the full "MATH 4210: Regression Modeling and Analysis"
+   (422px wide at the theme's default `text-md sm:text-xl`). The theme wraps
+   the logo in `<div class="... shrink-0">`, i.e. flex-shrink is DISABLED, so
+   a long title cannot give up space to the search box / theme toggle and
+   instead pushes the whole navbar past the viewport: measured
+   scrollWidth 842 vs clientWidth 768 at 768px, and 415 vs 390 at 390px --
+   a horizontally scrolling page on every phone.
+
+   Fix, in two parts:
+   1. Re-enable shrinking on that container (`min-width:0` is required as
+      well -- a flex item's automatic minimum size would otherwise still
+      refuse to shrink below its content width).
+   2. Let the inner <span> clip with an ellipsis rather than wrap, and step
+      the font down at three breakpoints so the ellipsis bites as late as
+      possible.
+
+   Result (Chromium, measured): the FULL title renders untruncated at
+   1024px and up; it clips to a single tidy ellipsis line below that; and
+   page scrollWidth === clientWidth at 390-1440px. Never a two-line title. */
+.myst-top-nav-bar > div:first-child {
+  min-width: 0;
+  flex-shrink: 1;
 }
-@media (max-width: 400px) {
-  .myst-home-link {
-    font-size: 0.8rem;
-  }
+
+.myst-home-link {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.myst-home-link > span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .myst-home-link > span { font-size: 1rem; }
+}
+@media (max-width: 640px) {
+  .myst-home-link > span { font-size: 0.9rem; line-height: 1.2; }
+}
+@media (max-width: 480px) {
+  .myst-home-link > span { font-size: 0.8rem; }
 }
 
 /* -------------------------------------------------------------------------
@@ -830,6 +975,28 @@ html.dark .article.content .lang-toggle a {
     padding: 0.3rem 0.75rem;
     font-size: 0.8125rem;
   }
+
+  /* Prev/next chapter footer: let the two cards actually shrink.
+     `.myst-footer-links` is a flex row of two `flex-1` links holding full
+     chapter titles. A flex item's automatic minimum size is its content
+     width, so at 320px the pair refused to shrink below the longest title
+     and pushed the page sideways -- worst measured `/ch11/es/` at 391 vs 320
+     ("10. Medidas correctivas y transformaciones (en espanol)"), and it hit
+     10 of the 32 chapter pages. `min-width: 0` down the flex chain restores
+     shrinking (both cards settle at an even 140px and the titles wrap), and
+     `overflow-wrap: break-word` covers a hypothetical unbreakable title.
+     This is the same automatic-minimum-size rule already documented for the
+     header logo; it just bites a second flex row. */
+  .myst-footer-links,
+  .myst-footer-links > a,
+  .myst-footer-links a > div,
+  .myst-footer-links .flex-grow {
+    min-width: 0;
+  }
+
+  .myst-footer-links .flex-grow {
+    overflow-wrap: break-word;
+  }
 }
 
 /* Tables and code: own-container horizontal scroll, never the page. The
@@ -840,6 +1007,22 @@ html.dark .article.content .lang-toggle a {
   overflow-x: auto !important;
   max-width: 100%;
   -webkit-overflow-scrolling: touch;
+  /* `contain: paint` is load-bearing, not decoration. KaTeX renders every
+     formula twice: the visible `.katex-html` and a `.katex-mathml` layer kept
+     for screen readers. KaTeX hides the latter with the 1x1 + `clip:rect()`
+     technique, but `clip` is a PAINT-time operation -- the MathML subtree
+     still has real layout geometry (measured up to 864px wide inside a 320px
+     viewport), and in Chromium that geometry propagates out through the
+     wrapper's `overflow-x: auto` into the document's scrollWidth. So a table
+     of formulas scrolled correctly inside its own box and STILL dragged the
+     page sideways: `/ch05/es/` 335 vs 320, `/ch14/es/` 518 vs 390.
+     `contain: paint` tells the browser nothing inside this wrapper paints
+     outside it, which stops the leak at the wrapper.
+     Verified: page overflow goes to zero while the wrappers keep scrolling
+     internally (370 content in a 296 box), so no content becomes unreachable.
+     Rejected alternative: hiding `.katex-mathml` outright also fixes the
+     numbers but removes the accessible MathML, so it was not used. */
+  contain: paint;
 }
 
 /* Figures and any inline image never exceed their column. */
@@ -847,6 +1030,77 @@ html.dark .article.content .lang-toggle a {
 figure.fig-figure img {
   max-width: 100%;
   height: auto;
+}
+
+/* Math: scroll inside its own box, never sideways-scroll the page.
+   -------------------------------------------------------------------------
+   Measured cause (headless Chromium over the real build, 320/360/390/414px):
+   KaTeX lays every formula out in `.katex .base`, which ships
+   `white-space: nowrap; width: min-content`, so a formula is an atomic box
+   that refuses to shrink or wrap. Math inside TABLES was already safe -- it
+   rides the theme's `div.overflow-auto` table wrapper. Math inside RUNNING
+   TEXT had no such wrapper, so a single long inline formula pushed the whole
+   document sideways: e.g. `/ch06/` at 390px carried a 500px-wide inline
+   formula in a <p> (page scrollWidth 461 vs clientWidth 390), and `/ch12/`
+   at 320px a 348px one (367 vs 320). Display math (`.katex-display`) was
+   never an offender in the sweep, but is guarded here on the same principle.
+
+   Fix: give the formula its own horizontal scroll box. `overflow` has no
+   effect on an inline box, so `.katex` must become `inline-block` for the
+   scroll to take -- that is the whole reason for the display change. It is
+   scoped to running text (p / li / dd / blockquote) so table and display
+   contexts keep their existing wrappers and no nested scrollbars appear.
+   `vertical-align: bottom` keeps the formula sitting on the text baseline
+   rather than dropping the line's baseline to the scroll box's bottom edge. */
+.article.content p > .katex,
+.article.content li > .katex,
+.article.content dd > .katex,
+.article.content blockquote > .katex,
+.article.content p > span > .katex,
+.article.content li > span > .katex {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: bottom;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Display math gets the same contract at the block level. */
+.article.content .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Heading anchor (the hover pilcrow) must not scroll the page on phones.
+   -------------------------------------------------------------------------
+   The theme appends a permalink to every heading:
+     <h2 class="relative group"><span class="heading-text">...</span>
+       <a class="... inline-block w-0 px-0 translate-x-[10px] opacity-0
+                  group-hover:opacity-70" href="#id">P</a></h2>
+   It is a zero-width inline-block, shifted 10px right by a transform, with
+   its glyph painted outside that zero-width box. When a heading's text runs
+   near the column edge the anchor therefore lands past the content column
+   and becomes real scrollable overflow: measured 419 vs 414 on `/ch07/`
+   ("7.6 The Gauss-Markov theorem") and 420 vs 414 on `/ch01/` at 414px.
+   The overflow is invisible, which is what made it hard to spot -- the
+   anchor is `opacity: 0` until its heading is hovered.
+
+   It is a hover-only affordance and there is no hover on a touch screen, so
+   it is dropped below the desktop breakpoint. Desktop keeps it untouched,
+   and the heading `id` stays linkable by URL at every width, so nothing is
+   actually lost. */
+@media (max-width: 1023px) {
+  .article.content h1 > a[href^="#"],
+  .article.content h2 > a[href^="#"],
+  .article.content h3 > a[href^="#"],
+  .article.content h4 > a[href^="#"],
+  .article.content h5 > a[href^="#"],
+  .article.content h6 > a[href^="#"] {
+    display: none;
+  }
 }
 
 /* Comfortable tap targets in the left navigator on touch screens. */

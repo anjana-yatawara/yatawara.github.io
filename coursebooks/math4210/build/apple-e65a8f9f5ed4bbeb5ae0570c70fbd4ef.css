@@ -1,0 +1,1065 @@
+/* =========================================================================
+   apple.css -- MATH 4210 site skin ("clean Apple look")
+   =========================================================================
+   Loaded natively by myst book-theme v1.10.1 via the "style" file option:
+
+       site.options.style: styles/apple.css   (in myst.yml)
+
+   MECHANISM (verified empirically against this project, see
+   _planning/08-site-design.md for the full writeup): the book-theme
+   template declares `- type: file, id: style` in its template.yml. At
+   build time the theme's server reads the referenced file's contents and
+   inlines them verbatim into a synthesized `/myst-theme.css` route, which
+   every page's <head> links as the LAST stylesheet:
+
+       <link rel="stylesheet" href="/myst-theme.css"/>
+
+   Loading last matters: this book's markup is styled almost entirely with
+   Tailwind utility classes (compiled into build/_assets/app-*.css, loaded
+   earlier in <head>). For selectors of equal specificity, the CSS cascade
+   breaks ties by source order, so rules below beat same-specificity
+   Tailwind utilities "for free". Where Tailwind's `dark:` variants compile
+   to a compound selector (e.g. `.dark .dark\:bg-stone-900`, specificity
+   (0,2,0)), rules here are deliberately written as `html.dark <selector>`
+   (adds the `html` element to the compound), which is *always* more
+   specific, regardless of source order. A handful of properties (body/
+   header/footer background, and the code-block syntax theme, which ships
+   with a `!important` background) are marked `!important` explicitly
+   because the existing rule they replace is itself `!important` or because
+   the override needs to be bulletproof regardless of future template
+   rebuilds.
+
+   Root theme hook: the book-theme's boot script adds a `light` or `dark`
+   class directly to <html> (documentElement) before first paint, reading
+   `localStorage["myst:theme"]` or `prefers-color-scheme`, e.g.:
+
+       <html lang="en" class="dark" ...>
+
+   Tailwind's own dark-mode rules key off the same `.dark` ancestor class
+   (`darkMode: 'class'`), so this stylesheet targets `html.dark` for dark
+   overrides and plain/`html.light` for light, with a `prefers-color-scheme`
+   fallback for the rare case neither class is present (no-JS).
+
+   Every selector below was confirmed against a real `myst build --html`
+   output (ch01-ch16, appendix pages) before being written -- see the
+   planning doc for the DOM excerpts that back each block.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   1. Design tokens
+   ------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------
+   PALETTE CONTRACT (2026-07-19 color-system pass) -- read before editing
+   -------------------------------------------------------------------------
+   Four colors carry the whole site: WHITE, BLACK(ink), ACCENT 1, ACCENT 2.
+
+     Accent 1 -- INTERACTIVE. Links, active nav item, focus rings, buttons,
+       the language pill, the `note` and `definition` cards. Light #0b5fcc
+       (5.96:1 on white), dark #4c9dff (7.10:1 on #0b0b0c).
+     Accent 2 -- EMPHASIS. Theorem cards (strongest), key-idea cards, tips.
+       A deep amber: light #8a5300 (6.33:1 on white), dark #e8b04b
+       (10.06:1 on #0b0b0c). Amber vs blue is the classic dichromat-safe
+       pair -- no red/green axis is used to carry meaning.
+
+   THERE IS NO GREY TEXT. `--text-secondary` is a dark ink (#2b2b2e light,
+   #d5d5d9 dark), not a wash; secondary material reads as secondary through
+   SIZE and WEIGHT. Grey survives only in `--hairline` (borders, rules) and
+   `--surface` (card/code tints), never as type a student must read --
+   figure captions included.
+
+   WARNING IS THE ONE DELIBERATE EXCEPTION to "exactly two accents".
+   `--adm-warning-fg` is a distinct alert red (#b02318 light / #ff9f96 dark)
+   rather than a warm variant of Accent 2, because a warning that reads as
+   "a slightly different amber than a tip" loses its meaning at a glance.
+   Hue is not its only channel: it also carries the theme's warning icon and
+   the literal word "Warning", so dichromats do not depend on the red.
+
+   Every color below is measured, not assumed. The proof table lives in
+   _planning/reports/color-system.md; regenerate with tools/contrast_check.py.
+   ------------------------------------------------------------------------- */
+
+:root,
+html.light {
+  color-scheme: light;
+
+  /* Palette (light) -- white page, near-black ink */
+  --bg: #ffffff;
+  --surface: #f5f5f7;       /* subtle section / code background (never text) */
+  --surface-raised: #ffffff;
+  --text: #111113;          /* body ink, 18.86:1 on white */
+  --text-secondary: #2b2b2e; /* dark secondary ink, 14.12:1 -- NOT grey */
+  --hairline: #d2d2d7;      /* grey is allowed HERE and nowhere else */
+  --accent: #0b5fcc;        /* Accent 1: interactive */
+  --accent-contrast: #ffffff;
+  --accent-2: #8a5300;      /* Accent 2: emphasis (deep amber) */
+  --accent-2-contrast: #ffffff;
+
+  /* Code */
+  --code-bg: #f5f5f7;
+  --code-text: #111113;
+  --code-border: var(--hairline);
+
+  /* Admonition accents -- all drawn from Accent 1 / Accent 2 / ink,
+     except the deliberate warning alert hue documented above. */
+  --adm-note-fg: var(--accent);
+  --adm-note-bg: rgba(11, 95, 204, 0.06);
+  --adm-tip-fg: var(--accent-2);
+  --adm-tip-bg: rgba(138, 83, 0, 0.08);
+  --adm-important-fg: var(--accent);
+  --adm-important-bg: rgba(11, 95, 204, 0.08);
+  --adm-warning-fg: #b02318;
+  --adm-warning-bg: rgba(176, 35, 24, 0.09);
+  --adm-definition-fg: var(--accent);
+  --adm-definition-bg: rgba(11, 95, 204, 0.04);
+  --adm-theorem-fg: var(--accent-2);
+  --adm-theorem-bg: rgba(138, 83, 0, 0.12);
+  --adm-keyidea-fg: var(--accent-2);
+  --adm-keyidea-bg: rgba(138, 83, 0, 0.09);
+
+  --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* Syntax highlighting (light) -- restricted to ink + the two accents +
+     the declared alert hue. Comments are ink, never grey. */
+  --syn-comment: #2b2b2e;
+  --syn-string: #8a5300;   /* Accent 2 */
+  --syn-number: #8a5300;   /* Accent 2 */
+  --syn-keyword: #0b5fcc;  /* Accent 1 */
+  --syn-type: #111113;     /* ink */
+  --syn-attr: #0b5fcc;     /* Accent 1 */
+  --syn-addition-fg: #0b5fcc;
+  --syn-addition-bg: rgba(11, 95, 204, 0.1);
+  --syn-deletion-fg: #b02318;
+  --syn-deletion-bg: rgba(176, 35, 24, 0.1);
+
+  --shadow-figure: 0 1px 2px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+html.dark {
+  color-scheme: dark;
+
+  /* Palette (dark) -- near-black page, near-white ink */
+  --bg: #0b0b0c;
+  --surface: #161618;
+  --surface-raised: #161618;
+  --text: #f7f7f8;          /* 18.38:1 on the page */
+  --text-secondary: #d5d5d9; /* 13.44:1 -- still ink, not a wash */
+  --hairline: #3a3a3d;
+  --accent: #4c9dff;        /* Accent 1 */
+  --accent-contrast: #0b0b0c;
+  --accent-2: #e8b04b;      /* Accent 2 */
+  --accent-2-contrast: #0b0b0c;
+
+  /* Code */
+  --code-bg: #161618;
+  --code-text: #f7f7f8;
+  --code-border: var(--hairline);
+
+  /* Admonition accents */
+  --adm-note-fg: var(--accent);
+  --adm-note-bg: rgba(76, 157, 255, 0.12);
+  --adm-tip-fg: var(--accent-2);
+  --adm-tip-bg: rgba(232, 176, 75, 0.12);
+  --adm-important-fg: var(--accent);
+  --adm-important-bg: rgba(76, 157, 255, 0.16);
+  --adm-warning-fg: #ff9f96;
+  --adm-warning-bg: rgba(255, 159, 150, 0.12);
+  --adm-definition-fg: var(--accent);
+  --adm-definition-bg: rgba(76, 157, 255, 0.08);
+  --adm-theorem-fg: var(--accent-2);
+  --adm-theorem-bg: rgba(232, 176, 75, 0.16);
+  --adm-keyidea-fg: var(--accent-2);
+  --adm-keyidea-bg: rgba(232, 176, 75, 0.12);
+
+  --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 28px rgba(0, 0, 0, 0.45);
+
+  /* Syntax highlighting (dark) -- ink + the two accents + the alert hue */
+  --syn-comment: #d5d5d9;
+  --syn-string: #e8b04b;
+  --syn-number: #e8b04b;
+  --syn-keyword: #4c9dff;
+  --syn-type: #f7f7f8;
+  --syn-attr: #4c9dff;
+  --syn-addition-fg: #4c9dff;
+  --syn-addition-bg: rgba(76, 157, 255, 0.16);
+  --syn-deletion-fg: #ff9f96;
+  --syn-deletion-bg: rgba(255, 159, 150, 0.16);
+
+  --shadow-figure: 0 1px 2px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Fallback for the rare no-JS case where the boot script never ran and
+   neither `light` nor `dark` landed on <html>. */
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not(.dark) {
+    color-scheme: dark;
+    --bg: #0b0b0c;
+    --surface: #161618;
+    --surface-raised: #161618;
+    --text: #f7f7f8;
+    --text-secondary: #d5d5d9;
+    --hairline: #3a3a3d;
+    --accent: #4c9dff;
+    --accent-contrast: #0b0b0c;
+    --accent-2: #e8b04b;
+    --accent-2-contrast: #0b0b0c;
+    --code-bg: #161618;
+    --code-text: #f7f7f8;
+    --adm-note-fg: var(--accent);
+    --adm-note-bg: rgba(76, 157, 255, 0.12);
+    --adm-tip-fg: var(--accent-2);
+    --adm-tip-bg: rgba(232, 176, 75, 0.12);
+    --adm-important-fg: var(--accent);
+    --adm-important-bg: rgba(76, 157, 255, 0.16);
+    --adm-warning-fg: #ff9f96;
+    --adm-warning-bg: rgba(255, 159, 150, 0.12);
+    --adm-definition-fg: var(--accent);
+    --adm-definition-bg: rgba(76, 157, 255, 0.08);
+    --adm-theorem-fg: var(--accent-2);
+    --adm-theorem-bg: rgba(232, 176, 75, 0.16);
+    --adm-keyidea-fg: var(--accent-2);
+    --adm-keyidea-bg: rgba(232, 176, 75, 0.12);
+    --shadow-theorem: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 28px rgba(0, 0, 0, 0.45);
+    --syn-comment: #d5d5d9;
+    --syn-string: #e8b04b;
+    --syn-number: #e8b04b;
+    --syn-keyword: #4c9dff;
+    --syn-type: #f7f7f8;
+    --syn-attr: #4c9dff;
+    --syn-addition-fg: #4c9dff;
+    --syn-addition-bg: rgba(76, 157, 255, 0.16);
+    --syn-deletion-fg: #ff9f96;
+    --syn-deletion-bg: rgba(255, 159, 150, 0.16);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   2. Base document, selection, motion, focus
+   ------------------------------------------------------------------------- */
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    Inter, Roboto, Helvetica, Arial, sans-serif;
+}
+
+body.bg-white {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Never hide focus outlines -- reinforce them with the accent color on top
+   of whatever the theme already draws (utility outline-* classes stay). */
+:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   3. Typography: headings, body measure, links
+   ------------------------------------------------------------------------- */
+
+.article.content {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.article.content h1,
+.article.content h2,
+.article.content h3,
+.article.content h4,
+.article.content h5,
+.article.content h6 {
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.015em;
+}
+
+h1.myst-fm-block-title {
+  font-size: 2.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+p.myst-fm-block-subtitle {
+  color: var(--text-secondary) !important;
+  font-size: 1.0625rem;
+  font-weight: 400;
+}
+
+.article.content h2 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  margin: 2.75rem 0 1rem;
+}
+
+.article.content h3 {
+  font-size: 1.375rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.article.content h4,
+.article.content h5,
+.article.content h6 {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  margin: 1.75rem 0 0.5rem;
+}
+
+/* Comfortable reading measure for running text, without fighting the
+   article-grid's full-width ("col-screen") track -- figures/tables/code
+   are left free to run wider. */
+.article.content p,
+.article.content li,
+.article.content dd,
+.article.content blockquote {
+  max-width: 70ch;
+}
+
+/* Generic content links: accent color, no underline until hover. Excludes
+   the theme's own decorative/utility anchors (section permalinks carry
+   `no-underline`+`text-inherit`; figure overlay links carry `hover-link`;
+   sidebar entries carry `myst-toc-item`) so those keep their intended
+   quiet/inherited styling. */
+.article.content a:not(.no-underline):not(.hover-link):not(.myst-toc-item) {
+  color: var(--accent);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.article.content a:not(.no-underline):not(.hover-link):not(.myst-toc-item):hover {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------
+   4. Header bar
+   ------------------------------------------------------------------------- */
+
+.myst-top-nav {
+  background: color-mix(in srgb, var(--bg) 85%, transparent) !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid var(--hairline);
+}
+
+html.dark .myst-top-nav {
+  border-bottom-color: var(--hairline);
+}
+
+.myst-home-link {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+   5. Sidebar navigation + in-book table of contents
+   ------------------------------------------------------------------------- */
+
+.myst-primary-sidebar-pointer {
+  border-right: 1px solid var(--hairline);
+}
+
+.myst-toc {
+  color: var(--text) !important;
+}
+
+.myst-toc-item {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Part/section group labels: quiet neutral, not blue -- accent is reserved
+   for the single active chapter link. */
+.myst-primary-sidebar [class*="text-blue-800"],
+html.dark .myst-primary-sidebar [class*="text-blue-200"] {
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+}
+
+.myst-toc-item:hover {
+  color: var(--text) !important;
+}
+
+.myst-toc-item.active,
+.myst-toc-item-exact.active {
+  background: color-mix(in srgb, var(--accent) 12%, transparent) !important;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+   6. Admonitions (note / tip / important / warning / dropdown)
+   ------------------------------------------------------------------------- */
+
+.myst-admonition {
+  border: 1px solid var(--hairline) !important;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card) !important;
+  background: var(--surface) !important;
+}
+
+html.dark .myst-admonition {
+  background: var(--surface) !important;
+}
+
+.myst-admonition-header {
+  background: transparent !important;
+  font-weight: 600;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.myst-admonition-header-text {
+  color: var(--text) !important;
+}
+
+.myst-admonition-body {
+  padding: 1rem 1.25rem !important;
+}
+
+.myst-admonition-header {
+  padding: 0.75rem 1.25rem !important;
+}
+
+/* Type accents: subtle tint + icon/rule color only -- title text stays
+   neutral (matches the theme's existing pattern of a neutral header-text
+   span next to a colored icon). */
+.myst-admonition-note {
+  border-color: color-mix(in srgb, var(--adm-note-fg) 30%, var(--hairline)) !important;
+}
+.myst-admonition-note > .myst-admonition-header {
+  background: var(--adm-note-bg) !important;
+}
+.myst-admonition-note > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-note-fg) !important;
+}
+
+.myst-admonition-tip {
+  border-color: color-mix(in srgb, var(--adm-tip-fg) 30%, var(--hairline)) !important;
+}
+.myst-admonition-tip > .myst-admonition-header {
+  background: var(--adm-tip-bg) !important;
+}
+.myst-admonition-tip > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-tip-fg) !important;
+}
+
+.myst-admonition-important {
+  border-color: color-mix(in srgb, var(--adm-important-fg) 30%, var(--hairline)) !important;
+}
+.myst-admonition-important > .myst-admonition-header {
+  background: var(--adm-important-bg) !important;
+}
+.myst-admonition-important > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-important-fg) !important;
+}
+
+.myst-admonition-warning {
+  border-color: color-mix(in srgb, var(--adm-warning-fg) 30%, var(--hairline)) !important;
+}
+.myst-admonition-warning > .myst-admonition-header {
+  background: var(--adm-warning-bg) !important;
+}
+.myst-admonition-warning > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-warning-fg) !important;
+}
+
+/* Custom variants: definition / theorem / keyidea. These are not built-in
+   MyST admonition kinds, so `{admonition}` falls back to its default
+   ("note" icon, `myst-admonition-default` class) and simply appends the
+   `:class:` value verbatim onto the same <aside class="myst-admonition
+   myst-admonition-note ... myst-admonition-default ... definition">
+   element (confirmed against real build output). Each compound selector
+   below (two classes, specificity 0,2,0) outranks the single-class
+   `.myst-admonition-note` / `.myst-admonition-default` rules above it,
+   so no extra `!important` fight is needed beyond matching the ones
+   already in place. */
+
+/* definition: the quietest card in the system -- black/white with a plain
+   hairline and only a whisper (4%) of Accent 1 in the header row. */
+.myst-admonition.definition {
+  border-color: var(--hairline) !important;
+}
+.myst-admonition.definition > .myst-admonition-header {
+  background: var(--adm-definition-bg) !important;
+}
+.myst-admonition.definition > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-definition-fg) !important;
+}
+
+/* theorem: the most distinguished card on the page -- hairline border
+   with a slightly stronger tinted header, a bold (not small-caps) title,
+   and a touch more shadow than the base card. */
+.myst-admonition.theorem {
+  border-color: color-mix(in srgb, var(--adm-theorem-fg) 45%, var(--hairline)) !important;
+  box-shadow: var(--shadow-theorem) !important;
+}
+.myst-admonition.theorem > .myst-admonition-header {
+  background: var(--adm-theorem-bg) !important;
+  border-bottom-color: color-mix(in srgb, var(--adm-theorem-fg) 35%, var(--hairline));
+}
+.myst-admonition.theorem > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-theorem-fg) !important;
+}
+.myst-admonition.theorem > .myst-admonition-header .myst-admonition-header-text {
+  font-weight: 700 !important;
+  color: var(--text) !important;
+}
+
+/* keyidea: Accent 2, used lightly -- the theorem card's quiet sibling. Same
+   hue, weaker tint, no extra shadow, regular-weight title. */
+.myst-admonition.keyidea {
+  border-color: color-mix(in srgb, var(--adm-keyidea-fg) 25%, var(--hairline)) !important;
+}
+.myst-admonition.keyidea > .myst-admonition-header {
+  background: var(--adm-keyidea-bg) !important;
+}
+.myst-admonition.keyidea > .myst-admonition-header .myst-admonition-header-icon {
+  color: var(--adm-keyidea-fg) !important;
+}
+
+/* Dropdown admonitions render as <details>/<summary> and share the classes
+   above, so they inherit all of the card styling automatically. Only the
+   disclosure marker needs a touch of polish. */
+.myst-admonition.dropdown summary {
+  cursor: pointer;
+}
+.myst-admonition.dropdown summary::marker,
+.myst-admonition.dropdown summary::-webkit-details-marker {
+  color: var(--text-secondary);
+}
+
+/* -------------------------------------------------------------------------
+   7. Code blocks + inline code
+   ------------------------------------------------------------------------- */
+
+.myst-code {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: 1px solid var(--code-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.myst-code-body.hljs {
+  background: var(--code-bg) !important;
+  color: var(--code-text) !important;
+  padding: 1rem !important;
+}
+
+.myst-code-copy-icon {
+  color: var(--text-secondary) !important;
+}
+.myst-code-copy-icon:hover {
+  color: var(--accent) !important;
+}
+
+/* Syntax colors: the theme ships two overlapping hljs palettes tuned for a
+   near-black background; on our light-mode code surface (#f5f5f7) those
+   colors are unreadably faint, so token colors are replaced outright with
+   an accessible set that follows the light/dark tokens above. */
+.myst-code-body .hljs-comment,
+.myst-code-body .hljs-quote {
+  color: var(--syn-comment) !important;
+  font-style: italic;
+}
+.myst-code-body .hljs-string,
+.myst-code-body .hljs-regexp,
+.myst-code-body .hljs-template-tag,
+.myst-code-body .hljs-template-variable,
+.myst-code-body .hljs-subst {
+  color: var(--syn-string) !important;
+}
+.myst-code-body .hljs-number,
+.myst-code-body .hljs-literal {
+  color: var(--syn-number) !important;
+}
+.myst-code-body .hljs-keyword,
+.myst-code-body .hljs-selector-tag,
+.myst-code-body .hljs-selector-id,
+.myst-code-body .hljs-selector-class,
+.myst-code-body .hljs-selector-attr,
+.myst-code-body .hljs-selector-pseudo,
+.myst-code-body .hljs-tag,
+.myst-code-body .hljs-name {
+  color: var(--syn-keyword) !important;
+}
+.myst-code-body .hljs-type,
+.myst-code-body .hljs-built_in,
+.myst-code-body .hljs-class,
+.myst-code-body .hljs-function,
+.myst-code-body .hljs-params,
+.myst-code-body .hljs-title {
+  color: var(--syn-type) !important;
+}
+.myst-code-body .hljs-variable,
+.myst-code-body .hljs-attr,
+.myst-code-body .hljs-attribute,
+.myst-code-body .hljs-meta,
+.myst-code-body .hljs-section,
+.myst-code-body .hljs-symbol,
+.myst-code-body .hljs-bullet {
+  color: var(--syn-attr) !important;
+}
+.myst-code-body .hljs-link {
+  color: var(--accent) !important;
+  text-decoration: underline;
+}
+.myst-code-body .hljs-emphasis {
+  font-style: italic;
+}
+.myst-code-body .hljs-strong,
+.myst-code-body .hljs-doctag {
+  font-weight: 600;
+}
+.myst-code-body .hljs-addition {
+  color: var(--syn-addition-fg) !important;
+  background-color: var(--syn-addition-bg) !important;
+}
+.myst-code-body .hljs-deletion {
+  color: var(--syn-deletion-fg) !important;
+  background-color: var(--syn-deletion-bg) !important;
+}
+.myst-code-body .hljs-code {
+  color: unset !important;
+}
+
+/* Inline code: only bare <code> with no class matches (block code always
+   carries a `language-*` class on <code>), so this can never collide with
+   the fenced-code styling above. */
+code:not([class]) {
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 5px;
+  padding: 0.15em 0.4em;
+  font-size: 0.9em;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+
+/* -------------------------------------------------------------------------
+   8. Figures
+   ------------------------------------------------------------------------- */
+
+figure.fig-figure {
+  margin: 2rem auto;
+  text-align: center;
+}
+
+figure.fig-figure img {
+  border-radius: 12px;
+  box-shadow: var(--shadow-figure);
+  border: 1px solid var(--hairline);
+}
+
+/* The 200+ generated figures are opaque WHITE plates (figstyle.py sets
+   figure/axes/savefig.facecolor = white; figtheme.R sets bg = "white").
+   Their palette is validated colorblind-safe and is NOT touched here.
+
+   Light mode: the plate is the same white as the page, so the hairline is
+   what defines the edge -- ideal, nothing to do.
+
+   Dark mode: a white plate on the new #0b0b0c page is a 19.67:1 step, up
+   from 18.08:1 on the old #161617 -- about 8.8% brighter relative to its
+   surround. Not a clash, but the edge should read as a deliberate printed
+   plate rather than a glare, so dark mode gets a slightly brighter hairline
+   and a deeper shadow to seat it. This is a BORDER treatment only: no
+   filter, opacity, or blend mode touches the pixels, so every validated
+   figure color renders exactly as generated. */
+html.dark figure.fig-figure img {
+  border-color: #4a4a4e;
+}
+
+/* Captions are dark ink (--text-secondary is #2b2b2e / #d5d5d9), NOT grey.
+   They read as secondary through size (15px vs 17px body) alone.
+   `!important` beats the theme's own grey utility class on <figcaption>. */
+figure.fig-figure figcaption {
+  color: var(--text-secondary) !important;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   9. Tables
+   ------------------------------------------------------------------------- */
+
+.article.content table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95em;
+}
+
+.article.content th,
+.article.content td {
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+}
+
+.article.content th {
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--text-secondary);
+}
+
+.article.content tr:last-child td {
+  border-bottom: none;
+}
+
+/* -------------------------------------------------------------------------
+   10. Footer (prev/next navigation)
+   ------------------------------------------------------------------------- */
+
+.article.footer {
+  background: var(--bg) !important;
+  box-shadow: none !important;
+  border-top: 1px solid var(--hairline);
+}
+
+.myst-footer-link {
+  border-color: var(--hairline) !important;
+  box-shadow: none !important;
+}
+
+.myst-footer-link:hover {
+  border-color: var(--accent) !important;
+}
+
+/* -------------------------------------------------------------------------
+   11. UI-surgeon polish (2026-07-19)  --  see _planning/08-site-design.md
+   -------------------------------------------------------------------------
+   Six professor-requested changes. Where a native book-theme option covered
+   the request it was used in myst.yml instead of CSS; the rules here are for
+   the items with no native option (language-toggle styling, source-download
+   removal, sidebar breathing room, header-title fit, mobile tuning).
+   ------------------------------------------------------------------------- */
+
+/* (Item 1) Right-hand CONTENTS outline is removed natively via
+   site.options.hide_outline: true. That leaves the theme's outline margin
+   track (`minmax(5rem,13rem)` on the right) empty, so the reading column is
+   nudged right into the reclaimed space at desktop widths for balance -- see
+   the sidebar-breathing-room rule (Item 4) below, which does double duty. */
+
+/* -------------------------------------------------------------------------
+   (Item 2, REWRITTEN 2026-07-19) Language toggle -- lifted out of the
+   reading flow into the page chrome's top-right corner
+   -------------------------------------------------------------------------
+   MECHANISM: pure CSS re-ordering of the existing per-page grid item.
+   No JavaScript, no theme part. See _planning/reports/chrome-structure.md
+   for the full writeup and for why the book-theme `navbar_end` part (a real
+   slot in the header bar) was investigated and REJECTED.
+
+   Short version of the rejection: `navbar_end` exists in book-theme v1.10.1
+   and does render into `.myst-navbar-end` in the top nav, but it is a single
+   SITE-WIDE part -- it cannot vary per chapter -- and MyST gives it no way to
+   become per-page:
+     * <script> is stripped at parse time (it never reaches the AST), and
+       a ```{raw} html``` block is escaped to visible literal text, so there
+       is no JS channel to compute a per-chapter href client-side; and
+     * a relative <a href="es/"> written into the part is rewritten by MyST's
+       link resolver to a root-relative "/es/", which 404s.
+   All three were confirmed empirically with probe builds.
+
+   So the per-page markdown element stays the single source of truth (its
+   href is resolved by MyST itself, which keeps it correct under BASE_URL),
+   and CSS alone moves it.
+
+   HOW IT MOVES: `.lang-toggle` is a direct child of the `article.content`
+   CSS grid, so it already inherits the content column and therefore already
+   shares its exact right edge (verified: toggle right === frontmatter-block
+   right at 320/390/768/1024/1280/1440px). Two declarations do the work:
+     * `order: -1` promotes it to the first grid item, above the title block;
+     * `height: 0` makes that first grid row collapse, so it consumes no
+       vertical space and cannot push content down.
+   The inner <p> is then absolutely positioned into the frontmatter block's
+   own 2.25rem (`pt-9`) top padding -- dead space that already existed -- so
+   the pill floats in the top-right corner of the page chrome, above the
+   title row and clear of the github icon that occupies the right end of
+   `.myst-fm-block-header`.
+
+   Measured result (Chromium, ch01/ch02/ch05/ch12, EN + ES, 320-1440px):
+   pill box is y=70..100 with its right edge flush to the content column at
+   every width; zero overlap with the h1, subtitle, github icon, frontmatter
+   header row, or first paragraph; and the first paragraph moved UP from
+   y=334 to y=258 (the old in-flow pill had been eating 71px of vertical
+   space). Content is never shifted down. */
+.article.content .lang-toggle {
+  order: -1;                /* hoist above the frontmatter/title block */
+  position: relative;
+  height: 0;                /* collapse the grid row -> zero content shift */
+  margin: 0;
+  padding: 0;
+  float: none;
+  max-width: none;          /* escape the 70ch paragraph measure */
+  z-index: 5;
+}
+
+.article.content .lang-toggle > p {
+  position: absolute;
+  right: 0;                 /* flush to the content column's right edge */
+  top: 0.3rem;              /* sits inside the frontmatter block's pt-9 */
+  margin: 0;
+  max-width: none;
+  line-height: 1;
+}
+
+.article.content .lang-toggle a,
+.article.content .lang-toggle a:not(.no-underline):not(.hover-link):not(.myst-toc-item) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;         /* comfortable tap target; WCAG 2.2 AA min is 24 */
+  padding: 0 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--hairline));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.article.content .lang-toggle a:hover {
+  text-decoration: none !important;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: var(--accent);
+}
+
+html.dark .article.content .lang-toggle a {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--hairline));
+}
+
+/* The old float-clearing ::after is no longer needed (the element is no
+   longer floated) and would add a stray box inside a zero-height item. */
+.article.content .lang-toggle::after {
+  content: none;
+}
+
+/* -------------------------------------------------------------------------
+   (Item 6) Remove the source/download button
+   -------------------------------------------------------------------------
+   book-theme's template.yml exposes no option to disable the frontmatter
+   download control, so the dropdown (which here only offers the raw source
+   .md) is hidden in CSS. The raw .md is not linked anywhere else in the
+   rendered UI. */
+.myst-fm-downloads-dropdown {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------
+   (Item 4) Sidebar breathing room + (Item 1) reclaimed width
+   -------------------------------------------------------------------------
+   The left navigator's dividing line sits at the col-margin-left boundary;
+   this pads the article's own subgrid inward at the widths where the fixed
+   sidebar is shown (>=1280px), giving a clean gap between the divider and the
+   text and letting the column drift into the space the outline vacated. The
+   70ch paragraph measure still caps line length, so text does not sprawl. */
+@media (min-width: 1280px) {
+  .article.content {
+    padding-left: 3rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   (Item 3, revised 2026-07-19) Header title: full string on desktop,
+   graceful single-line ellipsis on phones
+   -------------------------------------------------------------------------
+   logo_text is now the full "MATH 4210: Regression Modeling and Analysis"
+   (422px wide at the theme's default `text-md sm:text-xl`). The theme wraps
+   the logo in `<div class="... shrink-0">`, i.e. flex-shrink is DISABLED, so
+   a long title cannot give up space to the search box / theme toggle and
+   instead pushes the whole navbar past the viewport: measured
+   scrollWidth 842 vs clientWidth 768 at 768px, and 415 vs 390 at 390px --
+   a horizontally scrolling page on every phone.
+
+   Fix, in two parts:
+   1. Re-enable shrinking on that container (`min-width:0` is required as
+      well -- a flex item's automatic minimum size would otherwise still
+      refuse to shrink below its content width).
+   2. Let the inner <span> clip with an ellipsis rather than wrap, and step
+      the font down at three breakpoints so the ellipsis bites as late as
+      possible.
+
+   Result (Chromium, measured): the FULL title renders untruncated at
+   1024px and up; it clips to a single tidy ellipsis line below that; and
+   page scrollWidth === clientWidth at 390-1440px. Never a two-line title. */
+.myst-top-nav-bar > div:first-child {
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.myst-home-link {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.myst-home-link > span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .myst-home-link > span { font-size: 1rem; }
+}
+@media (max-width: 640px) {
+  .myst-home-link > span { font-size: 0.9rem; line-height: 1.2; }
+}
+@media (max-width: 480px) {
+  .myst-home-link > span { font-size: 0.8rem; }
+}
+
+/* -------------------------------------------------------------------------
+   (Item 5) Mobile optimization
+   -------------------------------------------------------------------------
+   The theme's grid already gives ~1.25rem body side padding and wraps tables
+   (`div.overflow-auto`) and code (`div.block.overflow-auto`) in their own
+   horizontal-scroll containers. These rules reinforce that contract: comfy
+   body text, images capped to their column, scroll containers that never
+   push the page sideways, and a language pill that stays small and visible. */
+@media (max-width: 640px) {
+  .article.content {
+    font-size: 16px;
+  }
+
+  /* Guarantee a comfortable reading gutter even if the fluid grid track
+     collapses to zero on the narrowest phones. */
+  .article.content > * {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  /* Keep the toggle pill in the corner and finger-friendly. */
+  .article.content .lang-toggle a {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Tables and code: own-container horizontal scroll, never the page. The
+   theme wraps both in an overflow-auto div; make that contract explicit and
+   robust so a wide table or long code line scrolls inside its box. */
+[aria-label="table content"],
+[aria-label="code block content"] {
+  overflow-x: auto !important;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Figures and any inline image never exceed their column. */
+.article.content img,
+figure.fig-figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Math: scroll inside its own box, never sideways-scroll the page.
+   -------------------------------------------------------------------------
+   Measured cause (headless Chromium over the real build, 320/360/390/414px):
+   KaTeX lays every formula out in `.katex .base`, which ships
+   `white-space: nowrap; width: min-content`, so a formula is an atomic box
+   that refuses to shrink or wrap. Math inside TABLES was already safe -- it
+   rides the theme's `div.overflow-auto` table wrapper. Math inside RUNNING
+   TEXT had no such wrapper, so a single long inline formula pushed the whole
+   document sideways: e.g. `/ch06/` at 390px carried a 500px-wide inline
+   formula in a <p> (page scrollWidth 461 vs clientWidth 390), and `/ch12/`
+   at 320px a 348px one (367 vs 320). Display math (`.katex-display`) was
+   never an offender in the sweep, but is guarded here on the same principle.
+
+   Fix: give the formula its own horizontal scroll box. `overflow` has no
+   effect on an inline box, so `.katex` must become `inline-block` for the
+   scroll to take -- that is the whole reason for the display change. It is
+   scoped to running text (p / li / dd / blockquote) so table and display
+   contexts keep their existing wrappers and no nested scrollbars appear.
+   `vertical-align: bottom` keeps the formula sitting on the text baseline
+   rather than dropping the line's baseline to the scroll box's bottom edge. */
+.article.content p > .katex,
+.article.content li > .katex,
+.article.content dd > .katex,
+.article.content blockquote > .katex,
+.article.content p > span > .katex,
+.article.content li > span > .katex {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: bottom;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Display math gets the same contract at the block level. */
+.article.content .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Heading anchor (the hover pilcrow) must not scroll the page on phones.
+   -------------------------------------------------------------------------
+   The theme appends a permalink to every heading:
+     <h2 class="relative group"><span class="heading-text">...</span>
+       <a class="... inline-block w-0 px-0 translate-x-[10px] opacity-0
+                  group-hover:opacity-70" href="#id">P</a></h2>
+   It is a zero-width inline-block, shifted 10px right by a transform, with
+   its glyph painted outside that zero-width box. When a heading's text runs
+   near the column edge the anchor therefore lands past the content column
+   and becomes real scrollable overflow: measured 419 vs 414 on `/ch07/`
+   ("7.6 The Gauss-Markov theorem") and 420 vs 414 on `/ch01/` at 414px.
+   The overflow is invisible, which is what made it hard to spot -- the
+   anchor is `opacity: 0` until its heading is hovered.
+
+   It is a hover-only affordance and there is no hover on a touch screen, so
+   it is dropped below the desktop breakpoint. Desktop keeps it untouched,
+   and the heading `id` stays linkable by URL at every width, so nothing is
+   actually lost. */
+@media (max-width: 1023px) {
+  .article.content h1 > a[href^="#"],
+  .article.content h2 > a[href^="#"],
+  .article.content h3 > a[href^="#"],
+  .article.content h4 > a[href^="#"],
+  .article.content h5 > a[href^="#"],
+  .article.content h6 > a[href^="#"] {
+    display: none;
+  }
+}
+
+/* Comfortable tap targets in the left navigator on touch screens. */
+@media (max-width: 1024px) {
+  .myst-toc-item {
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+  }
+}
