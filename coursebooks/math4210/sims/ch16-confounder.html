@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>An omitted common cause</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* A three-variable world in standardized units. An unmeasured common cause Z
+   (call it family background) sends a path of strength c into education and a
+   path of the same strength c into prestige. Education itself sends a true
+   direct path beta into prestige.
+
+     education* = c Z + sqrt(1 - c^2) u
+     prestige*  = beta education* + c Z + e
+
+   With every variable scaled to variance 1, the covariance of education* and
+   prestige* is beta + c^2, so the standardized slope a path analysis of the two
+   measured variables would report is exactly beta + c*c. */
+
+function reported(p) { return p.beta + p.c * p.c; }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'An unmeasured common cause manufactures a path that is not there',
+    es: 'Una causa comun no medida fabrica una ruta que no existe'
+  },
+  xRange: [-2, 2],
+  yRange: [-2, 2],
+  xLabel: { en: 'education*, standard deviations',
+            es: 'education*, desviaciones estandar' },
+  yLabel: { en: 'prestige*, standard deviations',
+            es: 'prestige*, desviaciones estandar' },
+  ariaLabel: {
+    en: 'Two lines through the origin: an amber dashed line for the true direct effect and a solid blue line for the effect a regression would report when a common cause is omitted.',
+    es: 'Dos rectas por el origen: una ambar discontinua para el efecto directo verdadero y una azul continua para el efecto que reportaria una regresion al omitir una causa comun.'
+  },
+  params: [
+    { id: 'c', label: { en: 'Strength of the hidden cause Z into both variables',
+                        es: 'Fuerza de la causa oculta Z hacia ambas variables' },
+      min: 0, max: 0.6, step: 0.05, value: 0.5, digits: 2 },
+    { id: 'beta', label: { en: 'True direct path from education to prestige',
+                           es: 'Ruta directa verdadera de educacion a prestigio' },
+      min: 0, max: 0.5, step: 0.05, value: 0, digits: 2 }
+  ],
+  curves: [
+    { accent: 2, dash: [6, 4], width: 2.5,
+      fn: function (p, x) { return p.beta * x; } },
+    { accent: 1, width: 3,
+      fn: function (p, x) { return reported(p) * x; } }
+  ],
+  readouts: [
+    { id: 'truth', label: { en: 'True direct path', es: 'Ruta directa verdadera' },
+      accent: 2, digits: 3,
+      compute: function (p) { return p.beta; } },
+    { id: 'spur', label: { en: 'Spurious part, c x c', es: 'Parte espuria, c x c' },
+      digits: 3,
+      compute: function (p) { return p.c * p.c; } },
+    { id: 'rep', label: { en: 'Path coefficient reported',
+                          es: 'Coeficiente de ruta reportado' },
+      accent: 1, digits: 3,
+      compute: function (p) { return reported(p); } },
+    { id: 'share', label: { en: 'Percent of it that is spurious',
+                            es: 'Porcentaje de eso que es espurio' },
+      digits: 0,
+      compute: function (p) {
+        var d = reported(p);
+        return d <= 0 ? NaN : 100 * (p.c * p.c) / d;
+      } }
+  ],
+  caption: {
+    en: 'Both lines describe the same world. Amber dashed is the truth, how much prestige ' +
+        'education really causes. Solid blue is what a path analysis of these two variables ' +
+        'alone would report, because the hidden cause Z lifts both and the regression cannot ' +
+        'know. The wedge between them is bias, not noise.\n\n' +
+        '**Try this.** Leave the true direct path at 0, so education causes nothing, and ' +
+        'push the hidden cause to 0.60. Blue still rises at 0.360 and the last readout says ' +
+        '100 percent of it is spurious: a confident analyst would report a path coefficient ' +
+        'for an arrow that does not exist. Slide the hidden cause back to 0 and the lines ' +
+        'snap together. That is the assumption the whole method rests on.',
+    es: 'Ambas rectas describen el mismo mundo. La ambar discontinua es la verdad, cuanto ' +
+        'prestigio causa realmente la educacion. La azul continua es lo que reportaria un ' +
+        'analisis de rutas solo con estas dos variables, porque la causa oculta Z eleva a ' +
+        'las dos y la regresion no puede saberlo. La cuna entre ellas es sesgo, no ruido.\n\n' +
+        '**Prueba esto.** Deja la ruta directa verdadera en 0, de modo que la educacion no ' +
+        'cause nada, y sube la causa oculta a 0.60. La azul sigue subiendo a 0.360 y el ' +
+        'ultimo valor dice que el 100 por ciento es espurio: un analista confiado reportaria ' +
+        'un coeficiente de ruta para una flecha que no existe. Baja la causa oculta a 0 y ' +
+        'las rectas se juntan. Ese es el supuesto en que descansa todo el metodo.'
+  }
+});
+</script>
+</body>
+</html>

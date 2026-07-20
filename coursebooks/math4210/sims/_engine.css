@@ -1,0 +1,336 @@
+/* ==========================================================================
+   MATH 4210 simulation engine -- shared stylesheet
+   Loaded by every book-myst/sims/chNN-<slug>.html via a sibling relative
+   <link rel="stylesheet" href="_engine.css">. Same folder, same origin,
+   ZERO external requests.
+
+   Palette is the book palette (see _planning/08-site-design.md). Theme
+   resolution order, handled by _engine.js:
+     1. prefers-color-scheme  (the no-JS / standalone default)
+     2. .sim-light / .sim-dark class on <html> (the class hook)
+   The engine sets the class hook by mirroring the parent book page's
+   html.dark class, so a sim follows the book's own theme toggle.
+   ========================================================================== */
+
+:root {
+  --sim-bg: #ffffff;
+  --sim-surface: #f5f5f7;
+  --sim-text: #111113;
+  --sim-text-2: #2b2b2e;
+  --sim-hairline: #d2d2d7;
+  --sim-accent: #0b5fcc;          /* Accent 1: interactive */
+  --sim-accent-2: #8a5300;        /* Accent 2: emphasis */
+  --sim-accent-contrast: #ffffff;
+  --sim-grid: #e6e6ea;
+
+  --sim-radius: 12px;
+  --sim-tap: 44px;                /* minimum touch target */
+  --sim-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+              Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sim-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+              "Liberation Mono", monospace;
+}
+
+/* Dark: media-query default ... */
+@media (prefers-color-scheme: dark) {
+  :root:not(.sim-light) {
+    --sim-bg: #0b0b0c;
+    --sim-surface: #161618;
+    --sim-text: #f7f7f8;
+    --sim-text-2: #d5d5d9;
+    --sim-hairline: #3a3a3d;
+    --sim-accent: #4c9dff;
+    --sim-accent-2: #e8b04b;
+    --sim-accent-contrast: #0b0b0c;
+    --sim-grid: #2a2a2d;
+  }
+}
+/* ... and the class hook, which must win in BOTH directions. */
+:root.sim-dark {
+  --sim-bg: #0b0b0c;
+  --sim-surface: #161618;
+  --sim-text: #f7f7f8;
+  --sim-text-2: #d5d5d9;
+  --sim-hairline: #3a3a3d;
+  --sim-accent: #4c9dff;
+  --sim-accent-2: #e8b04b;
+  --sim-accent-contrast: #0b0b0c;
+  --sim-grid: #2a2a2d;
+}
+:root.sim-light {
+  --sim-bg: #ffffff;
+  --sim-surface: #f5f5f7;
+  --sim-text: #111113;
+  --sim-text-2: #2b2b2e;
+  --sim-hairline: #d2d2d7;
+  --sim-accent: #0b5fcc;
+  --sim-accent-2: #8a5300;
+  --sim-accent-contrast: #ffffff;
+  --sim-grid: #e6e6ea;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--sim-bg);
+  color: var(--sim-text);
+  font-family: var(--sim-font);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;             /* a sim never scrolls sideways */
+}
+
+body { padding: 12px; touch-action: manipulation; }
+
+/* ---------- shell ---------------------------------------------------- */
+
+.sim-root {
+  max-width: 860px;
+  margin: 0 auto;
+  border: 1px solid var(--sim-hairline);
+  border-radius: var(--sim-radius);
+  background: var(--sim-bg);
+  padding: 14px;
+}
+
+.sim-title {
+  margin: 0 0 10px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--sim-text);
+}
+
+/* ---------- plot ------------------------------------------------------ */
+
+.sim-plot-wrap {
+  position: relative;
+  width: 100%;
+  background: var(--sim-surface);
+  border: 1px solid var(--sim-hairline);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sim-plot-wrap + .sim-plot-wrap { margin-top: 10px; }
+
+canvas.sim-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: none;             /* required: we own the drag gesture */
+}
+
+canvas.sim-canvas:focus-visible {
+  outline: 3px solid var(--sim-accent);
+  outline-offset: -3px;
+}
+
+/* ---------- readouts -------------------------------------------------- */
+
+.sim-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sim-stat {
+  background: var(--sim-surface);
+  border: 1px solid var(--sim-hairline);
+  border-radius: 10px;
+  padding: 8px 10px;
+  min-width: 0;
+}
+
+.sim-stat-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--sim-text-2);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sim-stat-value {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--sim-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--sim-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.sim-stat.is-accent .sim-stat-value { color: var(--sim-accent); }
+.sim-stat.is-accent-2 .sim-stat-value { color: var(--sim-accent-2); }
+
+/* ---------- sliders --------------------------------------------------- */
+
+.sim-controls { margin-top: 12px; display: grid; gap: 4px; }
+
+.sim-slider-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 4px 10px;
+  min-height: var(--sim-tap);
+  padding: 2px 0;
+}
+
+.sim-slider-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--sim-text-2);
+  min-width: 0;
+}
+
+.sim-slider-value {
+  font-family: var(--sim-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sim-accent);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  min-width: 4.5ch;
+}
+
+.sim-slider-row input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: var(--sim-tap);         /* 44px hit area, thin visible track */
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.sim-slider-row input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sim-hairline);
+}
+.sim-slider-row input[type="range"]::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sim-hairline);
+}
+.sim-slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: var(--sim-accent);
+  border: 2px solid var(--sim-bg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+.sim-slider-row input[type="range"]::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--sim-bg);
+  background: var(--sim-accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28);
+}
+/* Focus is NEVER hidden. */
+.sim-slider-row input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 3px solid var(--sim-accent);
+  outline-offset: 2px;
+}
+.sim-slider-row input[type="range"]:focus-visible::-moz-range-thumb {
+  outline: 3px solid var(--sim-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- buttons --------------------------------------------------- */
+
+.sim-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sim-btn {
+  flex: 1 1 auto;
+  min-width: 96px;
+  min-height: var(--sim-tap);
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--sim-accent);
+  background: var(--sim-accent);
+  color: var(--sim-accent-contrast);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sim-btn.is-secondary {
+  background: transparent;
+  color: var(--sim-accent);
+}
+
+.sim-btn:focus-visible {
+  outline: 3px solid var(--sim-accent);
+  outline-offset: 2px;
+}
+
+.sim-btn[disabled] { opacity: 0.45; cursor: default; }
+
+/* ---------- caption / explainer -------------------------------------- */
+
+.sim-caption {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--sim-hairline);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--sim-text-2);
+}
+
+.sim-caption strong { color: var(--sim-text); font-weight: 600; }
+.sim-caption p { margin: 0 0 6px; }
+.sim-caption p:last-child { margin-bottom: 0; }
+
+/* Screen-reader-only live region: the readouts are announced to AT. */
+.sim-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- responsive ------------------------------------------------ */
+
+/* Phones: 320px must stay readable and never scroll sideways. */
+@media (max-width: 430px) {
+  body { padding: 8px; }
+  .sim-root { padding: 10px; border-radius: 10px; }
+  .sim-title { font-size: 1rem; }
+  .sim-readouts { grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 6px; }
+  .sim-stat { padding: 6px 8px; }
+  .sim-stat-value { font-size: 0.9375rem; }
+  .sim-btn { min-width: 0; flex: 1 1 45%; padding: 10px 8px; font-size: 0.875rem; }
+}
+
+@media (max-width: 340px) {
+  .sim-readouts { grid-template-columns: repeat(2, 1fr); }
+  .sim-btn { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

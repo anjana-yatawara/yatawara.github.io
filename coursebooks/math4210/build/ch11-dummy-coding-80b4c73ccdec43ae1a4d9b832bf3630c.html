@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Indicator coefficients are differences of group means</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-backlink { margin: 10px 0 0; font-size: 0.8125rem; }
+.sim-backlink a { color: var(--sim-accent); text-decoration: none; }
+.sim-backlink a:hover { text-decoration: underline; }
+.sim-backlink a:focus-visible {
+  outline: 3px solid var(--sim-accent); outline-offset: 2px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Section 11.1. Reference-cell coding of the three faculty ranks.
+   Starting values are the salaries.csv group means in thousands of dollars:
+   Assistant 80.776, Associate 93.876, Full 126.772 (slider grid: 0.1k). */
+
+var LANG = (window.location.search.indexOf('lang=es') >= 0) ? 'es' : 'en';
+
+/* Each rank owns one third of the x axis; NaN elsewhere breaks the path,
+   so the three group levels draw as three separate flat segments. */
+function segment(lo, hi, value) {
+  return function (p, x) { return (x >= lo && x <= hi) ? value(p) : NaN; };
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Move a group mean and watch its indicator coefficient follow',
+    es: 'Mueve la media de un grupo y observa cómo sigue su coeficiente indicador'
+  },
+  xRange: [0.5, 3.5],
+  yRange: [60, 150],
+  xLabel: { en: 'rank: 1 Assistant, 2 Associate, 3 Full',
+            es: 'rango: 1 asistente, 2 asociado, 3 titular' },
+  yLabel: { en: 'salary (thousands of dollars)',
+            es: 'salario (miles de dólares)' },
+  ariaLabel: {
+    en: 'Three flat group means for salary by rank, with a dashed baseline at the assistant mean',
+    es: 'Tres medias de grupo planas para el salario por rango, con una línea base punteada en la media de asistente'
+  },
+  params: [
+    { id: 'mAsst', label: { en: 'Assistant mean (the reference)',
+                            es: 'Media de asistente (la referencia)' },
+      min: 60, max: 150, step: 0.1, value: 80.8, digits: 1 },
+    { id: 'mAssoc', label: { en: 'Associate mean', es: 'Media de asociado' },
+      min: 60, max: 150, step: 0.1, value: 93.9, digits: 1 },
+    { id: 'mFull', label: { en: 'Full professor mean', es: 'Media de titular' },
+      min: 60, max: 150, step: 0.1, value: 126.8, digits: 1 }
+  ],
+  curves: [
+    /* The baseline, drawn all the way across: every coefficient is measured
+       from here. */
+    { accent: 2, width: 1.5, dash: [5, 4],
+      fn: function (p, x) { return p.mAsst; } },
+    { accent: 1, width: 4, fn: segment(0.6, 1.4, function (p) { return p.mAsst; }) },
+    { accent: 1, width: 4, fn: segment(1.6, 2.4, function (p) { return p.mAssoc; }) },
+    { accent: 1, width: 4, fn: segment(2.6, 3.4, function (p) { return p.mFull; }) }
+  ],
+  readouts: [
+    { id: 'b0', label: { en: 'b0 (intercept)', es: 'b0 (intercepto)' },
+      accent: 2, digits: 2,
+      compute: function (p) { return p.mAsst; } },
+    { id: 'b1', label: { en: 'b1 (Assoc - Asst)', es: 'b1 (asoc - asist)' },
+      accent: 1, digits: 2,
+      compute: function (p) { return p.mAssoc - p.mAsst; } },
+    { id: 'b2', label: { en: 'b2 (Full - Asst)', es: 'b2 (titular - asist)' },
+      accent: 1, digits: 2,
+      compute: function (p) { return p.mFull - p.mAsst; } },
+    { id: 'gap', label: { en: 'Full - Assoc (b2 - b1)', es: 'Titular - asoc (b2 - b1)' },
+      digits: 2,
+      compute: function (p) { return p.mFull - p.mAssoc; } }
+  ],
+  caption: {
+    en: '**What to notice.** The intercept b0 is nothing but the reference mean, and each ' +
+        'indicator coefficient is the vertical distance from that dashed baseline up to a ' +
+        'group.\n\n' +
+        '**Try this.** Push the assistant slider up to 93.9 and watch b1 fall to 0.00 and b2 ' +
+        'to 32.90 while the associate and full means sit exactly where they were: the ' +
+        'coefficients describe the gaps, not the groups. The last tile, Full minus Associate, ' +
+        'is the contrast reference-cell coding never prints for you.',
+    es: '**Qué observar.** El intercepto b0 no es más que la media de referencia, y cada ' +
+        'coeficiente indicador es la distancia vertical desde esa línea base punteada hasta ' +
+        'un grupo.\n\n' +
+        '**Prueba esto.** Sube el deslizador de asistente hasta 93.9 y observa cómo b1 cae a ' +
+        '0.00 y b2 a 32.90 mientras las medias de asociado y titular siguen donde estaban: los ' +
+        'coeficientes describen las brechas, no los grupos. La última casilla, titular menos ' +
+        'asociado, es el contraste que la codificación de celda de referencia nunca imprime.'
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var root = document.querySelector('.sim-root');
+  if (!root) { return; }
+  var p = document.createElement('p');
+  p.className = 'sim-backlink';
+  var a = document.createElement('a');
+  a.href = (LANG === 'es') ? '../ch11/es/#ch11-dummy-coding-es'
+                           : '../ch11/#ch11-dummy-coding';
+  a.target = '_top';
+  a.textContent = (LANG === 'es') ? 'Volver a la sección 11.1'
+                                  : 'Back to section 11.1';
+  p.appendChild(a);
+  root.appendChild(p);
+});
+</script>
+</body>
+</html>

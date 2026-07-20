@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Signal and noise in 20 coin tosses</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Twenty tosses of a fair coin. The systematic part is fixed at 10 heads;
+   everything else you see is the random part. Theory: mean 10, SD
+   sqrt(20 * 0.5 * 0.5) = 2.2361, and P(heads <= 5 or heads >= 15) = 0.0414. */
+var N_TOSSES = 20, P_HEADS = 0.5;
+
+Sim.mount({
+  type: 'sampling',
+  seed: 4210,
+  title: {
+    en: 'Toss a fair coin 20 times, over and over',
+    es: 'Lanza 20 veces una moneda justa, una y otra vez'
+  },
+  draw: function (rng) { return rng.binomial(N_TOSSES, P_HEADS); },
+  xRange: [0, 20],
+  bins: 21,
+  trueValue: N_TOSSES * P_HEADS,
+  trueValueLabel: { en: 'signal: 10 heads', es: 'senal: 10 caras' },
+  tail: function (v) { return v <= 5.5 || v >= 14.5; },
+  xLabel: { en: 'heads in 20 tosses', es: 'caras en 20 lanzamientos' },
+  ariaLabel: {
+    en: 'Histogram of the number of heads in 20 tosses of a fair coin, accumulating over repeated rounds.',
+    es: 'Histograma del numero de caras en 20 lanzamientos de una moneda justa, acumulado en rondas repetidas.'
+  },
+  drawOneLabel: { en: 'Toss 20 times', es: 'Lanzar 20 veces' },
+  drawManyLabel: { en: 'Run 1000 rounds', es: 'Correr 1000 rondas' },
+  readouts: [
+    { id: 'n',    label: { en: 'Rounds',        es: 'Rondas' } },
+    { id: 'last', label: { en: 'Heads, last round', es: 'Caras, ultima ronda' }, digits: 0 },
+    { id: 'mean', label: { en: 'Mean heads',    es: 'Media de caras' }, accent: 1, digits: 3 },
+    { id: 'sd',   label: { en: 'SD of heads',   es: 'DE de caras' },    accent: 2, digits: 3 }
+  ],
+  caption: {
+    en: 'Nothing about the coin changes between rounds. The mechanism is fixed, so 10 heads ' +
+        'is the systematic part, marked in amber, and every departure from it is the random ' +
+        'part. The amber bars are rounds of 5 or fewer, or 15 or more, heads.\n\n' +
+        '**What to notice.** Toss 20 times a few rounds by hand: you will rarely land on ' +
+        'exactly 10, and a run of 13 or 7 heads is ordinary, not evidence of a bent coin. ' +
+        '**Try this.** Press Run 1000 rounds and watch the mean settle near 10 while the SD ' +
+        'holds near 2.24. The noise never shrinks, it just becomes describable, and that is ' +
+        'the whole reason a model carries an error term instead of pretending it away.',
+    es: 'Nada cambia en la moneda entre rondas. El mecanismo es fijo, asi que 10 caras es la ' +
+        'parte sistematica, marcada en ambar, y cada desviacion es la parte aleatoria. Las ' +
+        'barras ambar son rondas de 5 caras o menos, o de 15 o mas.\n\n' +
+        '**Que observar.** Lanza 20 veces a mano unas cuantas rondas: rara vez caeras en ' +
+        'exactamente 10, y una ronda de 13 o de 7 caras es comun, no prueba de una moneda ' +
+        'trucada. **Prueba esto.** Presiona Correr 1000 rondas y observa como la media se ' +
+        'asienta cerca de 10 mientras la DE se mantiene cerca de 2.24. El ruido nunca ' +
+        'desaparece, solo se vuelve descriptible, y por eso un modelo lleva un termino de ' +
+        'error en vez de fingir que no existe.'
+  }
+});
+</script>
+</body>
+</html>

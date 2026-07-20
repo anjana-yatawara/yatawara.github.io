@@ -108,6 +108,9 @@ html.light {
   --code-bg: #f5f5f7;
   --code-text: #111113;
   --code-border: var(--hairline);
+  --code-badge-fg: #2b2b2e;  /* secondary ink, 11.55:1 on the badge tab */
+  --code-badge-bg: #e8e8ed;  /* one step darker than --code-bg so the tab reads */
+  --output-bg: #ffffff;      /* output drops back to the page colour */
 
   /* Admonition accents -- all drawn from Accent 1 / Accent 2 / ink,
      except the deliberate warning alert hue documented above. */
@@ -164,6 +167,9 @@ html.dark {
   --code-bg: #161618;
   --code-text: #f7f7f8;
   --code-border: var(--hairline);
+  --code-badge-fg: #d5d5d9;
+  --code-badge-bg: #26262b;
+  --output-bg: #0b0b0c;
 
   /* Admonition accents */
   --adm-note-fg: var(--accent);
@@ -216,6 +222,9 @@ html.dark {
     --accent-2-contrast: #0b0b0c;
     --code-bg: #161618;
     --code-text: #f7f7f8;
+    --code-badge-fg: #d5d5d9;
+    --code-badge-bg: #26262b;
+    --output-bg: #0b0b0c;
     --adm-note-fg: var(--accent);
     --adm-note-bg: rgba(76, 157, 255, 0.12);
     --adm-tip-fg: var(--accent-2);
@@ -568,19 +577,171 @@ html.dark .myst-admonition {
   border: 1px solid var(--code-border);
   border-radius: 10px;
   overflow: hidden;
+
+  /* Width of the language badge tab. The copy button is positioned just to
+     its left off this same value, so the two never collide no matter which
+     label is drawn. */
+  --code-badge-w: 4.1rem;
 }
 
 .myst-code-body.hljs {
   background: var(--code-bg) !important;
   color: var(--code-text) !important;
-  padding: 1rem !important;
+  /* Top padding reserves an empty strip for the badge + copy button, so
+     neither can ever sit on top of the first line of code. The strip is
+     part of the scroll box's padding, so it stays put while the code
+     scrolls horizontally. */
+  padding: 2.3rem 1rem 1rem !important;
 }
 
-.myst-code-copy-icon {
-  color: var(--text-secondary) !important;
+/* -- 7a. Language badges -------------------------------------------------
+
+   The theme emits no language hook on the block container; the language
+   only reaches the DOM as `language-*` on the inner <code>:
+
+     div.myst-code > div.myst-code-body.hljs > pre > code.language-r
+
+   so the badge is drawn as a ::before on the container and selected with
+   :has(). Content audit of every fence in the book (43 markdown files,
+   1450 fenced blocks) found exactly four info strings: `r`, `python`,
+   `text`, and `bash`, and zero unlabeled openers -- so every block is
+   covered. A browser without :has() support simply falls back to the
+   neutral "Code" label below rather than losing the badge entirely.
+
+   The badge is inert: pointer-events:none so it cannot swallow a tap, and
+   user-select:none so dragging a selection across the code never picks the
+   label up into the clipboard. The theme's copy button copies the raw AST
+   value, so it never sees the badge either. */
+
+.myst-code::before {
+  content: "Code";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--code-badge-w);
+  min-height: 1.7rem;
+  padding: 0 0.55rem;
+  box-sizing: border-box;
+
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--code-badge-fg);
+  background: var(--code-badge-bg);
+
+  border-left: 1px solid var(--code-border);
+  border-bottom: 1px solid var(--code-border);
+  border-radius: 0 9px 0 9px;
+
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
-.myst-code-copy-icon:hover {
+
+.myst-code:has(code.language-r)::before {
+  content: "R";
+}
+.myst-code:has(code.language-python)::before {
+  content: "Python";
+}
+.myst-code:has(code.language-text)::before {
+  content: "Output";
+}
+.myst-code:has(code.language-bash)::before {
+  content: "Shell";
+}
+
+/* -- 7b. Output blocks ---------------------------------------------------
+
+   Console transcripts (```text) must never be mistaken for something the
+   student is meant to type. Code sits on the raised tinted surface; output
+   drops back to the page colour inside its hairline frame, so the two read
+   as different objects at a glance even before the badge is read. The copy
+   control is removed there too -- there is nothing to run. */
+
+.myst-code:has(code.language-text) .myst-code-body.hljs {
+  background: var(--output-bg) !important;
+}
+.myst-code:has(code.language-text) .myst-code-copy-icon {
+  display: none !important;
+}
+
+/* -- 7c. Copy control ----------------------------------------------------
+
+   book-theme v1.10.1 already ships a copy button (SSR'd <button> with
+   aria-label="Copy code to clipboard", React onClick ->
+   navigator.clipboard.writeText(rawValue), aria-pressed flipping to "true"
+   for 3s after a successful copy). Its one real defect is the Tailwind
+   `opacity-0 group-hover:opacity-100` reveal: on a phone there is no hover,
+   so the control was effectively invisible to every touch reader. It is
+   made permanently visible here, moved clear of the badge, sized to a WCAG
+   2.2 tap target, repainted in Accent 1 so it reads as interactive, and
+   given a text "Copied" confirmation driven off the theme's own
+   aria-pressed state -- no extra JavaScript, no new dependency. */
+
+.myst-code-copy-icon {
+  opacity: 1 !important;
+  top: 0 !important;
+  right: calc(var(--code-badge-w) + 0.2rem) !important;
+  margin-left: 0 !important;
+  padding: 0.3rem !important;
+  border-radius: 7px;
   color: var(--accent) !important;
+  background: transparent;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.myst-code-copy-icon svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+.myst-code-copy-icon:hover,
+.myst-code-copy-icon:focus-visible {
+  color: var(--accent) !important;
+  background: var(--code-badge-bg);
+}
+/* A bare icon is not obviously a copy control, so the button carries a
+   persistent word. It flips to "Copied" off the theme's own aria-pressed
+   state (set true for 3s after a successful clipboard write), which gives
+   the confirmation with no script of ours. The label is user-select:none,
+   so a student dragging a selection over the block never picks it up. */
+.myst-code-copy-icon::after {
+  content: "Copy";
+  margin-left: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: inherit;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.myst-code-copy-icon[aria-pressed="true"],
+.myst-code-copy-icon[aria-pressed="true"]:hover {
+  color: var(--accent) !important;
+}
+.myst-code-copy-icon[aria-pressed="true"]::after {
+  content: "Copied";
+}
+
+/* Phones: keep the badge from eating the block, keep the tap target big. */
+@media (max-width: 480px) {
+  .myst-code {
+    --code-badge-w: 3.5rem;
+  }
+  .myst-code::before {
+    font-size: 0.625rem;
+    padding: 0 0.4rem;
+  }
+  .myst-code-copy-icon {
+    padding: 0.35rem !important;
+  }
 }
 
 /* Syntax colors: the theme ships two overlapping hljs palettes tuned for a
@@ -1109,4 +1270,72 @@ figure.fig-figure img {
     padding-top: 0.55rem;
     padding-bottom: 0.55rem;
   }
+}
+
+/* -------------------------------------------------------------------------
+   (Item 12) Embedded simulations
+   -------------------------------------------------------------------------
+   Chapter simulations live in `book-myst/sims/chNN-<slug>.html` and are
+   embedded with the native `{iframe}` directive carrying `:class: sim ...`
+   (see `_planning/10-sim-spec.md`). MyST renders that as
+
+     <figure class="fig-figure sim sim-m">
+       <div class="leading-[0]" style="text-align:center">
+         <div class="relative inline-block"
+              style="padding-bottom:60%;width:min(max(100%,500px),100%)">
+           <iframe style="position:absolute;height:100%;...">
+
+   The inner div is a fixed-ASPECT box (`padding-bottom:60%`). That is wrong
+   for a simulation: on a 320px phone 60% is only ~190px tall, which is the
+   width where a sim needs the MOST height, because its readouts and buttons
+   wrap. There is no way to fix this from the markdown, and no JS channel to
+   auto-size the frame (MyST strips `<script>` from page content, so a
+   postMessage resize handshake is impossible). So the aspect box is
+   converted here into a fixed-HEIGHT box.
+
+   `padding-bottom` and `width` are INLINE styles, so `!important` is
+   required to beat them. `height` is not set inline, so it needs no flag.
+   The iframe inside is already `position:absolute; height:100%`, so it
+   fills whatever height the box is given.
+
+   The three sizes are measured, not guessed: real content heights of the
+   five shipped demo sims across 320-1024px ran 687px to 1247px. Each class
+   sits above the worst case for its shape, and the sim's own stylesheet
+   keeps `overflow-y` available inside the frame as the safety net for an
+   unusually long caption. Phones get MORE height than desktop for `-s` and
+   `-m` because the readout grid and button row wrap there. */
+
+figure.sim {
+  margin: 1.75rem 0;
+  --sim-h: 1040px;                    /* default = the `sim-m` desktop size */
+}
+
+figure.sim > div > div {
+  padding-bottom: 0 !important;       /* kill the 60% aspect box */
+  width: 100% !important;
+  height: var(--sim-h);
+}
+
+figure.sim > div > div > iframe {
+  border-radius: 12px;                /* the sim draws its own card border */
+}
+
+/* Sizes, desktop and tablet. */
+figure.sim.sim-s { --sim-h: 820px; }   /* one plot, short caption */
+figure.sim.sim-m { --sim-h: 1040px; }  /* one plot plus sliders or buttons */
+figure.sim.sim-l { --sim-h: 1300px; }  /* two stacked plots */
+
+/* Phones: the readout grid and the button row wrap, so add height. */
+@media (max-width: 430px) {
+  figure.sim { --sim-h: 1120px; }
+  figure.sim.sim-s { --sim-h: 920px; }
+  figure.sim.sim-m { --sim-h: 1120px; }
+  figure.sim.sim-l { --sim-h: 1280px; }
+}
+
+/* The sim caption is book prose, so it keeps the reading measure. */
+figure.sim figcaption {
+  max-width: 70ch;
+  margin-left: auto;
+  margin-right: auto;
 }

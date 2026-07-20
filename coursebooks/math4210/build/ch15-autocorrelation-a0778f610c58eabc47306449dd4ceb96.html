@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autocorrelation and the standard error that lies</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ---------------------------------------------------------------------------
+   Section 15.2. One hundred months of y = 2 + 0.5t + eps, where eps follows
+   AR(1) with autocorrelation rho. The innovations u are drawn once and held
+   fixed, so moving the slider changes only the correlation, never the luck.
+
+   The errors are scaled to have variance 1 at every rho:
+       eps_1 = u_1,   eps_t = rho * eps_{t-1} + sqrt(1 - rho^2) * u_t
+   which is the stationary AR(1) with unit variance. Holding the variance
+   fixed is what makes the comparison fair: only the pattern changes.
+
+   True sd{b1} is the exact value implied by that error structure,
+       Var{b1} = sum_i sum_j c_i c_j rho^|i-j|,   c_i = (t_i - tbar) / Stt,
+   not a simulated approximation.
+   --------------------------------------------------------------------------- */
+
+var N = 100;
+var B0 = 2, B1 = 0.5;
+var TS = [];
+var i, j;
+for (i = 1; i <= N; i++) { TS.push(i); }
+
+/* Fixed innovations: the same luck at every rho. */
+var U = [];
+var rng = Sim.Stats.rng(4210);
+for (i = 0; i < N; i++) { U.push(rng.normal(0, 1)); }
+
+/* Leverage weights c_i for the slope, computed once. */
+var TBAR = Sim.Stats.mean(TS);
+var STT = 0;
+for (i = 0; i < N; i++) { STT += (TS[i] - TBAR) * (TS[i] - TBAR); }
+var CW = TS.map(function (t) { return (t - TBAR) / STT; });
+
+var cache = { rho: null };
+
+function build(rho) {
+  if (cache.rho === rho) { return cache; }
+  var s = Math.sqrt(1 - rho * rho);
+  var eps = [U[0]];
+  for (var k = 1; k < N; k++) { eps.push(rho * eps[k - 1] + s * U[k]); }
+  var ys = [];
+  for (k = 0; k < N; k++) { ys.push(B0 + B1 * TS[k] + eps[k]); }
+  var fit = Sim.Stats.lsFit(TS, ys);
+  var e = fit.residuals;
+
+  var num = 0, den = 0, cross = 0;
+  for (k = 0; k < N; k++) { den += e[k] * e[k]; }
+  for (k = 1; k < N; k++) {
+    num += (e[k] - e[k - 1]) * (e[k] - e[k - 1]);
+    cross += e[k] * e[k - 1];
+  }
+
+  /* Exact variance of b1 under this AR(1) error structure. */
+  var v = 0;
+  for (var a = 0; a < N; a++) {
+    for (var b = 0; b < N; b++) {
+      v += CW[a] * CW[b] * Math.pow(rho, Math.abs(a - b));
+    }
+  }
+
+  cache = {
+    rho: rho, e: e, slope: fit.slope,
+    D: num / den,
+    r1: cross / den,
+    seOls: fit.seSlope,
+    sdTrue: Math.sqrt(v)
+  };
+  return cache;
+}
+
+function seriesAt(arr, x) {
+  if (x < 1 || x > arr.length) { return NaN; }
+  var k = Math.floor(x);
+  if (k >= arr.length) { k = arr.length - 1; }
+  var f = x - k;
+  return arr[k - 1] + f * (arr[k] - arr[k - 1]);
+}
+
+Sim.mount({
+  type: 'sliders',
+  seed: 4210,
+  title: {
+    en: 'Turn up the autocorrelation and watch the standard error start lying',
+    es: 'Sube la autocorrelacion y observa como el error estandar empieza a mentir'
+  },
+  xRange: [1, N],
+  yRange: [-4, 4],
+  xLabel: { en: 'month t', es: 'mes t' },
+  yLabel: { en: 'residual e_t', es: 'residuo e_t' },
+  ariaLabel: {
+    en: 'Residuals from a fitted trend, plotted in time order, for the chosen autocorrelation.',
+    es: 'Residuos de una tendencia ajustada, en orden temporal, para la autocorrelacion elegida.'
+  },
+  params: [
+    { id: 'rho', label: { en: 'Autocorrelation ρ', es: 'Autocorrelacion ρ' },
+      min: -0.8, max: 0.95, step: 0.05, value: 0, digits: 2 }
+  ],
+  curves: [
+    { accent: 2, width: 1.5, dash: [4, 4], fn: function () { return 0; } },
+    { accent: 1, width: 2,
+      fn: function (p, x) { return seriesAt(build(p.rho).e, x); } }
+  ],
+  readouts: [
+    { id: 'dw', label: { en: 'Durbin-Watson D', es: 'Durbin-Watson D' },
+      accent: 2, digits: 2,
+      compute: function (p) { return build(p.rho).D; } },
+    { id: 'r1', label: { en: 'Lag-one r1', es: 'r1 de rezago uno' }, digits: 2,
+      compute: function (p) { return build(p.rho).r1; } },
+    { id: 'seo', label: { en: 'OLS reports s{b1}', es: 'MCO reporta s{b1}' },
+      accent: 1, digits: 4,
+      compute: function (p) { return build(p.rho).seOls; } },
+    { id: 'sdt', label: { en: 'True sd{b1}', es: 'sd{b1} verdadero' },
+      accent: 2, digits: 4,
+      compute: function (p) { return build(p.rho).sdTrue; } },
+    { id: 'rat', label: { en: 'Reported / true', es: 'Reportado / verdadero' }, digits: 2,
+      compute: function (p) {
+        var c = build(p.rho);
+        return c.seOls / c.sdTrue;
+      } }
+  ],
+  caption: {
+    en: 'One hundred months of data follow the same trend and carry the same shocks at every ' +
+        'setting; only ρ, the correlation between one error and the next, changes. The blue ' +
+        'line is the residual e_t in time order.\n\n' +
+        '**Try this.** Start at ρ = 0 and slide slowly to 0.9. The residuals stop jittering ' +
+        'and start wandering in long runs above and below zero, D falls from near 2 toward 0, ' +
+        'and here is the part to stare at: **OLS reports s{b1}** barely moves while **true ' +
+        'sd{b1}** grows several times larger. The reported standard error is not adjusting to ' +
+        'the correlation, so the ratio collapses and every confidence interval built from it ' +
+        'is far too narrow. Now pull ρ negative: D climbs past 2 and the residuals zigzag.',
+    es: 'Cien meses de datos siguen la misma tendencia y llevan los mismos choques en cada ' +
+        'ajuste; lo unico que cambia es ρ, la correlacion entre un error y el siguiente. La ' +
+        'linea azul es el residuo e_t en orden temporal.\n\n' +
+        '**Prueba esto.** Empieza en ρ = 0 y desliza despacio hasta 0.9. Los residuos dejan de ' +
+        'vibrar y empiezan a vagar en rachas largas por encima y por debajo de cero, D baja de ' +
+        'casi 2 hacia 0, y esto es lo que hay que mirar: **MCO reporta s{b1}** apenas se mueve ' +
+        'mientras **sd{b1} verdadero** crece varias veces. El error estandar reportado no se ' +
+        'ajusta a la correlacion, asi que la razon se desploma y todo intervalo de confianza ' +
+        'construido con el resulta demasiado estrecho. Ahora lleva ρ a valores negativos: D ' +
+        'sube mas alla de 2 y los residuos zigzaguean.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Move the threshold, move the errors</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Fitted probabilities from the five-predictor Pima model
+   test ~ glucose + bmi + age + diabetes + pregnant, for the 752 women with
+   complete data, stored as ten-thousandths so the file stays small. YOBS holds
+   the observed 0/1 test result for the same women, in the same order. */
+var PHAT_INT = [
+  6842,411,7679,408,8647,1404,504,3784,8030,2495,8882,7632,7785,6450,1842,4469,1832,2364,2323,4865,3057,9474,2890,7502,4249,7191,478,5501,3067,3789,6385,412,434,4040,1424,6441,3528,1488,5721,7336,
+  6990,1236,9573,5795,9453,3747,356,3265,429,642,577,8768,7407,162,9005,4027,8333,1814,4873,175,2920,3027,1091,2073,4885,297,3533,1821,3602,8197,3363,496,685,2001,4282,892,707,1354,443,7460,
+  2053,4655,1773,7628,680,150,3001,3098,2638,2916,5498,674,131,1008,5446,8270,2533,846,312,1965,2331,356,3965,833,1058,6316,7626,552,751,7084,5757,3362,1083,953,557,8946,2428,1581,3314,1383,
+  3826,4619,1750,2392,1519,6598,6018,6944,2374,519,2300,958,613,2731,2177,1600,3132,1390,3259,5057,566,2813,6047,415,3999,1161,8692,6767,9594,8851,720,1134,507,9664,4611,2899,2899,894,3098,2411,
+  4187,2850,2053,1523,1550,5277,801,1577,439,8770,1174,8552,7388,6565,459,2569,383,3319,9399,8793,4464,2495,4087,666,4575,6502,9137,686,7452,523,960,3164,4083,1817,4496,1231,382,3302,1208,9581,
+  7512,873,8804,389,5805,8510,5268,3498,9054,2811,3267,1593,3302,7846,6991,1944,6066,667,624,1101,7259,9807,3086,7183,7250,336,3270,396,8625,9046,8657,8072,418,490,1157,2458,4025,5327,9325,4127,
+  8629,4785,1006,2851,1920,384,695,2958,1874,1825,1077,7051,9050,7779,4313,1416,4656,2621,2790,4894,5733,411,2892,7164,661,1311,422,4497,2599,1436,778,2427,1261,4670,5763,4404,6493,1173,4555,7626,
+  5335,482,2518,659,2154,6850,4439,3437,7021,3198,2050,4970,2934,6502,3826,907,6287,2428,3149,6639,1350,3804,3521,624,2214,3804,1864,5172,1829,420,7069,2586,7661,2726,1518,1389,7583,1726,2813,3159,
+  8742,2562,1638,4359,650,8554,1915,387,7915,3098,2559,7968,8950,1703,760,3355,3379,5925,2999,896,493,2117,3464,462,581,2223,7575,3551,7901,3109,8972,8379,6097,3555,7301,5426,1958,2513,328,420,
+  3037,9455,809,1452,3846,8411,444,1085,8256,3007,1628,345,1239,891,1090,747,3217,4733,5755,1938,1271,8628,1385,1287,6873,4142,1137,2347,282,8205,1046,3045,4663,959,6815,4470,2090,398,9231,8389,
+  2884,1976,7076,2141,3534,7011,1108,6487,230,1809,4493,640,1966,1628,8408,8298,7342,4109,1164,380,1017,487,2022,854,4936,7415,4677,229,3672,7923,702,2198,3551,2031,9923,776,1077,1274,1440,227,
+  2716,1273,1801,1887,8953,3359,828,8743,5349,2822,168,1736,751,3518,909,234,1444,2967,8545,6130,2523,2385,4377,1362,2449,2002,1743,2661,3622,6278,2125,587,770,6659,4602,5206,9365,776,8932,1154,
+  984,1273,4315,6664,1292,596,8120,6643,1039,1054,2537,1696,1315,7366,2393,925,3106,1784,1231,1135,630,593,5527,7086,5314,1690,2568,179,2614,6202,2129,357,262,1057,1521,980,2334,3526,2095,1257,
+  1090,3320,950,191,3591,5249,4348,3254,3807,1239,705,8921,9659,3118,6082,8133,985,880,2452,585,991,2210,1365,2427,5700,1553,3879,8992,1045,1303,866,791,1607,1274,5359,1963,668,1238,1468,1090,
+  4132,2173,1818,4452,4027,9054,5913,1161,4181,3168,4477,369,5931,958,8717,140,8009,2342,4128,1415,4478,7527,955,561,6779,693,900,682,1319,7695,6910,2879,9009,303,5813,613,1277,7523,8853,2870,
+  7583,822,1931,122,4887,1410,2384,1435,9668,1710,1061,1591,962,2419,3835,499,2766,1048,968,1365,1098,3779,1416,1101,4291,307,1048,3300,4913,942,1323,6137,4083,7480,5062,583,372,2128,3152,1534,
+  1167,5916,406,5114,6627,1662,7018,9621,8222,7829,2954,1593,5512,2330,2228,6490,7984,641,1389,8203,3313,8501,5755,859,2541,746,121,8133,1950,3225,3269,1488,840,2606,6972,2264,9081,4392,5943,342,
+  4635,5775,434,3990,5990,3046,3437,7889,4157,1184,1428,2488,7551,1762,4941,3166,7126,1634,950,9103,8091,1697,1731,2304,668,2191,3801,3985,1691,3231,2427,3164,4382,589,2431,2469,8725,1089,1033,1456,
+  1567,966,1577,2080,7732,1243,876,6887,9399,3208,7364,2950,8474,5123,5236,2918,886,8134,7084,4953,5027,2898,1626,9097,766,9265,683,3124,2959,1767,2334,658
+];
+var YOBS_STR =
+  '10101010101011111010011111000010000011100010100100010010001001010001010000100001' +
+  '00010000100000110000000011100111000100011001111100000000001000000010110001000011' +
+  '00001100010101000011111001101011100000011010001111011110000010011000111100011010' +
+  '00000001100010100101001100000100010011001000111001010110100101100101001010111001' +
+  '01000100001110000000000000111011001001001100010010000000111001001001011010101011' +
+  '00001101010000111010000010000100111001001000100100000000010000000100010001100000' +
+  '00100010000001000100001100000100000000000100011110011000000000000011000000010000' +
+  '00010110001010101010010010000110100001101000110000000000100001001000100011100000' +
+  '01000101111011000000011010010100001010101100001100001100100110010010000000111000' +
+  '00011001001011100111010101000010';
+
+var N = PHAT_INT.length;
+var PHAT = new Array(N), YOBS = new Array(N);
+for (var i = 0; i < N; i++) {
+  PHAT[i] = PHAT_INT[i] / 10000;
+  YOBS[i] = YOBS_STR.charCodeAt(i) - 48;
+}
+
+/* Confusion counts at a threshold: predict positive when Yhat > t. */
+function table(t) {
+  var tp = 0, fn = 0, tn = 0, fp = 0;
+  for (var i = 0; i < N; i++) {
+    var pos = PHAT[i] > t;
+    if (YOBS[i] === 1) { if (pos) { tp++; } else { fn++; } }
+    else { if (pos) { fp++; } else { tn++; } }
+  }
+  return { tp: tp, fn: fn, tn: tn, fp: fp,
+           sens: tp / (tp + fn), spec: tn / (tn + fp), acc: (tp + tn) / N };
+}
+
+/* The ROC curve, swept once at load: every distinct threshold, from the
+   strictest to the loosest, giving the (1 - specificity, sensitivity) path. */
+var ROC = (function () {
+  var order = [];
+  for (var i = 0; i < N; i++) { order.push(i); }
+  order.sort(function (a, b) { return PHAT[b] - PHAT[a]; });
+  var P = 0, Ng = 0, j;
+  for (j = 0; j < N; j++) { if (YOBS[j] === 1) { P++; } else { Ng++; } }
+  var pts = [{ x: 0, y: 0 }], tp = 0, fp = 0, k = 0;
+  while (k < N) {
+    var v = PHAT[order[k]];
+    while (k < N && PHAT[order[k]] === v) {
+      if (YOBS[order[k]] === 1) { tp++; } else { fp++; }
+      k++;
+    }
+    pts.push({ x: fp / Ng, y: tp / P });
+  }
+  return pts;
+}());
+
+/* Area under that path by the trapezoid rule, which handles the ties
+   correctly and reproduces the Mann-Whitney form used in the chapter. */
+var AUC = (function () {
+  var a = 0;
+  for (var i = 1; i < ROC.length; i++) {
+    a += (ROC[i].x - ROC[i - 1].x) * (ROC[i].y + ROC[i - 1].y) / 2;
+  }
+  return a;
+}());
+
+/* Sensitivity at a given false-positive rate, read off the swept curve. */
+function rocY(x) {
+  if (x <= 0) { return 0; }
+  if (x >= 1) { return 1; }
+  for (var i = 1; i < ROC.length; i++) {
+    if (ROC[i].x >= x) {
+      var d = ROC[i].x - ROC[i - 1].x;
+      if (d <= 0) { return ROC[i].y; }
+      var f = (x - ROC[i - 1].x) / d;
+      return ROC[i - 1].y + f * (ROC[i].y - ROC[i - 1].y);
+    }
+  }
+  return 1;
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Slide the threshold along the ROC curve',
+    es: 'Desliza el umbral a lo largo de la curva ROC'
+  },
+  xRange: [0, 1],
+  yRange: [0, 1],
+  xLabel: { en: '1 - specificity (false alarms)',
+            es: '1 - especificidad (falsas alarmas)' },
+  yLabel: { en: 'sensitivity', es: 'sensibilidad' },
+  ariaLabel: {
+    en: 'ROC curve for the five-predictor Pima model with a movable operating point set by the classification threshold.',
+    es: 'Curva ROC del modelo Pima de cinco predictores con un punto de operacion movil fijado por el umbral de clasificacion.'
+  },
+  params: [
+    { id: 't', label: { en: 'Threshold on Yhat', es: 'Umbral sobre Yhat' },
+      min: 0.05, max: 0.95, step: 0.01, value: 0.5, digits: 2 }
+  ],
+  bands: [
+    /* The operating point at the current threshold, drawn as a small square. */
+    { accent: 2, alpha: 0.95,
+      lo: function (p, x) {
+        var r = table(p.t);
+        return Math.abs(x - (1 - r.spec)) < 0.014 ? Math.max(0, r.sens - 0.022) : 0;
+      },
+      hi: function (p, x) {
+        var r = table(p.t);
+        return Math.abs(x - (1 - r.spec)) < 0.014 ? Math.min(1, r.sens + 0.022) : 0;
+      } }
+  ],
+  curves: [
+    { fn: function (p, x) { return x; }, accent: 2, dash: [5, 4], width: 1.5 },
+    { fn: function (p, x) { return rocY(x); }, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'sens', label: { en: 'Sensitivity', es: 'Sensibilidad' },
+      accent: 1, digits: 3,
+      compute: function (p) { return table(p.t).sens; } },
+    { id: 'spec', label: { en: 'Specificity', es: 'Especificidad' },
+      accent: 2, digits: 3,
+      compute: function (p) { return table(p.t).spec; } },
+    { id: 'acc', label: { en: 'Accuracy', es: 'Precision' }, digits: 3,
+      compute: function (p) { return table(p.t).acc; } },
+    { id: 'caught', label: { en: 'Caught / missed', es: 'Capturados / perdidos' },
+      compute: function (p) { var r = table(p.t); return r.tp + ' / ' + r.fn; } },
+    { id: 'fp', label: { en: 'False alarms', es: 'Falsas alarmas' },
+      compute: function (p) { return String(table(p.t).fp); } }
+  ],
+  caption: {
+    en: 'The blue path is the ROC curve of the five-predictor model on 752 women, area ' +
+        AUC.toFixed(3) + ', and the ' +
+        'amber square is where your threshold puts you on it. The dashed diagonal is what a ' +
+        'coin flip would trace. The counts under the plot are the classification table, ' +
+        'recomputed from the 752 fitted probabilities every time you move the slider.\n\n' +
+        '**Try this.** Start at 0.50, where accuracy peaks near 0.773 but the model misses ' +
+        '114 of the 264 women who tested positive. Now slide down to 0.30. Sensitivity jumps ' +
+        'to 0.784, only 57 are missed, and accuracy falls. Nothing about the model changed, ' +
+        'only the cutoff, which is why one accuracy number never settles the question.',
+    es: 'La trayectoria azul es la curva ROC del modelo de cinco predictores sobre 752 ' +
+        'mujeres, con area ' + AUC.toFixed(3) + ', y el cuadro ambar marca donde te coloca ' +
+        'tu umbral. La diagonal punteada es ' +
+        'lo que trazaria una moneda al aire. Los conteos debajo del grafico son la tabla de ' +
+        'clasificacion, recalculada a partir de las 752 probabilidades ajustadas cada vez ' +
+        'que mueves el deslizador.\n\n' +
+        '**Prueba esto.** Empieza en 0.50, donde la precision llega a 0.773 pero el modelo ' +
+        'pasa por alto a 114 de las 264 mujeres con prueba positiva. Ahora baja a 0.30. La ' +
+        'sensibilidad sube a 0.784, solo se pierden 57 casos, y la precision baja. El modelo ' +
+        'no cambio en nada, solo el punto de corte, y por eso un solo numero de precision ' +
+        'nunca resuelve la pregunta.'
+  }
+});
+</script>
+</body>
+</html>

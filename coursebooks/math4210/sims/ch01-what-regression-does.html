@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Description and prediction from one line</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 25 Toluca production runs, data/toluca.csv, lot size and work hours.
+   R: lm(hours ~ lotsize) gives b0 = 62.3659, b1 = 3.5702, SSE = 54825.46,
+   and Yhat at a lot of 100 units = 419.39 hours. */
+var TOLUCA = [
+  { x: 80, y: 399 }, { x: 30, y: 121 }, { x: 50, y: 221 }, { x: 90, y: 376 },
+  { x: 70, y: 361 }, { x: 60, y: 224 }, { x: 120, y: 546 }, { x: 80, y: 352 },
+  { x: 100, y: 353 }, { x: 50, y: 157 }, { x: 40, y: 160 }, { x: 70, y: 252 },
+  { x: 90, y: 389 }, { x: 20, y: 113 }, { x: 110, y: 435 }, { x: 100, y: 420 },
+  { x: 30, y: 212 }, { x: 50, y: 268 }, { x: 90, y: 377 }, { x: 110, y: 421 },
+  { x: 30, y: 273 }, { x: 90, y: 468 }, { x: 40, y: 244 }, { x: 80, y: 342 },
+  { x: 70, y: 323 }
+];
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'One line, two jobs: a slope to report and an hour count to budget',
+    es: 'Una recta, dos tareas: una pendiente que reportar y unas horas que presupuestar'
+  },
+  points: TOLUCA,
+  xRange: [0, 140],
+  yRange: [0, 650],
+  xLabel: { en: 'lot size (units)', es: 'tamano del lote (unidades)' },
+  yLabel: { en: 'work hours', es: 'horas de trabajo' },
+  ariaLabel: {
+    en: 'Draggable scatterplot of work hours against lot size for 25 Toluca production runs, with a fitted line.',
+    es: 'Diagrama de dispersion arrastrable de horas de trabajo contra tamano del lote para 25 corridas de Toluca, con una recta ajustada.'
+  },
+  showLine: true,
+  showResiduals: true,
+  readouts: [
+    { id: 'slope',     label: { en: 'Slope b1 (hours per unit)', es: 'Pendiente b1 (horas por unidad)' },
+      accent: 1, digits: 3 },
+    { id: 'intercept', label: { en: 'Intercept b0', es: 'Intercepto b0' }, digits: 2 },
+    { id: 'yhat100',   label: { en: 'Yhat at lot size 100', es: 'Yhat en lote de 100' },
+      accent: 2, digits: 1,
+      compute: function (f) { return f.predict(100); } },
+    { id: 'yhat200',   label: { en: 'Yhat at lot size 200', es: 'Yhat en lote de 200' },
+      accent: 2, digits: 1,
+      compute: function (f) { return f.predict(200); } },
+    { id: 'sse',       label: { en: 'SSE', es: 'SCE' }, digits: 0 }
+  ],
+  caption: {
+    en: 'Each dot is one production run. The blue line is the least-squares fit, and the ' +
+        'amber sticks are what it misses. **b1** is the description, hours per extra unit. ' +
+        '**Yhat at lot size 100** is the prediction the engineer budgets with, and lot ' +
+        'size 200 is a prediction past every run on record.\n\n' +
+        '**What to notice.** Drag the run at lot size 120, the rightmost point, straight ' +
+        'up. Both readouts move, but Yhat at 200 moves far more than Yhat at 100, and the ' +
+        'line out there is answering a question the data was never asked. **Try this.** ' +
+        'Now drag a point near the middle the same distance and watch how little changes. ' +
+        'A prediction inside the data is steady; one past the edge rests on a single run.',
+    es: 'Cada punto es una corrida de produccion. La recta azul es el ajuste de minimos ' +
+        'cuadrados y los trazos ambar son lo que no explica. **b1** es la descripcion, ' +
+        'horas por unidad adicional. **Yhat en lote de 100** es la prediccion con la que ' +
+        'la ingeniera presupuesta, y el lote de 200 es una prediccion mas alla de toda ' +
+        'corrida registrada.\n\n' +
+        '**Que observar.** Arrastra hacia arriba la corrida del lote de 120, el punto mas ' +
+        'a la derecha. Ambos valores cambian, pero Yhat en 200 se mueve mucho mas que ' +
+        'Yhat en 100, y alla la recta responde algo que los datos nunca preguntaron. ' +
+        '**Prueba esto.** Ahora arrastra un punto central la misma distancia y observa lo ' +
+        'poco que cambia. Una prediccion dentro de los datos es estable; una mas alla del ' +
+        'borde depende de una sola corrida.'
+  }
+});
+</script>
+</body>
+</html>

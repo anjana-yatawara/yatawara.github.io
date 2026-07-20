@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The valley the data leave for b1</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ------------------------------------------------------------------
+   Chapter 12.1, the variance inflation factor.
+
+   A fixed 60-case design. Z1, Z2 and EPS are drawn once (R, set.seed
+   4210, rounded to three decimals) and hardcoded, so every number the
+   widget prints is reproducible in R:
+
+     X1 = Z1
+     X2 = rho * Z1 + sqrt(1 - rho^2) * Z2
+     Y  = 3 + X1 + X2 + EPS,     EPS ~ N(0, 2^2)
+
+   Only the correlation between the two predictors changes. The plot is
+   the PROFILE of SSE in b1: for each candidate value c of b1, the
+   smallest SSE reachable with b0 and b2 free. For a least-squares fit
+   that profile is exactly
+
+     SSE(c) = SSE_min + (c - b1)^2 * S11 * (1 - r12^2),
+
+   so the curvature of the valley is S11 * (1 - r12^2), the reference
+   curvature (no collinearity) is S11, and their ratio is the VIF.
+   ------------------------------------------------------------------ */
+
+var Z1 = [
+  0.35, -0.096, 0.559, -0.642, 0.584, -0.493, 0.519, -0.816, 0.38, 0.198,
+  0.219, -0.195, -0.666, 0.871, 0.267, -0.858, 1.927, 0.322, 0.413, 0.369,
+  0.719, 0.236, 0.458, -0.531, 0.27, -0.916, -1.033, -2.411, 0.495, 0.52,
+  2.097, 0.738, 1.09, 0.844, -0.058, 0.528, -1.115, 0.89, -0.074, 0.406,
+  -0.308, 0.107, -0.169, 0.216, 0.664, 1.787, 0.547, 0.273, 0.111, -0.46,
+  -0.297, 0.726, -0.637, -0.209, -1.041, -0.169, 1.841, -0.832, -0.489, -0.548
+];
+var Z2 = [
+  -0.365, 0.22, -0.111, 0.262, -0.945, -0.273, 0.829, -1.063, -0.219, 0.755,
+  0.518, -0.268, 1.567, -0.138, 0.371, 0.986, -0.496, -1.123, -0.933, 0.228,
+  -0.402, 0.608, -0.335, -0.869, -0.37, -1.97, -0.217, 0.751, -0.83, 0.175,
+  -1.407, -0.328, 0.047, 0.036, -1.09, -0.98, -1.4, -1.287, -0.128, 1.359,
+  -0.048, -0.653, 0.802, -0.129, 1.223, -0.365, 0.051, -0.605, -1.994, 1.12,
+  -0.992, 1.43, -0.205, -0.066, 1.096, -1.097, -0.625, -0.296, 0.485, 1.088
+];
+var EPS = [
+  1.249, 2.875, 4.064, 1.135, 1.823, 2.183, 0.954, -1.091, 0.702, 1.645,
+  1.499, 1.933, 2.52, 1.279, 0.625, -0.052, 3.049, 1.681, 2.906, -1.343,
+  -1.071, -1.115, 0.277, 2.122, -1.943, -1.731, 0.733, -0.225, 1.118, 1.682,
+  0.45, -0.844, -0.59, 4.138, 0.35, 0.591, -0.983, -0.067, 1.13, 1.208,
+  -0.38, -1.074, -3.175, -1.072, -2.081, -0.584, 2.089, -0.143, 0.133, 0.164,
+  -0.429, -0.535, -1.58, -3.096, 0.769, -1.153, 1.486, -0.547, 1.148, -2.105
+];
+
+var N = Z1.length;
+var Y_TOP = 60;                       /* top of the plot, in extra-SSE units */
+var TCRIT = Sim.Stats.qt(0.975, N - 3);
+
+var cache = {};
+
+/* Two-predictor least squares, in closed form from the corrected sums of
+   squares and cross products. Everything the readouts show comes from here. */
+function design(rho) {
+  var key = rho.toFixed(4);
+  if (cache[key]) { return cache[key]; }
+
+  var s = Math.sqrt(1 - rho * rho);
+  var x1 = [], x2 = [], y = [], i;
+  for (i = 0; i < N; i++) {
+    x1.push(Z1[i]);
+    x2.push(rho * Z1[i] + s * Z2[i]);
+    y.push(3 + Z1[i] + x2[i] + EPS[i]);
+  }
+
+  var m1 = Sim.Stats.mean(x1), m2 = Sim.Stats.mean(x2), my = Sim.Stats.mean(y);
+  var S11 = 0, S22 = 0, S12 = 0, S1y = 0, S2y = 0, Syy = 0;
+  for (i = 0; i < N; i++) {
+    var d1 = x1[i] - m1, d2 = x2[i] - m2, dy = y[i] - my;
+    S11 += d1 * d1; S22 += d2 * d2; S12 += d1 * d2;
+    S1y += d1 * dy; S2y += d2 * dy; Syy += dy * dy;
+  }
+
+  var det = S11 * S22 - S12 * S12;
+  var b1 = (S22 * S1y - S12 * S2y) / det;
+  var b2 = (S11 * S2y - S12 * S1y) / det;
+  var sse = Syy - b1 * S1y - b2 * S2y;
+  var mse = sse / (N - 3);
+  var r12 = S12 / Math.sqrt(S11 * S22);
+  var curv = det / S22;                    /* = S11 * (1 - r12^2) */
+
+  var out = {
+    b1: b1, b2: b2, b0: my - b1 * m1 - b2 * m2,
+    sse: sse, mse: mse, r12: r12,
+    vif: 1 / (1 - r12 * r12),
+    curv: curv, S11: S11,
+    se1: Math.sqrt(mse / curv)
+  };
+  cache[key] = out;
+  return out;
+}
+
+Sim.mount({
+  type: 'sliders',
+  seed: 4210,
+  title: {
+    en: 'Raise the correlation and watch the valley for b1 flatten out',
+    es: 'Sube la correlación y observa cómo se aplana el valle de b1'
+  },
+  xRange: [-4, 6],
+  yRange: [0, Y_TOP],
+  xLabel: { en: 'candidate value for b1', es: 'valor candidato para b1' },
+  yLabel: { en: 'extra SSE', es: 'SCE adicional' },
+  ariaLabel: {
+    en: 'The extra error sum of squares caused by forcing b1 away from its least-squares value, as a valley whose width grows with the correlation between the two predictors.',
+    es: 'La suma de cuadrados del error adicional causada por forzar b1 lejos de su valor de mínimos cuadrados, como un valle cuyo ancho crece con la correlación entre los dos predictores.'
+  },
+  params: [
+    { id: 'rho',
+      label: { en: 'Correlation between X1 and X2',
+               es: 'Correlación entre X1 y X2' },
+      min: 0, max: 0.99, step: 0.01, value: 0.5, digits: 2 }
+  ],
+  curves: [
+    /* The real profile: what the data actually charge for moving b1. */
+    { accent: 1, width: 3,
+      fn: function (p, c) {
+        var d = design(p.rho);
+        return (c - d.b1) * (c - d.b1) * d.curv;
+      } },
+    /* The same charge if X1 and X2 carried separate information. */
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function (p, c) {
+        var d = design(p.rho);
+        return (c - d.b1) * (c - d.b1) * d.S11;
+      } }
+  ],
+  bands: [
+    /* The 95 percent confidence interval for b1, as a shaded slab. */
+    { accent: 1, alpha: 0.16,
+      lo: function () { return 0; },
+      hi: function (p, c) {
+        var d = design(p.rho);
+        return Math.abs(c - d.b1) <= TCRIT * d.se1 ? Y_TOP : 0;
+      } }
+  ],
+  readouts: [
+    { id: 'r12', label: { en: 'r(X1, X2)', es: 'r(X1, X2)' }, digits: 3,
+      compute: function (p) { return design(p.rho).r12; } },
+    { id: 'vif', label: { en: 'VIF', es: 'VIF' }, accent: 2, digits: 2,
+      compute: function (p) { return design(p.rho).vif; } },
+    { id: 'se1', label: { en: 'SE(b1)', es: 'EE(b1)' }, accent: 1, digits: 3,
+      compute: function (p) { return design(p.rho).se1; } },
+    { id: 'b1', label: { en: 'b1', es: 'b1' }, digits: 3,
+      compute: function (p) { return design(p.rho).b1; } },
+    { id: 'sse', label: { en: 'SSE of the fit', es: 'SCE del ajuste' }, digits: 1,
+      compute: function (p) { return design(p.rho).sse; } }
+  ],
+  caption: {
+    en: 'The horizontal axis holds candidate values for b1. The height is the **extra SSE** ' +
+        'the data charge you for pinning b1 there, with b0 and b2 refit to compensate. The ' +
+        'dashed curve is the same charge if X1 and X2 carried separate information, and the ' +
+        'shaded strip is the 95 percent confidence interval for b1. Both predictors really ' +
+        'have coefficient 1.\n\n' +
+        '**Try this.** Push the correlation to 0.99. The valley goes nearly flat, so b1 = 0 ' +
+        'and b1 = 3 now fit almost as well as the estimate does, the interval swallows the ' +
+        'plot, and VIF and SE(b1) climb together. Notice what does not move: the SSE of the ' +
+        'fit itself. Collinearity costs you the coefficient, not the fit.',
+    es: 'El eje horizontal recorre valores candidatos para b1. La altura es la **SCE ' +
+        'adicional** que los datos cobran por fijar b1 ahí, con b0 y b2 reajustados para ' +
+        'compensar. La curva discontinua es ese mismo cobro si X1 y X2 llevaran información ' +
+        'separada, y la franja sombreada es el intervalo de confianza del 95 por ciento para ' +
+        'b1. Ambos predictores tienen de verdad coeficiente 1.\n\n' +
+        '**Prueba esto.** Lleva la correlación a 0.99. El valle queda casi plano, así que ' +
+        'b1 = 0 y b1 = 3 ajustan ahora casi tan bien como la estimación, el intervalo se traga ' +
+        'el gráfico, y el VIF y el EE(b1) suben juntos. Fíjate en lo que no se mueve: la SCE ' +
+        'del ajuste. La colinealidad te cuesta el coeficiente, no el ajuste.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pearson and Spearman under one moving point</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Twelve cases on a tidy rising trend, plus a thirteenth with an ordinary Y
+   and an extreme X. This is the shape of the Libya point in Section 4.5. */
+var PTS = [
+  { x: 1,  y: 3.6 }, { x: 2,  y: 4.4 }, { x: 3,  y: 5.0 }, { x: 4,  y: 5.6 },
+  { x: 5,  y: 6.1 }, { x: 6,  y: 6.6 }, { x: 7,  y: 8.2 }, { x: 8,  y: 8.7 },
+  { x: 9,  y: 9.4 }, { x: 10, y: 10.0 }, { x: 11, y: 10.6 }, { x: 12, y: 11.3 },
+  { x: 14, y: 7.4 }
+];
+
+/* Midranks: ties share the average of the positions they occupy, which is
+   what cor(method = "spearman") in R and scipy's spearmanr both do. */
+function ranks(v) {
+  var idx = [], i, j, k;
+  for (i = 0; i < v.length; i++) { idx.push(i); }
+  idx.sort(function (a, b) { return v[a] - v[b]; });
+  var out = new Array(v.length);
+  i = 0;
+  while (i < idx.length) {
+    j = i;
+    while (j + 1 < idx.length && v[idx[j + 1]] === v[idx[i]]) { j++; }
+    var avg = (i + j) / 2 + 1;
+    for (k = i; k <= j; k++) { out[idx[k]] = avg; }
+    i = j + 1;
+  }
+  return out;
+}
+
+function spearman(pts) {
+  return Sim.Stats.corr(
+    ranks(pts.map(function (p) { return p.x; })),
+    ranks(pts.map(function (p) { return p.y; }))
+  );
+}
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Slide the far point sideways: r moves, the rank correlation does not',
+    es: 'Desliza el punto lejano de lado: r se mueve, la correlacion de rangos no'
+  },
+  points: PTS,
+  xRange: [0, 30],
+  yRange: [0, 14],
+  xLabel: { en: 'X', es: 'X' },
+  yLabel: { en: 'Y', es: 'Y' },
+  showLine: true,
+  showResiduals: false,
+  ariaLabel: {
+    en: 'Twelve points on a rising trend at X from 1 to 12, plus one point at X equal to 14 sitting below the trend, with the fitted line drawn through all thirteen.',
+    es: 'Doce puntos en una tendencia creciente con X de 1 a 12, mas un punto en X igual a 14 por debajo de la tendencia, con la recta ajustada trazada sobre los trece.'
+  },
+  readouts: [
+    { id: 'r', accent: 1, digits: 3,
+      label: { en: 'Pearson r', es: 'r de Pearson' },
+      compute: function (f) { return f.r; } },
+    { id: 'rs', accent: 2, digits: 3,
+      label: { en: 'Spearman rS', es: 'rS de Spearman' },
+      compute: function (f, pts) { return spearman(pts); } },
+    { id: 'b1', digits: 3,
+      label: { en: 'Slope b1', es: 'Pendiente b1' },
+      compute: function (f) { return f.slope; } },
+    { id: 'n', digits: 0,
+      label: { en: 'n', es: 'n' },
+      compute: function (f, pts) { return pts.length; } }
+  ],
+  caption: {
+    en: 'Pearson counts distances. Spearman throws the distances away and counts ' +
+        'only the order, so it sees the far point as nothing more than "the largest ' +
+        'X, with the seventh smallest Y".\n\n' +
+        '**Try this.** Grab the lone point on the right and drag it straight ' +
+        'sideways, keeping its height inside the gap it sits in. Pearson **r** falls ' +
+        'from 0.850 toward 0.460 as the point travels out to X of 30, and the slope ' +
+        '**b1** falls with it, while Spearman **rS** stays pinned at 0.885: no pair ' +
+        'ever changed places. Now drag the same point up and down instead, and watch ' +
+        'the moment rS finally jumps, which is the moment the ordering breaks.',
+    es: 'Pearson cuenta distancias. Spearman descarta las distancias y cuenta solo el ' +
+        'orden, asi que ve el punto lejano apenas como "la X mas grande, con la ' +
+        'septima Y mas pequena".\n\n' +
+        '**Prueba esto.** Toma el punto solitario de la derecha y arrastralo de lado, ' +
+        'manteniendo su altura dentro del hueco donde esta. La **r** de Pearson baja ' +
+        'de 0.850 hacia 0.460 cuando el punto llega a X igual a 30, y la pendiente ' +
+        '**b1** baja con ella, mientras que la **rS** de Spearman se queda fija en ' +
+        '0.885: ningun par cambio de lugar. Ahora arrastra ese mismo punto hacia ' +
+        'arriba y hacia abajo, y observa el instante en que rS por fin salta, que es ' +
+        'el instante en que se rompe el orden.'
+  }
+});
+</script>
+</body>
+</html>

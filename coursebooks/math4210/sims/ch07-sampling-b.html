@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The sampling distribution of b1</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+  .sim-back {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--sim-accent);
+  }
+  .sim-back:focus-visible { outline: 3px solid var(--sim-accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* All 21 Dwaine Studios cities (data/dwaine.csv): target population and
+     disposable income. The design matrix X carries a leading ones column, so
+     n = 21 and p = 3. */
+  var TARGTPOP = [68.5, 45.2, 91.3, 47.8, 46.9, 66.1, 49.5, 52.0, 48.9, 38.4, 87.9,
+                  72.8, 88.4, 42.9, 52.5, 85.7, 41.3, 51.7, 89.6, 82.7, 52.3];
+  var DISPOINC = [16.7, 16.8, 18.2, 16.3, 17.3, 18.2, 15.9, 17.2, 16.6, 16.0, 18.3,
+                  17.1, 17.4, 15.8, 17.8, 18.4, 16.5, 16.3, 18.1, 19.1, 16.0];
+
+  /* Treated as the truth for this simulation: the fitted Dwaine coefficients
+     and the fitted error standard deviation, MSE = 121.1626 (Example 7.5). */
+  var BETA = [-68.85707315, 1.45455958, 9.36550038];
+  var SIGMA = Math.sqrt(121.1626);
+
+  var n = TARGTPOP.length, p = 3, i, j, k;
+
+  /* X, then X'X. */
+  var X = [];
+  for (i = 0; i < n; i++) { X.push([1, TARGTPOP[i], DISPOINC[i]]); }
+
+  var XtX = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < p; j++) {
+      for (k = 0; k < p; k++) { XtX[j][k] += X[i][j] * X[i][k]; }
+    }
+  }
+
+  /* Inverse of a 3 by 3 matrix by the adjugate over the determinant. */
+  function invert3(m) {
+    var c = [
+      [m[1][1] * m[2][2] - m[1][2] * m[2][1],
+       m[0][2] * m[2][1] - m[0][1] * m[2][2],
+       m[0][1] * m[1][2] - m[0][2] * m[1][1]],
+      [m[1][2] * m[2][0] - m[1][0] * m[2][2],
+       m[0][0] * m[2][2] - m[0][2] * m[2][0],
+       m[0][2] * m[1][0] - m[0][0] * m[1][2]],
+      [m[1][0] * m[2][1] - m[1][1] * m[2][0],
+       m[0][1] * m[2][0] - m[0][0] * m[2][1],
+       m[0][0] * m[1][1] - m[0][1] * m[1][0]]
+    ];
+    var det = m[0][0] * c[0][0] + m[0][1] * c[1][0] + m[0][2] * c[2][0];
+    var out = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    for (var a = 0; a < 3; a++) {
+      for (var b = 0; b < 3; b++) { out[a][b] = c[a][b] / det; }
+    }
+    return out;
+  }
+
+  var XtXinv = invert3(XtX);
+
+  /* A = (X'X)^(-1)X' is p by n and fixed, so one refit is a matrix-vector
+     product: b = A Y. */
+  var A = [];
+  for (j = 0; j < p; j++) {
+    A.push([]);
+    for (i = 0; i < n; i++) {
+      A[j].push(XtXinv[j][0] * X[i][0] + XtXinv[j][1] * X[i][1] + XtXinv[j][2] * X[i][2]);
+    }
+  }
+
+  /* The true mean vector X beta, fixed across samples. */
+  var MU = [];
+  for (i = 0; i < n; i++) {
+    MU.push(BETA[0] * X[i][0] + BETA[1] * X[i][1] + BETA[2] * X[i][2]);
+  }
+
+  /* Theory: Cov{b} = sigma^2 (X'X)^(-1), so the standard error of b1 is
+     sigma times the square root of entry (1,1) of the inverse. */
+  var SE_THEORY = SIGMA * Math.sqrt(XtXinv[1][1]);
+
+  Sim.mount({
+    type: 'sampling',
+    seed: 4210,
+    title: {
+      en: 'Refit Dwaine on fresh errors and watch b1 scatter',
+      es: 'Reajusta Dwaine con errores nuevos y observa cómo se dispersa b1'
+    },
+    manyCount: 1000,
+    draw: function (rng) {
+      var y = [], b1 = 0, idx;
+      for (idx = 0; idx < n; idx++) { y.push(MU[idx] + rng.normal(0, SIGMA)); }
+      for (idx = 0; idx < n; idx++) { b1 += A[1][idx] * y[idx]; }
+      return b1;
+    },
+    xRange: [0.6, 2.3],
+    xLabel: { en: 'b1 from one fresh sample of 21 cities',
+              es: 'b1 de una nueva muestra de 21 ciudades' },
+    ariaLabel: {
+      en: 'Histogram of the population slope b1 accumulated over repeated refits of the Dwaine model, with a marker at the true beta1.',
+      es: 'Histograma de la pendiente de población b1 acumulada en reajustes repetidos del modelo Dwaine, con una marca en el verdadero beta1.'
+    },
+    showNormal: true,
+    trueValue: BETA[1],
+    trueValueLabel: { en: 'beta1 = 1.4546', es: 'beta1 = 1.4546' },
+    readouts: [
+      { id: 'n', label: { en: 'Refits', es: 'Reajustes' } },
+      { id: 'mean', label: { en: 'Mean of b1', es: 'Media de b1' }, accent: 1, digits: 4 },
+      { id: 'sd', label: { en: 'SD of b1', es: 'DE de b1' }, accent: 2, digits: 4 },
+      { id: 'theory', label: { en: 'SE from formula', es: 'EE de la fórmula' }, digits: 4,
+        compute: function () { return SE_THEORY; } }
+    ],
+    caption: {
+      en: '**What to notice.** Every bar is one refit of the same 21 cities with fresh ' +
+          'errors, so the histogram is the sampling distribution of b1 itself, and the ' +
+          'last tile is sigma times the square root of entry (1,1) of the inverse of ' +
+          'X-prime-X.\n\n' +
+          '**Try this.** Press Draw 1000, then compare the SD tile with the SE tile: ' +
+          'the matrix formula predicted the width of this pile before a single sample ' +
+          'was drawn, and the mean lands on beta1 because b is unbiased.',
+      es: '**Qué observar.** Cada barra es un reajuste de las mismas 21 ciudades con ' +
+          'errores nuevos, así que el histograma es la distribución muestral de b1, y la ' +
+          'última casilla es sigma por la raíz cuadrada de la entrada (1,1) de la inversa ' +
+          'de X-prima-X.\n\n' +
+          '**Prueba esto.** Presiona Tomar 1000 y compara la casilla DE con la casilla EE: ' +
+          'la fórmula matricial predijo el ancho de este montón antes de tomar una sola ' +
+          'muestra, y la media cae sobre beta1 porque b es insesgado.'
+    }
+  });
+
+  /* Link back to the chapter section; relative so it survives any base path. */
+  function addBackLink() {
+    var lang = 'en';
+    try {
+      var q = new URLSearchParams(window.location.search).get('lang');
+      if (q === 'es') { lang = 'es'; }
+    } catch (e) { /* fall back to English */ }
+    var root = document.querySelector('.sim-root');
+    if (!root) { return; }
+    var a = document.createElement('a');
+    a.className = 'sim-back';
+    a.target = '_parent';
+    a.href = lang === 'es' ? '../ch07/es/#ch07-sampling-es' : '../ch07/#ch07-sampling';
+    a.textContent = lang === 'es'
+      ? 'Volver a 7.4 La distribución muestral de b'
+      : 'Back to 7.4 The sampling distribution of b';
+    root.appendChild(a);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addBackLink);
+  } else {
+    addBackLink();
+  }
+}());
+</script>
+</body>
+</html>

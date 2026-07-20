@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What 95 percent confidence actually buys</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Each "sample" is a fresh set of 25 work-hour values generated at the real
+   Toluca lot sizes from the fitted model, then refitted. We record the
+   standardized slope t = (b1 - beta1) / s{b1}. The 95% interval
+   b1 +/- t(0.975, 23) * s{b1} covers beta1 exactly when |t| <= 2.0687, so the
+   amber tail bars are precisely the samples whose interval missed. */
+var TRUE_B0 = 62.365859, TRUE_B1 = 3.570202, SIGMA = 48.8233;
+var XS = [80, 30, 50, 90, 70, 60, 120, 80, 100, 50, 40, 70, 90, 20, 110,
+          100, 30, 50, 90, 110, 30, 90, 40, 80, 70];
+var TCRIT = Sim.Stats.qt(0.975, XS.length - 2);
+
+function missed(v) { return Math.abs(v) > TCRIT; }
+
+Sim.mount({
+  type: 'sampling',
+  seed: 4210,
+  title: {
+    en: 'Out of 100 intervals, how many actually caught beta1?',
+    es: '¿De cada 100 intervalos, cuántos atraparon en realidad a beta1?'
+  },
+  draw: function (rng) {
+    var ys = [], i;
+    for (i = 0; i < XS.length; i++) {
+      ys.push(TRUE_B0 + TRUE_B1 * XS[i] + rng.normal(0, SIGMA));
+    }
+    var fit = Sim.Stats.lsFit(XS, ys);
+    return (fit.slope - TRUE_B1) / fit.seSlope;
+  },
+  manyCount: 100,
+  xRange: [-4.5, 4.5],
+  bins: 36,
+  showNormal: false,
+  /* No centre marker: amber is reserved here for the intervals that missed. */
+  tail: missed,
+  xLabel: {
+    en: 'standardized slope (b1 - beta1) / s{b1}',
+    es: 'pendiente estandarizada (b1 - beta1) / s{b1}'
+  },
+  ariaLabel: {
+    en: 'Histogram of standardized slopes from repeated samples, with the tails beyond plus or minus 2.07 shaded to mark the intervals that missed the true slope.',
+    es: 'Histograma de pendientes estandarizadas de muestras repetidas, con las colas más allá de más o menos 2.07 sombreadas para marcar los intervalos que fallaron.'
+  },
+  drawOneLabel: { en: 'One sample', es: 'Una muestra' },
+  drawManyLabel: { en: 'Draw 100 more', es: 'Tomar 100 más' },
+  readouts: [
+    { id: 'n', label: { en: 'Intervals built', es: 'Intervalos construidos' } },
+    { id: 'cover', label: { en: 'Caught beta1 (%)', es: 'Atraparon a beta1 (%)' },
+      accent: 1, digits: 1,
+      compute: function (draws) {
+        if (!draws.length) { return NaN; }
+        var k = 0;
+        for (var i = 0; i < draws.length; i++) { if (!missed(draws[i])) { k++; } }
+        return 100 * k / draws.length;
+      } },
+    { id: 'miss', label: { en: 'Missed', es: 'Fallaron' }, accent: 2, digits: 0,
+      compute: function (draws) {
+        var k = 0;
+        for (var i = 0; i < draws.length; i++) { if (missed(draws[i])) { k++; } }
+        return k;
+      } },
+    { id: 'sd', label: { en: 'SD of the t values', es: 'DE de los valores t' }, digits: 3 }
+  ],
+  caption: {
+    en: 'Every press draws a fresh set of 25 runs from the Toluca model, refits the line, and ' +
+        'builds the 95% interval b1 plus or minus 2.069 s{b1}. A bar lands in the amber tail ' +
+        'exactly when that sample\'s interval failed to cover the true slope beta1 = 3.5702.\n\n' +
+        '**Try this.** Press One sample about fifteen times and watch a miss appear; it is not ' +
+        'a mistake, it is the 5% doing its job. Then press Draw 100 more a few times. The ' +
+        'caught percentage settles near 95 and stays there, which is the whole meaning of 95% ' +
+        'confidence: a property of the procedure over repeated samples, not of the one ' +
+        'interval you happen to have. Notice too that the pile is a t curve with 23 degrees of ' +
+        'freedom, so its SD sits a little above 1 rather than at 1.',
+    es: 'Cada pulsación toma un conjunto nuevo de 25 corridas del modelo Toluca, reajusta la ' +
+        'recta y construye el intervalo del 95% b1 más o menos 2.069 s{b1}. Una barra cae en la ' +
+        'cola ámbar exactamente cuando el intervalo de esa muestra no cubrió la pendiente real ' +
+        'beta1 = 3.5702.\n\n' +
+        '**Prueba esto.** Presiona Una muestra unas quince veces y observa aparecer un fallo; ' +
+        'no es un error, es el 5% haciendo su trabajo. Luego presiona Tomar 100 más varias ' +
+        'veces. El porcentaje de aciertos se estabiliza cerca de 95 y ahí se queda, y ese es ' +
+        'todo el significado de la confianza del 95%: una propiedad del procedimiento en ' +
+        'muestras repetidas, no del intervalo que te tocó. Nota además que el montón es una ' +
+        'curva t con 23 grados de libertad, así que su DE queda un poco por encima de 1 y no ' +
+        'exactamente en 1.'
+  }
+});
+</script>
+</body>
+</html>

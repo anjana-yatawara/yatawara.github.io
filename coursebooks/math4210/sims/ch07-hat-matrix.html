@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The hat matrix is built from X alone</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+  .sim-back {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--sim-accent);
+  }
+  .sim-back:focus-visible { outline: 3px solid var(--sim-accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* The same seven Dwaine Studios cities (data/dwaine.csv) used in 7.2, with
+     sales Y on the young-population predictor X1, so p = 2 and
+     H = X(X'X)^(-1)X' has diagonal h_ii = 1/n + (X_i - Xbar)^2 / Sxx. */
+  var CITIES = [
+    { x: 38.4, y: 137.2 }, { x: 45.2, y: 164.4 }, { x: 52.3, y: 166.5 },
+    { x: 66.1, y: 207.5 }, { x: 72.8, y: 191.1 }, { x: 82.7, y: 224.1 },
+    { x: 91.3, y: 244.2 }
+  ];
+
+  /* Leverages: the diagonal of H. Note that only the x values enter, which is
+     the whole point of this widget. */
+  function leverages(pts) {
+    var n = pts.length, i, xbar = 0, sxx = 0, d, h = [];
+    for (i = 0; i < n; i++) { xbar += pts[i].x; }
+    xbar /= n;
+    for (i = 0; i < n; i++) { d = pts[i].x - xbar; sxx += d * d; }
+    for (i = 0; i < n; i++) {
+      d = pts[i].x - xbar;
+      h.push(sxx > 0 ? 1 / n + d * d / sxx : 1 / n);
+    }
+    return h;
+  }
+
+  function traceH(pts) {
+    var h = leverages(pts), s = 0;
+    for (var i = 0; i < h.length; i++) { s += h[i]; }
+    return s;
+  }
+
+  function extremeH(pts, wantMax) {
+    var h = leverages(pts), best = h[0];
+    for (var i = 1; i < h.length; i++) {
+      if (wantMax ? h[i] > best : h[i] < best) { best = h[i]; }
+    }
+    return best;
+  }
+
+  Sim.mount({
+    type: 'scatter-drag',
+    seed: 4210,
+    title: {
+      en: 'Move a point up: nothing in H moves. Move it sideways: everything does',
+      es: 'Mueve un punto hacia arriba: nada en H cambia. Muévelo de lado: todo cambia'
+    },
+    points: CITIES,
+    xRange: [30, 100],
+    yRange: [110, 275],
+    xLabel: { en: 'X1: young population (thousands)',
+              es: 'X1: población joven (miles)' },
+    yLabel: { en: 'Y: sales (thousand dollars)',
+              es: 'Y: ventas (miles de dólares)' },
+    ariaLabel: {
+      en: 'Scatterplot of sales against young population for seven cities, with the fitted line and dashed residual sticks, and readouts of the hat matrix diagonal.',
+      es: 'Diagrama de dispersión de ventas contra población joven para siete ciudades, con la recta ajustada, trazos discontinuos de residuos y lecturas de la diagonal de la matriz sombrero.'
+    },
+    showLine: true,
+    showResiduals: true,
+    readouts: [
+      { id: 'trace', label: { en: 'trace(H)', es: 'traza(H)' }, accent: 1, digits: 3,
+        compute: function (fit, pts) { return traceH(pts); } },
+      { id: 'hmax', label: { en: 'largest h_ii', es: 'mayor h_ii' }, digits: 3,
+        compute: function (fit, pts) { return extremeH(pts, true); } },
+      { id: 'hmin', label: { en: 'smallest h_ii', es: 'menor h_ii' }, digits: 3,
+        compute: function (fit, pts) { return extremeH(pts, false); } },
+      { id: 'df', label: { en: 'n - p', es: 'n - p' }, digits: 0,
+        compute: function (fit, pts) { return pts.length - 2; } },
+      { id: 'sse', label: { en: 'SSE', es: 'SCE' }, accent: 2, digits: 1,
+        compute: function (fit) { return fit.sse; } }
+    ],
+    caption: {
+      en: '**What to notice.** The hat matrix H turns Y into Yhat, but it is assembled ' +
+          'from the predictors only, and its diagonal entries h_ii are the leverages.\n\n' +
+          '**Try this.** Drag one city straight up and down: SSE swings wildly while ' +
+          'every leverage tile sits frozen. Now drag that same city sideways to the far ' +
+          'right edge and its leverage jumps, yet trace(H) never budges from 2, the ' +
+          'number of parameters p.',
+      es: '**Qué observar.** La matriz sombrero H convierte Y en Yhat, pero se construye ' +
+          'solo con los predictores, y sus entradas diagonales h_ii son los apalancamientos.\n\n' +
+          '**Prueba esto.** Arrastra una ciudad hacia arriba y hacia abajo: SCE cambia ' +
+          'muchísimo mientras cada casilla de apalancamiento queda congelada. Ahora ' +
+          'arrastra esa misma ciudad de lado hasta el borde derecho y su apalancamiento ' +
+          'salta, pero traza(H) nunca se mueve de 2, el número de parámetros p.'
+    }
+  });
+
+  /* Link back to the chapter section; relative so it survives any base path. */
+  function addBackLink() {
+    var lang = 'en';
+    try {
+      var q = new URLSearchParams(window.location.search).get('lang');
+      if (q === 'es') { lang = 'es'; }
+    } catch (e) { /* fall back to English */ }
+    var root = document.querySelector('.sim-root');
+    if (!root) { return; }
+    var a = document.createElement('a');
+    a.className = 'sim-back';
+    a.target = '_parent';
+    a.href = lang === 'es' ? '../ch07/es/#ch07-hat-matrix-es' : '../ch07/#ch07-hat-matrix';
+    a.textContent = lang === 'es'
+      ? 'Volver a 7.3 La matriz sombrero'
+      : 'Back to 7.3 The hat matrix';
+    root.appendChild(a);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addBackLink);
+  } else {
+    addBackLink();
+  }
+}());
+</script>
+</body>
+</html>

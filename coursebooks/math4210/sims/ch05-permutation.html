@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Permutation test for a slope</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+var X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+var Y = [3.1, 4.0, 3.6, 5.2, 5.0, 6.1, 5.8, 7.3, 7.0, 8.1];
+
+Sim.mount({
+  type: 'resample',
+  mode: 'permutation',
+  seed: 99,
+  title: {
+    en: 'If x and y were unrelated, how often would we see this slope?',
+    es: 'Si x e y no estuvieran relacionadas, con que frecuencia veriamos esta pendiente?'
+  },
+  data: { x: X, y: Y },
+  stat: function (x, y) { return Sim.Stats.lsFit(x, y).slope; },
+  statRange: [-0.85, 0.85],
+  bins: 34,
+  xRange: [0, 11],
+  yRange: [2, 9.5],
+  xLabel: { en: 'x', es: 'x' },
+  yLabel: { en: 'y', es: 'y' },
+  statLabel: {
+    en: 'slope from shuffled data',
+    es: 'pendiente de datos barajados'
+  },
+  observedLabel: { en: 'observed', es: 'observado' },
+  showFit: true,
+  readouts: [
+    { id: 'obs',  label: { en: 'Observed slope', es: 'Pendiente obs.' }, accent: 2, digits: 3 },
+    { id: 'n',    label: { en: 'Shuffles',       es: 'Barajadas' } },
+    { id: 'last', label: { en: 'Last slope',     es: 'Ultima pend.' },   digits: 3 },
+    { id: 'p',    label: { en: 'p-value',        es: 'valor p' },        accent: 1, digits: 4 }
+  ],
+  caption: {
+    en: 'Shuffling the y values breaks any real link between x and y while keeping both ' +
+        'sets of numbers exactly as they were. Each shuffle gives one slope the data could ' +
+        'have produced **by luck alone**, and those pile up into the null distribution below.\n\n' +
+        '**Try this.** Shuffle once and watch the cloud rearrange and its line tilt at ' +
+        'random. Do it a few times. Then press Run 1000. The null pile centers on zero, ' +
+        'while the observed slope sits far out in the amber tail. The p-value counts the ' +
+        'fraction of shuffles at least as extreme as what we actually saw. No normal ' +
+        'distribution and no t table were used anywhere in that argument.',
+    es: 'Barajar los valores de y rompe cualquier vinculo real entre x e y, y a la vez ' +
+        'conserva ambos conjuntos de numeros tal como estaban. Cada barajada da una ' +
+        'pendiente que los datos podrian haber producido **solo por azar**, y esas se ' +
+        'acumulan en la distribucion nula de abajo.\n\n' +
+        '**Prueba esto.** Baraja una vez y observa como se reacomoda la nube y su recta ' +
+        'se inclina al azar. Hazlo varias veces. Luego presiona Correr 1000. El monton ' +
+        'nulo se centra en cero, mientras la pendiente observada queda lejos, en la cola ' +
+        'ambar. El valor p cuenta la fraccion de barajadas al menos tan extrema como lo ' +
+        'que realmente vimos. No se uso ninguna distribucion normal ni tabla t en ese ' +
+        'argumento.'
+  }
+});
+</script>
+</body>
+</html>

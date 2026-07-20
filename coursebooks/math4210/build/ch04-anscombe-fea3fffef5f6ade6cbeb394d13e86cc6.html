@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anscombe's quartet, one slider</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Anscombe's four datasets, exactly as they appear in data/anscombe.csv. */
+var SETS = [
+  { x: [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5],
+    y: [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68] },
+  { x: [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5],
+    y: [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74] },
+  { x: [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5],
+    y: [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73] },
+  { x: [8, 8, 8, 8, 8, 8, 8, 19, 8, 8, 8],
+    y: [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89] }
+];
+
+/* The engine reads cfg.points once and calls .map() on it at every redraw, so
+   a small duck-typed stand-in lets the plotted set follow the slider. PARAMS
+   is the live slider state, captured on the first draw from the curve
+   callback; until then the slider is still at its default, so the first frame
+   is already correct. */
+var PARAMS = { set: 1 };
+var CACHE = { key: null, pts: null, fit: null, meanY: 0 };
+
+function current() {
+  var k = Math.min(4, Math.max(1, Math.round(PARAMS.set)));
+  if (CACHE.key !== k) {
+    var s = SETS[k - 1], pts = [];
+    for (var i = 0; i < s.x.length; i++) { pts.push({ x: s.x[i], y: s.y[i] }); }
+    CACHE.key = k;
+    CACHE.pts = pts;
+    CACHE.fit = Sim.Stats.lsFit(s.x, s.y);
+    CACHE.meanY = Sim.Stats.mean(s.y);
+  }
+  return CACHE;
+}
+
+var LIVE = { map: function (fn) { return current().pts.map(fn); } };
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Four pictures, one set of numbers',
+    es: 'Cuatro imagenes, un solo conjunto de numeros'
+  },
+  points: LIVE,
+  xRange: [2, 20],
+  yRange: [2, 14],
+  xLabel: { en: 'X', es: 'X' },
+  yLabel: { en: 'Y', es: 'Y' },
+  ariaLabel: {
+    en: 'One of Anscombe\'s four datasets at a time: a plain scatter, a smooth curve, a straight line with one high outlier, and ten points stacked at a single X with one far to the right. The fitted line is identical in all four.',
+    es: 'Uno de los cuatro conjuntos de Anscombe a la vez: una nube corriente, una curva suave, una recta con un valor atipico alto, y diez puntos apilados en una sola X con uno muy a la derecha. La recta ajustada es identica en los cuatro.'
+  },
+  params: [
+    { id: 'set', min: 1, max: 4, step: 1, value: 1, digits: 0,
+      label: { en: 'Anscombe set', es: 'Conjunto de Anscombe' } }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { PARAMS = p; return current().fit.predict(x); } }
+  ],
+  readouts: [
+    { id: 'r', accent: 1, digits: 3,
+      label: { en: 'r', es: 'r' },
+      compute: function (p) { PARAMS = p; return current().fit.r; } },
+    { id: 'b0', digits: 3,
+      label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      compute: function (p) { PARAMS = p; return current().fit.intercept; } },
+    { id: 'b1', digits: 3,
+      label: { en: 'Slope b1', es: 'Pendiente b1' },
+      compute: function (p) { PARAMS = p; return current().fit.slope; } },
+    { id: 'my', accent: 2, digits: 3,
+      label: { en: 'Mean of Y', es: 'Media de Y' },
+      compute: function (p) { PARAMS = p; return current().meanY; } }
+  ],
+  caption: {
+    en: 'The four readouts are recomputed from scratch every time the slider moves. ' +
+        'Nothing is hard-coded; the line you see is the least-squares fit to the ' +
+        'eleven points currently on screen.\n\n' +
+        '**Try this.** Step the slider 1, 2, 3, 4 while watching the readouts and not ' +
+        'the plot. **r** never leaves 0.816 and the fit stays Yhat = 3.00 + 0.50 X, ' +
+        'yet the picture goes from an honest scatter, to a clean curve, to a straight ' +
+        'line wrecked by one high point, to ten points stacked at a single X where ' +
+        'one lone case invents the whole correlation. Then look at set 4 and ask ' +
+        'what deleting that far-right point would leave you.',
+    es: 'Los cuatro valores se recalculan desde cero cada vez que se mueve el ' +
+        'deslizador. Nada esta fijado de antemano; la recta que ves es el ajuste de ' +
+        'minimos cuadrados a los once puntos que estan en pantalla.\n\n' +
+        '**Prueba esto.** Recorre el deslizador 1, 2, 3, 4 mirando los valores y no ' +
+        'la grafica. La **r** nunca se aparta de 0.816 y el ajuste sigue siendo ' +
+        'Yhat = 3.00 + 0.50 X, pero la imagen pasa de una nube honesta, a una curva ' +
+        'limpia, a una recta arruinada por un punto alto, a diez puntos apilados en ' +
+        'una sola X donde un unico caso inventa toda la correlacion. Luego mira el ' +
+        'conjunto 4 y preguntate que quedaria si borraras ese punto de la derecha.'
+  }
+});
+</script>
+</body>
+</html>

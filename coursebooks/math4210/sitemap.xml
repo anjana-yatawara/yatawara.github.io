@@ -1,130 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="http://localhost:3001/sitemap_style.xsl" ?>
+<?xml-stylesheet type="text/xsl" href="http://localhost:3000/sitemap_style.xsl" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://localhost:3001</loc>
+    <loc>http://localhost:3000</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch01</loc>
+    <loc>http://localhost:3000/ch01</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch02</loc>
+    <loc>http://localhost:3000/ch02</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch03</loc>
+    <loc>http://localhost:3000/ch03</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch04</loc>
+    <loc>http://localhost:3000/ch04</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch05</loc>
+    <loc>http://localhost:3000/ch05</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch06</loc>
+    <loc>http://localhost:3000/ch06</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch07</loc>
+    <loc>http://localhost:3000/ch07</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch08</loc>
+    <loc>http://localhost:3000/ch08</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch09</loc>
+    <loc>http://localhost:3000/ch09</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch10</loc>
+    <loc>http://localhost:3000/ch10</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch11</loc>
+    <loc>http://localhost:3000/ch11</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch12</loc>
+    <loc>http://localhost:3000/ch12</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch13</loc>
+    <loc>http://localhost:3000/ch13</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch14</loc>
+    <loc>http://localhost:3000/ch14</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch15</loc>
+    <loc>http://localhost:3000/ch15</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch16</loc>
+    <loc>http://localhost:3000/ch16</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/games</loc>
+    <loc>http://localhost:3000/games</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/formulas</loc>
+    <loc>http://localhost:3000/sims</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/tables</loc>
+    <loc>http://localhost:3000/appendix/formulas</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/r-reference</loc>
+    <loc>http://localhost:3000/appendix/tables</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/python-reference</loc>
+    <loc>http://localhost:3000/appendix/r-reference</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/datasets</loc>
+    <loc>http://localhost:3000/appendix/python-reference</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/which-method</loc>
+    <loc>http://localhost:3000/appendix/datasets</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/glossary</loc>
+    <loc>http://localhost:3000/appendix/which-method</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/appendix/answers</loc>
+    <loc>http://localhost:3000/appendix/glossary</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch01/es</loc>
+    <loc>http://localhost:3000/appendix/answers</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch02/es</loc>
+    <loc>http://localhost:3000/ch01/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch03/es</loc>
+    <loc>http://localhost:3000/ch02/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch04/es</loc>
+    <loc>http://localhost:3000/ch03/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch05/es</loc>
+    <loc>http://localhost:3000/ch04/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch06/es</loc>
+    <loc>http://localhost:3000/ch05/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch07/es</loc>
+    <loc>http://localhost:3000/ch06/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch08/es</loc>
+    <loc>http://localhost:3000/ch07/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch09/es</loc>
+    <loc>http://localhost:3000/ch08/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch10/es</loc>
+    <loc>http://localhost:3000/ch09/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch11/es</loc>
+    <loc>http://localhost:3000/ch10/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch12/es</loc>
+    <loc>http://localhost:3000/ch11/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch13/es</loc>
+    <loc>http://localhost:3000/ch12/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch14/es</loc>
+    <loc>http://localhost:3000/ch13/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch15/es</loc>
+    <loc>http://localhost:3000/ch14/es</loc>
   </url>
   <url>
-    <loc>http://localhost:3001/ch16/es</loc>
+    <loc>http://localhost:3000/ch15/es</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/ch16/es</loc>
   </url>
 </urlset>

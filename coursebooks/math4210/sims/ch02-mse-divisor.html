@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why the divisor is n minus 2</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Samples come from the model the Toluca fit estimated:
+   Y = 62.366 + 3.5702 X + e, e ~ N(0, 48.82^2), at the 25 real lot sizes. */
+var BETA0 = 62.366, BETA1 = 3.5702, SIGMA = 48.82;
+var SIGMA2 = SIGMA * SIGMA;
+var XS = [80, 30, 50, 90, 70, 60, 120, 80, 100, 50, 40, 70, 90, 20, 110,
+          100, 30, 50, 90, 110, 30, 90, 40, 80, 70];
+var N = XS.length;
+
+Sim.mount({
+  type: 'sampling',
+  seed: 4210,
+  title: {
+    en: 'Two divisors, and only one of them is right on average',
+    es: 'Dos divisores, y solo uno es correcto en promedio'
+  },
+  draw: function (rng) {
+    var ys = [];
+    for (var i = 0; i < N; i++) {
+      ys.push(BETA0 + BETA1 * XS[i] + rng.normal(0, SIGMA));
+    }
+    return Sim.Stats.lsFit(XS, ys).mse;
+  },
+  xRange: [0, 6000],
+  bins: 30,
+  showNormal: false,
+  trueValue: SIGMA2,
+  trueValueLabel: { en: 'sigma-squared', es: 'sigma-cuadrado' },
+  xLabel: {
+    en: 'MSE = SSE / (n - 2) from one sample',
+    es: 'MSE = SSE / (n - 2) de una muestra'
+  },
+  ariaLabel: {
+    en: 'A histogram of the mean square error from repeated samples, with a marker at the true error variance.',
+    es: 'Un histograma del cuadrado medio del error de muestras repetidas, con un marcador en la varianza real del error.'
+  },
+  drawOneLabel: { en: 'Draw a sample', es: 'Tomar una muestra' },
+  drawManyLabel: { en: 'Draw 1000', es: 'Tomar 1000' },
+  readouts: [
+    { id: 'n', label: { en: 'Samples', es: 'Muestras' } },
+    { id: 'm23', label: { en: 'Mean of SSE/(n-2)', es: 'Media de SSE/(n-2)' },
+      accent: 1, digits: 1,
+      compute: function (draws) { return Sim.Stats.mean(draws); } },
+    { id: 'm25', label: { en: 'Mean of SSE/n', es: 'Media de SSE/n' },
+      accent: 2, digits: 1,
+      compute: function (draws) { return Sim.Stats.mean(draws) * (N - 2) / N; } },
+    { id: 'truth', label: { en: 'True sigma-squared', es: 'Sigma-cuadrado real' },
+      digits: 1, compute: function () { return SIGMA2; } }
+  ],
+  caption: {
+    en: 'Every sample is 25 fresh production runs from a model whose error variance really is ' +
+        'sigma-squared = 2383.4. The histogram collects **MSE = SSE/(n-2)** from each sample, ' +
+        'and the amber marker sits at the truth.\n\n' +
+        '**Try this.** Press Draw 1000 and compare the two means. The estimator with divisor ' +
+        'n-2 settles on the true sigma-squared, while the one with divisor n settles about 8 ' +
+        'percent low, and drawing more samples never rescues it. That permanent shortfall is ' +
+        'bias, and it is exactly the two degrees of freedom you spent estimating b0 and b1.',
+    es: 'Cada muestra son 25 corridas de produccion nuevas de un modelo cuya varianza del error ' +
+        'es de verdad sigma-cuadrado = 2383.4. El histograma reune **MSE = SSE/(n-2)** de cada ' +
+        'muestra, y el marcador ambar esta en el valor real.\n\n' +
+        '**Prueba esto.** Presiona Tomar 1000 y compara las dos medias. El estimador con ' +
+        'divisor n-2 se asienta en el sigma-cuadrado real, mientras que el de divisor n se ' +
+        'asienta cerca de 8 por ciento por debajo, y tomar mas muestras nunca lo rescata. Ese ' +
+        'faltante permanente es el sesgo, y es justo los dos grados de libertad que gastaste ' +
+        'al estimar b0 y b1.'
+  }
+});
+</script>
+</body>
+</html>

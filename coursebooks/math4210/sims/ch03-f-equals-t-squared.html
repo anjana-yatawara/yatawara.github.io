@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>F is the slope t statistic, squared</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Eight points you can drag. Every readout is recomputed from the current
+   data by the engine's least-squares fit:
+     t*  = b1 / s{b1}                with s{b1} = sqrt(MSE / Sxx)
+     F*  = MSR / MSE = SSR / MSE     since MSR = SSR / 1 in simple regression
+   The point of the sim is that the last two readouts never disagree. */
+var PTS = [
+  { x: 1, y: 2.1 }, { x: 2, y: 3.4 }, { x: 3, y: 4.4 }, { x: 4, y: 4.9 },
+  { x: 5, y: 6.6 }, { x: 6, y: 6.9 }, { x: 7, y: 8.6 }, { x: 8, y: 9.1 }
+];
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Break the data any way you like. F stays t squared.',
+    es: 'Descompón los datos como quieras. F sigue siendo t al cuadrado.'
+  },
+  points: PTS,
+  xRange: [0, 9],
+  yRange: [0, 12],
+  xLabel: { en: 'X', es: 'X' },
+  yLabel: { en: 'Y', es: 'Y' },
+  showResiduals: true,
+  showMeanLines: true,
+  ariaLabel: {
+    en: 'Eight draggable points with the least-squares line, the mean of Y, and dashed residual sticks.',
+    es: 'Ocho puntos arrastrables con la recta de mínimos cuadrados, la media de Y y segmentos punteados de residuos.'
+  },
+  readouts: [
+    { id: 'slope', label: { en: 'Slope b1', es: 'Pendiente b1' }, accent: 1, digits: 4 },
+    { id: 'se', label: { en: 's{b1}', es: 's{b1}' }, digits: 4,
+      compute: function (f) { return f.seSlope; } },
+    { id: 'tstat', label: { en: 't* = b1 / s{b1}', es: 't* = b1 / s{b1}' },
+      accent: 1, digits: 4,
+      compute: function (f) { return f.tSlope; } },
+    { id: 'fstat', label: { en: 'F* = MSR / MSE', es: 'F* = MCR / MCE' },
+      accent: 2, digits: 4,
+      compute: function (f) { return f.ssr / f.mse; } },
+    { id: 'tsq', label: { en: '(t*) squared', es: '(t*) al cuadrado' },
+      accent: 2, digits: 4,
+      compute: function (f) { return f.tSlope * f.tSlope; } }
+  ],
+  caption: {
+    en: 'The dashed horizontal line is Ybar, so each amber stick is the residual and the gap ' +
+        'between the two lines is what the regression explains. F* is built from the ANOVA ' +
+        'table, MSR over MSE; t* is built from the coefficient table, b1 over its standard ' +
+        'error. They come from different places on the printout.\n\n' +
+        '**Try this.** Drag the rightmost point far down until the fitted line is almost flat. ' +
+        'Watch t* march toward zero and F* collapse with it, and check the last two readouts ' +
+        'against each other digit by digit. Keep dragging until b1 turns negative: t* goes ' +
+        'negative, F* cannot, and that is the one thing squaring throws away. The ANOVA F test ' +
+        'is the slope t test in different clothing, minus the direction.',
+    es: 'La línea horizontal punteada es Ybar, así que cada segmento ámbar es el residuo y la ' +
+        'separación entre ambas rectas es lo que la regresión explica. F* proviene de la tabla ' +
+        'de análisis de varianza, MCR sobre MCE; t* proviene de la tabla de coeficientes, b1 ' +
+        'sobre su error estándar. Salen de lugares distintos de la salida.\n\n' +
+        '**Prueba esto.** Arrastra el punto más a la derecha muy hacia abajo hasta que la recta ' +
+        'quede casi plana. Observa cómo t* se acerca a cero y F* se desploma con él, y compara ' +
+        'los dos últimos valores dígito por dígito. Sigue arrastrando hasta que b1 se vuelva ' +
+        'negativa: t* se hace negativa, F* no puede, y eso es lo único que el cuadrado descarta. ' +
+        'La prueba F del análisis de varianza es la prueba t de la pendiente con otra ropa, sin ' +
+        'la dirección.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>High leverage, or actually influential?</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Nine ordinary cases plus one lone case at X = 11 that starts exactly on the
+   trend the other nine set: high leverage, no influence. */
+var PTS = [
+  { x: 1, y: 3.2 }, { x: 2, y: 3.4 }, { x: 3, y: 5.3 }, { x: 4, y: 5.2 },
+  { x: 5, y: 7.0 }, { x: 6, y: 6.9 }, { x: 7, y: 8.6 }, { x: 8, y: 8.7 },
+  { x: 9, y: 10.4 }, { x: 11, y: 11.8 }
+];
+
+/* Full case diagnostics for the point with the largest leverage value.
+   p = 2 in simple regression, so h_ii = 1/n + (X_i - Xbar)^2 / Sxx. */
+function flagged(fit, pts) {
+  var n = pts.length, p = 2, i, best = 0, hBest = -1;
+  var hs = [];
+  for (i = 0; i < n; i++) {
+    var d = pts[i].x - fit.meanX;
+    var h = 1 / n + (fit.sxx > 0 ? d * d / fit.sxx : 0);
+    hs.push(h);
+    if (h > hBest) { hBest = h; best = i; }
+  }
+  var h = hs[best];
+  var e = fit.residuals[best];
+  var mse = fit.mse;
+  var r = e / Math.sqrt(mse * (1 - h));
+  /* Leave-one-out error variance, without refitting:
+     (n - p - 1) s_(i)^2 = (n - p) MSE - e_i^2 / (1 - h_ii). */
+  var s2i = ((n - p) * mse - e * e / (1 - h)) / (n - p - 1);
+  var t = e / Math.sqrt(s2i * (1 - h));
+  var D = (r * r / p) * (h / (1 - h));
+  return { i: best, h: h, e: e, r: r, t: t, D: D };
+}
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Drag the lone case on the right and find out when it starts running the fit',
+    es: 'Arrastra el caso solitario de la derecha y descubre cuándo empieza a mandar en el ajuste'
+  },
+  points: PTS,
+  xRange: [0, 12],
+  yRange: [0, 14],
+  xLabel: { en: 'X', es: 'X' },
+  yLabel: { en: 'Y', es: 'Y' },
+  showLine: true,
+  showResiduals: true,
+  ariaLabel: {
+    en: 'Ten points with a fitted least-squares line and dashed residuals. Nine points lie between X equals 1 and 9; one lone point sits at X equals 11 and can be dragged.',
+    es: 'Diez puntos con una recta de mínimos cuadrados ajustada y residuos discontinuos. Nueve puntos están entre X igual a 1 y 9; un punto solitario está en X igual a 11 y se puede arrastrar.'
+  },
+  readouts: [
+    { id: 'h', label: { en: 'Leverage h_ii', es: 'Apalancamiento h_ii' }, digits: 3,
+      compute: function (f, pts) { return flagged(f, pts).h; } },
+    { id: 'e', label: { en: 'Residual e_i', es: 'Residuo e_i' }, digits: 2,
+      compute: function (f, pts) { return flagged(f, pts).e; } },
+    { id: 't', label: { en: 'Studentized t_i', es: 'Studentizado t_i' }, digits: 2,
+      compute: function (f, pts) { return flagged(f, pts).t; } },
+    { id: 'D', label: { en: 'Cook distance D_i', es: 'Distancia de Cook D_i' },
+      accent: 2, digits: 3,
+      compute: function (f, pts) { return flagged(f, pts).D; } },
+    { id: 'b1', label: { en: 'Slope b1', es: 'Pendiente b1' }, accent: 1, digits: 3,
+      compute: function (f) { return f.slope; } }
+  ],
+  caption: {
+    en: 'The first four readouts follow the case with the largest leverage value, the ' +
+        'lone point on the right at the start.\n\n' +
+        '**Try this.** It begins on the trend: leverage 0.416, Cook distance 0.000, ' +
+        'high leverage and harmless. Drag it down to about 6.5 and D_i passes 2.5 while ' +
+        'b1 falls from 0.88 to 0.57. Reset, then drag the case at X = 5 down that same ' +
+        'distance: an equally bad miss, and b1 hardly moves.',
+    es: 'Los primeros cuatro valores siguen al caso con mayor apalancamiento, al inicio ' +
+        'el punto solitario de la derecha.\n\n' +
+        '**Prueba esto.** Empieza sobre la tendencia: apalancamiento 0.416 y distancia ' +
+        'de Cook 0.000, inofensivo. Arrástralo hasta cerca de 6.5 y D_i pasa de 2.5 ' +
+        'mientras b1 baja de 0.88 a 0.57. Reinicia y arrastra el caso en X = 5 esa misma ' +
+        'distancia: el mismo error, y b1 casi no se mueve.'
+  }
+});
+</script>
+</body>
+</html>

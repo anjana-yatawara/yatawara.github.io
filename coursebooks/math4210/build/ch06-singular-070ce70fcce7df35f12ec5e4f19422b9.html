@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>When a matrix loses its inverse</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Chapter 6, section 6.4. The two columns of a 2 by 2 matrix are draggable
+   arrows. The shaded box between them has area |det(A)|, and the entries of
+   A-inverse are computed from the chapter's own formula, so they visibly blow
+   up as the columns fall onto one line. */
+(function () {
+  'use strict';
+
+  /* ---------- language ---------------------------------------------- */
+  var m = /[?&]lang=([a-zA-Z]{2})/.exec(location.search);
+  var lang = (m && m[1].toLowerCase() === 'es') ? 'es' : 'en';
+  document.documentElement.setAttribute('lang', lang);
+  function T(v) { return (typeof v === 'string') ? v : (v[lang] || v.en); }
+
+  /* ---------- dom + palette + theme (mirrors the engine) ------------- */
+  function el(tag, cls, parent) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (parent) { parent.appendChild(n); }
+    return n;
+  }
+  function pal() {
+    var cs = getComputedStyle(document.documentElement);
+    function g(name, fb) { var v = cs.getPropertyValue(name); return (v && v.trim()) || fb; }
+    return {
+      bg: g('--sim-bg', '#ffffff'), surface: g('--sim-surface', '#f5f5f7'),
+      text: g('--sim-text', '#111113'), text2: g('--sim-text-2', '#2b2b2e'),
+      hairline: g('--sim-hairline', '#d2d2d7'), accent: g('--sim-accent', '#0b5fcc'),
+      accent2: g('--sim-accent-2', '#8a5300'), grid: g('--sim-grid', '#e6e6ea')
+    };
+  }
+  function tint(hex, alpha) {
+    var s = hex.trim();
+    if (s.charAt(0) !== '#') { return s; }
+    if (s.length === 4) { s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]; }
+    if (s.length !== 7) { return s; }
+    return 'rgba(' + parseInt(s.substr(1, 2), 16) + ',' + parseInt(s.substr(3, 2), 16) +
+           ',' + parseInt(s.substr(5, 2), 16) + ',' + alpha + ')';
+  }
+  var hooks = [];
+  function redrawAll() {
+    for (var i = 0; i < hooks.length; i++) { try { hooks[i](); } catch (e) { /* keep going */ } }
+  }
+  function wireTheme() {
+    var root = document.documentElement;
+    function apply(dark) {
+      root.classList.toggle('sim-dark', !!dark);
+      root.classList.toggle('sim-light', !dark);
+      redrawAll();
+    }
+    try {
+      if (window.parent && window.parent !== window) {
+        var pel = window.parent.document.documentElement;
+        var read = function () { return pel.classList.contains('dark'); };
+        if (pel.classList.contains('dark') || pel.classList.contains('light')) { apply(read()); }
+        new window.parent.MutationObserver(function () { apply(read()); })
+          .observe(pel, { attributes: true, attributeFilter: ['class'] });
+        return;
+      }
+    } catch (e) { /* cross-origin: the media query stays in charge */ }
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mq.addEventListener) { mq.addEventListener('change', redrawAll); }
+      else if (mq.addListener) { mq.addListener(redrawAll); }
+    }
+  }
+  function canvasIn(parent, opts) {
+    var wrap = el('div', 'sim-plot-wrap', parent);
+    var cv = el('canvas', 'sim-canvas', wrap);
+    cv.setAttribute('role', 'img');
+    cv.setAttribute('aria-label', opts.ariaLabel);
+    cv.tabIndex = 0;
+    var o = { wrap: wrap, canvas: cv, ctx: cv.getContext('2d'), w: 300, h: 220, pal: pal() };
+    o.resize = function () {
+      var cssW = wrap.clientWidth || 300;
+      var cssH = Math.max(opts.minHeight, Math.round(cssW * ((cssW < 420) ? opts.ratioNarrow : opts.ratioWide)));
+      if (opts.maxHeight) { cssH = Math.min(cssH, opts.maxHeight); }
+      var dpr = window.devicePixelRatio || 1;
+      cv.style.height = cssH + 'px';
+      cv.width = Math.round(cssW * dpr);
+      cv.height = Math.round(cssH * dpr);
+      o.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      o.w = cssW; o.h = cssH;
+    };
+    o.clear = function () {
+      o.pal = pal();
+      o.ctx.clearRect(0, 0, o.w, o.h);
+      o.ctx.fillStyle = o.pal.surface;
+      o.ctx.fillRect(0, 0, o.w, o.h);
+    };
+    o.pos = function (ev) {
+      var r = cv.getBoundingClientRect();
+      return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+    };
+    return o;
+  }
+  function statBlock(root, defs) {
+    var wrap = el('div', 'sim-readouts', root);
+    var live = el('div', 'sim-sr', root);
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('aria-atomic', 'true');
+    var cells = {};
+    defs.forEach(function (d) {
+      var cell = el('div', 'sim-stat' + (d.accent === 2 ? ' is-accent-2' : d.accent ? ' is-accent' : ''), wrap);
+      el('span', 'sim-stat-label', cell).textContent = T(d.label);
+      var val = el('span', 'sim-stat-value', cell);
+      val.textContent = '--';
+      cells[d.id] = { label: T(d.label), value: val };
+    });
+    return {
+      set: function (id, text) { if (cells[id]) { cells[id].value.textContent = text; } },
+      announce: function () {
+        var parts = [];
+        for (var k in cells) {
+          if (Object.prototype.hasOwnProperty.call(cells, k)) {
+            parts.push(cells[k].label + ' ' + cells[k].value.textContent);
+          }
+        }
+        live.textContent = parts.join(', ');
+      }
+    };
+  }
+  function buttonBlock(root, defs) {
+    var wrap = el('div', 'sim-buttons', root);
+    defs.forEach(function (d) {
+      var b = el('button', 'sim-btn' + (d.secondary ? ' is-secondary' : ''), wrap);
+      b.type = 'button';
+      b.textContent = T(d.text);
+      b.addEventListener('click', d.onClick);
+    });
+  }
+  function captionBlock(root, text) {
+    var c = el('div', 'sim-caption', root);
+    T(text).split(/\n\s*\n/).forEach(function (para) {
+      var p = el('p', null, c);
+      para.split(/\*\*/).forEach(function (bit, i) {
+        if (i % 2) { el('strong', null, p).textContent = bit; }
+        else if (bit) { p.appendChild(document.createTextNode(bit)); }
+      });
+    });
+  }
+
+  /* ================================================================== */
+  /* Strings                                                             */
+  /* ================================================================== */
+
+  var STR = {
+    title: { en: 'Drag the columns together and the inverse blows up',
+             es: 'Junta las columnas y la inversa se dispara' },
+    aria: { en: 'A plane with two draggable arrows from the origin, the two columns of a 2 by 2 matrix A. The parallelogram between them is shaded and its area equals the absolute value of the determinant.',
+            es: 'Un plano con dos flechas arrastrables desde el origen, las dos columnas de una matriz A de 2 por 2. El paralelogramo entre ellas esta sombreado y su area es el valor absoluto del determinante.' },
+    det: { en: 'det(A)', es: 'det(A)' },
+    area: { en: 'area of the box', es: 'area de la caja' },
+    rank: { en: 'rank of A', es: 'rango de A' },
+    maxinv: { en: 'max |A-inverse|', es: 'max |A-inversa|' },
+    collapse: { en: 'Collapse onto one line', es: 'Colapsar sobre una recta' },
+    reset: { en: 'Reset', es: 'Reiniciar' },
+    col1: { en: 'column 1', es: 'columna 1' },
+    col2: { en: 'column 2', es: 'columna 2' },
+    none: { en: 'none', es: 'ninguna' },
+    singular: { en: 'singular: no inverse', es: 'singular: sin inversa' },
+    hint: { en: 'Drag either arrow tip. Tab to the picture and use the arrow keys to move the selected column.',
+            es: 'Arrastra la punta de cualquier flecha. Usa Tab para llegar a la figura y las flechas para mover la columna seleccionada.' },
+    caption: {
+      en: 'The two arrows are the columns of A. The shaded box they frame has area ' +
+          '|det(A)|, and A-inverse is computed straight from the chapter formula, one ' +
+          'over ad minus bc times the swapped matrix.\n\n' +
+          '**Try this.** Drag the second arrow slowly toward the dashed line through the ' +
+          'first. Long before the box is visibly flat, det(A) is near zero and max ' +
+          '|A-inverse| has run past 100: dividing by a nearly zero determinant is what ' +
+          'makes coefficients wild. Press "Collapse onto one line" to land exactly on ' +
+          'zero, where the rank drops to 1 and the inverse stops existing.',
+      es: 'Las dos flechas son las columnas de A. La caja sombreada que forman tiene area ' +
+          '|det(A)|, y A-inversa se calcula directamente con la formula del capitulo, uno ' +
+          'sobre ad menos bc por la matriz intercambiada.\n\n' +
+          '**Prueba esto.** Arrastra despacio la segunda flecha hacia la recta discontinua ' +
+          'que pasa por la primera. Mucho antes de que la caja se vea plana, det(A) esta ' +
+          'cerca de cero y max |A-inversa| ya paso de 100: dividir entre un determinante ' +
+          'casi nulo es lo que vuelve indomables a los coeficientes. Presiona "Colapsar ' +
+          'sobre una recta" para caer exactamente en cero, donde el rango baja a 1 y la ' +
+          'inversa deja de existir.'
+    }
+  };
+
+  /* ================================================================== */
+  /* State: A = [[a, b], [c, d]], column 1 = (a, c), column 2 = (b, d)   */
+  /* ================================================================== */
+
+  var C0 = [{ x: 4, y: 1 }, { x: 2, y: 3 }];      /* the chapter's Try it 6.4 matrix */
+  var C = [{ x: C0[0].x, y: C0[0].y }, { x: C0[1].x, y: C0[1].y }];
+  var active = 1;
+
+  function entries() {
+    return { a: C[0].x, b: C[1].x, c: C[0].y, d: C[1].y };
+  }
+  function det() { var E = entries(); return E.a * E.d - E.b * E.c; }
+  function maxInv() {
+    var E = entries(), D = det();
+    if (D === 0) { return Infinity; }
+    return Math.max(Math.abs(E.a), Math.abs(E.b), Math.abs(E.c), Math.abs(E.d)) / Math.abs(D);
+  }
+  function rank() {
+    var E = entries();
+    if (det() !== 0) { return 2; }
+    var any = Math.abs(E.a) + Math.abs(E.b) + Math.abs(E.c) + Math.abs(E.d);
+    return any === 0 ? 0 : 1;
+  }
+
+  /* ================================================================== */
+  /* Build                                                               */
+  /* ================================================================== */
+
+  var host = document.getElementById('sim');
+  var root = el('div', 'sim-root', host);
+  el('h1', 'sim-title', root).textContent = T(STR.title);
+
+  var plot = canvasIn(root, {
+    ariaLabel: T(STR.aria),
+    ratioNarrow: 1.0, ratioWide: 0.62, minHeight: 250, maxHeight: 400
+  });
+
+  var stats = statBlock(root, [
+    { id: 'det', label: STR.det, accent: 2 },
+    { id: 'area', label: STR.area },
+    { id: 'rank', label: STR.rank },
+    { id: 'inv', label: STR.maxinv, accent: 1 }
+  ]);
+
+  buttonBlock(root, [
+    { text: STR.collapse, onClick: function () {
+        /* Project column 2 onto the line through column 1: det becomes exactly 0. */
+        var d1 = C[0], n2 = d1.x * d1.x + d1.y * d1.y;
+        if (n2 === 0) { return; }
+        var k = (C[1].x * d1.x + C[1].y * d1.y) / n2;
+        C[1] = { x: k * d1.x, y: k * d1.y };
+        active = 1;
+        draw();
+      } },
+    { text: STR.reset, secondary: true, onClick: function () {
+        C = [{ x: C0[0].x, y: C0[0].y }, { x: C0[1].x, y: C0[1].y }];
+        active = 1;
+        draw();
+      } }
+  ]);
+
+  captionBlock(root, {
+    en: STR.caption.en + '\n\n' + STR.hint.en,
+    es: STR.caption.es + '\n\n' + STR.hint.es
+  });
+
+  /* ---------- equal-aspect plot mapping -------------------------------- */
+  var XR = [-2.5, 6.5], YR = [-2.5, 6.5];
+  var M = { sx: 20, ox: 0, oy: 0 };
+
+  function setMap() {
+    var padL = 8, padR = 8, padT = 8, padB = 8;
+    var availW = plot.w - padL - padR, availH = plot.h - padT - padB;
+    M.sx = Math.min(availW / (XR[1] - XR[0]), availH / (YR[1] - YR[0]));
+    /* Centre the data window inside whatever box we were given. */
+    M.ox = padL + (availW - M.sx * (XR[1] - XR[0])) / 2 - M.sx * XR[0];
+    M.oy = padT + (availH + M.sx * (YR[1] - YR[0])) / 2 + M.sx * YR[0];
+  }
+  function px(x) { return M.ox + M.sx * x; }
+  function py(y) { return M.oy - M.sx * y; }
+  function ux(p) { return (p - M.ox) / M.sx; }
+  function uy(p) { return (M.oy - p) / M.sx; }
+
+  function arrow(c, tx, ty, color, width) {
+    var x0 = px(0), y0 = py(0), x1 = px(tx), y1 = py(ty);
+    c.save();
+    c.strokeStyle = color; c.lineWidth = width; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+    var dx = x1 - x0, dy = y1 - y0, L = Math.sqrt(dx * dx + dy * dy);
+    if (L > 8) {
+      var ux2 = dx / L, uy2 = dy / L, hl = 11, hw = 5.5;
+      c.fillStyle = color;
+      c.beginPath();
+      c.moveTo(x1, y1);
+      c.lineTo(x1 - hl * ux2 + hw * uy2, y1 - hl * uy2 - hw * ux2);
+      c.lineTo(x1 - hl * ux2 - hw * uy2, y1 - hl * uy2 + hw * ux2);
+      c.closePath(); c.fill();
+    }
+    c.restore();
+  }
+
+  function fmt(v) {
+    if (!isFinite(v)) { return '--'; }
+    if (Math.abs(v) >= 1000) { return v.toExponential(1); }
+    return v.toFixed(2);
+  }
+
+  /* ---------- drawing --------------------------------------------------- */
+  function draw() {
+    var c = plot.ctx, p = plot.pal;
+    plot.clear();
+    setMap();
+    var small = plot.w < 420;
+    var E = entries(), D = det();
+
+    /* integer gridlines */
+    c.beginPath();
+    c.strokeStyle = p.grid; c.lineWidth = 1;
+    var v;
+    for (v = Math.ceil(XR[0]); v <= XR[1]; v++) {
+      c.moveTo(Math.round(px(v)) + 0.5, py(YR[0])); c.lineTo(Math.round(px(v)) + 0.5, py(YR[1]));
+    }
+    for (v = Math.ceil(YR[0]); v <= YR[1]; v++) {
+      c.moveTo(px(XR[0]), Math.round(py(v)) + 0.5); c.lineTo(px(XR[1]), Math.round(py(v)) + 0.5);
+    }
+    c.stroke();
+
+    /* axes */
+    c.beginPath();
+    c.strokeStyle = p.hairline; c.lineWidth = 1.4;
+    c.moveTo(px(XR[0]), Math.round(py(0)) + 0.5); c.lineTo(px(XR[1]), Math.round(py(0)) + 0.5);
+    c.moveTo(Math.round(px(0)) + 0.5, py(YR[0])); c.lineTo(Math.round(px(0)) + 0.5, py(YR[1]));
+    c.stroke();
+
+    /* the dashed line through column 1: the collapse target */
+    var n1 = Math.sqrt(C[0].x * C[0].x + C[0].y * C[0].y);
+    if (n1 > 1e-6) {
+      var t = 12;
+      c.save();
+      c.setLineDash([5, 5]);
+      c.strokeStyle = tint(p.accent, 0.5); c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(px(-t * C[0].x / n1), py(-t * C[0].y / n1));
+      c.lineTo(px(t * C[0].x / n1), py(t * C[0].y / n1));
+      c.stroke();
+      c.restore();
+    }
+
+    /* the parallelogram: its area is |det(A)| */
+    c.beginPath();
+    c.moveTo(px(0), py(0));
+    c.lineTo(px(C[0].x), py(C[0].y));
+    c.lineTo(px(C[0].x + C[1].x), py(C[0].y + C[1].y));
+    c.lineTo(px(C[1].x), py(C[1].y));
+    c.closePath();
+    c.fillStyle = tint(p.accent2, 0.16);
+    c.fill();
+    c.strokeStyle = tint(p.accent2, 0.55); c.lineWidth = 1;
+    c.stroke();
+
+    /* the two columns */
+    arrow(c, C[0].x, C[0].y, p.accent, 3);
+    arrow(c, C[1].x, C[1].y, p.accent2, 3);
+
+    /* handles */
+    [0, 1].forEach(function (i) {
+      var col = i === 0 ? p.accent : p.accent2;
+      var q = { x: px(C[i].x), y: py(C[i].y) };
+      c.beginPath(); c.arc(q.x, q.y, small ? 9 : 8, 0, 2 * Math.PI);
+      c.fillStyle = p.bg; c.fill();
+      c.strokeStyle = col; c.lineWidth = active === i ? 4 : 2.5; c.stroke();
+    });
+
+    /* labels for the arrows */
+    c.font = '600 ' + (small ? 11 : 12) + 'px -apple-system, "Segoe UI", Roboto, sans-serif';
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    [0, 1].forEach(function (i) {
+      var txt = T(i === 0 ? STR.col1 : STR.col2);
+      var col = i === 0 ? p.accent : p.accent2;
+      var q = { x: px(C[i].x) + 12, y: py(C[i].y) - 12 };
+      var tw = c.measureText(txt).width;
+      q.x = Math.min(q.x, plot.w - tw - 6);
+      c.fillStyle = tint(p.surface, 0.9);
+      c.fillRect(q.x - 3, q.y - 9, tw + 6, 18);
+      c.fillStyle = col;
+      c.fillText(txt, q.x, q.y);
+    });
+
+    /* the matrix and its determinant, spelled out */
+    c.font = (small ? 11 : 12.5) + 'px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+    c.textAlign = 'left'; c.textBaseline = 'top';
+    var lines = [
+      'A = [ ' + E.a.toFixed(1) + '  ' + E.b.toFixed(1) + ' ]',
+      '    [ ' + E.c.toFixed(1) + '  ' + E.d.toFixed(1) + ' ]',
+      'det = ' + E.a.toFixed(1) + '·' + E.d.toFixed(1) + ' - ' +
+        E.b.toFixed(1) + '·' + E.c.toFixed(1) + ' = ' + D.toFixed(2)
+    ];
+    var lw = 0;
+    lines.forEach(function (s) { lw = Math.max(lw, c.measureText(s).width); });
+    var lh = small ? 15 : 17;
+    c.fillStyle = tint(p.surface, 0.92);
+    c.fillRect(6, 6, lw + 12, lines.length * lh + 10);
+    c.strokeStyle = p.hairline; c.lineWidth = 1;
+    c.strokeRect(6.5, 6.5, lw + 11, lines.length * lh + 9);
+    lines.forEach(function (s, i) {
+      c.fillStyle = (i === 2) ? p.accent2 : p.text;
+      c.fillText(s, 12, 11 + i * lh);
+    });
+
+    if (D === 0) {
+      c.font = '600 ' + (small ? 11 : 12) + 'px -apple-system, "Segoe UI", Roboto, sans-serif';
+      c.textAlign = 'center'; c.textBaseline = 'bottom';
+      c.fillStyle = p.accent2;
+      c.fillText(T(STR.singular), plot.w / 2, plot.h - 8);
+    }
+
+    /* readouts */
+    stats.set('det', D.toFixed(2));
+    stats.set('area', Math.abs(D).toFixed(2));
+    stats.set('rank', String(rank()));
+    stats.set('inv', D === 0 ? T(STR.none) : fmt(maxInv()));
+    stats.announce();
+  }
+
+  /* ---------- interaction ------------------------------------------------ */
+  function clampPt(q) {
+    q.x = Math.min(XR[1], Math.max(XR[0], q.x));
+    q.y = Math.min(YR[1], Math.max(YR[0], q.y));
+  }
+  var dragging = -1;
+  function nearest(qx, qy) {
+    var best = -1, bd = Infinity;
+    [0, 1].forEach(function (i) {
+      var dx = px(C[i].x) - qx, dy = py(C[i].y) - qy, d = dx * dx + dy * dy;
+      if (d < bd) { bd = d; best = i; }
+    });
+    return bd <= 26 * 26 ? best : -1;
+  }
+  plot.canvas.addEventListener('pointerdown', function (ev) {
+    var q = plot.pos(ev), i = nearest(q.x, q.y);
+    if (i < 0) { return; }
+    dragging = i; active = i;
+    plot.canvas.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+    draw();
+  });
+  plot.canvas.addEventListener('pointermove', function (ev) {
+    if (dragging < 0) { return; }
+    var q = plot.pos(ev);
+    C[dragging] = { x: ux(q.x), y: uy(q.y) };
+    clampPt(C[dragging]);
+    ev.preventDefault();
+    draw();
+  });
+  function endDrag(ev) {
+    if (dragging < 0) { return; }
+    dragging = -1;
+    if (ev && ev.pointerId !== undefined && plot.canvas.hasPointerCapture &&
+        plot.canvas.hasPointerCapture(ev.pointerId)) {
+      plot.canvas.releasePointerCapture(ev.pointerId);
+    }
+  }
+  plot.canvas.addEventListener('pointerup', endDrag);
+  plot.canvas.addEventListener('pointercancel', endDrag);
+  plot.canvas.addEventListener('keydown', function (ev) {
+    var k = ev.key, s = 0.1;
+    if (k === 'n' || k === 'N' || k === ' ') { active = 1 - active; ev.preventDefault(); draw(); return; }
+    if (k === 'ArrowLeft') { C[active].x -= s; }
+    else if (k === 'ArrowRight') { C[active].x += s; }
+    else if (k === 'ArrowUp') { C[active].y += s; }
+    else if (k === 'ArrowDown') { C[active].y -= s; }
+    else { return; }
+    clampPt(C[active]);
+    ev.preventDefault();
+    draw();
+  });
+
+  /* ---------- boot -------------------------------------------------------- */
+  function run() { plot.resize(); draw(); }
+  hooks.push(run);
+  if (window.ResizeObserver) { new ResizeObserver(run).observe(plot.wrap); }
+  else { window.addEventListener('resize', run); }
+  wireTheme();
+  run();
+}());
+</script>
+</body>
+</html>

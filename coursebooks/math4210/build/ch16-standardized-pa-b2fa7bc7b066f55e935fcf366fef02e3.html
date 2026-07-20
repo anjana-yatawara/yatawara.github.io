@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raw slope and path coefficient</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Twelve of Duncan's 45 occupations: percent of workers with a high-school
+   diploma (education) against percent earning at least $3,500 (income).
+   Education is fixed by the 1950 Census, so points move only vertically. */
+var OCC = [
+  { x: 93, y: 64 },   /* professor      */
+  { x: 97, y: 76 },   /* physician      */
+  { x: 84, y: 21 },   /* minister       */
+  { x: 91, y: 48 },   /* teacher        */
+  { x: 82, y: 78 },   /* banker         */
+  { x: 44, y: 42 },   /* store manager  */
+  { x: 72, y: 29 },   /* bookkeeper     */
+  { x: 50, y: 29 },   /* store clerk    */
+  { x: 23, y: 21 },   /* carpenter      */
+  { x: 28, y: 81 },   /* RR engineer    */
+  { x:  7, y:  7 },   /* coal miner     */
+  { x: 32, y:  8 }    /* waiter         */
+];
+
+function sdX(pts) {
+  return Sim.Stats.sd(pts.map(function (p) { return p.x; }));
+}
+function sdY(pts) {
+  return Sim.Stats.sd(pts.map(function (p) { return p.y; }));
+}
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'The raw slope b1 and the path coefficient p do not move together',
+    es: 'La pendiente cruda b1 y el coeficiente de ruta p no se mueven juntos'
+  },
+  points: OCC,
+  lockX: true,
+  xRange: [0, 100],
+  yRange: [0, 130],
+  xLabel: { en: 'education (percent high-school graduates)',
+            es: 'educacion (porcentaje con secundaria)' },
+  yLabel: { en: 'income (percent earning $3,500 or more)',
+            es: 'ingreso (porcentaje que gana $3,500 o mas)' },
+  ariaLabel: {
+    en: 'Scatterplot of income against education for twelve occupations, with a draggable least-squares line.',
+    es: 'Diagrama de dispersion de ingreso contra educacion para doce ocupaciones, con una recta de minimos cuadrados arrastrable.'
+  },
+  readouts: [
+    { id: 'b1', label: { en: 'Raw slope b1', es: 'Pendiente cruda b1' },
+      accent: 1, digits: 3,
+      compute: function (fit) { return fit.slope; } },
+    { id: 'sy', label: { en: 'SD of income sY', es: 'DE del ingreso sY' },
+      digits: 2,
+      compute: function (fit, pts) { return sdY(pts); } },
+    { id: 'p', label: { en: 'Path coefficient p = b1 sX/sY',
+                        es: 'Coeficiente de ruta p = b1 sX/sY' },
+      accent: 2, digits: 3,
+      compute: function (fit, pts) { return fit.slope * sdX(pts) / sdY(pts); } },
+    { id: 'r', label: { en: 'Correlation r', es: 'Correlacion r' },
+      digits: 3,
+      compute: function (fit) { return fit.r; } }
+  ],
+  caption: {
+    en: 'Each point is one occupation. The line\'s slope is **b1** in raw units, income ' +
+        'points per education point. The amber readout rescales it into the **path ' +
+        'coefficient** p = b1 sX/sY, and the last readout shows r. Those two never disagree, ' +
+        'which is Theorem 16.7 for a single predictor.\n\n' +
+        '**Try this.** Drag the banker (education 82, income 78) straight up to about 120. ' +
+        'The raw slope b1 climbs by roughly a fifth, and yet p falls, because you stretched ' +
+        'the spread of income at the same time you steepened the line. A raw slope can grow ' +
+        'for no reason except a change of ruler, which is why path diagrams report arrows ' +
+        'in standard deviations.',
+    es: 'Cada punto es una ocupacion. La pendiente de la recta es **b1** en unidades crudas, ' +
+        'puntos de ingreso por punto de educacion. El valor ambar la reescala al ' +
+        '**coeficiente de ruta** p = b1 sX/sY, y el ultimo valor muestra r. Esos dos nunca ' +
+        'discrepan, que es el Teorema 16.7 para un solo predictor.\n\n' +
+        '**Prueba esto.** Arrastra al banquero (educacion 82, ingreso 78) hacia arriba hasta ' +
+        'unos 120. La pendiente cruda b1 sube casi una quinta parte, y aun asi p baja, ' +
+        'porque estiraste la dispersion del ingreso al mismo tiempo que inclinaste la recta. ' +
+        'Una pendiente cruda puede crecer sin mas razon que un cambio de regla, y por eso ' +
+        'los diagramas de rutas reportan las flechas en desviaciones estandar.'
+  }
+});
+</script>
+</body>
+</html>

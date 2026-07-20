@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What an offset pins down</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 34 ship records with positive service. T is service in thousands of
+   months at sea, Y is the count of wave-damage incidents. */
+var T = [0.127, 0.063, 1.095, 1.095, 1.512, 3.353, 2.244, 44.882, 17.176,
+         28.609, 20.370, 7.064, 13.099, 7.117, 1.179, 0.552, 0.781, 0.676,
+         0.783, 1.948, 0.274, 0.251, 0.105, 0.288, 0.192, 0.349, 1.208,
+         2.051, 0.045, 0.789, 0.437, 1.157, 2.161, 0.542];
+var Y = [0, 0, 3, 4, 6, 18, 11, 39, 29, 58, 53, 12, 44, 18, 1, 1, 0, 1,
+         6, 2, 1, 0, 0, 0, 0, 2, 11, 4, 0, 7, 7, 5, 12, 1];
+
+var PTS = T.map(function (t, i) { return { x: t, y: Y[i] }; });
+
+/* Lanczos log-gamma, used for the log(y!) constant so the log-likelihood
+   readout matches R's logLik exactly. */
+var LANCZOS = [
+  0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+  771.32342877765313, -176.61502916214059, 12.507343278686905,
+  -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+];
+function lgamma(z) {
+  if (z < 0.5) { return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z); }
+  z -= 1;
+  var a = LANCZOS[0], t = z + 7.5, i;
+  for (i = 1; i < 9; i++) { a += LANCZOS[i] / (z + i); }
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a);
+}
+var LOGFACT = 0;
+for (var k = 0; k < Y.length; k++) { LOGFACT += lgamma(Y[k] + 1); }
+
+/* Yhat = exp(b0) * t^g. With g pinned at 1 this is exactly the offset model,
+   log Yhat = b0 + log t, and exp(b0) is a rate per 1000 months of service. */
+function muHat(p, t) {
+  if (t <= 0) { return p.g === 0 ? Math.exp(p.b0) : 0; }
+  return Math.exp(p.b0 + p.g * Math.log(t));
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'How hard should the count lean on the exposure?',
+    es: 'Cuanto debe apoyarse el conteo en la exposicion?'
+  },
+  points: PTS,
+  xRange: [0, 46],
+  yRange: [0, 62],
+  xLabel: { en: 'service, thousands of months', es: 'servicio, en miles de meses' },
+  yLabel: { en: 'damage incidents Y', es: 'incidentes de dano Y' },
+  ariaLabel: {
+    en: 'Wave-damage incident counts for 34 ship records against months of service, with a ' +
+        'fitted mean curve whose exposure exponent the reader controls.',
+    es: 'Conteos de incidentes de dano por oleaje de 34 registros de barcos contra meses de ' +
+        'servicio, con una curva media ajustada cuyo exponente de exposicion controla el lector.'
+  },
+  params: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      min: -1, max: 3, step: 0.01, value: 2.00, digits: 2 },
+    { id: 'g', label: { en: 'Exposure exponent on log t', es: 'Exponente de exposicion sobre log t' },
+      min: 0, max: 1.5, step: 0.01, value: 0, digits: 2 }
+  ],
+  curves: [
+    { fn: muHat, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'dbl', label: { en: 'Factor if exposure doubles', es: 'Factor si la exposicion se duplica' },
+      accent: 2, digits: 2,
+      compute: function (p) { return Math.pow(2, p.g); } },
+    { id: 'r1', label: { en: 'mu-hat at 1000 months', es: 'mu-sombrero a 1000 meses' }, digits: 2,
+      compute: function (p) { return muHat(p, 1); } },
+    { id: 'rbig', label: { en: 'mu-hat at 44,882 months', es: 'mu-sombrero a 44,882 meses' }, digits: 1,
+      compute: function (p) { return muHat(p, 44.882); } },
+    { id: 'll', label: { en: 'Log-likelihood', es: 'Log-verosimilitud' },
+      accent: 1, digits: 1,
+      compute: function (p) {
+        var s = 0;
+        for (var i = 0; i < T.length; i++) {
+          var eta = p.b0 + p.g * Math.log(T[i]);
+          s += Y[i] * eta - Math.exp(eta);
+        }
+        return s - LOGFACT;
+      } }
+  ],
+  caption: {
+    en: 'Each dot is one ship record: months at sea across the bottom, wave-damage incidents up ' +
+        'the side. The blue curve is mu-hat = exp(b0) times t raised to the exposure exponent.\n\n' +
+        '**What to notice.** At an exponent of 0 the model ignores exposure: it predicts the same ' +
+        'few incidents for a ship at sea 45 months and one at sea 44,882, and the busiest ship, ' +
+        'which had 39, is stranded above a flat line. At an exponent of 1 the doubling factor ' +
+        'reads exactly 2, which is the offset log t.\n\n' +
+        '**Try this.** Park the exponent at 1 and tune b0 until the log-likelihood stops rising; ' +
+        'it peaks near b0 = 0.78, a rate of about 2.18 incidents per 1000 months. Then let the ' +
+        'exponent go free and it climbs a little further near 0.73, the data saying that with no ' +
+        'ship type or period in the model, incidents grow a shade slower than service does.',
+    es: 'Cada punto es un registro de barco: meses en el mar en la base, incidentes de dano por ' +
+        'oleaje en el costado. La curva azul es mu-sombrero = exp(b0) por t elevado al exponente de ' +
+        'exposicion.\n\n' +
+        '**Que observar.** Con exponente 0 el modelo ignora la exposicion: predice los mismos ' +
+        'pocos incidentes para un barco con 45 meses en el mar y para uno con 44,882, y el barco ' +
+        'mas activo, que tuvo 39, queda varado sobre una recta plana. Con exponente 1 el factor ' +
+        'de duplicacion marca exactamente 2, que es el desplazamiento log t.\n\n' +
+        '**Prueba esto.** Deja el exponente en 1 y ajusta b0 hasta que la log-verosimilitud deje ' +
+        'de subir; alcanza su maximo cerca de b0 = 0.78, una tasa de unos 2.18 incidentes por ' +
+        '1000 meses. Luego suelta el exponente y sube un poco mas cerca de 0.73, el dato diciendo ' +
+        'que sin tipo de barco ni periodo en el modelo, los incidentes crecen un poco mas lento ' +
+        'que el servicio.'
+  }
+});
+</script>
+</body>
+</html>

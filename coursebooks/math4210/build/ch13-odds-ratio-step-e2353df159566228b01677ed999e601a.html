@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The same step, a different jump</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Single-predictor logistic fit to the Pima data, test ~ glucose, with the
+   impossible zeros set to missing. Maximum-likelihood coefficients from glm. */
+var B0 = -5.7150876436;
+var B1 = 0.0406336228;
+var LO = 60, HI = 200;
+
+function piHat(x) { return 1 / (1 + Math.exp(-(B0 + B1 * x))); }
+function oddsHat(x) { var q = piHat(x); return q / (1 - q); }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'One fixed step, taken in two different places',
+    es: 'Un mismo paso, dado en dos lugares distintos'
+  },
+  xRange: [LO, HI],
+  yRange: [-0.05, 1.05],
+  xLabel: { en: 'plasma glucose', es: 'glucosa en plasma' },
+  yLabel: { en: 'P(positive test)', es: 'P(prueba positiva)' },
+  ariaLabel: {
+    en: 'Fitted logistic curve for a positive diabetes test against glucose, with two movable markers a fixed step apart.',
+    es: 'Curva logistica ajustada de una prueba de diabetes positiva contra la glucosa, con dos marcadores moviles separados por un paso fijo.'
+  },
+  params: [
+    { id: 'x', label: { en: 'Starting glucose x', es: 'Glucosa inicial x' },
+      min: 60, max: 160, step: 1, value: 100, digits: 0 },
+    { id: 'c', label: { en: 'Step size c (glucose units)',
+                        es: 'Tamano del paso c (unidades de glucosa)' },
+      min: 5, max: 40, step: 5, value: 10, digits: 0 }
+  ],
+  bands: [
+    /* Two bars: one at x, one at x + c, each rising to its fitted probability. */
+    { accent: 2, alpha: 0.85,
+      lo: function () { return -0.05; },
+      hi: function (p, u) {
+        if (Math.abs(u - p.x) < 1.6) { return piHat(p.x); }
+        if (Math.abs(u - (p.x + p.c)) < 1.6) { return piHat(p.x + p.c); }
+        return -0.05;
+      } }
+  ],
+  curves: [
+    { fn: function (p, u) { return piHat(u); }, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'p1', label: { en: 'Yhat at x', es: 'Yhat en x' }, digits: 3,
+      compute: function (p) { return piHat(p.x); } },
+    { id: 'p2', label: { en: 'Yhat at x + c', es: 'Yhat en x + c' }, digits: 3,
+      compute: function (p) { return piHat(p.x + p.c); } },
+    { id: 'dp', label: { en: 'Change in probability', es: 'Cambio de probabilidad' },
+      accent: 2, digits: 3,
+      compute: function (p) { return piHat(p.x + p.c) - piHat(p.x); } },
+    { id: 'or', label: { en: 'Odds ratio e^(c b1)', es: 'Razon de momios e^(c b1)' },
+      accent: 1, digits: 3,
+      compute: function (p) { return oddsHat(p.x + p.c) / oddsHat(p.x); } }
+  ],
+  caption: {
+    en: 'The curve is the fitted model logit(Yhat) = -5.715 + 0.0406 x. The two amber bars ' +
+        'sit c glucose units apart, and the odds ratio is computed as the ratio of the two ' +
+        'fitted odds, not read off a formula.\n\n' +
+        '**Try this.** Leave c at 40 and slide the starting glucose from 60 up to 160. The ' +
+        'change in probability swings from about 0.12 to 0.33 and back down, but the odds ' +
+        'ratio never moves off 5.080. That is the whole point: e^(c b1) is one honest ' +
+        'constant, while "the change in chance" is a different number at every glucose ' +
+        'level you pick.',
+    es: 'La curva es el modelo ajustado logit(Yhat) = -5.715 + 0.0406 x. Las dos barras ' +
+        'ambar estan separadas por c unidades de glucosa, y la razon de momios se calcula ' +
+        'como el cociente de los dos momios ajustados, no se lee de una formula.\n\n' +
+        '**Prueba esto.** Deja c en 40 y desliza la glucosa inicial de 60 a 160. El cambio ' +
+        'de probabilidad oscila entre 0.12 y 0.33 y vuelve a bajar, pero la razon de momios ' +
+        'nunca se mueve de 5.080. Ese es el punto: e^(c b1) es una constante honesta, ' +
+        'mientras que "el cambio en la probabilidad" es un numero distinto en cada nivel de ' +
+        'glucosa que elijas.'
+  }
+});
+</script>
+</body>
+</html>

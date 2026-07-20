@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Least squares as a projection</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Chapter 6, section 6.5. Drag the response vector Y around three-dimensional
+   space and watch Yhat = HY stay glued to the column space of X while the
+   residual e stays perpendicular to it. n = 3, p = 2, so the whole geometry
+   fits in a picture a student can turn with a finger. */
+(function () {
+  'use strict';
+
+  /* ---------- language ---------------------------------------------- */
+  var m = /[?&]lang=([a-zA-Z]{2})/.exec(location.search);
+  var lang = (m && m[1].toLowerCase() === 'es') ? 'es' : 'en';
+  document.documentElement.setAttribute('lang', lang);
+  function T(v) { return (typeof v === 'string') ? v : (v[lang] || v.en); }
+
+  /* ---------- dom + palette + theme (mirrors the engine) ------------- */
+  function el(tag, cls, parent) {
+    var n = document.createElement(tag);
+    if (cls) { n.className = cls; }
+    if (parent) { parent.appendChild(n); }
+    return n;
+  }
+  function pal() {
+    var cs = getComputedStyle(document.documentElement);
+    function g(name, fb) { var v = cs.getPropertyValue(name); return (v && v.trim()) || fb; }
+    return {
+      bg: g('--sim-bg', '#ffffff'), surface: g('--sim-surface', '#f5f5f7'),
+      text: g('--sim-text', '#111113'), text2: g('--sim-text-2', '#2b2b2e'),
+      hairline: g('--sim-hairline', '#d2d2d7'), accent: g('--sim-accent', '#0b5fcc'),
+      accent2: g('--sim-accent-2', '#8a5300'), grid: g('--sim-grid', '#e6e6ea')
+    };
+  }
+  function tint(hex, alpha) {
+    var s = hex.trim();
+    if (s.charAt(0) !== '#') { return s; }
+    if (s.length === 4) { s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3]; }
+    if (s.length !== 7) { return s; }
+    return 'rgba(' + parseInt(s.substr(1, 2), 16) + ',' + parseInt(s.substr(3, 2), 16) +
+           ',' + parseInt(s.substr(5, 2), 16) + ',' + alpha + ')';
+  }
+  var hooks = [];
+  function redrawAll() {
+    for (var i = 0; i < hooks.length; i++) { try { hooks[i](); } catch (e) { /* keep going */ } }
+  }
+  function wireTheme() {
+    var root = document.documentElement;
+    function apply(dark) {
+      root.classList.toggle('sim-dark', !!dark);
+      root.classList.toggle('sim-light', !dark);
+      redrawAll();
+    }
+    try {
+      if (window.parent && window.parent !== window) {
+        var pel = window.parent.document.documentElement;
+        var read = function () { return pel.classList.contains('dark'); };
+        if (pel.classList.contains('dark') || pel.classList.contains('light')) { apply(read()); }
+        new window.parent.MutationObserver(function () { apply(read()); })
+          .observe(pel, { attributes: true, attributeFilter: ['class'] });
+        return;
+      }
+    } catch (e) { /* cross-origin: the media query stays in charge */ }
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      if (mq.addEventListener) { mq.addEventListener('change', redrawAll); }
+      else if (mq.addListener) { mq.addListener(redrawAll); }
+    }
+  }
+  function canvasIn(parent, opts) {
+    var wrap = el('div', 'sim-plot-wrap', parent);
+    var cv = el('canvas', 'sim-canvas', wrap);
+    cv.setAttribute('role', 'img');
+    cv.setAttribute('aria-label', opts.ariaLabel);
+    cv.tabIndex = 0;
+    var o = { wrap: wrap, canvas: cv, ctx: cv.getContext('2d'), w: 300, h: 220, pal: pal() };
+    o.resize = function () {
+      var cssW = wrap.clientWidth || 300;
+      var cssH = Math.max(opts.minHeight, Math.round(cssW * ((cssW < 420) ? opts.ratioNarrow : opts.ratioWide)));
+      if (opts.maxHeight) { cssH = Math.min(cssH, opts.maxHeight); }
+      var dpr = window.devicePixelRatio || 1;
+      cv.style.height = cssH + 'px';
+      cv.width = Math.round(cssW * dpr);
+      cv.height = Math.round(cssH * dpr);
+      o.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      o.w = cssW; o.h = cssH;
+    };
+    o.clear = function () {
+      o.pal = pal();
+      o.ctx.clearRect(0, 0, o.w, o.h);
+      o.ctx.fillStyle = o.pal.surface;
+      o.ctx.fillRect(0, 0, o.w, o.h);
+    };
+    o.pos = function (ev) {
+      var r = cv.getBoundingClientRect();
+      return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+    };
+    return o;
+  }
+  function statBlock(root, defs) {
+    var wrap = el('div', 'sim-readouts', root);
+    var live = el('div', 'sim-sr', root);
+    live.setAttribute('aria-live', 'polite');
+    live.setAttribute('aria-atomic', 'true');
+    var cells = {};
+    defs.forEach(function (d) {
+      var cell = el('div', 'sim-stat' + (d.accent === 2 ? ' is-accent-2' : d.accent ? ' is-accent' : ''), wrap);
+      el('span', 'sim-stat-label', cell).textContent = T(d.label);
+      var val = el('span', 'sim-stat-value', cell);
+      val.textContent = '--';
+      cells[d.id] = { label: T(d.label), value: val };
+    });
+    return {
+      set: function (id, text) { if (cells[id]) { cells[id].value.textContent = text; } },
+      announce: function () {
+        var parts = [];
+        for (var k in cells) {
+          if (Object.prototype.hasOwnProperty.call(cells, k)) {
+            parts.push(cells[k].label + ' ' + cells[k].value.textContent);
+          }
+        }
+        live.textContent = parts.join(', ');
+      }
+    };
+  }
+  function sliderBlock(root, params, onChange) {
+    var wrap = el('div', 'sim-controls', root);
+    var state = {};
+    params.forEach(function (p) {
+      state[p.id] = p.value;
+      var row = el('div', 'sim-slider-row', wrap);
+      var lab = el('label', 'sim-slider-label', row);
+      var out = el('span', 'sim-slider-value', row);
+      var inp = el('input', null, row);
+      var id = 'sl-' + p.id + '-' + Math.random().toString(36).slice(2, 7);
+      inp.type = 'range'; inp.id = id;
+      inp.min = p.min; inp.max = p.max; inp.step = p.step; inp.value = p.value;
+      lab.textContent = T(p.label);
+      lab.setAttribute('for', id);
+      function show() {
+        out.textContent = Number(state[p.id]).toFixed(p.digits || 0) + (p.unit || '');
+        inp.setAttribute('aria-valuetext', out.textContent);
+      }
+      inp.addEventListener('input', function () {
+        state[p.id] = parseFloat(inp.value); show(); onChange();
+      });
+      show();
+    });
+    return state;
+  }
+  function buttonBlock(root, defs) {
+    var wrap = el('div', 'sim-buttons', root);
+    defs.forEach(function (d) {
+      var b = el('button', 'sim-btn' + (d.secondary ? ' is-secondary' : ''), wrap);
+      b.type = 'button';
+      b.textContent = T(d.text);
+      b.addEventListener('click', d.onClick);
+    });
+  }
+  function captionBlock(root, text) {
+    var c = el('div', 'sim-caption', root);
+    T(text).split(/\n\s*\n/).forEach(function (para) {
+      var p = el('p', null, c);
+      para.split(/\*\*/).forEach(function (bit, i) {
+        if (i % 2) { el('strong', null, p).textContent = bit; }
+        else if (bit) { p.appendChild(document.createTextNode(bit)); }
+      });
+    });
+  }
+
+  /* ================================================================== */
+  /* Linear algebra, written out so every number is checkable            */
+  /* ================================================================== */
+
+  var XCOL = [1, 2, 3];                                  /* the one predictor */
+  var X = XCOL.map(function (v) { return [1, v]; });     /* n = 3, p = 2 */
+
+  function XtXinv() {
+    var a = 0, b = 0, d = 0, i;                          /* X'X = [[a,b],[b,d]] */
+    for (i = 0; i < 3; i++) {
+      a += X[i][0] * X[i][0]; b += X[i][0] * X[i][1]; d += X[i][1] * X[i][1];
+    }
+    var det = a * d - b * b;
+    return [[d / det, -b / det], [-b / det, a / det]];
+  }
+  var G = XtXinv();
+
+  /* b = (X'X)^-1 X'Y, Yhat = Xb, e = Y - Yhat. */
+  function fit(Y) {
+    var XtY = [0, 0], i;
+    for (i = 0; i < 3; i++) { XtY[0] += X[i][0] * Y[i]; XtY[1] += X[i][1] * Y[i]; }
+    var b = [G[0][0] * XtY[0] + G[0][1] * XtY[1], G[1][0] * XtY[0] + G[1][1] * XtY[1]];
+    var Yhat = [], e = [], sse = 0, dot = 0;
+    for (i = 0; i < 3; i++) {
+      Yhat.push(b[0] * X[i][0] + b[1] * X[i][1]);
+      e.push(Y[i] - Yhat[i]);
+      sse += e[i] * e[i];
+      dot += e[i] * Yhat[i];
+    }
+    return { b: b, Yhat: Yhat, e: e, sse: sse, dot: dot };
+  }
+
+  /* Orthonormal basis of the column space of X, for drawing the plane. */
+  function unit(v) {
+    var n = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    return n === 0 ? [0, 0, 0] : [v[0] / n, v[1] / n, v[2] / n];
+  }
+  function dot3(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  var U1 = unit([X[0][0], X[1][0], X[2][0]]);
+  var raw2 = [X[0][1], X[1][1], X[2][1]];
+  var proj1 = dot3(raw2, U1);
+  var U2 = unit([raw2[0] - proj1 * U1[0], raw2[1] - proj1 * U1[1], raw2[2] - proj1 * U1[2]]);
+
+  /* ================================================================== */
+  /* Strings                                                             */
+  /* ================================================================== */
+
+  var STR = {
+    title: { en: 'Drag Y, and the residual stays perpendicular',
+             es: 'Arrastra Y, y el residuo sigue siendo perpendicular' },
+    aria: { en: 'A three-dimensional view. A tilted plane is the column space of X. An arrow Y points from the origin to a draggable tip, an arrow Yhat lies in the plane, and a dashed segment e joins the tip of Yhat to the tip of Y at a right angle.',
+            es: 'Una vista tridimensional. Un plano inclinado es el espacio columna de X. Una flecha Y va del origen a una punta arrastrable, una flecha Yhat esta en el plano, y un segmento discontinuo e une la punta de Yhat con la punta de Y en angulo recto.' },
+    spin: { en: 'Spin the view', es: 'Gira la vista' },
+    reset: { en: 'Reset', es: 'Reiniciar' },
+    flatten: { en: 'Put Y on the plane', es: 'Coloca Y sobre el plano' },
+    b0: { en: 'b0', es: 'b0' },
+    b1: { en: 'b1', es: 'b1' },
+    sse: { en: "SSE = e'e", es: "SCE = e'e" },
+    ortho: { en: "e'Yhat", es: "e'Yhat" },
+    planeLabel: { en: 'column space of X', es: 'espacio columna de X' },
+    yLabel: 'Y',
+    yhatLabel: 'Yhat',
+    eLabel: 'e',
+    hint: { en: 'Drag the tip of Y. Arrow keys move it too.',
+            es: 'Arrastra la punta de Y. Las flechas tambien la mueven.' },
+    caption: {
+      en: 'With three cities and two parameters, the whole model lives in three ' +
+          'dimensions. The tilted surface is every fitted vector the predictors can ' +
+          'produce; Yhat = HY is the point of that surface closest to Y, and e is what ' +
+          'is left over.\n\n' +
+          '**Try this.** Drag the tip of Y anywhere at all, then read the last tile: ' +
+          "e'Yhat stays at 0.00 no matter where you put Y. That single zero is why " +
+          'least squares is the closest fit. Now press "Put Y on the plane" and watch ' +
+          'SSE drop to zero, the one case where the model reproduces the data exactly.',
+      es: 'Con tres ciudades y dos parametros, todo el modelo vive en tres dimensiones. ' +
+          'La superficie inclinada contiene todos los vectores ajustados que los ' +
+          'predictores pueden producir; Yhat = HY es el punto de esa superficie mas ' +
+          'cercano a Y, y e es lo que sobra.\n\n' +
+          '**Prueba esto.** Arrastra la punta de Y a donde quieras y lee el ultimo ' +
+          "recuadro: e'Yhat se queda en 0.00 sin importar donde coloques Y. Ese cero es " +
+          'la razon por la que minimos cuadrados da el ajuste mas cercano. Ahora presiona ' +
+          '"Coloca Y sobre el plano" y observa como SCE cae a cero, el unico caso en que ' +
+          'el modelo reproduce los datos exactamente.'
+    }
+  };
+
+  /* ================================================================== */
+  /* Build                                                               */
+  /* ================================================================== */
+
+  var Y0 = [2, 4.5, 4];
+  var Y = Y0.slice();
+
+  var host = document.getElementById('sim');
+  var root = el('div', 'sim-root', host);
+  el('h1', 'sim-title', root).textContent = T(STR.title);
+
+  var plot = canvasIn(root, {
+    ariaLabel: T(STR.aria),
+    ratioNarrow: 0.98, ratioWide: 0.60, minHeight: 250, maxHeight: 400
+  });
+
+  var stats = statBlock(root, [
+    { id: 'b0', label: STR.b0 },
+    { id: 'b1', label: STR.b1 },
+    { id: 'sse', label: STR.sse, accent: 2 },
+    { id: 'ortho', label: STR.ortho, accent: 1 }
+  ]);
+
+  var P = sliderBlock(root, [
+    { id: 'rot', label: STR.spin, min: 0, max: 360, step: 1, value: 40, digits: 0, unit: '°' }
+  ], function () { draw(); });
+
+  buttonBlock(root, [
+    { text: STR.flatten, onClick: function () { Y = fit(Y).Yhat.slice(); draw(); } },
+    { text: STR.reset, secondary: true, onClick: function () { Y = Y0.slice(); draw(); } }
+  ]);
+
+  captionBlock(root, {
+    en: STR.caption.en + '\n\n' + STR.hint.en,
+    es: STR.caption.es + '\n\n' + STR.hint.es
+  });
+
+  /* ---------- camera -------------------------------------------------- */
+  var PHI = 0.40;                      /* elevation, radians */
+  var CENTER = [1.4, 2.0, 2.2];
+  var RADIUS = 5.6;
+  var cam = { right: [1, 0, 0], up: [0, 1, 0], cx: 0, cy: 0, scale: 20 };
+
+  function setCam() {
+    var th = P.rot * Math.PI / 180;
+    cam.right = [-Math.sin(th), Math.cos(th), 0];
+    cam.up = [-Math.cos(th) * Math.sin(PHI), -Math.sin(th) * Math.sin(PHI), Math.cos(PHI)];
+    cam.cx = plot.w / 2;
+    cam.cy = plot.h / 2;
+    cam.scale = Math.min(plot.w - 30, plot.h - 30) / (2 * RADIUS);
+  }
+  function sc(p) {
+    var d = [p[0] - CENTER[0], p[1] - CENTER[1], p[2] - CENTER[2]];
+    return { x: cam.cx + cam.scale * dot3(d, cam.right),
+             y: cam.cy - cam.scale * dot3(d, cam.up) };
+  }
+
+  /* ---------- drawing -------------------------------------------------- */
+  function seg(c, a, b) { var p = sc(a), q = sc(b); c.moveTo(p.x, p.y); c.lineTo(q.x, q.y); }
+
+  function arrow(c, from, to, color, width, dash) {
+    var p = sc(from), q = sc(to);
+    c.save();
+    c.strokeStyle = color; c.lineWidth = width; c.lineCap = 'round';
+    if (dash) { c.setLineDash(dash); }
+    c.beginPath(); c.moveTo(p.x, p.y); c.lineTo(q.x, q.y); c.stroke();
+    c.setLineDash([]);
+    var dx = q.x - p.x, dy = q.y - p.y, L = Math.sqrt(dx * dx + dy * dy);
+    if (L > 6) {
+      var ux = dx / L, uy = dy / L, hl = 10, hw = 5;
+      c.fillStyle = color;
+      c.beginPath();
+      c.moveTo(q.x, q.y);
+      c.lineTo(q.x - hl * ux + hw * uy, q.y - hl * uy - hw * ux);
+      c.lineTo(q.x - hl * ux - hw * uy, q.y - hl * uy + hw * ux);
+      c.closePath(); c.fill();
+    }
+    c.restore();
+  }
+
+  function label(c, at, text, color, dxp, dyp) {
+    var q = sc(at);
+    c.font = '600 ' + (plot.w < 420 ? 12 : 13) + 'px -apple-system, "Segoe UI", Roboto, sans-serif';
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    var tw = c.measureText(text).width;
+    c.fillStyle = tint(plot.pal.surface, 0.88);
+    c.fillRect(q.x + dxp - 3, q.y + dyp - 9, tw + 6, 18);
+    c.fillStyle = color;
+    c.fillText(text, q.x + dxp, q.y + dyp);
+  }
+
+  function planePt(a, b) {
+    return [a * U1[0] + b * U2[0], a * U1[1] + b * U2[1], a * U1[2] + b * U2[2]];
+  }
+
+  function draw() {
+    var c = plot.ctx, p = plot.pal;
+    plot.clear();
+    setCam();
+
+    var f = fit(Y);
+    var A0 = -1.6, A1 = 8.0, B0 = -3.4, B1 = 3.4;
+
+    /* The column space of X, drawn as a patch of the plane through the origin. */
+    var corners = [planePt(A0, B0), planePt(A1, B0), planePt(A1, B1), planePt(A0, B1)];
+    c.beginPath();
+    corners.forEach(function (pt, i) {
+      var q = sc(pt);
+      if (i === 0) { c.moveTo(q.x, q.y); } else { c.lineTo(q.x, q.y); }
+    });
+    c.closePath();
+    c.fillStyle = tint(p.accent, 0.13);
+    c.fill();
+    c.strokeStyle = tint(p.accent, 0.55);
+    c.lineWidth = 1.25;
+    c.stroke();
+
+    /* Gridlines inside the patch, so the tilt reads as a surface. */
+    c.beginPath();
+    c.strokeStyle = tint(p.accent, 0.28);
+    c.lineWidth = 1;
+    var s;
+    for (s = A0; s <= A1 + 0.01; s += 1.6) { seg(c, planePt(s, B0), planePt(s, B1)); }
+    for (s = B0; s <= B1 + 0.01; s += 1.7) { seg(c, planePt(A0, s), planePt(A1, s)); }
+    c.stroke();
+
+    /* The origin. */
+    var o = sc([0, 0, 0]);
+    c.fillStyle = p.text2;
+    c.beginPath(); c.arc(o.x, o.y, 3, 0, 2 * Math.PI); c.fill();
+
+    /* Yhat, e, then Y on top. */
+    arrow(c, [0, 0, 0], f.Yhat, p.accent, 3);
+
+    /* Right-angle marker where e meets the plane. */
+    var nrm = unit([Y[0] - f.Yhat[0], Y[1] - f.Yhat[1], Y[2] - f.Yhat[2]]);
+    var inpl = unit(f.Yhat);
+    if (nrm[0] !== 0 || nrm[1] !== 0 || nrm[2] !== 0) {
+      var t2 = 0.5;
+      var pA = [f.Yhat[0] + t2 * inpl[0], f.Yhat[1] + t2 * inpl[1], f.Yhat[2] + t2 * inpl[2]];
+      var pB = [pA[0] + t2 * nrm[0], pA[1] + t2 * nrm[1], pA[2] + t2 * nrm[2]];
+      var pC = [f.Yhat[0] + t2 * nrm[0], f.Yhat[1] + t2 * nrm[1], f.Yhat[2] + t2 * nrm[2]];
+      c.beginPath();
+      var qa = sc(pA), qb = sc(pB), qc = sc(pC);
+      c.moveTo(qa.x, qa.y); c.lineTo(qb.x, qb.y); c.lineTo(qc.x, qc.y);
+      c.strokeStyle = p.accent2; c.lineWidth = 1.5; c.stroke();
+    }
+
+    arrow(c, f.Yhat, Y, p.accent2, 2.5, [6, 4]);
+    arrow(c, [0, 0, 0], Y, p.text, 3);
+
+    /* The draggable handle. */
+    var qy = sc(Y);
+    c.beginPath(); c.arc(qy.x, qy.y, plot.w < 420 ? 9 : 8, 0, 2 * Math.PI);
+    c.fillStyle = p.bg; c.fill();
+    c.strokeStyle = p.text; c.lineWidth = 3; c.stroke();
+
+    /* Labels. */
+    label(c, Y, STR.yLabel, p.text, 14, -12);
+    label(c, f.Yhat, STR.yhatLabel, p.accent, 12, 14);
+    label(c, [(Y[0] + f.Yhat[0]) / 2, (Y[1] + f.Yhat[1]) / 2, (Y[2] + f.Yhat[2]) / 2],
+          STR.eLabel, p.accent2, 10, 0);
+    c.font = (plot.w < 420 ? 11 : 12) + 'px -apple-system, "Segoe UI", Roboto, sans-serif';
+    c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillStyle = p.accent;
+    c.fillText(T(STR.planeLabel), 10, plot.h - 20);
+
+    /* Readouts. */
+    stats.set('b0', f.b[0].toFixed(2));
+    stats.set('b1', f.b[1].toFixed(2));
+    stats.set('sse', f.sse.toFixed(2));
+    stats.set('ortho', Math.abs(f.dot) < 5e-9 ? '0.00' : f.dot.toFixed(2));
+    stats.announce();
+  }
+
+  /* ---------- interaction ---------------------------------------------- */
+  function moveBy(dsx, dsy) {
+    var i;
+    for (i = 0; i < 3; i++) {
+      Y[i] = Y[i] + dsx * cam.right[i] + dsy * cam.up[i];
+      Y[i] = Math.min(9, Math.max(-4, Y[i]));
+    }
+  }
+  var dragging = false;
+  plot.canvas.addEventListener('pointerdown', function (ev) {
+    var q = plot.pos(ev), t = sc(Y);
+    var d = (q.x - t.x) * (q.x - t.x) + (q.y - t.y) * (q.y - t.y);
+    if (d > 26 * 26) { return; }
+    dragging = true;
+    plot.canvas.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  });
+  plot.canvas.addEventListener('pointermove', function (ev) {
+    if (!dragging) { return; }
+    var q = plot.pos(ev), t = sc(Y);
+    moveBy((q.x - t.x) / cam.scale, -(q.y - t.y) / cam.scale);
+    ev.preventDefault();
+    draw();
+  });
+  function endDrag(ev) {
+    if (!dragging) { return; }
+    dragging = false;
+    if (ev && ev.pointerId !== undefined && plot.canvas.hasPointerCapture &&
+        plot.canvas.hasPointerCapture(ev.pointerId)) {
+      plot.canvas.releasePointerCapture(ev.pointerId);
+    }
+  }
+  plot.canvas.addEventListener('pointerup', endDrag);
+  plot.canvas.addEventListener('pointercancel', endDrag);
+  plot.canvas.addEventListener('keydown', function (ev) {
+    var k = ev.key, s = 0.35;
+    if (k === 'ArrowLeft') { moveBy(-s, 0); }
+    else if (k === 'ArrowRight') { moveBy(s, 0); }
+    else if (k === 'ArrowUp') { moveBy(0, s); }
+    else if (k === 'ArrowDown') { moveBy(0, -s); }
+    else { return; }
+    ev.preventDefault();
+    draw();
+  });
+
+  /* ---------- boot ------------------------------------------------------ */
+  function run() { plot.resize(); draw(); }
+  hooks.push(run);
+  if (window.ResizeObserver) { new ResizeObserver(run).observe(plot.wrap); }
+  else { window.addEventListener('resize', run); }
+  wireTheme();
+  run();
+}());
+</script>
+</body>
+</html>

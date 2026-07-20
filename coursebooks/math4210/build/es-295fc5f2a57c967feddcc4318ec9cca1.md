@@ -1,0 +1,1534 @@
+---
+title: "15. Regresion con el tiempo: autocorrelacion y pronostico (en espanol)"
+subtitle: "MATH 4210, Capitulo 15"
+---
+
+(ch15-es)=
+# 15. Regresion con el tiempo: autocorrelacion y pronostico
+
+:::{div}
+:class: lang-toggle
+[English](./index.md)
+:::
+
+En 1949 una aerolinea internacional empezo a llevar un registro mensual sencillo: cuantos
+pasajeros volaron ese mes, contados en miles. Doce anos de esos conteos, de enero de 1949 a
+diciembre de 1960, se convirtieron en uno de los conjuntos de datos mas estudiados de la
+estadistica. El problema de la aerolinea era concreto. Para decidir cuantos aviones comprar,
+cuantas tripulaciones contratar y como programar el mantenimiento, los planificadores
+necesitaban pronosticar la demanda con uno o dos anos de anticipacion. Un buen pronostico
+ahorraba dinero; uno malo dejaba aviones en tierra o pasajeros varados.
+
+@fig-ch15-series-es grafica los 144 conteos mensuales en orden. Saltan a la vista tres rasgos.
+La serie sube de forma constante: los viajes aereos casi se triplicaron en los doce anos.
+Tambien tiene un ciclo anual, con un pico alto en verano (la gente vuela en vacaciones) y una
+caida en invierno. Y las oscilaciones se ensanchan a medida que la serie crece: la diferencia
+entre el pico de verano y el valle de invierno era pequena en 1949 y grande en 1960. Una sola
+linea recta no describira esto, pero una regresion con un termino de tendencia y un conjunto de
+indicadores mensuales bien podria hacerlo.
+
+```{figure} figures/fig_ch15_series.png
+:name: fig-ch15-series-es
+:alt: Un grafico de lineas de los pasajeros mensuales de una aerolinea internacional en miles, de 1949 a 1960. La serie sube desde unos 100 hasta mas de 600, repite un ciclo anual con un pico en verano y un valle en invierno, y el tamano de la oscilacion anual crece desde unos 30 en 1949 hasta mas de 150 para 1960.
+La serie aerea mensual: una tendencia creciente, un ciclo anual que se repite con picos en verano, y oscilaciones estacionales que se ensanchan a medida que sube el nivel general.
+```
+
+Los datos ordenados en el tiempo como estos rompen una promesa en la que se apoyaron los
+capitulos anteriores. Toda la inferencia que has hecho hasta ahora suponia que los errores no
+estaban correlacionados: la suerte de una observacion no te decia nada sobre la siguiente.
+Cuando las observaciones llegan en orden temporal, ese supuesto suele fallar. Un mes que corre
+por encima de la tendencia tiende a ir seguido por otro por encima de la tendencia, porque lo
+que empujo la demanda hacia arriba (una economia en auge, una ruta nueva) no desaparece de la
+noche a la manana. Este capitulo muestra que le hace esa correlacion a tus errores estandar,
+como detectarla, una forma clasica de eliminarla, y como juzgar un pronostico con honestidad
+probandolo en el futuro en lugar de en el pasado.
+
+:::{admonition} La leccion de un vistazo
+:class: important
+- **Que estamos haciendo:** Regresion sobre datos ordenados en el tiempo: un modelo de tendencia mas estacionalidad sobre la serie aerea en escala logaritmica, diagnosticando la autocorrelacion con la prueba de Durbin-Watson, eliminandola con Cochrane-Orcutt, y juzgando un pronostico fuera de tiempo.
+- **Por que lo hacemos:** Las observaciones ordenadas en el tiempo violan el supuesto de errores no correlacionados en el que se apoyo toda la inferencia anterior, y la autocorrelacion positiva hace que los errores estandar de minimos cuadrados ordinarios sean demasiado pequenos.
+- **Objetivo principal:** Ajustar e interpretar un modelo de tendencia y estacionalidad en la escala logaritmica, detectar y corregir la autocorrelacion de primer orden, y evaluar un pronostico probandolo en el futuro.
+- **Que cambio respecto a los capitulos anteriores:** Todo capitulo anterior suponia errores no correlacionados; aqui ese supuesto falla porque los datos llegan en orden temporal. Durbin-Watson (visto como diagnostico en @ch09-es) y la escala logaritmica (@ch10-log-interpretation-es) regresan, y el intervalo de prediccion de @ch03-prediction-interval-es resulta estar mal calibrado.
+:::
+
+:::{admonition} Objetivos de aprendizaje
+:class: tip
+Al terminar este capitulo podras:
+- **Ajustar** una regresion con una tendencia lineal y variables indicadoras estacionales (de mes) en escala logaritmica, e **interpretar** sus coeficientes de tendencia y estacionales.
+- **Explicar** por que los datos ordenados en el tiempo suelen violar el supuesto de errores no correlacionados, y **mostrar**, para la autocorrelacion positiva, que minimos cuadrados ordinarios reporta errores estandar demasiado pequenos.
+- **Diagnosticar** la autocorrelacion con un grafico de residuos contra el tiempo, un grafico de rezago y la prueba de Durbin-Watson.
+- **Derivar** la relacion entre el estadistico de Durbin-Watson y la autocorrelacion de residuos de rezago uno.
+- **Aplicar** la idea de Cochrane-Orcutt para eliminar la autocorrelacion de primer orden, y **derivar** por que funciona la cuasi-diferenciacion.
+- **Evaluar** un pronostico con una division de entrenamiento y prueba fuera de tiempo, calculando el error en el conjunto de prueba y la cobertura del intervalo de prediccion.
+- **Explicar** por que los intervalos de prediccion honestos para series de tiempo necesitan metodos mas alla de la regresion ordinaria.
+:::
+
+(ch15-trend-season-es)=
+## 15.1 Un modelo para la tendencia y la estacionalidad
+
+### Intuicion
+
+Empezamos donde siempre empieza el flujo de trabajo: con la imagen y la pregunta.
+@fig-ch15-series-es muestra tres ingredientes, y una regresion puede llevar un termino para cada
+uno. La subida constante es una **tendencia**, que modelamos con una linea recta en el indice de
+tiempo $t = 1, 2, \dots, 144$. El ciclo anual es **estacionalidad**, que modelamos con once
+variables indicadoras (ficticias) para los meses de febrero a diciembre, cada una midiendo como
+se situa ese mes respecto a una linea base de enero. Las oscilaciones crecientes son la razon
+por la que no modelamos los conteos crudos directamente.
+
+Mira otra vez la serie cruda: en 1949 el pico de verano esta quiza 30 por encima del valle de
+invierno, pero para 1960 esa misma brecha estacional supera los 150. El efecto estacional no es
+un numero fijo de pasajeros; es un *porcentaje* fijo del nivel actual. Cuando un efecto es
+multiplicativo asi, tomar logaritmos lo vuelve aditivo y, como bono, empareja la varianza.
+@fig-ch15-raw-vs-log-es muestra el beneficio: en la escala logaritmica las oscilaciones
+estacionales tienen aproximadamente el mismo ancho cada ano. Trabajar en la escala logaritmica
+es la idea de transformacion de @ch10-log-interpretation-es, y es lo que permite que un unico
+conjunto de efectos de mes ajuste los doce anos completos.
+
+```{figure} figures/fig_ch15_raw_vs_log.png
+:name: fig-ch15-raw-vs-log-es
+:alt: Dos graficos de lineas lado a lado de la serie aerea. El panel izquierdo, en la escala cruda, muestra oscilaciones estacionales que se ensanchan con el tiempo. El panel derecho, en la escala logaritmica, muestra oscilaciones estacionales de ancho aproximadamente constante en todos los anos.
+En la escala cruda (izquierda) las oscilaciones anuales se ensanchan al subir el nivel; en la escala logaritmica (derecha) mantienen un ancho casi constante. Los logaritmos convierten un patron estacional multiplicativo en uno aditivo y estabilizan la varianza.
+```
+
+### Formula
+
+Sea $Y_t$ el conteo de pasajeros en el mes $t$ y trabajemos con $\log Y_t$. El modelo lleva un
+termino para cada rasgo de @fig-ch15-series-es: una tendencia lineal, un desplazamiento fijo para
+cada mes, y un error.
+
+:::{admonition} Definicion 15.1: Modelo de tendencia mas estacionalidad
+:class: note definition
+Para una serie mensual $Y_t$ observada en $t = 1, \dots, n$, el **modelo de tendencia mas
+estacionalidad** en la escala logaritmica es
+
+$$
+\log Y_t = \beta_0 + \beta_1 t + \sum_{m=2}^{12} \gamma_m D_{mt} + \varepsilon_t ,
+\qquad t = 1, \dots, n ,
+$$
+
+una tendencia lineal $\beta_0 + \beta_1 t$ en el indice de tiempo mas un desplazamiento estacional
+$\gamma_m$ para cada mes $m = 2, \dots, 12$ (con $D_{mt}$ la indicadora del mes $m$ y enero como
+linea base) mas un error $\varepsilon_t$.
+:::
+
+Las piezas, termino por termino:
+
+- $t$ es el indice de tiempo, $1$ para enero de 1949 hasta $n = 144$ para diciembre de 1960.
+- $\beta_0$ es el intercepto: el nivel logaritmico de un enero en el tiempo $t = 0$ (un ancla de referencia).
+- $\beta_1$ es la pendiente de tendencia: el cambio en $\log Y$ por mes. Como $Y$ esta en logaritmos, $\beta_1$ es una tasa de crecimiento proporcional aproximada por mes (de @ch10-log-interpretation-es).
+- $D_{mt}$ es la indicadora del mes $m$: vale $1$ cuando el mes $t$ es el mes calendario $m$, y $0$ en otro caso. Hay once de ellas, de febrero ($m=2$) a diciembre ($m=12$).
+- $\gamma_m$ es el coeficiente estacional del mes $m$: cuanto se situa el mes $m$ por encima o por debajo de enero en la escala logaritmica, manteniendo fija la tendencia. Enero es el mes de referencia, codificado con las once indicadoras en cero, exactamente el esquema de codificacion ficticia de @ch11-dummy-coding-es.
+- $\varepsilon_t$ es el error en el mes $t$.
+
+En palabras: el conteo logaritmico de pasajeros es una tendencia en linea recta mas un
+desplazamiento fijo para cada mes del ano mas una perturbacion. Por ahora ajustamos esto por
+minimos cuadrados ordinarios, tratando a los $\varepsilon_t$ como si cumplieran los supuestos
+habituales. La Seccion 15.2 revisa si lo hacen.
+
+### R
+
+Leemos el archivo mensual ordenado, construimos un indice de tiempo y una respuesta logaritmica,
+y hacemos de `month` un factor para que `lm` lo expanda en variables indicadoras automaticamente.
+
+```r
+air <- read.csv("data/airpassengers.csv")
+air$t <- seq_len(nrow(air))
+air$logpass <- log(air$passengers)
+air$month <- factor(air$month)
+dim(air)
+head(air, 3)
+```
+```text
+[1] 144   5
+  year month passengers t  logpass
+1 1949     1        112 1 4.718499
+2 1949     2        118 2 4.770685
+3 1949     3        132 3 4.882802
+```
+
+:::{admonition} Ejemplo 15.1: Ajuste del modelo de tendencia mas estacionalidad
+:class: note
+**Pregunta.** Cuales son los coeficientes de tendencia y estacionales, y que tan bien ajusta este
+modelo la serie logaritmica?
+
+**Intuicion.** Regresar $\log Y$ sobre el indice de tiempo y las once indicadoras de mes. Leer la
+pendiente de tendencia como una tasa de crecimiento mensual y cada coeficiente de mes como un
+desplazamiento estacional respecto a enero.
+
+**Formula.** $\log Y_t = \beta_0 + \beta_1 t + \sum_{m=2}^{12}\gamma_m D_{mt} + \varepsilon_t$,
+ajustado por minimos cuadrados.
+
+**Calculo.**
+
+```r
+fit <- lm(logpass ~ t + month, data = air)
+round(coef(fit), 4)
+c(R2 = summary(fit)$r.squared, resid_se = summary(fit)$sigma)
+```
+```text
+(Intercept)           t      month2      month3      month4      month5
+     4.7268      0.0101     -0.0221      0.1082      0.0769      0.0745
+     month6      month7      month8      month9     month10     month11
+     0.1967      0.3006      0.2913      0.1467      0.0085     -0.1352
+    month12
+    -0.0213
+        R2   resid_se
+0.98346816 0.05930356
+```
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+air = pd.read_csv("data/airpassengers.csv")
+air["t"] = np.arange(1, len(air) + 1)
+air["logpass"] = np.log(air["passengers"])
+fit = smf.ols("logpass ~ t + C(month)", data=air).fit()
+print(round(fit.params["t"], 4))
+print(round(fit.rsquared, 4), round(np.sqrt(fit.scale), 5))
+```
+```text
+0.0101
+0.9835 0.0593
+```
+
+**Interpretacion.** El modelo explica el $98.3\%$ de la variacion en $\log Y$, con una desviacion
+estandar de los residuos de cerca de $0.059$ en la escala logaritmica. La pendiente de tendencia
+estimada es $b_1 \approx 0.0101$ por mes. Los coeficientes estacionales ordenan los meses: julio
+($\hat\gamma_7 = 0.3006$) y agosto ($0.2913$) estan mas altos, noviembre ($-0.1352$) mas bajo, todo
+respecto a enero. Como son desplazamientos logaritmicos, el $0.30$ de julio significa que el
+trafico de julio corre cerca de $e^{0.30} - 1 \approx 35\%$ por encima de un enero en el mismo
+punto de la tendencia, mientras que noviembre corre cerca de $e^{-0.135} - 1 \approx 13\%$ por
+debajo. La historia estacional coincide con la imagen de vacaciones de verano del grafico crudo.
+:::
+
+Once coeficientes son dificiles de imaginar desde una tabla, asi que @fig-ch15-seasonal-bars-es
+los dibuja como barras. Cada barra es el desplazamiento de un mes respecto a enero, y la forma
+cuenta toda la historia estacional de un vistazo: una joroba de verano con pico en julio y agosto,
+una caida suave a fines del otono.
+
+```{figure} figures/fig_ch15_seasonal_bars.png
+:name: fig-ch15-seasonal-bars-es
+:alt: Un grafico de barras de los once desplazamientos estacionales mensuales del modelo ajustado, con enero fijo en cero como linea base. Las barras suben durante la primavera hasta un pico de verano en julio (cerca de 0.30) y agosto (cerca de 0.29), luego caen a un minimo en noviembre (cerca de menos 0.14). Las barras por encima de enero son azules, las que estan por debajo son naranjas.
+Los coeficientes estacionales como barras, cada uno medido contra una linea base de enero. El pico de verano y el minimo de noviembre que ordenan los numeros son mucho mas faciles de ver como una forma que como una columna de decimales.
+```
+
+La pendiente de tendencia merece su propia lectura, porque los logaritmos la convierten en una
+tasa de crecimiento.
+
+:::{admonition} Ejemplo 15.2: La tendencia como tasa de crecimiento
+:class: note
+**Pregunta.** Que tan rapido crece el trafico aereo, en porcentaje por mes y por ano?
+
+**Intuicion.** En la escala logaritmica una pendiente es un cambio proporcional aproximado.
+Exponenciar la convierte en un factor multiplicativo exacto; restar uno y escalar por 100 da un
+porcentaje.
+
+**Formula.** Crecimiento mensual $= (e^{\beta_1} - 1)\times 100\%$; crecimiento anual
+$= (e^{12\beta_1} - 1)\times 100\%$.
+
+**Calculo.**
+
+```r
+monthly_growth <- (exp(coef(fit)["t"]) - 1) * 100
+annual_growth <- (exp(12 * coef(fit)["t"]) - 1) * 100
+round(c(monthly_pct = monthly_growth, annual_pct = annual_growth), 3)
+```
+```text
+monthly_pct.t  annual_pct.t
+        1.012        12.843
+```
+
+```python
+monthly_growth = (np.exp(fit.params["t"]) - 1) * 100
+annual_growth = (np.exp(12 * fit.params["t"]) - 1) * 100
+print(round(monthly_growth, 3), round(annual_growth, 3))
+```
+```text
+1.012 12.843
+```
+
+**Interpretacion.** La tendencia ajustada dice que el trafico de pasajeros crecio cerca de
+$1.0\%$ por mes, lo que se compone a aproximadamente $12.8\%$ por ano entre 1949 y 1960. Ese unico
+numero, leido directamente de la pendiente, es la clase de resumen que quiere un departamento de
+planificacion. Si deberias confiar en su error estandar es la pregunta de la siguiente seccion.
+:::
+
+@fig-ch15-fitted-es superpone los valores ajustados sobre la serie logaritmica observada. La
+tendencia recta mas doce desplazamientos mensuales reproduce de cerca la forma de sierra, que es
+por lo que el $R^2$ es tan alto.
+
+```{figure} figures/fig_ch15_fitted.png
+:name: fig-ch15-fitted-es
+:alt: Un grafico de lineas en la escala logaritmica que muestra los pasajeros logaritmicos observados y los valores ajustados del modelo de tendencia mas mes, de 1949 a 1960. La linea ajustada sigue de cerca el patron de sierra observado, capturando tanto la tendencia ascendente como la forma estacional que se repite.
+El modelo de tendencia mas mes en la escala logaritmica. Una unica tendencia recta y once desplazamientos estacionales siguen de cerca la sierra observada, que es por lo que el modelo explica el 98 por ciento de la variacion.
+```
+
+::::{admonition} Practica 15.1
+:class: important
+El coeficiente de agosto estimado es $\hat\gamma_8 = 0.2913$. Conviertelo en una diferencia porcentual
+aproximada respecto a enero, y di en una oracion que significa para la aerolinea.
+
+:::{admonition} Solucion
+:class: dropdown
+$e^{0.2913} - 1 = 0.338$, asi que el trafico de agosto corre cerca de $34\%$ por encima de un
+enero en el mismo punto de la tendencia. Para la aerolinea significa que la demanda de fin de
+verano es aproximadamente un tercio mayor que la linea base de invierno, asi que agosto necesita
+mucha mas capacidad que enero del mismo ano.
+:::
+::::
+
+(ch15-autocorrelation-es)=
+## 15.2 Por que el tiempo rompe los minimos cuadrados ordinarios
+
+### Intuicion
+
+Ya podemos ajustar la linea; la siguiente pregunta obvia es si deberiamos confiar en sus errores
+estandar. Recuerda el habito del grafico de residuos del Capitulo 2: despues de cualquier ajuste,
+mira los residuos. Para datos temporales, graficalos en orden temporal. @fig-ch15-resid-time-es
+hace exactamente eso para el modelo de tendencia mas estacionalidad, y la imagen no es la banda
+aleatoria que quieres. Los residuos se mueven en rachas largas: un tramo de meses por encima de
+cero, luego un tramo por debajo, luego por encima otra vez. Un mes que se pasa del modelo suele ir
+seguido por otro que tambien se pasa. Eso es **autocorrelacion** (Definicion 15.2): los errores
+estan correlacionados con su propio pasado reciente.
+
+:::{admonition} Definicion 15.2: Autocorrelacion
+:class: note definition
+La **autocorrelacion** es la correlacion de los errores de regresion con sus propios valores
+pasados. Los errores muestran autocorrelacion *positiva* cuando errores consecutivos tienden a
+compartir signo, de modo que un mes por encima del modelo suele ir seguido por otro por encima.
+:::
+
+```{figure} figures/fig_ch15_resid_time.png
+:name: fig-ch15-resid-time-es
+:alt: Un grafico de los residuos del modelo de tendencia mas mes contra el tiempo de 1949 a 1960, dibujado como tallos desde una linea de cero y coloreado por signo. Los residuos forman rachas largas del mismo color, varios anos de residuos en su mayoria positivos seguidos por tramos de residuos en su mayoria negativos, en lugar de alternar al azar.
+Los residuos del modelo en orden temporal forman rachas largas del mismo signo en lugar de dispersarse al azar alrededor de cero. Ese agrupamiento es la firma visual de la autocorrelacion positiva.
+```
+
+La autocorrelacion importa porque rompe el supuesto de "errores no correlacionados" sobre el que
+se construyo cada formula de error estandar de este libro. Bajo las condiciones de Gauss-Markov de
+@ch02-gauss-markov-slr-es, los errores distintos no estaban correlacionados. Cuando no lo estan,
+minimos cuadrados sigue cayendo sobre una estimacion insesgada de la pendiente, pero su error
+estandar reportado es incorrecto. Para la autocorrelacion positiva que casi siempre ves en series
+de tiempo, es incorrecto en la direccion peligrosa: demasiado pequeno. El software imprime un
+intervalo de confianza estrecho y un valor p diminuto, y crees que la tendencia esta fijada con
+mucha mas precision de la que los datos sostienen.
+
+### Formula
+
+El modelo mas simple y comun para errores correlacionados es el **modelo autorregresivo de primer
+orden**, escrito AR(1).
+
+:::{admonition} Definicion 15.3: Modelo de error autorregresivo de primer orden (AR(1))
+:class: note definition
+El **modelo de error autorregresivo de primer orden**, escrito AR(1), especifica
+
+$$
+\varepsilon_t = \rho\, \varepsilon_{t-1} + u_t, \qquad u_t \overset{\text{iid}}{\sim} N(0, \sigma_u^2),
+\qquad |\rho| < 1 ,
+$$
+
+de modo que cada error es una fraccion $\rho$ del error anterior mas una **innovacion**
+independiente $u_t$. El **parametro de autocorrelacion** $\rho$ es la correlacion entre errores
+consecutivos, y $|\rho| < 1$ mantiene estable el proceso.
+:::
+
+Leyendo las piezas:
+
+- $\varepsilon_t$ es el error de regresion en el mes $t$, lo que supusimos no correlacionado pero no lo esta.
+- $\rho$ es el **parametro de autocorrelacion**: la correlacion entre un error y el inmediatamente anterior. Un $\rho$ positivo significa que errores consecutivos tienden a compartir signo.
+- $u_t$ es la **innovacion**: el choque genuinamente nuevo e impredecible en el mes $t$, y estos *si* son independientes con varianza constante.
+- $|\rho| < 1$ mantiene estable el proceso para que los errores no se disparen.
+
+En palabras: el error de este mes es una fraccion $\rho$ del error del mes pasado mas un choque
+independiente y fresco. @fig-ch15-autocorr-intuition-es contrasta errores independientes con
+errores AR(1) de la misma varianza. La serie independiente no tiene memoria; la serie AR(1)
+deambula en rachas, exactamente como los residuos de @fig-ch15-resid-time-es.
+
+```{figure} figures/fig_ch15_autocorr_intuition.png
+:name: fig-ch15-autocorr-intuition-es
+:alt: Dos graficos temporales lado a lado de series de error simuladas con la misma varianza. El panel izquierdo, errores independientes, tiembla rapidamente alrededor de cero sin memoria. El panel derecho, errores AR(1) con rho igual a 0.8, deambula en rachas largas y suaves por encima y por debajo de cero.
+Errores independientes (izquierda) y errores AR(1) positivamente autocorrelacionados (derecha) con la misma varianza. La serie AR(1) deriva en rachas largas, que es por lo que los residuos autocorrelacionados se agrupan por signo.
+```
+
+### Derivacion
+
+Por que la autocorrelacion positiva hace que el error estandar reportado sea demasiado pequeno? El
+lugar mas limpio para ver el mecanismo es el estimador mas simple, la media muestral, donde el
+algebra es corta y la leccion se transfiere directamente a la pendiente de regresion.
+
+:::{admonition} Teorema 15.4: La autocorrelacion positiva infla la varianza de la media
+:class: important theorem
+Sea $Y_t = \mu + \varepsilon_t$ para $t = 1, \dots, n$, donde cada error tiene media cero y
+varianza $\sigma^2$ y $\operatorname{Corr}\{\varepsilon_t, \varepsilon_{t+k}\} = \rho^{\,k}$.
+Entonces la media muestral tiene varianza
+
+$$
+\operatorname{Var}\{\bar Y\}
+= \frac{\sigma^2}{n}\left(1 + 2\sum_{k=1}^{n-1}\Big(1 - \frac{k}{n}\Big)\rho^{\,k}\right).
+$$
+
+Cuando $\rho > 0$ cada termino de la suma es positivo, asi que
+$\operatorname{Var}\{\bar Y\} > \sigma^2/n$: la varianza verdadera supera al $\sigma^2/n$ que
+estima la formula ordinaria, y lo mismo vale para la pendiente de regresion.
+:::
+
+**Demostracion.** Supongamos
+$Y_t = \mu + \varepsilon_t$ para $t = 1, \dots, n$, donde cada error tiene media cero y varianza
+$\sigma^2$, y los errores vecinos tienen correlacion
+$\operatorname{Corr}\{\varepsilon_t, \varepsilon_{t+k}\} = \rho^{\,k}$, el patron AR(1). El
+estimador de $\mu$ es $\bar Y$. Su varianza verdadera es
+
+$$
+\operatorname{Var}\{\bar Y\}
+= \frac{1}{n^2}\operatorname{Var}\!\Big\{\sum_{t=1}^n \varepsilon_t\Big\}
+= \frac{1}{n^2}\Big(\sum_{t=1}^n \operatorname{Var}\{\varepsilon_t\}
++ 2\sum_{s<t}\operatorname{Cov}\{\varepsilon_s, \varepsilon_t\}\Big).
+$$
+
+La primera suma es $n\sigma^2$. Cada covarianza es
+$\operatorname{Cov}\{\varepsilon_s,\varepsilon_t\} = \sigma^2 \rho^{\,|t-s|}$, asi que recogiendo
+terminos por su rezago $k = t - s$ da
+
+$$
+\operatorname{Var}\{\bar Y\}
+= \frac{\sigma^2}{n}\left(1 + 2\sum_{k=1}^{n-1}\Big(1 - \frac{k}{n}\Big)\rho^{\,k}\right).
+$$
+
+En palabras: la varianza verdadera de la media es el familiar $\sigma^2/n$ multiplicado por un
+corchete que depende de la autocorrelacion. Cuando los errores no estan correlacionados
+($\rho = 0$) el corchete es $1$ y recuperamos $\sigma^2/n$. Cuando $\rho > 0$ cada termino de la
+suma es positivo, asi que el corchete supera a $1$ y la varianza verdadera es *mayor* que
+$\sigma^2/n$. Pero $\sigma^2/n$ es exactamente lo que estima la formula ordinaria, porque ignora
+las covarianzas. Asi que minimos cuadrados ordinarios divide entre muy poco y reporta una varianza,
+y un error estandar, que son demasiado pequenos. La misma cancelacion de covarianzas infla la
+varianza verdadera de la pendiente de regresion $b_1$; solo la contabilidad es mas larga.
+$\blacksquare$
+
+:::{admonition} Idea clave
+:class: tip keyidea
+La autocorrelacion no sesga las estimaciones de minimos cuadrados; corrompe su precision
+declarada. Con autocorrelacion positiva los errores estandar reportados salen demasiado pequenos,
+asi que los intervalos de confianza se ven mas estrechos y los valores p mas pequenos de lo que
+los datos justifican. La estimacion puntual esta bien; las barras de error mienten.
+:::
+
+Que tan fuerte muerde esto en la practica? Una simulacion lo vuelve concreto, y vale la pena
+correrla tu mismo, con el espiritu del habito de "comprueba una formula simulandola".
+
+:::{admonition} Ejemplo 15.3: Cuanto subestima MCO el error estandar de la pendiente?
+:class: note
+**Pregunta.** Con errores fuertemente autocorrelacionados, que tan lejos esta el error estandar
+que minimos cuadrados ordinarios reporta para una pendiente?
+
+**Intuicion.** Generar muchas series de tiempo con una tendencia conocida y errores AR(1)
+($\rho = 0.8$). Para cada una, ajustar la tendencia por minimos cuadrados y registrar tanto la
+estimacion de la pendiente como el error estandar que reporta el software. La dispersion de las
+estimaciones de la pendiente a lo largo de las simulaciones es el error estandar *verdadero*;
+compararlo con el promedio *reportado*.
+
+**Formula.** $\operatorname{sd}\{b_1\}$ verdadero = desviacion estandar de los valores de $b_1$
+simulados; SE reportado = el habitual $\sqrt{\mathrm{MSE}/S_{tt}}$ de cada ajuste, donde
+$S_{tt} = \sum_t (t - \bar t)^2$ es la suma de cuadrados de las desviaciones del predictor de
+tiempo.
+
+**Calculo.**
+
+```r
+set.seed(4210)
+n <- 100
+x <- 1:n
+rho <- 0.8
+reps <- 2000
+keep <- matrix(NA, reps, 2)
+for (r in 1:reps) {
+  u <- rnorm(n)
+  eps <- numeric(n)
+  eps[1] <- u[1]
+  for (i in 2:n) eps[i] <- rho * eps[i - 1] + u[i]
+  y <- 2 + 0.5 * x + eps
+  m <- lm(y ~ x)
+  keep[r, ] <- c(coef(m)[2], summary(m)$coefficients[2, 2])
+}
+true_sd <- sd(keep[, 1])
+mean_reported_se <- mean(keep[, 2])
+round(c(true_sd_of_b1 = true_sd,
+        mean_OLS_reported_se = mean_reported_se,
+        ratio = mean_reported_se / true_sd), 4)
+```
+```text
+       true_sd_of_b1 mean_OLS_reported_se                ratio
+              0.0163               0.0052               0.3209
+```
+
+```python
+rng = np.random.default_rng(4210)
+n = 100
+x = np.arange(1, n + 1)
+rho = 0.8
+reps = 2000
+b1 = np.empty(reps)
+se = np.empty(reps)
+for r in range(reps):
+    u = rng.standard_normal(n)
+    eps = np.empty(n)
+    eps[0] = u[0]
+    for i in range(1, n):
+        eps[i] = rho * eps[i - 1] + u[i]
+    y = 2 + 0.5 * x + eps
+    m = smf.ols("y ~ x", data=pd.DataFrame({"x": x, "y": y})).fit()
+    b1[r] = m.params["x"]
+    se[r] = m.bse["x"]
+print(round(b1.std(ddof=1), 4), round(se.mean(), 4),
+      round(se.mean() / b1.std(ddof=1), 4))
+```
+```text
+0.0157 0.0052 0.3326
+```
+
+**Interpretacion.** Las estimaciones de la pendiente en realidad varian con una desviacion
+estandar cercana a $0.016$, pero minimos cuadrados reporta un error estandar promedio de solo unos
+$0.005$, aproximadamente un tercio de la verdad. Un intervalo de confianza construido con el SE
+reportado es cerca de tres veces demasiado estrecho, asi que un intervalo nominal del $95\%$ cubre
+la pendiente verdadera mucho menos que el $95\%$ de las veces, y las pruebas t rechazan una
+hipotesis nula verdadera mucho mas del $5\%$ de las veces. @fig-ch15-se-simulation-es muestra la
+brecha: el histograma de las estimaciones de la pendiente es ancho, el error estandar reportado es
+una astilla. Este es el peligro practico de ignorar la autocorrelacion, y es por lo que el valor p
+diminuto de la tendencia en el modelo aereo no puede tomarse al pie de la letra.
+:::
+
+```{figure} figures/fig_ch15_se_simulation.png
+:name: fig-ch15-se-simulation-es
+:alt: Un histograma de 2000 estimaciones de pendiente simuladas centradas en la pendiente verdadera de 0.5, con una flecha ancha de doble punta marcando la dispersion verdadera de cerca de mas o menos 0.016 y una flecha mucho mas corta marcando el error estandar promedio reportado por MCO de cerca de mas o menos 0.005.
+Dos mil estimaciones de pendiente bajo errores AR(1). Su dispersion real (flecha ancha) es cerca de tres veces el error estandar que reporta minimos cuadrados ordinarios (flecha corta), asi que el intervalo de confianza habitual es demasiado estrecho.
+```
+
+:::{admonition} Habilidad duradera: Comprueba el supuesto del que depende tu inferencia
+:class: tip
+Un numero es tan confiable como el supuesto que lo respalda. Minimos cuadrados da una estimacion
+puntual honesta bajo condiciones muy debiles, pero sus errores estandar, intervalos de confianza y
+valores p se apoyan todos en que los errores no esten correlacionados. El orden temporal es la
+forma mas comun en que ese apoyo falla, y falla en silencio: el software imprime un intervalo
+confiado de cualquier modo. Antes de reportar un error estandar sobre datos recogidos a lo largo
+del tiempo, del espacio, o de cualquier otro ordenamiento, pregunta que le pasaria a ese numero si
+las observaciones vecinas estuvieran correlacionadas, y comprueba. El habito de nombrar el supuesto
+que sostiene la carga y probarlo, en lugar de confiar en la salida por defecto, es lo que separa a
+un analista de quien solo aprieta botones.
+:::
+
+::::{admonition} Practica 15.2
+:class: important
+La derivacion dio $\operatorname{Var}\{\bar Y\} = \frac{\sigma^2}{n}\big(1 + 2\sum_{k=1}^{n-1}
+(1 - k/n)\rho^k\big)$. Para una serie larga el corchete se acerca a $(1 + \rho)/(1 - \rho)$. Toma
+$\rho = 0.5$. (a) Evalua el corchete. (b) Por que factor es el error estandar verdadero de $\bar Y$
+mayor que el $\sigma/\sqrt{n}$ que reporta minimos cuadrados ordinarios? (c) Di en una oracion que
+le hace eso a un intervalo de confianza nominal del $95\%$.
+
+:::{admonition} Solucion
+:class: dropdown
+(a) El corchete es $(1 + 0.5)/(1 - 0.5) = 3$. (b) La varianza verdadera es $3\sigma^2/n$, asi que
+el error estandar verdadero es $\sqrt{3}\,\sigma/\sqrt{n} \approx 1.73$ veces el $\sigma/\sqrt{n}$
+que reporta minimos cuadrados ordinarios. (c) El intervalo ordinario es cerca de $1.73$ veces
+demasiado estrecho, asi que un intervalo nominal del $95\%$ cubre la media verdadera mucho menos
+que el $95\%$ de las veces: la precision reportada esta sobrestimada, exactamente el peligro que el
+Ejemplo 15.3 midio por simulacion.
+:::
+::::
+
+La simulacion de abajo pone todo ese argumento bajo tu dedo: mantiene fijos los datos y los
+choques y te deja subir la autocorrelacion, para que veas como el error estandar reportado se
+queda quieto mientras el verdadero se le escapa.
+
+```{iframe} ../../sims/ch15-autocorrelation.html?lang=es
+:class: sim sim-m
+:width: 100%
+Desliza la autocorrelacion rho y observa como los residuos caen en rachas largas, el estadistico de Durbin-Watson baja de 2 hacia 0, y el error estandar que reportan los minimos cuadrados se aleja cada vez mas por debajo de la dispersion verdadera de la pendiente.
+```
+
+(ch15-durbin-watson-es)=
+## 15.3 Deteccion de la autocorrelacion: la prueba de Durbin-Watson
+
+### Intuicion
+
+El grafico de residuos te advierte; una prueba cuantifica la advertencia. Dos imagenes apuntan en
+la misma direccion. Un **grafico de rezago** (Definicion 15.5) grafica cada residuo $e_t$ contra el
+residuo anterior $e_{t-1}$; la autocorrelacion positiva aparece como una inclinacion hacia arriba,
+porque un residuo positivo tiende a sentarse junto a otro positivo. @fig-ch15-lag-plot-es es ese
+grafico para el modelo aereo, y la inclinacion es inconfundible.
+
+:::{admonition} Definicion 15.5: Grafico de rezago
+:class: note definition
+Un **grafico de rezago** de residuos es un diagrama de dispersion de cada residuo $e_t$ contra su
+antecesor $e_{t-1}$. Una inclinacion hacia arriba senala autocorrelacion positiva, una inclinacion
+hacia abajo negativa, y una nube redonda ninguna.
+:::
+
+La **prueba de Durbin-Watson** convierte esa inclinacion en un solo numero y un valor p. Conociste
+esta prueba como un elemento del conjunto de herramientas de diagnostico de @ch09-es, donde marco
+un ordenamiento en los residuos de ahorro; aqui estan los datos ordenados en el tiempo para los que
+fue construida, y aqui es donde por fin derivamos por que su escala corre como corre.
+
+```{figure} figures/fig_ch15_lag_plot.png
+:name: fig-ch15-lag-plot-es
+:alt: Un diagrama de dispersion de cada residuo del modelo contra el residuo anterior, con una linea ajustada de pendiente positiva de cerca de 0.79 pasando por el origen. Los puntos se agrupan a lo largo de la linea ascendente, mostrando que un residuo y su antecesor tienden a tener el mismo signo.
+Cada residuo contra el anterior. La clara inclinacion hacia arriba (pendiente cerca de 0.79) significa que un residuo suele ir seguido por otro del mismo signo, la definicion de autocorrelacion positiva.
+```
+
+### Formula
+
+El **estadistico de Durbin-Watson** mide cuanto difieren los residuos consecutivos.
+
+:::{admonition} Definicion 15.6: Estadistico de Durbin-Watson
+:class: note definition
+El **estadistico de Durbin-Watson** para los residuos de regresion $e_t$ es
+
+$$
+D = \frac{\sum_{t=2}^{n} (e_t - e_{t-1})^2}{\sum_{t=1}^{n} e_t^2} ,
+$$
+
+la suma de cambios al cuadrado entre residuos vecinos dividida entre la suma de cuadrados de los
+residuos. Corre de $0$ (autocorrelacion positiva fuerte) pasando por $2$ (ninguna) hasta $4$
+(negativa fuerte).
+:::
+
+- $e_t$ es el residuo en el mes $t$ de la regresion ajustada.
+- El numerador suma los *cambios* al cuadrado entre residuos vecinos; el denominador es la suma de cuadrados de los residuos habitual.
+
+El estadistico corre de $0$ a $4$. Cuando los residuos vecinos son casi iguales (autocorrelacion
+positiva fuerte) el numerador es pequeno y $D$ esta cerca de $0$. Cuando los residuos alternan de
+signo (autocorrelacion negativa) los cambios son grandes y $D$ esta cerca de $4$. Cuando los
+residuos no estan correlacionados, $D$ se situa cerca de $2$. @fig-ch15-dw-scale-es es la recta
+numerica que hay que tener en mente.
+
+```{figure} figures/fig_ch15_dw_scale.png
+:name: fig-ch15-dw-scale-es
+:alt: Una recta numerica horizontal de 0 a 4 sombreada en tres zonas: cerca de 0 etiquetada autocorrelacion positiva, cerca de 2 etiquetada ninguna o ideal, cerca de 4 etiquetada autocorrelacion negativa. Un marcador rojo se situa en 0.43, muy dentro de la zona de autocorrelacion positiva, etiquetado modelo airpassengers DW igual a 0.43.
+El estadistico de Durbin-Watson corre de 0 a 4: cerca de 0 es autocorrelacion positiva fuerte, cerca de 2 es ninguna, cerca de 4 es negativa. El modelo aereo cae en 0.43, muy dentro de la zona positiva.
+```
+
+### Derivacion
+
+La escala no es arbitraria. El Capitulo 9 enuncio el atajo $D \approx 2(1 - \hat\rho)$ en su
+resumen y lo uso para leer el estadistico de ahorro; ahora que la autocorrelacion es toda la
+historia, vale la pena ver de donde viene esa identidad. El estadistico de Durbin-Watson es, salvo
+una correccion de muestra pequena, solo un reescalamiento de la autocorrelacion de residuos de
+rezago uno, lo que explica por que $2$ es el valor neutral.
+
+:::{admonition} Teorema 15.7: Estadistico de Durbin-Watson y autocorrelacion de rezago uno
+:class: important theorem
+Para los residuos de una regresion sobre una serie razonablemente larga,
+
+$$
+D \approx 2(1 - r_1), \qquad
+r_1 = \frac{\sum_{t=2}^{n} e_t e_{t-1}}{\sum_{t=1}^{n} e_t^2} ,
+$$
+
+donde $r_1$ es la autocorrelacion de residuos de rezago uno. Por tanto $D \approx 2$ cuando
+$r_1 = 0$, $D \to 0$ cuando $r_1 \to 1$, y $D \to 4$ cuando $r_1 \to -1$.
+:::
+
+**Demostracion.** Desarrolla el cuadrado en el numerador:
+
+$$
+\sum_{t=2}^{n} (e_t - e_{t-1})^2
+= \sum_{t=2}^{n} e_t^2 + \sum_{t=2}^{n} e_{t-1}^2 - 2\sum_{t=2}^{n} e_t e_{t-1} .
+$$
+
+Para una serie razonablemente larga las primeras dos sumas estan cada una muy cerca de la suma de
+cuadrados de los residuos completa $\sum_{t=1}^n e_t^2$, porque cada una deja fuera solo un termino
+(el ultimo o el primero). Escribe
+$r_1 = \big(\sum_{t=2}^n e_t e_{t-1}\big)\big/\big(\sum_{t=1}^n e_t^2\big)$ para la autocorrelacion
+de residuos de rezago uno. Dividiendo el desarrollo entre $\sum e_t^2$,
+
+$$
+D = \frac{\sum_{t=2}^{n} e_t^2 + \sum_{t=2}^{n} e_{t-1}^2 - 2\sum_{t=2}^{n} e_t e_{t-1}}
+{\sum_{t=1}^{n} e_t^2}
+\;\approx\; 1 + 1 - 2 r_1 = 2(1 - r_1) .
+$$
+
+En palabras: el estadistico de Durbin-Watson es aproximadamente $2$ menos dos veces la
+autocorrelacion de rezago uno. Si $r_1 = 0$ entonces $D \approx 2$; si $r_1 \to 1$ entonces
+$D \to 0$; si $r_1 \to -1$ entonces $D \to 4$. Por esto un valor cerca de $2$ senala ausencia de
+autocorrelacion. $\blacksquare$
+
+Decidir si un $D$ observado esta lo bastante lejos de $2$ para ser sorprendente es algo incomodo.
+La distribucion nula de $D$ depende de los valores del predictor, asi que Durbin y Watson
+publicaron un par de cotas, $d_L$ y $d_U$, que enmarcan el valor critico verdadero. El software
+esquiva las tablas calculando el valor p directamente. Ambos aparecen abajo.
+
+### R y Python
+
+:::{admonition} Ejemplo 15.4: Durbin-Watson sobre el modelo aereo
+:class: note
+**Pregunta.** Es real la autocorrelacion en los residuos aereos, o podria ser azar?
+
+**Intuicion.** Calcular $D$ a partir de los residuos, confirmarlo contra $2(1 - r_1)$, y leer el
+valor p de una prueba formal.
+
+**Formula.** $D = \sum (e_t - e_{t-1})^2 / \sum e_t^2$ y $D \approx 2(1 - r_1)$.
+
+**Calculo.**
+
+```r
+e <- residuals(fit)
+DW <- sum(diff(e)^2) / sum(e^2)
+round(DW, 4)
+```
+```text
+[1] 0.4252
+```
+
+```python
+from statsmodels.stats.stattools import durbin_watson
+e = fit.resid.to_numpy()
+DW = durbin_watson(e)
+print(round(DW, 4))
+```
+```text
+0.4252
+```
+
+La prueba formal en R, del paquete `lmtest`, adjunta un valor p:
+
+```r
+library(lmtest)
+dwtest(fit)
+```
+```text
+	Durbin-Watson test
+
+data:  fit
+DW = 0.42518, p-value < 2.2e-16
+alternative hypothesis: true autocorrelation is greater than 0
+```
+
+El estadistico concuerda con el atajo $2(1 - r_1)$:
+
+```r
+r1 <- sum(e[-1] * e[-length(e)]) / sum(e^2)
+round(c(lag1_autocorr = r1, two_times_1_minus_r1 = 2 * (1 - r1)), 4)
+```
+```text
+       lag1_autocorr two_times_1_minus_r1
+              0.7788               0.4423
+```
+
+```python
+r1 = np.sum(e[1:] * e[:-1]) / np.sum(e**2)
+print(round(r1, 4), round(2 * (1 - r1), 4))
+```
+```text
+0.7788 0.4423
+```
+
+**Interpretacion.** El estadistico de Durbin-Watson es $D = 0.43$, muy por debajo del valor neutral
+de $2$ y muy dentro de la zona de autocorrelacion positiva, con un valor p por debajo de
+$2\times 10^{-16}$: la autocorrelacion no es azar. La autocorrelacion de residuos de rezago uno es
+$r_1 = 0.78$, y el atajo $2(1 - r_1) = 0.44$ coincide con $D$ salvo la correccion de muestra
+pequena. La conclusion es firme: los errores en el modelo aereo estan fuertemente correlacionados
+de forma positiva, asi que los errores estandar y valores p pulcros del Ejemplo 15.1 no son
+confiables. Necesitamos o bien un modelo distinto para los errores o bien una forma distinta de
+juzgar el ajuste. Las siguientes dos secciones toman cada camino.
+:::
+
+::::{admonition} Practica 15.3
+:class: important
+Un colega ajusta una regresion a 60 trimestres de datos de ventas y reporta un estadistico de
+Durbin-Watson de $D = 1.98$. Sin ninguna tabla, que autocorrelacion de rezago uno implica eso, y
+que deberia concluir el colega sobre el supuesto de independencia?
+
+:::{admonition} Solucion
+:class: dropdown
+De $D \approx 2(1 - r_1)$, despeja $r_1 \approx 1 - D/2 = 1 - 0.99 = 0.01$. La autocorrelacion de
+rezago uno es esencialmente cero, asi que $D = 1.98$ esta justo al lado del valor neutral de $2$.
+No hay evidencia de autocorrelacion de primer orden, y los errores estandar habituales son
+defendibles en ese aspecto. (Una prueba formal devolveria un valor p grande.)
+:::
+::::
+
+(ch15-cochrane-orcutt-es)=
+## 15.4 Un remedio: el procedimiento de Cochrane-Orcutt
+
+### Intuicion
+
+Si los errores siguen un patron AR(1), podemos transformarlos para eliminarlos. El truco es la
+**cuasi-diferenciacion**: en lugar de la serie cruda, regresamos cada observacion menos $\rho$
+veces la observacion anterior. Esa combinacion cancela la parte correlacionada del error y deja
+atras las innovaciones frescas e independientes. Como el modelo transformado tiene errores no
+correlacionados, minimos cuadrados ordinarios sobre el es valido otra vez. El unico inconveniente
+es que $\rho$ es desconocido, asi que lo estimamos a partir de los residuos e iteramos. Ese bucle
+es el **procedimiento de Cochrane-Orcutt**.
+
+:::{admonition} Definicion 15.8: Cuasi-diferenciacion
+:class: note definition
+La **cuasi-diferenciacion** reemplaza cada observacion por si misma menos $\rho$ veces su
+antecesor, $Y_t - \rho Y_{t-1}$, y hace lo mismo con cada predictor. Con el $\rho$ correcto esto
+cancela la parte correlacionada de un error AR(1) y deja las innovaciones independientes $u_t$.
+:::
+
+:::{admonition} Definicion 15.9: Procedimiento de Cochrane-Orcutt
+:class: note definition
+El **procedimiento de Cochrane-Orcutt** elimina la autocorrelacion AR(1) de forma iterativa:
+ajustar por minimos cuadrados, estimar $\rho$ a partir de los residuos, cuasi-diferenciar la
+respuesta y los predictores, reajustar, y repetir hasta que $\hat\rho$ se estabilice.
+:::
+
+### Formula
+
+Parte de la regresion con errores AR(1), escrita de forma compacta con $\mathbf{x}_t$ para la fila
+de predictores (el $1$, la tendencia $t$, y las indicadoras de mes) en el mes $t$:
+
+$$
+Y_t = \mathbf{x}_t' \boldsymbol\beta + \varepsilon_t, \qquad
+\varepsilon_t = \rho\,\varepsilon_{t-1} + u_t .
+$$
+
+Rezaga toda la regresion un paso, multiplica por $\rho$, y resta:
+
+$$
+\underbrace{Y_t - \rho\, Y_{t-1}}_{Y_t^{\ast}}
+= \underbrace{(\mathbf{x}_t - \rho\,\mathbf{x}_{t-1})'}_{\mathbf{x}_t^{\ast\prime}} \boldsymbol\beta
++ \underbrace{(\varepsilon_t - \rho\,\varepsilon_{t-1})}_{u_t} .
+$$
+
+- $Y_t^{\ast} = Y_t - \rho Y_{t-1}$ es la **respuesta cuasi-diferenciada**.
+- $\mathbf{x}_t^{\ast} = \mathbf{x}_t - \rho\,\mathbf{x}_{t-1}$ es la fila de predictores cuasi-diferenciada.
+- $u_t$ es la innovacion, y por la definicion AR(1) es independiente en $t$ con varianza constante.
+
+El modelo transformado $Y_t^{\ast} = \mathbf{x}_t^{\ast\prime}\boldsymbol\beta + u_t$ tiene
+exactamente los mismos coeficientes $\boldsymbol\beta$ que el original, pero ahora satisface los
+supuestos de minimos cuadrados ordinarios, asi que ajustarlo da errores estandar confiables.
+
+### Derivacion
+
+:::{admonition} Teorema 15.10: La cuasi-diferenciacion elimina la autocorrelacion AR(1)
+:class: important theorem
+Bajo el modelo $Y_t = \mathbf{x}_t' \boldsymbol\beta + \varepsilon_t$ con errores AR(1)
+$\varepsilon_t = \rho\,\varepsilon_{t-1} + u_t$, el modelo cuasi-diferenciado
+
+$$
+Y_t - \rho\, Y_{t-1} = (\mathbf{x}_t - \rho\,\mathbf{x}_{t-1})'\boldsymbol\beta + u_t
+$$
+
+tiene los mismos coeficientes $\boldsymbol\beta$ y errores $u_t$ que son independientes con
+varianza constante, asi que minimos cuadrados ordinarios aplicado a el produce errores estandar
+confiables.
+:::
+
+**Demostracion.** La definicion AR(1) dice que el error es
+su propio rezago escalado por $\rho$ mas un choque independiente, $\varepsilon_t =
+\rho\varepsilon_{t-1} + u_t$, lo que se reordena a $u_t = \varepsilon_t - \rho\varepsilon_{t-1}$.
+Toma la regresion original $Y_t = \mathbf{x}_t'\boldsymbol\beta + \varepsilon_t$ y la misma relacion
+un paso atras, $Y_{t-1} = \mathbf{x}_{t-1}'\boldsymbol\beta + \varepsilon_{t-1}$. Multiplica la
+ecuacion rezagada por $\rho$ y restala de la actual. A la izquierda, $Y_t - \rho Y_{t-1}$; a la
+derecha, $(\mathbf{x}_t - \rho\mathbf{x}_{t-1})'\boldsymbol\beta$ mas $\varepsilon_t - \rho
+\varepsilon_{t-1}$, y esa ultima pieza es exactamente $u_t$. Asi que la serie cuasi-diferenciada
+obedece una regresion con el mismo $\boldsymbol\beta$ y con los errores independientes de varianza
+constante $u_t$. Minimos cuadrados ordinarios esta de vuelta en terreno solido, que es todo el
+punto de la transformacion.
+
+El obstaculo es que $\rho$ es desconocido. El procedimiento de Cochrane-Orcutt lo estima junto con
+los coeficientes, iterando:
+
+1. Ajusta el modelo original por minimos cuadrados ordinarios y guarda los residuos $e_t$.
+2. Estima $\rho$ regresando $e_t$ sobre $e_{t-1}$ por el origen: $\hat\rho = \sum_{t=2}^n e_t e_{t-1} / \sum_{t=2}^n e_{t-1}^2$.
+3. Cuasi-diferencia $Y$ y cada predictor usando $\hat\rho$, y reajusta por minimos cuadrados para obtener nuevos $\boldsymbol\beta$.
+4. Recalcula los residuos del ajuste en escala original, reestima $\rho$, y repite hasta que $\hat\rho$ deje de cambiar.
+
+Cada pasada reduce la autocorrelacion restante; en la practica un par de iteraciones bastan.
+$\blacksquare$
+
+@fig-ch15-co-flow-es despliega los cuatro pasos como un bucle. Leelo de arriba a abajo, luego sigue
+la flecha naranja de vuelta hacia arriba siempre que el $\rho$ estimado siga moviendose: ajustar,
+estimar, transformar, reajustar, comprobar, y detenerse una vez que $\hat\rho$ se asiente.
+
+```{figure} figures/fig_ch15_co_flow.png
+:name: fig-ch15-co-flow-es
+:alt: Un diagrama de flujo del procedimiento de Cochrane-Orcutt. Cuatro cajas bajan por la izquierda en orden: ajustar por minimos cuadrados ordinarios y guardar residuos, estimar rho regresando cada residuo sobre su rezago, cuasi-diferenciar la respuesta y cada predictor con el rho estimado, y reajustar por minimos cuadrados y recalcular residuos. Una flecha lleva a un rombo de decision que pregunta si rho-sombrero es estable. Una rama de no vuelve hacia arriba al paso de estimar rho; una rama de si lleva a una caja final, reportar el ajuste corregido.
+El procedimiento de Cochrane-Orcutt como un bucle. Cada pasada estima la autocorrelacion, cuasi-diferencia con ella, y reajusta; el bucle se repite hasta que el rho estimado deja de cambiar, luego reporta los errores estandar corregidos.
+```
+
+### R y Python
+
+:::{admonition} Ejemplo 15.5: Un paso de Cochrane-Orcutt sobre el modelo aereo
+:class: note
+**Pregunta.** Elimina la cuasi-diferenciacion la autocorrelacion del modelo aereo?
+
+**Intuicion.** Estimar $\rho$ a partir de los residuos, cuasi-diferenciar la respuesta y la matriz
+de diseno, reajustar, y volver a revisar el estadistico de Durbin-Watson sobre los nuevos residuos.
+
+**Formula.** $\hat\rho = \sum e_t e_{t-1} / \sum e_{t-1}^2$; luego ajustar
+$Y_t^{\ast} = \mathbf{x}_t^{\ast\prime}\boldsymbol\beta + u_t$.
+
+**Calculo.**
+
+```r
+n <- nrow(air)
+rho_hat <- sum(e[-1] * e[-n]) / sum(e[-n]^2)
+round(rho_hat, 4)
+```
+```text
+[1] 0.7918
+```
+
+```r
+X <- model.matrix(fit)
+ystar <- air$logpass[-1] - rho_hat * air$logpass[-n]
+Xstar <- X[-1, ] - rho_hat * X[-n, ]
+co <- lm(ystar ~ Xstar - 1)
+e_co <- residuals(co)
+DW_co <- sum(diff(e_co)^2) / sum(e_co^2)
+round(c(DW_before = DW, DW_after = DW_co), 4)
+```
+```text
+DW_before  DW_after
+   0.4252    2.1891
+```
+
+```python
+N = len(air)
+rho_hat = np.sum(e[1:] * e[:-1]) / np.sum(e[:-1] ** 2)
+X = fit.model.exog
+y = air["logpass"].to_numpy()
+Xstar = X[1:] - rho_hat * X[:-1]
+ystar = y[1:] - rho_hat * y[:-1]
+bco = np.linalg.lstsq(Xstar, ystar, rcond=None)[0]
+e_co = ystar - Xstar @ bco
+DW_co = np.sum(np.diff(e_co) ** 2) / np.sum(e_co**2)
+print(round(rho_hat, 4), round(DW_co, 4))
+```
+```text
+0.7918 2.1891
+```
+
+**Interpretacion.** La autocorrelacion estimada es $\hat\rho = 0.79$, coincidiendo con la
+inclinacion del grafico de rezago. Tras una ronda de cuasi-diferenciacion el estadistico de
+Durbin-Watson sube de $0.43$ a $2.19$, justo al lado del valor neutral de $2$: la autocorrelacion
+de primer orden practicamente desaparecio. @fig-ch15-co-lag-es muestra el mismo resultado como
+graficos de rezago de antes y despues, la inclinacion aplanandose a una nube redonda. Los errores
+estandar del ajuste transformado tienen en cuenta la correlacion y son los que hay que reportar.
+Cochrane-Orcutt arregla la *inferencia* sobre la tendencia y los coeficientes estacionales. No
+hace, por si solo, que el modelo pronostique bien el futuro, que es el problema mas dificil al que
+pasamos a continuacion.
+:::
+
+```{figure} figures/fig_ch15_co_lag.png
+:name: fig-ch15-co-lag-es
+:alt: Dos graficos de rezago de residuos lado a lado. El panel izquierdo, antes de Cochrane-Orcutt, muestra una inclinacion hacia arriba con pendiente de rezago uno de cerca de 0.79. El panel derecho, tras un paso de cuasi-diferenciacion, muestra una nube redonda con pendiente de rezago uno cercana a cero.
+Graficos de rezago de residuos antes (izquierda) y despues (derecha) de un paso de Cochrane-Orcutt. La cuasi-diferenciacion aplana la inclinacion hacia arriba a una nube redonda, asi que los errores transformados se ven no correlacionados.
+```
+
+::::{admonition} Practica 15.4
+:class: important
+La cuasi-diferenciacion con $\rho = 1$ calcularia $Y_t - Y_{t-1}$, la primera diferencia ordinaria.
+Usando el modelo de error AR(1), explica por que elegir $\rho$ cerca del $0.79$ estimado es
+preferible a diferenciar automaticamente con $\rho = 1$ siempre que los residuos se vean
+autocorrelacionados.
+
+:::{admonition} Solucion
+:class: dropdown
+La transformacion que convierte los errores AR(1) en innovaciones independientes es
+$\varepsilon_t - \rho\varepsilon_{t-1} = u_t$ con el $\rho$ *real*. Usar $\rho = 1$ cuando el valor
+verdadero es $0.79$ sobre-diferencia: resta demasiado del error anterior, y los errores
+transformados $\varepsilon_t - \varepsilon_{t-1}$ estan ellos mismos autocorrelacionados (ahora de
+forma negativa), asi que la cura introduce un nuevo problema. Ajustar $\rho$ a la autocorrelacion
+estimada elimina solo la parte correlacionada y deja innovaciones limpias. La primera diferencia es
+la jugada correcta solo cuando $\rho$ esta genuinamente cerca de $1$.
+:::
+::::
+
+(ch15-forecasting-es)=
+## 15.5 Pronosticar con honestidad: probar en el futuro
+
+### Intuicion
+
+Un modelo que ajusta el pasado a la perfeccion puede aun pronosticar mal el futuro. La unica forma
+honesta de juzgar un pronostico es ocultar parte del futuro al modelo, pronosticarlo, y comparar.
+Para datos temporales eso significa una **division fuera de tiempo** (Definicion 15.11): entrenar
+en los anos anteriores, probar en los posteriores. Esta es la mentalidad de validacion del
+Capitulo 12 con una regla estricta anadida por el reloj. Nunca puedes entrenar con datos que
+llegaron despues de tu periodo de prueba, porque al momento del pronostico esos datos no existian.
+Dividir al azar, como lo harias para datos transversales, dejaria que el modelo espiara el futuro y
+se halagara a si mismo.
+
+:::{admonition} Definicion 15.11: Division fuera de tiempo
+:class: note definition
+Una **division fuera de tiempo** divide los datos ordenados en el tiempo por el calendario: el
+modelo se entrena con las observaciones anteriores y se prueba con las posteriores, de modo que la
+evaluacion imita el pronostico real. El modelo nunca puede entrenar con datos posteriores al
+periodo de prueba.
+:::
+
+Entrenamos el modelo de tendencia mas estacionalidad de 1949 a 1957 y pronosticamos de 1958 a 1960,
+tres anos que nunca ha visto. @fig-ch15-train-test-es muestra el resultado, y es una humildad util.
+
+```{figure} figures/fig_ch15_train_test.png
+:name: fig-ch15-train-test-es
+:alt: Un grafico de la serie aerea con una linea discontinua separando el periodo de entrenamiento de 1949 a 1957 del periodo de prueba de 1958 a 1960. Los valores ajustados abrazan los datos en el periodo de entrenamiento. En el periodo de prueba la linea de pronostico corre visiblemente por encima de los conteos reales, y una banda de prediccion del 95 por ciento sombreada cubre solo unos pocos de los puntos reales.
+El modelo entrenado de 1949 a 1957 y pronosticando de 1958 a 1960. En los anos de prueba el pronostico deriva por encima de lo que realmente paso, y la banda de prediccion ingenua sombreada se pierde la mayoria de los meses reales.
+```
+
+### Formula
+
+Dos boletas de calificaciones honestas resumen el desempeno en el conjunto de prueba. La **raiz del
+error cuadratico medio** y el **error porcentual absoluto medio** sobre los meses reservados son
+
+$$
+\mathrm{RMSE} = \sqrt{\frac{1}{n_{\text{test}}}\sum_{t \in \text{test}} (Y_t - \hat Y_t)^2},
+\qquad
+\mathrm{MAPE} = \frac{100\%}{n_{\text{test}}}\sum_{t \in \text{test}}\frac{|Y_t - \hat Y_t|}{Y_t} .
+$$
+
+- $Y_t$ es el conteo real de pasajeros en un mes de prueba; $\hat Y_t$ es el pronostico del modelo, retro-transformado de la escala logaritmica exponenciando.
+- RMSE esta en pasajeros (miles); MAPE es un porcentaje sin unidades que es facil de explicar.
+
+En palabras: RMSE es el tamano tipico de un fallo de pronostico en pasajeros, y MAPE es el fallo
+promedio como porcentaje del conteo real.
+
+Como el modelo esta ajustado en la escala logaritmica, exponenciamos el pronostico logaritmico para
+obtener un pronostico de conteo antes de calificar. Tambien llevamos el intervalo de prediccion de
+regresion ordinaria de @ch03-prediction-interval-es, retro-transformado de la misma manera, y
+revisamos con que frecuencia cubre en realidad la verdad.
+
+### R y Python
+
+:::{admonition} Ejemplo 15.6: Evaluacion fuera de tiempo del pronostico aereo
+:class: note
+**Pregunta.** Que tan preciso es el pronostico de tendencia mas estacionalidad sobre tres anos que
+nunca ha visto, y mantiene su promesa su intervalo de prediccion del $95\%$?
+
+**Intuicion.** Ajustar de 1949 a 1957, pronosticar de 1958 a 1960, retro-transformar, y comparar
+pronosticos con reales usando RMSE y MAPE. Luego contar cuantos de los 36 meses de prueba caen
+dentro del intervalo de prediccion del $95\%$ retro-transformado.
+
+**Formula.** RMSE y MAPE como arriba; cobertura nominal $0.95$ frente a la fraccion observada
+cubierta.
+
+**Calculo.**
+
+```r
+train <- subset(air, year <= 1957)
+test  <- subset(air, year >= 1958)
+c(train_n = nrow(train), test_n = nrow(test))
+fit_tr <- lm(logpass ~ t + month, data = train)
+```
+```text
+train_n  test_n
+    108      36
+```
+
+```r
+pred_log <- predict(fit_tr, newdata = test, interval = "prediction", level = 0.95)
+pred_pass <- exp(pred_log[, "fit"])
+actual <- test$passengers
+rmse <- sqrt(mean((actual - pred_pass)^2))
+mape <- mean(abs(actual - pred_pass) / actual) * 100
+insample <- exp(fitted(fit_tr))
+rmse_in <- sqrt(mean((train$passengers - insample)^2))
+round(c(RMSE_test = rmse, MAPE_test_pct = mape, RMSE_train = rmse_in), 2)
+```
+```text
+    RMSE_test MAPE_test_pct    RMSE_train
+        63.34         14.23          9.20
+```
+
+```python
+train = air[air["year"] <= 1957]
+test = air[air["year"] >= 1958]
+print(len(train), len(test))
+fit_tr = smf.ols("logpass ~ t + C(month)", data=train).fit()
+pred = fit_tr.get_prediction(test).summary_frame(alpha=0.05)
+pred_pass = np.exp(pred["mean"].to_numpy())
+actual = test["passengers"].to_numpy()
+rmse = np.sqrt(np.mean((actual - pred_pass) ** 2))
+mape = np.mean(np.abs(actual - pred_pass) / actual) * 100
+insample = np.exp(fit_tr.fittedvalues.to_numpy())
+rmse_in = np.sqrt(np.mean((train["passengers"].to_numpy() - insample) ** 2))
+print(round(rmse, 2), round(mape, 2), round(rmse_in, 2))
+```
+```text
+108 36
+63.34 14.23 9.2
+```
+
+Ahora la cobertura del intervalo de prediccion:
+
+```r
+lo <- exp(pred_log[, "lwr"])
+hi <- exp(pred_log[, "upr"])
+covered <- (actual >= lo) & (actual <= hi)
+round(c(nominal = 0.95, actual_coverage = mean(covered),
+        n_covered = sum(covered), n_total = length(covered)), 3)
+```
+```text
+        nominal actual_coverage       n_covered         n_total
+          0.950           0.194           7.000          36.000
+```
+
+```python
+lo = np.exp(pred["obs_ci_lower"].to_numpy())
+hi = np.exp(pred["obs_ci_upper"].to_numpy())
+covered = (actual >= lo) & (actual <= hi)
+print(round(covered.mean(), 3), int(covered.sum()), len(covered))
+```
+```text
+0.194 7 36
+```
+
+**Interpretacion.** En muestra el modelo se ve excelente: un RMSE de entrenamiento de cerca de $9$
+mil pasajeros. Sobre el futuro es mucho peor, con un RMSE de prueba de $63$ y un error porcentual
+absoluto medio del $14\%$. El pronostico se pasa sistematicamente por encima porque extrapola la
+tasa de crecimiento de 1949 a 1957 hacia anos en que el crecimiento se desacelero, y los errores,
+al estar autocorrelacionados, derivan todos en la misma direccion a la vez en lugar de cancelarse.
+Peor aun, el intervalo de prediccion del $95\%$ cubre solo $7$ de $36$ meses de prueba, una
+cobertura real del $19\%$. El intervalo que prometia equivocarse una vez de cada veinte se
+equivoco cuatro de cada cinco. La brecha entre el ajuste en muestra confiado y el desempeno fuera
+de tiempo pobre es toda la leccion de esta seccion.
+:::
+
+:::{admonition} Idea clave
+:class: tip keyidea
+El ajuste en muestra y la precision de pronostico fuera de tiempo son cosas distintas. El modelo
+aereo explica el $98\%$ del pasado y sin embargo se pierde el futuro por un $14\%$, y su intervalo
+de prediccion del $95\%$ cubre un mes de prueba de cada cinco. Un $R^2$ alto certifica descripcion,
+nunca pronostico; solo los meses reservados pueden hacerlo.
+:::
+
+Por que falla tan feo el intervalo de prediccion? El intervalo de @ch03-prediction-interval-es se
+derivo bajo errores independientes, de varianza constante y normales, y tiene en cuenta solo dos
+fuentes de incertidumbre: la dispersion de un solo error nuevo y la incertidumbre en la media
+ajustada. Para un pronostico a varios anos vista, ninguna pieza es la historia real. Los errores
+estan fuertemente autocorrelacionados, asi que una racha de meses malos se compone en lugar de
+promediarse. La tendencia se extrapola mucho mas alla de los datos, asi que cualquier error en la
+pendiente estimada crece con el horizonte. Y la incertidumbre genuina del pronostico deberia
+ensancharse cuanto mas adelante mires, mientras que el intervalo de regresion ordinaria apenas se
+ensancha. Un intervalo que ignora todo esto esta condenado a ser demasiado estrecho, que es
+exactamente lo que muestra la cobertura del $19\%$.
+
+:::{admonition} Por que los intervalos de pronostico reales necesitan metodos de series de tiempo
+:class: warning
+Obtener un intervalo de prediccion honesto para un pronostico es genuinamente mas dificil que
+cualquier cosa que ofrezca la regresion ordinaria, y esta mas alla de este curso. Los metodos
+propios (modelos autorregresivos integrados de media movil, suavizamiento exponencial, y modelos de
+espacio de estados o de series de tiempo estructurales) construyen la correlacion del error dentro
+del modelo mismo, de modo que sus intervalos de pronostico se ensanchan con el horizonte y reflejan
+la incertidumbre acumulada. La regresion con una tendencia y variables ficticias estacionales es
+una buena herramienta para la descripcion y para pronosticos puntuales de horizonte corto, y
+Cochrane-Orcutt repara su inferencia sobre los coeficientes. Pero cuando una decision depende de un
+intervalo de pronostico calibrado, recurre a un modelo de series de tiempo real, o al menos reporta
+el error de prueba fuera de tiempo en lugar del intervalo en muestra. El numero unico mas honesto
+que puedes darle a un planificador aqui es el MAPE de prueba del $14\%$, no la etiqueta del $95\%$
+sobre un intervalo que cubre el $19\%$.
+:::
+
+:::{admonition} Habilidad duradera: Prueba en el futuro, nunca en el pasado
+:class: tip
+La forma mas rapida de enganarte a ti mismo con cualquier modelo predictivo es calificarlo con los
+mismos datos con los que lo ajustaste. El error en muestra es optimista por construccion, y para
+datos temporales el arreglo es estricto: divide por tiempo, entrena con la parte anterior, y prueba
+con la parte posterior, porque esa es la unica division que imita la tarea real de pronosticar algo
+que aun no ha pasado. Esta regla sobrevive a la regresion. Es la misma disciplina detras de una
+prueba retrospectiva de una estrategia de trading, una validacion de un pronostico de demanda, o
+una evaluacion de cualquier modelo que se usara para predecir el futuro. Cuando alguien te muestre
+un modelo que "predice" una serie de tiempo, haz la unica pregunta que importa: se probo con datos
+posteriores al periodo de entrenamiento?
+:::
+
+::::{admonition} Practica 15.5
+:class: important
+El RMSE de entrenamiento fue de cerca de $9$ y el RMSE de prueba de cerca de $63$, un salto de
+siete veces. Da una razon por la que esta brecha es esperable para este pronostico en particular, y
+nombra una cosa que podrias reportar a quien toma decisiones que seria mas honesta que el intervalo
+de prediccion del $95\%$ en muestra del modelo.
+
+:::{admonition} Solucion
+:class: dropdown
+La brecha es esperable porque el modelo extrapola la tendencia hacia anos que nunca vio, y los
+errores autocorrelacionados empujan los pronosticos en la misma direccion durante meses seguidos en
+lugar de cancelarse, asi que el error reservado es mucho mayor que el error sobre los anos
+ajustados. Un reporte mas honesto seria el error de prueba fuera de tiempo mismo, el MAPE de prueba
+del $14\%$ o el RMSE de prueba de $63$, o la cobertura observada del intervalo de prediccion del
+$19\%$, cualquiera de los cuales le dice a quien decide como se desempena en realidad el pronostico
+sobre meses no vistos en lugar de que tan ajustado queda al pasado.
+:::
+::::
+
+## 15.6 Resumen del capitulo
+
+Ahora puedes manejar la regresion sobre datos ordenados en el tiempo de principio a fin. Ajustas un
+modelo de tendencia mas estacionalidad en la escala logaritmica (Definicion 15.1), leyendo la
+tendencia como una tasa de crecimiento y cada coeficiente de mes como un desplazamiento estacional,
+reutilizando la transformacion logaritmica de @ch10-log-interpretation-es y la codificacion
+ficticia de @ch11-dummy-coding-es. Puedes explicar por que el orden temporal suele correlacionar
+los errores, y demostraste, para la media muestral, que la autocorrelacion positiva hace que la
+formula de varianza ordinaria sea demasiado pequena (Teorema 15.4), asi que minimos cuadrados
+reporta errores estandar en los que no puedes confiar. Diagnosticas la autocorrelacion de tres
+formas, el grafico de residuos contra el tiempo, el grafico de rezago, y la prueba de
+Durbin-Watson, y derivaste por que $D \approx 2(1 - r_1)$ hace de $2$ el valor neutral (Teorema
+15.7). Aplicas el procedimiento de Cochrane-Orcutt y sabes por que la cuasi-diferenciacion restaura
+los errores independientes (Teorema 15.10). Y evaluas un pronostico con honestidad con una division
+fuera de tiempo, calculando el error de prueba y la cobertura del intervalo de prediccion, y puedes
+decir con claridad por que los intervalos de pronostico calibrados necesitan metodos de series de
+tiempo que este curso no cubre.
+
+**Resultados clave de un vistazo.**
+
+| Resultado | Enunciado o formula | Valido cuando |
+|---|---|---|
+| Modelo de tendencia mas estacionalidad (Def 15.1) | $\log Y_t = \beta_0 + \beta_1 t + \sum_{m=2}^{12}\gamma_m D_{mt} + \varepsilon_t$ | la tendencia y la estacionalidad son multiplicativas; los logaritmos las vuelven aditivas y estabilizan la varianza |
+| Crecimiento a partir de la pendiente logaritmica | mensual $(e^{\beta_1}-1)\times 100\%$; anual $(e^{12\beta_1}-1)\times 100\%$ | respuesta modelada en la escala logaritmica |
+| Modelo de error AR(1) (Def 15.3) | $\varepsilon_t = \rho\varepsilon_{t-1} + u_t$, $|\rho|<1$ | los errores persisten de un periodo al siguiente |
+| Varianza de la media bajo AR(1) (Thm 15.4) | $\operatorname{Var}\{\bar Y\}=\frac{\sigma^2}{n}\big(1 + 2\sum_{k}(1-\tfrac{k}{n})\rho^k\big)$ | errores AR(1); supera a $\sigma^2/n$ cuando $\rho>0$, asi que los SE de MCO son demasiado pequenos |
+| Estadistico de Durbin-Watson (Def 15.6) | $D = \sum_{t\ge 2}(e_t - e_{t-1})^2 / \sum_t e_t^2$ | cualquier regresion ajustada; $0$ positiva, $2$ ninguna, $4$ negativa |
+| Identidad de Durbin-Watson (Thm 15.7) | $D \approx 2(1 - r_1)$ | serie de residuos razonablemente larga |
+| La cuasi-diferenciacion elimina AR(1) (Thm 15.10) | $Y_t - \rho Y_{t-1} = (\mathbf{x}_t - \rho\mathbf{x}_{t-1})'\boldsymbol\beta + u_t$ | errores AR(1), con $\rho$ conocido o estimado |
+| Calificacion de pronostico fuera de tiempo | RMSE y MAPE sobre los meses posteriores reservados | la division de entrenamiento y prueba respeta el orden temporal |
+| Cobertura del intervalo de prediccion | fraccion de meses de prueba dentro del intervalo del $95\%$ | el intervalo es honesto solo si la cobertura $\approx 0.95$ |
+
+Cifras aereas: $R^2 = 0.983$, $\hat\rho = 0.79$, $D$ pasa de $0.43$ a $2.19$ tras un paso de
+Cochrane-Orcutt, RMSE de prueba $63$ / MAPE $14\%$, y cobertura del intervalo de prediccion $0.19$
+(7 de 36).
+
+**Terminos clave.** **datos ordenados en el tiempo**, **tendencia**, **estacionalidad**, **modelo
+de tendencia mas estacionalidad**, **autocorrelacion**, **modelo de error autorregresivo de primer
+orden (AR(1))**, **parametro de autocorrelacion**, **innovacion**, **estadistico de
+Durbin-Watson**, **prueba de Durbin-Watson**, **grafico de rezago**, **procedimiento de
+Cochrane-Orcutt**, **cuasi-diferenciacion**, **division fuera de tiempo**, **error porcentual
+absoluto medio (MAPE)**, **cobertura del intervalo de prediccion**.
+
+**Ahora deberias poder.**
+
+- [ ] Ajustar e interpretar un modelo de tendencia mas estacionalidad en la escala logaritmica, leyendo la tendencia como una tasa de crecimiento y cada coeficiente de mes como un desplazamiento estacional.
+- [ ] Explicar por que el orden temporal correlaciona los errores, y mostrar que la autocorrelacion positiva hace que los errores estandar de minimos cuadrados ordinarios sean demasiado pequenos.
+- [ ] Diagnosticar la autocorrelacion con un grafico de residuos contra el tiempo, un grafico de rezago, y la prueba de Durbin-Watson.
+- [ ] Derivar $D \approx 2(1 - r_1)$ y usarlo para leer la escala de Durbin-Watson.
+- [ ] Aplicar el procedimiento de Cochrane-Orcutt y explicar por que la cuasi-diferenciacion restaura los errores independientes.
+- [ ] Evaluar un pronostico con una division fuera de tiempo, calculando el RMSE de prueba, el MAPE, y la cobertura del intervalo de prediccion.
+- [ ] Explicar por que los intervalos de pronostico calibrados necesitan metodos de series de tiempo mas alla de la regresion ordinaria.
+
+**Donde encaja esto.** Este capitulo sirve a las etapas de COMPROBAR (CHECK) y USAR (USE) del flujo
+de trabajo de modelado introducido en @ch02-workflow-es. PREGUNTAMOS (ASK) una pregunta de
+pronostico y EXPLORAMOS (EXPLORE) la serie, AJUSTAMOS (FIT) un modelo de tendencia y estacionalidad,
+luego pasamos la mayor parte del capitulo en COMPROBAR: el supuesto de errores no correlacionados
+en el que se apoyo toda la inferencia anterior falla sobre datos temporales, asi que diagnosticamos
+el fallo con la prueba de Durbin-Watson y reparamos la inferencia con Cochrane-Orcutt. La etapa de
+USAR, el pronostico, viene con una advertencia que los capitulos anteriores podian hacer limpiamente
+pero este no puede: el intervalo de prediccion de @ch03-prediction-interval-es, honesto bajo errores
+independientes, esta aqui mal calibrado. Esa es la costura donde un curso de regresion aplicada
+entrega el relevo a un curso de series de tiempo: la division fuera de tiempo y la disciplina de
+pronostico honesto que construiste aqui son los habitos de entrada que cualquier curso asi supone.
+El Capitulo 16 (@ch16-es) cierra el libro apartandose de cualquier modelo individual para preguntar
+que puede y que no puede decir una cadena de regresiones sobre la causa, y recorriendo todo el flujo
+de trabajo una ultima vez.
+
+## 15.7 Preguntas frecuentes
+
+**P1. Por que tomar logaritmos de los pasajeros en lugar de modelar los conteos directamente?**
+Porque las oscilaciones estacionales y la dispersion del error crecen ambas con el nivel de la
+serie, que es un patron multiplicativo. Tomar logaritmos convierte el efecto estacional
+multiplicativo en uno aditivo, asi que un unico conjunto de coeficientes de mes ajusta los doce
+anos, y estabiliza la varianza de modo que el supuesto de varianza constante queda mas cerca de ser
+verdad. Este es el mismo razonamiento de @ch10-log-interpretation-es, aplicado a una serie que crece
+con el tiempo.
+
+**P2. Si minimos cuadrados sigue siendo insesgado bajo autocorrelacion, por que preocuparse?**
+Insesgado significa que la estimacion es correcta en promedio, pero un solo analisis te da una
+estimacion, y necesitas saber que tan lejos podria estar. Ese es el trabajo del error estandar, y
+la autocorrelacion hace que el error estandar reportado sea incorrecto, usualmente demasiado
+pequeno. Terminas con una estimacion puntual que esta bien y un intervalo de confianza que miente
+sobre su propia confiabilidad.
+
+**P3. Mi estadistico de Durbin-Watson es $2.6$. Es eso un problema?** Esta del lado de la
+autocorrelacion negativa, ya que $D > 2$ significa $r_1 < 0$. De $D \approx 2(1 - r_1)$, un $D$ de
+$2.6$ implica $r_1 \approx -0.3$. La autocorrelacion negativa leve es menos comun que la positiva
+pero si ocurre, a menudo por sobre-diferenciacion o por una variable medida como un cambio. Si es
+"un problema" depende del valor p y de cuanto te apoyes en los errores estandar.
+
+**P4. Cambia Cochrane-Orcutt la estimacion de la tendencia o solo los errores estandar?** Ambos, un
+poco. El ajuste cuasi-diferenciado es una estimacion de minimos cuadrados generalizados, que pondera
+los datos de forma distinta a minimos cuadrados ordinarios, asi que los coeficientes se desplazan un
+tanto. El cambio mas grande e importante es a los errores estandar, que ahora tienen en cuenta la
+correlacion y son los que deberias reportar.
+
+**P5. Por que no usar simplemente el intervalo de prediccion ordinario y admitir que es
+aproximado?** Porque no es aproximadamente correcto, es gravemente incorrecto: sobre el conjunto de
+prueba aereo cubrio el $19\%$ de los meses en lugar del $95\%$. Un intervalo tan alejado no comunica
+la incertidumbre, la tergiversa. Si no puedes producir un intervalo calibrado, reporta el error de
+prueba fuera de tiempo en su lugar, que es honesto sobre como se desempena en realidad el
+pronostico.
+
+**P6. Podria agregar mas predictores en lugar de modelar la correlacion del error?** A veces. Los
+residuos autocorrelacionados pueden ser un sintoma de un predictor faltante, una curvatura de
+tendencia omitida o un termino estacional saltado, y agregar el predictor correcto puede eliminar el
+patron en su origen. Ese suele ser el mejor arreglo cuando puedes encontrar la estructura faltante.
+Cochrane-Orcutt es para la correlacion de residuos que queda despues de haber modelado la estructura
+que puedas.
+
+**P7. Es un $R^2$ alto como $0.983$ evidencia de que el pronostico sera bueno?** No. Ese $R^2$ mide
+el ajuste al pasado, y todo el punto de este capitulo es que el ajuste en muestra y la precision de
+pronostico fuera de tiempo son cosas distintas. El mismo modelo con $R^2 = 0.983$ se perdio el
+futuro por un $14\%$ y su intervalo cubrio un mes de prueba de cada cinco. Juzga un pronostico sobre
+datos reservados, nunca sobre $R^2$.
+
+## 15.8 Problemas de practica
+
+:::{note}
+A menos que un problema diga lo contrario, usa `airpassengers.csv` y el modelo de tendencia mas
+estacionalidad $\log Y_t = \beta_0 + \beta_1 t + \sum_{m=2}^{12}\gamma_m D_{mt} + \varepsilon_t$,
+ajustado por minimos cuadrados ordinarios, con los valores encontrados en este capitulo:
+$b_1 = 0.0101$, $R^2 = 0.983$, $D = 0.43$, $r_1 = 0.78$, $\hat\rho = 0.79$. Los problemas estan
+marcados (A) conceptos, (B) teoria, o (C) analisis de datos. Las respuestas de numero impar aparecen
+en el Apendice H; las soluciones completas estan en los materiales del instructor.
+:::
+
+1. (A) En una oracion cada uno, nombra los tres rasgos de la serie aerea en @fig-ch15-series-es y di que termino del modelo de tendencia mas estacionalidad captura cada uno.
+2. (A) Explica por que los errores en una regresion sobre datos mensuales probablemente esten correlacionados, y da una razon concreta por la que dos meses vecinos compartirian el signo de su error.
+3. (A) La pendiente de tendencia estimada es $b_1 = 0.0101$ en la escala logaritmica. Interpretala como una tasa de crecimiento porcentual mensual, y explica por que se necesita exponenciar.
+4. (A) Un estadistico de Durbin-Watson vale $0.43$. Sin una tabla, enuncia que implica sobre la autocorrelacion de rezago uno y sobre la confiabilidad de los errores estandar ordinarios.
+5. (A) Explica, a alguien que no ha tomado este curso, por que dividir datos de series de tiempo al azar para una evaluacion de entrenamiento y prueba es hacer trampa, y cual es la division correcta.
+6. (A) El intervalo de prediccion ingenuo del $95\%$ cubrio el $19\%$ de los meses de prueba. Enuncia con claridad que se supone que significa "cobertura del 95%" y por que $19\%$ es un fracaso, no solo un pequeno fallo.
+7. (A) Da una lectura incorrecta del coeficiente de julio $\hat\gamma_7 = 0.3006$ que un estudiante descuidado podria enunciar, luego corrigela. (Pista: el coeficiente esta en la escala logaritmica, respecto a enero.)
+8. (A) Por que la autocorrelacion positiva, y no la negativa, hace que minimos cuadrados ordinarios sea demasiado confiado? Senala el signo de los terminos de covarianza en la varianza de la media.
+9. (B) Partiendo de $D = \sum_{t=2}^n (e_t - e_{t-1})^2 / \sum_{t=1}^n e_t^2$, deriva la aproximacion $D \approx 2(1 - r_1)$ (Teorema 15.7), enunciando el paso donde las dos sumas truncadas se reemplazan por la suma de cuadrados de los residuos completa y por que es razonable para $n$ grande.
+10. (B) Para $Y_t = \mu + \varepsilon_t$ con $\operatorname{Var}\{\varepsilon_t\} = \sigma^2$ y $\operatorname{Cov}\{\varepsilon_s, \varepsilon_t\} = \sigma^2 \rho^{|t-s|}$, deriva $\operatorname{Var}\{\bar Y\} = \frac{\sigma^2}{n}\big(1 + 2\sum_{k=1}^{n-1}(1 - k/n)\rho^k\big)$ (Teorema 15.4), y concluye que supera a $\sigma^2/n$ cuando $\rho > 0$.
+11. (B) Usando el modelo de error AR(1) $\varepsilon_t = \rho\varepsilon_{t-1} + u_t$, deriva la transformacion de cuasi-diferenciacion (Teorema 15.10) y muestra que el error transformado $\varepsilon_t - \rho\varepsilon_{t-1}$ es igual a la innovacion independiente $u_t$.
+12. (B) Muestra que $\operatorname{Var}\{\varepsilon_t\} = \sigma_u^2/(1 - \rho^2)$ para un proceso AR(1) estacionario, partiendo de $\varepsilon_t = \rho\varepsilon_{t-1} + u_t$ y usando $\operatorname{Var}\{\varepsilon_t\} = \operatorname{Var}\{\varepsilon_{t-1}\}$.
+13. (B) En el modelo AR(1), muestra que la correlacion entre errores separados $k$ pasos es $\rho^k$, asi que la autocorrelacion decae geometricamente con el rezago. (Usa $\operatorname{Cov}\{\varepsilon_t, \varepsilon_{t-k}\} = \rho\,\operatorname{Cov}\{\varepsilon_{t-1}, \varepsilon_{t-k}\}$.)
+14. (B) La transformacion de Cochrane-Orcutt pierde la primera observacion, ya que $Y_1^{\ast}$ no tiene antecesor. Explica por que, y describe como la variante de Prais-Winsten la recupera reescalando la primera fila por $\sqrt{1 - \rho^2}$ (un argumento de un parrafo, sin derivacion completa necesaria).
+15. (B) Un estudiante afirma que como $b_1$ es insesgado bajo autocorrelacion, el intervalo de confianza $b_1 \pm t^{\ast} s\{b_1\}$ sigue siendo valido. Identifica el error en la afirmacion y enuncia con precision cual cantidad del intervalo es incorrecta.
+16. (B) Muestra que si los errores verdaderos no estan correlacionados ($\rho = 0$), el primer paso de Cochrane-Orcutt estima $\hat\rho \approx 0$ y el ajuste cuasi-diferenciado se reduce a minimos cuadrados ordinarios, asi que el procedimiento no hace dano cuando no hay autocorrelacion.
+17. (C) Lee `airpassengers.csv`, construye `t` y `logpass`, ajusta el modelo de tendencia mas estacionalidad, y reproduce la pendiente de tendencia, el $R^2$, y la desviacion estandar de los residuos reportados en el Ejemplo 15.1.
+18. (C) Calcula el estadistico de Durbin-Watson a partir de los residuos a mano (via $\sum (e_t - e_{t-1})^2 / \sum e_t^2$) y confirmalo contra `lmtest::dwtest` en R o `durbin_watson` en Python. Reporta ambos.
+19. (C) Haz el grafico de residuos contra el tiempo y el grafico de rezago para el modelo ajustado. Describe que muestra cada uno y como concuerdan sobre el signo de la autocorrelacion.
+20. (C) Estima $\rho$ a partir de los residuos, cuasi-diferencia la respuesta y la matriz de diseno, reajusta, y reporta el estadistico de Durbin-Watson antes y despues. Confirma que pasa de cerca de $0.43$ hacia $2$.
+21. (C) Ajusta el modelo sin logaritmos (`passengers ~ t + month`) y compara su grafico de residuos contra el tiempo y su estadistico de Durbin-Watson con los del modelo logaritmico. Quitar el logaritmo mejora o empeora la autocorrelacion, y se ve constante la dispersion de los residuos?
+22. (C) Divide los datos por tiempo (entrena de 1949 a 1957, prueba de 1958 a 1960), ajusta sobre los anos de entrenamiento, pronostica los anos de prueba, retro-transforma, y reproduce el RMSE de prueba y el MAPE del Ejemplo 15.6.
+23. (C) Para la misma division, calcula la cobertura del intervalo de prediccion ingenuo del $95\%$ sobre el conjunto de prueba y confirma que esta muy por debajo de $0.95$. Luego calcula la cobertura en muestra sobre el conjunto de entrenamiento y comenta la diferencia.
+24. (C) Reajusta el modelo de tendencia mas estacionalidad quitando las ficticias estacionales (solo tendencia, `logpass ~ t`). Reporta la caida en $R^2$ y el nuevo estadistico de Durbin-Watson, y explica como el patron estacional no modelado aparece en los residuos del ajuste de solo tendencia.
+25. (C) Agrega un termino de tendencia al cuadrado (`logpass ~ t + I(t^2) + month`) y reporta si el termino de curvatura es necesario y si reduce la autocorrelacion de residuos. Interpreta que significaria un coeficiente negativo sobre $t^2$ para la tasa de crecimiento.
+26. (C) Usando el ajuste de entrenamiento, pronostica diciembre de 1958, 1959, y 1960 (meses $120$, $132$, $144$), retro-transforma, y compara cada uno con el valor real. Describe como crece el error de pronostico con el horizonte.
+27. (C) Repite la evaluacion fuera de tiempo con una division mas temprana (entrena de 1949 a 1955, prueba de 1956 a 1960). Reporta el MAPE de prueba y comparalo con el $14\%$ de la division de 1958. Explica por que una ventana de entrenamiento mas corta puede cambiar el error de pronostico.
+28. (C) Corre la simulacion del Ejemplo 15.3 para $\rho = 0$, $\rho = 0.4$, y $\rho = 0.8$, y reporta la razon del SE promedio reportado a la desviacion estandar verdadera de $b_1$ para cada uno. Describe como cambia la razon a medida que $\rho$ crece y que significa eso para los intervalos de confianza.
+29. (A) El intervalo de prediccion de regresion ordinaria de @ch03-prediction-interval-es cubrio solo el $19\%$ de los meses de prueba aereos. Da las tres razones por las que este intervalo es estructuralmente demasiado estrecho para un pronostico a varios anos vista, y nombra una familia de metodos que construye la correlacion del error dentro del modelo de modo que su intervalo de pronostico se ensancha con el horizonte.
+
+## 15.9 Practica de examen
+
+Estas cinco preguntas estan escritas en el estilo de los examenes del curso: cada una te entrega
+una salida o una afirmacion y te pide explicar, en oraciones completas con unidades, que significa.
+Un numero correcto sin razonamiento gana poco credito aqui. Trabaja cada una antes de abrir la
+respuesta modelo.
+
+**EP 15.1 (interpreta esta salida en contexto).** El modelo de tendencia mas estacionalidad se
+ajusto a los 144 meses completos de `airpassengers.csv`, y el software reporto lo siguiente.
+
+```text
+Coefficients (partial):
+            Estimate  Std. Error  t value  Pr(>|t|)
+t          0.0100688   0.0001193   84.40    < 2e-16 ***
+
+Durbin-Watson test:  DW = 0.4252,  p-value < 2.2e-16
+alternative hypothesis: true autocorrelation is greater than 0
+```
+
+Interpreta el coeficiente de tendencia como una tasa de crecimiento anual (usa $e^{12 \times 0.0101}
+\approx 1.128$), y luego explica, dado el resultado de Durbin-Watson, si reportarias el error
+estandar impreso de $0.00012$ y el valor p diminuto sobre la tendencia al pie de la letra. Enuncia
+la direccion en la que esos numeros son incorrectos y por que.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+En la escala logaritmica la tendencia de $0.0101$ por mes se compone en doce meses a
+$e^{12(0.0101)} = e^{0.1208} \approx 1.128$, asi que el trafico de pasajeros crecio cerca de
+$12.8\%$ por ano entre 1949 y 1960. El estadistico de Durbin-Watson de $0.43$ se situa muy por
+debajo del valor neutral de $2$, con un valor p por debajo de $2 \times 10^{-16}$, asi que los
+residuos estan fuertemente correlacionados de forma positiva: un mes por encima de la linea ajustada
+suele ir seguido por otro por encima. Eso importa porque cada formula de error estandar en el modelo
+supone errores no correlacionados, y la autocorrelacion positiva lo viola. Bajo autocorrelacion
+positiva minimos cuadrados ordinarios trata los meses correlacionados como si cada uno llevara
+informacion independiente, asi que divide entre demasiado y reporta un error estandar que es
+demasiado pequeno, lo que a su vez hace que el estadistico t sea demasiado grande y el valor p
+demasiado diminuto. La estimacion puntual de la tendencia, $0.0101$, sigue siendo insesgada y vale
+la pena reportarla, pero el error estandar impreso de $0.00012$ y el valor p microscopico
+sobrestiman la precision y no deberian tomarse al pie de la letra; la inferencia honesta necesita
+primero una correccion como Cochrane-Orcutt.
+
+Una respuesta debil convierte la tasa de crecimiento pero luego confia en el valor p pequeno, o dice
+que el error estandar es "demasiado grande", pasando por alto que la autocorrelacion positiva
+encoge el error estandar reportado en lugar de inflarlo.
+:::
+
+**EP 15.2 (un estudiante afirma X, evalua).** Un estudiante escribe: "Este modelo tiene
+$R^2 = 0.983$, asi que explica casi toda la variacion en la serie. Eso significa que pronosticara
+los conteos mensuales de pasajeros del proximo ano con una precision de cerca del $2\%$." Usando la
+evaluacion fuera de tiempo de este capitulo, evalua el razonamiento del estudiante y enuncia cual es
+la expectativa correcta.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+El estudiante ha confundido el ajuste en muestra con la precision de pronostico fuera de tiempo, que
+es el error central contra el que advierte este capitulo. El $R^2 = 0.983$ mide solo que tan bien la
+linea ajustada describe los meses de 1949 a 1960 con los que se entreno el modelo; no dice nada
+directamente sobre meses que el modelo nunca ha visto. Cuando el modelo se entrena de 1949 a 1957 y
+se le pide pronosticar los meses reservados de 1958 a 1960, su error porcentual absoluto medio de
+prueba es cerca del $14\%$, no del $2\%$, y su RMSE de prueba de $63$ mil pasajeros empequenece al
+RMSE de entrenamiento de cerca de $9$. El pronostico se degrada fuera de muestra porque el modelo
+extrapola la tasa de crecimiento temprana hacia anos en que el crecimiento se desacelero, y porque
+los errores autocorrelacionados derivan todos en la misma direccion a la vez en lugar de cancelarse.
+Asi que la expectativa correcta es que el modelo describe el pasado muy bien pero pronostica el
+futuro cercano solo con una precision de cerca del $14\%$, y la unica forma honesta de saberlo es
+probarlo sobre meses posteriores reservados, nunca leerlo del $R^2$.
+
+Una respuesta debil simplemente dice "un $R^2$ alto es bueno" o disputa la cifra de $0.983$, sin
+nombrar la distincion entre en muestra y fuera de tiempo ni citar el error de prueba de
+aproximadamente $14\%$ como el numero honesto.
+:::
+
+**EP 15.3 (interpreta esta salida en contexto).** Se corrio un paso de Cochrane-Orcutt sobre el
+modelo aereo, produciendo la salida de abajo.
+
+```text
+rho_hat (lag-one autocorrelation of residuals):  0.7918
+Durbin-Watson before quasi-differencing:  0.4252
+Durbin-Watson after  quasi-differencing:  2.1891
+```
+
+Explica que le hizo este procedimiento al modelo, que problema muestra el estadistico "despues" que
+arreglo, y nombra una cosa que este paso no arregla. Escribe en oraciones completas.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+El procedimiento estimo la autocorrelacion de primer orden de los residuos como $\hat\rho = 0.79$,
+luego cuasi-diferencio la respuesta y cada predictor reemplazando cada valor por si mismo menos
+$0.79$ veces su antecesor, y reajusto. La cuasi-diferenciacion con el $\rho$ correcto cancela la
+parte correlacionada de un error AR(1) y deja atras las innovaciones independientes, asi que el
+modelo transformado satisface el supuesto de errores no correlacionados que el original violaba. El
+estadistico de Durbin-Watson confirma que esto funciono: paso de $0.43$, muy dentro de la zona de
+autocorrelacion positiva, a $2.19$, esencialmente el valor neutral de $2$, asi que la autocorrelacion
+de primer orden desaparecio y los errores estandar del ajuste transformado ahora son confiables. Lo
+que Cochrane-Orcutt no arregla es el problema del pronostico: repara la inferencia sobre la tendencia
+y los coeficientes estacionales, pero no hace que el modelo extrapole mejor el futuro, asi que el
+error de prueba fuera de tiempo y el intervalo de prediccion mal calibrado quedan exactamente tan
+pobres como antes. Corregir los errores estandar y pronosticar bien son metas separadas.
+
+Una respuesta debil lee "$2.19$ esta cerca de $2$" sin explicar que la cuasi-diferenciacion elimino
+la correlacion AR(1), o afirma que el paso tambien mejora el pronostico, lo cual no hace.
+:::
+
+**EP 15.4 (que cambiaria si).** Supon que hubieras ajustado el modelo a los conteos crudos de
+pasajeros en lugar de sus logaritmos, `passengers ~ t + month`. Los dos ajustes se comparan asi.
+
+```text
+                    R^2     residual SE        DW      corr(|residual|, fitted)
+raw counts        0.9559     26.33 pass       0.4502            +0.137
+log counts        0.9835      0.0593 (log)    0.4252            -0.041
+```
+
+Explica que cambiaria, y que no, si usaras el ajuste de conteos crudos. Aborda tanto el
+comportamiento de la dispersion de los residuos como si el problema de la autocorrelacion queda
+curado, y di por que la escala logaritmica es preferible aqui.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+Dos cosas cambian y una no. Primero, la dispersion de los residuos deja de ser constante: en la
+escala cruda el tamano de los residuos crece con el nivel ajustado, mostrado por la correlacion
+positiva de $+0.137$ entre los residuos absolutos y los valores ajustados, asi que los errores se
+abren en abanico a medida que el trafico de pasajeros sube y el supuesto de varianza constante falla.
+El ajuste logaritmico elimina ese abanico, con una correlacion casi nula de $-0.04$, porque tomar
+logaritmos convierte las oscilaciones estacionales multiplicativas en aditivas y estabiliza la
+varianza. Segundo, un unico conjunto de coeficientes de mes ya no describe cada ano igual de bien en
+la escala cruda, ya que la brecha estacional en pasajeros es pequena al principio y grande al final;
+ese es el mismo patron multiplicativo que el logaritmo maneja. Lo que no cambia es la
+autocorrelacion: el estadistico de Durbin-Watson de conteos crudos es $0.45$, esencialmente tan malo
+como el $0.43$ del modelo logaritmico, asi que apagar el logaritmo no hace nada para curar la
+autocorrelacion positiva, que viene del orden temporal y no de la escala. La escala logaritmica es
+preferible porque arregla la varianza no constante y deja que un patron estacional ajuste los doce
+anos, mientras que la autocorrelacion aun debe manejarse por separado con Cochrane-Orcutt o un modelo
+de series de tiempo.
+
+Una respuesta debil afirma que el logaritmo "arregla la autocorrelacion" (no lo hace, ambos
+estadisticos estan cerca de $0.45$) o ignora la dispersion creciente de los residuos que el
+logaritmo esta realmente ahi para curar.
+:::
+
+**EP 15.5 (explica por que).** Sobre el conjunto de prueba de 1958 a 1960, el intervalo de
+prediccion nominal del $95\%$ del modelo cubrio solo $7$ de los $36$ meses de prueba, una cobertura
+real del $19\%$.
+
+```text
+nominal coverage:  0.95
+actual coverage:   0.194   (7 of 36 test months inside the 95% interval)
+```
+
+Enuncia que se supone que significa "cobertura del $95\%$", explica por que $19\%$ es un fracaso
+estructural en lugar de un pequeno fallo, da las tres razones por las que el intervalo de regresion
+ordinaria es demasiado estrecho para un pronostico a varios anos vista, y nombra una familia de
+metodos construida para arreglarlo.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+Un intervalo de prediccion del $95\%$ es una promesa de que, a lo largo de muchos pronosticos, cerca
+de $95$ de cada $100$ observaciones futuras caeran dentro de sus intervalos, asi que deberia estar
+equivocado aproximadamente una vez de cada veinte. Cubrir solo el $19\%$ de los meses de prueba
+significa que el intervalo estuvo equivocado cerca de cuatro veces de cada cinco, asi que no es un
+intervalo ligeramente optimista sino uno que tergiversa la incertidumbre por un amplio margen; la
+tasa de fallo prometida de uno de cada veinte se convirtio en una tasa de fallo de cuatro de cada
+cinco. El intervalo de regresion ordinaria es estructuralmente demasiado estrecho aqui por tres
+razones. Primero, los errores estan fuertemente correlacionados de forma positiva, asi que una racha
+de meses malos se compone en la misma direccion en lugar de promediarse, y el intervalo, derivado
+bajo errores independientes, nunca tiene en cuenta eso. Segundo, la tendencia se extrapola anos mas
+alla de los datos de entrenamiento, asi que cualquier error en la pendiente estimada crece con el
+horizonte de pronostico, pero el intervalo ordinario apenas se ensancha a medida que llega mas lejos.
+Tercero, la incertidumbre genuina del pronostico deberia ensancharse cuanto mas adelante mires,
+mientras que el intervalo de prediccion de regresion permanece casi del mismo ancho a lo largo de
+todo el periodo de prueba. Los metodos construidos para arreglar esto son la familia de series de
+tiempo, como los modelos autorregresivos integrados de media movil (ARIMA), el suavizamiento
+exponencial, y los modelos de espacio de estados o estructurales, que construyen la correlacion del
+error dentro del modelo de modo que sus intervalos de pronostico se ensanchan con el horizonte.
+
+Una respuesta debil trata el $19\%$ como meramente "un poco bajo", o lista solo una razon
+(usualmente la autocorrelacion) sin las razones de la pendiente extrapolada y del ensanchamiento con
+el horizonte, o no nombra ningun remedio propio de series de tiempo.
+:::
+
+## Juego del capitulo
+
+:::{admonition} Juega el juego del Capitulo 15
+:class: tip
+[Juega el juego del Capitulo 15 en tu telefono o portatil](../games/ch15.html): 10 rondas rapidas,
+sin preparacion. Ejercita las jugadas centrales de este capitulo sobre la serie aerea real: leer la
+tendencia logaritmica como una tasa de crecimiento, detectar el pico estacional, diagnosticar la
+autocorrelacion con el estadistico de Durbin-Watson, ordenar el arreglo de Cochrane-Orcutt, y juzgar
+un pronostico fuera de tiempo, con una razon breve mostrada despues de cada respuesta.
+:::
+
+:::{admonition} Chapter summary (in English)
+:class: dropdown
+This chapter covers **regression with time-ordered data**, using the classic monthly airline
+passenger series from 1949 to 1960. The series shows three features: a rising **trend**, a yearly
+**seasonality** with a summer peak, and swings that grow with the level. We model $\log Y_t = \beta_0
++ \beta_1 t + \sum_{m=2}^{12}\gamma_m D_{mt} + \varepsilon_t$: a linear trend in time plus eleven
+month indicator variables, on the log scale to make the seasonality additive and stabilize the
+variance. The model explains $98.3\%$ of the variation; the slope estimate $b_1 = 0.0101$ implies about
+$1.0\%$ monthly growth, near $12.8\%$ per year.
+
+The central problem is **autocorrelation**: in time data the errors are correlated with their recent
+past, which violates the uncorrelated-errors assumption. With the **first-order autoregressive
+(AR(1)) model** $\varepsilon_t = \rho\varepsilon_{t-1} + u_t$, we show that positive autocorrelation
+makes the true variance of the estimator exceed the ordinary formula, so least squares reports
+standard errors that are too small. A simulation shows the reported standard error is barely a third
+of the true one.
+
+To detect autocorrelation we use the residual-versus-time plot, the lag plot, and the
+**Durbin-Watson test**, with statistic $D = \sum (e_t - e_{t-1})^2 / \sum e_t^2$. We derive that $D
+\approx 2(1 - r_1)$, so $2$ signals no autocorrelation. For the airline series $D = 0.43$ (strong
+positive autocorrelation, $r_1 = 0.78$). The **Cochrane-Orcutt procedure** transforms the model by
+quasi-differencing $Y_t - \rho Y_{t-1}$, leaving independent errors; after one iteration $D$ rises
+from $0.43$ to $2.19$.
+
+Finally we evaluate the forecast honestly with an **out-of-time split**: train on 1949 to 1957, test
+on 1958 to 1960. The test RMSE ($63$) far exceeds the training one ($9$), with a MAPE of $14\%$, and
+the $95\%$ prediction interval covers only $19\%$ of the months. That is why calibrated forecast
+intervals need time-series methods beyond this course.
+:::

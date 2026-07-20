@@ -1,0 +1,186 @@
+/* MATH 4210 study-tutor footer card.
+ *
+ * Loaded by the `:css:` option of the {anywidget} directive in
+ * ../parts/tutor-footer.md. Unlike the chat bubble this replaced, the card
+ * renders INTO the element the host gives it (never document.body), so this
+ * stylesheet actually reaches the markup and no <style> injection is needed.
+ *
+ * THEMING: every color is `var(--token, <literal>)`. The tokens are the ones
+ * declared on :root / html.light / html.dark in styles/apple.css, and CSS
+ * custom properties inherit across a shadow boundary, so the card follows the
+ * site's light/dark switch for free. The literal fallbacks are the shipped
+ * palette values, so the card still looks correct if it is ever mounted
+ * somewhere the tokens are not defined.
+ *
+ *   --bg              #ffffff / #0b0b0c    page
+ *   --surface         #f5f5f7 / #161618    card tint
+ *   --text            #111113 / #f7f7f8    ink
+ *   --text-secondary  #2b2b2e / #d5d5d9    secondary ink (NOT grey)
+ *   --hairline        #d2d2d7 / #3a3a3d    borders
+ *   --accent          #0b5fcc / #4c9dff    Accent 1, interactive
+ *   --accent-contrast #ffffff / #0b0b0c    text on Accent 1
+ *   --accent-2        #8a5300 / #e8b04b    Accent 2, emphasis
+ */
+
+.m4210-tutor-card {
+  box-sizing: border-box;
+  max-width: 46rem;
+  margin: 1.5rem auto 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--hairline, #d2d2d7);
+  border-radius: 14px;
+  background: var(--surface, #f5f5f7);
+  color: var(--text, #111113);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    Inter, Roboto, system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.m4210-tutor-card *,
+.m4210-tutor-card *::before,
+.m4210-tutor-card *::after {
+  box-sizing: inherit;
+}
+
+.m4210-tutor-heading {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text, #111113);
+  /* The card sits in the site footer; it must not join the page outline
+     visually, so no border/uppercase treatment beyond plain bold ink. */
+}
+
+.m4210-tutor-blurb {
+  margin: 0 0 0.85rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #2b2b2e);
+}
+
+.m4210-tutor-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+}
+
+.m4210-tutor-copy {
+  flex: 0 0 auto;
+  min-height: 44px; /* touch target floor, same rule the games follow */
+  padding: 0.55rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--accent, #0b5fcc);
+  color: var(--accent-contrast, #ffffff);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.m4210-tutor-copy:hover {
+  filter: brightness(1.08);
+}
+
+.m4210-tutor-copy:active {
+  transform: translateY(1px);
+}
+
+.m4210-tutor-copy:focus-visible {
+  outline: 2px solid var(--accent, #0b5fcc);
+  outline-offset: 2px;
+}
+
+.m4210-tutor-ok .m4210-tutor-copy {
+  background: var(--accent-2, #8a5300);
+  color: var(--accent-2-contrast, #ffffff);
+}
+
+.m4210-tutor-status {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #2b2b2e);
+}
+
+.m4210-tutor-details {
+  margin-top: 0.9rem;
+}
+
+.m4210-tutor-summary {
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent, #0b5fcc);
+  list-style: none;
+}
+
+.m4210-tutor-summary::-webkit-details-marker {
+  display: none;
+}
+
+.m4210-tutor-summary::before {
+  content: "\25B8"; /* right-pointing triangle */
+  display: inline-block;
+  margin-right: 0.4rem;
+  transition: transform 0.15s ease;
+}
+
+.m4210-tutor-details[open] .m4210-tutor-summary::before {
+  transform: rotate(90deg);
+}
+
+.m4210-tutor-summary:focus-visible {
+  outline: 2px solid var(--accent, #0b5fcc);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.m4210-tutor-prompt {
+  margin: 0.65rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--hairline, #d2d2d7);
+  border-radius: 10px;
+  background: var(--surface-raised, #ffffff);
+  color: var(--text, #111113);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  /* Long prompt lines must wrap rather than push the page sideways: the ship
+     pass fixed mobile horizontal scroll and this card must not reintroduce it. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+@media (max-width: 30rem) {
+  .m4210-tutor-card {
+    margin-top: 1.25rem;
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+  }
+
+  .m4210-tutor-copy {
+    width: 100%;
+  }
+
+  .m4210-tutor-status {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m4210-tutor-copy,
+  .m4210-tutor-summary::before {
+    transition: none;
+  }
+
+  .m4210-tutor-copy:active {
+    transform: none;
+  }
+}

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Box-Cox: turn the lambda dial</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* cars.csv, all 50 rows: [speed in mph, stopping distance in ft]. */
+var RAW = [
+  [4,2], [4,10], [7,4], [7,22], [8,16], [9,10], [10,18], [10,26], [10,34], [11,17], [11,28],
+  [12,14], [12,20], [12,24], [12,28], [13,26], [13,34], [13,34], [13,46], [14,26], [14,36],
+  [14,60], [14,80], [15,20], [15,26], [15,54], [16,32], [16,40], [17,32], [17,40], [17,50],
+  [18,42], [18,56], [18,76], [18,84], [19,36], [19,46], [19,68], [20,32], [20,48], [20,52],
+  [20,56], [20,64], [22,66], [23,54], [24,70], [24,92], [24,93], [24,120], [25,85]
+];
+var SPEED = RAW.map(function (d) { return d[0]; });
+var DIST  = RAW.map(function (d) { return d[1]; });
+var N = RAW.length;
+var SUM_LOG_Y = DIST.reduce(function (a, y) { return a + Math.log(y); }, 0);
+
+/* The Box-Cox family of Definition 10.5, continuous at lambda = 0. */
+function boxcox(y, lam) {
+  return Math.abs(lam) < 1e-8 ? Math.log(y) : (Math.pow(y, lam) - 1) / lam;
+}
+
+/* Least-squares fit of Y^(lambda) on speed, plus everything Theorem 10.6 needs. */
+function fitAt(lam) {
+  var z = DIST.map(function (y) { return boxcox(y, lam); });
+  var fit = Sim.Stats.lsFit(SPEED, z);
+  var rss = fit.sse;
+  var s = Math.sqrt(rss / (N - 2));
+  return {
+    rss: rss,
+    r2: fit.r2,
+    /* Profile log-likelihood: -n/2 log(RSS/n) + (lambda - 1) sum log Y_i. */
+    ellp: -N / 2 * Math.log(rss / N) + (lam - 1) * SUM_LOG_Y,
+    /* Residuals standardized by the fit's own root mean square error, so the
+       vertical scale is comparable across every power. */
+    std: fit.residuals.map(function (e) { return e / s; })
+  };
+}
+
+/* The engine draws points before it evaluates curves, so the sim keeps a live
+   reference to the slider state and reads it through property getters. The
+   first curve below hands that reference over; until then the seed value
+   matches the slider's own default. */
+var LIVE = { lam: 1 };
+var CACHE = { lam: null, out: fitAt(1) };
+function current() {
+  if (CACHE.lam !== LIVE.lam) { CACHE.lam = LIVE.lam; CACHE.out = fitAt(LIVE.lam); }
+  return CACHE.out;
+}
+
+var PTS = SPEED.map(function (sv, i) {
+  return {
+    x: sv,
+    get y() { return current().std[i]; }
+  };
+});
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Turn the lambda dial and watch the residual funnel close',
+    es: 'Gira el dial de lambda y observa como se cierra el embudo de residuos'
+  },
+  points: PTS,
+  xRange: [3, 26],
+  yRange: [-5.2, 5.2],
+  xLabel: { en: 'speed (mph)', es: 'velocidad (mph)' },
+  yLabel: { en: 'standardized residual', es: 'residuo estandarizado' },
+  ariaLabel: {
+    en: 'Residual plot for 50 cars: standardized residuals against speed, reshaped live by the Box-Cox power lambda.',
+    es: 'Grafica de residuos para 50 autos: residuos estandarizados contra velocidad, remodelados en vivo por la potencia lambda de Box-Cox.'
+  },
+  params: [
+    { id: 'lam', label: { en: 'Power lambda (1 = none, 0.5 = square root, 0 = log)',
+                          es: 'Potencia lambda (1 = ninguna, 0.5 = raiz cuadrada, 0 = log)' },
+      min: -0.5, max: 1.5, step: 0.01, value: 1.00, digits: 2 }
+  ],
+  curves: [
+    /* Zero line. This also hands the live slider state to the getters above. */
+    { fn: function (p) { LIVE = p; return 0; }, accent: 1, width: 2 },
+    { fn: function () { return 2; }, accent: 2, dash: [6, 4], width: 1.5 },
+    { fn: function () { return -2; }, accent: 2, dash: [6, 4], width: 1.5 }
+  ],
+  readouts: [
+    { id: 'lam', label: { en: 'Power lambda', es: 'Potencia lambda' },
+      accent: 1, digits: 2,
+      compute: function (p) { return p.lam; } },
+    { id: 'ellp', label: { en: 'Profile log-likelihood', es: 'Log-verosimilitud perfil' },
+      accent: 2, digits: 3,
+      compute: function (p) { return fitAt(p.lam).ellp; } },
+    { id: 'rss', label: 'RSS(lambda)', digits: 3,
+      compute: function (p) { return fitAt(p.lam).rss; } },
+    { id: 'r2', label: { en: 'R2 (transformed scale)', es: 'R2 (escala transformada)' },
+      digits: 4,
+      compute: function (p) { return fitAt(p.lam).r2; } }
+  ],
+  caption: {
+    en: 'Fifty stopping distances, refitted from scratch every time you move the dial. ' +
+        'Each dot is the residual of one car from the least-squares fit of Y^(lambda) on ' +
+        'speed, divided by the root mean square error of that same fit, so the vertical ' +
+        'scale stays comparable. The dashed amber lines sit at plus and minus two.\n\n' +
+        '**Try this.** Start at lambda = 1, the raw distances, and see the funnel: tight ' +
+        'scatter for slow cars, wide for fast ones. Now walk lambda down and hunt the ' +
+        'largest profile log-likelihood, which peaks at 0.43. The funnel flattens on the way ' +
+        'there, then a new outlier opens up below lambda = 0.2, which is the likelihood ' +
+        'telling you that you have transformed too far.',
+    es: 'Cincuenta distancias de frenado, reajustadas desde cero cada vez que mueves el ' +
+        'dial. Cada punto es el residuo de un auto en el ajuste de minimos cuadrados de ' +
+        'Y^(lambda) sobre la velocidad, dividido entre la raiz del error cuadratico medio ' +
+        'de ese mismo ajuste, para que la escala vertical siga siendo comparable. Las lineas ' +
+        'ambar discontinuas estan en mas y menos dos.\n\n' +
+        '**Prueba esto.** Empieza en lambda = 1, las distancias sin transformar, y mira el ' +
+        'embudo: poca dispersion en los autos lentos y mucha en los rapidos. Ahora baja ' +
+        'lambda y busca la log-verosimilitud perfil mas grande, que llega a su maximo en ' +
+        '0.43. El embudo se aplana en el camino, y luego aparece un nuevo valor atipico por ' +
+        'debajo de lambda = 0.2, que es la verosimilitud avisandote que transformaste ' +
+        'demasiado.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The residual stays perpendicular</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+  .sim-back {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--sim-accent);
+  }
+  .sim-back:focus-visible { outline: 3px solid var(--sim-accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* Seven Dwaine Studios cities (data/dwaine.csv), regressing sales Y on the
+     young-population predictor X1 alone, so p = 2 and the column space of X is
+     spanned by the ones column and the X1 column. */
+  var CITIES = [
+    { x: 38.4, y: 137.2 }, { x: 45.2, y: 164.4 }, { x: 52.3, y: 166.5 },
+    { x: 66.1, y: 207.5 }, { x: 72.8, y: 191.1 }, { x: 82.7, y: 224.1 },
+    { x: 91.3, y: 244.2 }
+  ];
+
+  /* Floating-point dust is not a signal: show a clean zero. */
+  function tidy(v) { return Math.abs(v) < 1e-6 ? 0 : v; }
+
+  /* Entry j of X'e. Column 0 is the ones column, column 1 holds X1. */
+  function dotWithColumn(fit, pts, j) {
+    var s = 0;
+    for (var i = 0; i < pts.length; i++) {
+      s += (j === 0 ? 1 : pts[i].x) * fit.residuals[i];
+    }
+    return tidy(s);
+  }
+
+  /* SST, SSR and SSE computed independently from the fitted values, so the
+     Pythagoras readout is a real arithmetic check and not an identity. */
+  function pythagorasGap(fit, pts) {
+    var ybar = fit.meanY, sst = 0, ssr = 0, sse = 0, i, d;
+    for (i = 0; i < pts.length; i++) {
+      d = pts[i].y - ybar; sst += d * d;
+      d = fit.fitted[i] - ybar; ssr += d * d;
+      d = pts[i].y - fit.fitted[i]; sse += d * d;
+    }
+    return tidy(sst - ssr - sse);
+  }
+
+  Sim.mount({
+    type: 'scatter-drag',
+    seed: 4210,
+    title: {
+      en: 'Drag Y anywhere: the residual stays perpendicular to X',
+      es: 'Arrastra Y a donde quieras: el residuo sigue perpendicular a X'
+    },
+    points: CITIES,
+    xRange: [30, 100],
+    yRange: [110, 275],
+    xLabel: { en: 'X1: young population (thousands)',
+              es: 'X1: población joven (miles)' },
+    yLabel: { en: 'Y: sales (thousand dollars)',
+              es: 'Y: ventas (miles de dólares)' },
+    ariaLabel: {
+      en: 'Scatterplot of sales against young population for seven cities, with a fitted least-squares line and dashed residual sticks.',
+      es: 'Diagrama de dispersión de ventas contra población joven para siete ciudades, con la recta de mínimos cuadrados ajustada y trazos discontinuos de residuos.'
+    },
+    showLine: true,
+    showResiduals: true,
+    readouts: [
+      { id: 'b1', label: { en: 'Slope b1', es: 'Pendiente b1' }, accent: 1, digits: 3,
+        compute: function (fit) { return fit.slope; } },
+      { id: 'xe0', label: { en: "X'e entry 1", es: "X'e entrada 1" }, digits: 4,
+        compute: function (fit, pts) { return dotWithColumn(fit, pts, 0); } },
+      { id: 'xe1', label: { en: "X'e entry 2", es: "X'e entrada 2" }, digits: 4,
+        compute: function (fit, pts) { return dotWithColumn(fit, pts, 1); } },
+      { id: 'pyth', label: { en: 'SST - SSR - SSE', es: 'STC - SCR - SCE' }, digits: 4,
+        compute: function (fit, pts) { return pythagorasGap(fit, pts); } },
+      { id: 'sse', label: { en: 'SSE', es: 'SCE' }, accent: 2, digits: 1,
+        compute: function (fit) { return fit.sse; } }
+    ],
+    caption: {
+      en: '**What to notice.** The two middle tiles are the entries of X\'e, the ' +
+          'residual vector dotted with each column of X, and the third is the ' +
+          'Pythagoras check SST minus SSR minus SSE.\n\n' +
+          '**Try this.** Drag any city as far off the line as you can, in any ' +
+          'direction, and watch SSE climb while all three of those tiles stay ' +
+          'locked on zero: least squares always leaves a residual the model has ' +
+          'no way to reach.',
+      es: '**Qué observar.** Las dos casillas del medio son las entradas de X\'e, el ' +
+          'vector de residuos multiplicado por cada columna de X, y la tercera es la ' +
+          'comprobación de Pitágoras STC menos SCR menos SCE.\n\n' +
+          '**Prueba esto.** Arrastra cualquier ciudad tan lejos de la recta como puedas, ' +
+          'en cualquier dirección, y observa cómo crece SCE mientras esas tres casillas ' +
+          'siguen clavadas en cero: los mínimos cuadrados siempre dejan un residuo que ' +
+          'el modelo no puede alcanzar.'
+    }
+  });
+
+  /* Link back to the chapter section. The sim lives one level deep at
+     /sims/, the chapter page at /ch07/ (Spanish at /ch07/es/), so a relative
+     href is correct under any deployment prefix. target=_parent so the whole
+     page navigates, not just this frame. */
+  function addBackLink() {
+    var lang = 'en';
+    try {
+      var q = new URLSearchParams(window.location.search).get('lang');
+      if (q === 'es') { lang = 'es'; }
+    } catch (e) { /* fall back to English */ }
+    var root = document.querySelector('.sim-root');
+    if (!root) { return; }
+    var a = document.createElement('a');
+    a.className = 'sim-back';
+    a.target = '_parent';
+    a.href = lang === 'es' ? '../ch07/es/#ch07-geometry-es' : '../ch07/#ch07-geometry';
+    a.textContent = lang === 'es'
+      ? 'Volver a 7.2 La geometría de los mínimos cuadrados'
+      : 'Back to 7.2 The geometry of least squares';
+    root.appendChild(a);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addBackLink);
+  } else {
+    addBackLink();
+  }
+}());
+</script>
+</body>
+</html>
