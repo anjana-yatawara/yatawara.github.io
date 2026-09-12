@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Permutation test for the punting slope</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* punting.csv, all thirteen punters: right-leg strength in pounds against
+   average punt distance in feet. Observed slope b1 = 0.9020383. */
+var RSTR = [170, 140, 180, 160, 170, 150, 170, 110, 120, 130, 120, 140, 160];
+var DIST = [162.5, 144, 147.5, 163.5, 192, 171.75, 162, 104.93, 105.67,
+            117.59, 140.25, 150.17, 165.17];
+
+function slope(x, y) { return Sim.Stats.lsFit(x, y).slope; }
+
+Sim.mount({
+  type: 'resample',
+  mode: 'permutation',
+  seed: 4210,
+  manyCount: 1000,
+  title: {
+    en: 'If strength had nothing to do with distance, how often would chance give us b1 = 0.902?',
+    es: 'Si la fuerza no tuviera nada que ver con la distancia, con que frecuencia el azar nos daria b1 = 0.902?'
+  },
+  data: { x: RSTR, y: DIST },
+  stat: slope,
+  statRange: [-1.15, 1.15],
+  bins: 34,
+  xRange: [100, 190],
+  yRange: [95, 205],
+  xLabel: { en: 'right-leg strength (pounds)', es: 'fuerza de pierna derecha (libras)' },
+  yLabel: { en: 'punt distance (feet)', es: 'distancia del punt (pies)' },
+  statLabel: {
+    en: 'slope b1 from shuffled distances',
+    es: 'pendiente b1 de distancias barajadas'
+  },
+  observedLabel: { en: 'observed 0.902', es: 'observada 0.902' },
+  dataAriaLabel: {
+    en: 'Scatterplot of punt distance against right-leg strength for thirteen punters, with the fitted line for the current shuffle.',
+    es: 'Diagrama de dispersion de la distancia del punt frente a la fuerza de la pierna derecha para trece pateadores, con la recta ajustada de la barajada actual.'
+  },
+  ariaLabel: {
+    en: 'Histogram of slopes from shuffled data, with the observed slope marked in the right tail.',
+    es: 'Histograma de pendientes de datos barajados, con la pendiente observada marcada en la cola derecha.'
+  },
+  showFit: true,
+  readouts: [
+    { id: 'obs', label: { en: 'Observed b1', es: 'b1 observada' }, accent: 2, digits: 3 },
+    { id: 'n',   label: { en: 'Shuffles B', es: 'Barajadas B' } },
+    { id: 'M',   label: { en: 'Extreme M', es: 'Extremas M' }, digits: 0,
+      compute: function (draws, observed) {
+        var a = Math.abs(observed), k = 0;
+        for (var i = 0; i < draws.length; i++) {
+          if (Math.abs(draws[i]) >= a) { k++; }
+        }
+        return k;
+      } },
+    { id: 'p',   label: { en: 'p-value', es: 'valor p' }, accent: 1, digits: 4 }
+  ],
+  caption: {
+    en: 'The top panel holds the thirteen strengths where they are and reassigns the thirteen ' +
+        'distances at random, which is exactly the no-association null. Each shuffle gives one ' +
+        'slope b1 that chance alone could produce, and those pile up below.\n\n' +
+        '**Try this.** Shuffle once and watch a punter keep his strength but inherit someone ' +
+        'else\'s distance, so the line tilts at random. Then press Run 1000 twice. The null pile ' +
+        'settles around zero and the observed 0.902 sits alone in the amber tail, with M near ' +
+        'one or two per thousand. Notice that p can never fall below 1/(B+1), no matter how far ' +
+        'out the observed slope lands.',
+    es: 'El panel superior deja las trece fuerzas donde estan y reasigna al azar las trece ' +
+        'distancias, que es justo la hipotesis nula de no asociacion. Cada barajada da una ' +
+        'pendiente b1 que el azar por si solo podria producir, y esas se acumulan abajo.\n\n' +
+        '**Prueba esto.** Baraja una vez y observa como un pateador conserva su fuerza pero ' +
+        'hereda la distancia de otro, de modo que la recta se inclina al azar. Luego presiona ' +
+        'Correr 1000 dos veces. El monton nulo se asienta alrededor de cero y la pendiente ' +
+        'observada 0.902 queda sola en la cola ambar, con M cercano a uno o dos por mil. Fijate ' +
+        'en que p nunca puede bajar de 1/(B+1), por lejos que caiga la pendiente observada.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leverage is a fixed budget</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 25 Toluca lot sizes. The response never enters a leverage value, so
+   only the predictor column is needed here. */
+var LOTS = [80, 30, 50, 90, 70, 60, 120, 80, 100, 50, 40, 70,
+            90, 20, 110, 100, 30, 50, 90, 110, 30, 90, 40, 80, 70];
+
+/* Augment the 25 runs with one new run at lot size xnew, then return the
+   pieces of h_ii = 1/n + (X_i - Xbar)^2 / Sxx for that augmented sample. */
+function design(xnew) {
+  var xs = LOTS.concat([xnew]);
+  var n = xs.length;
+  var mx = Sim.Stats.mean(xs);
+  var sxx = 0;
+  for (var i = 0; i < n; i++) { var d = xs[i] - mx; sxx += d * d; }
+  return { xs: xs, n: n, mx: mx, sxx: sxx };
+}
+
+function hAt(g, x) { return 1 / g.n + (x - g.mx) * (x - g.mx) / g.sxx; }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Place one new run and watch every leverage value move',
+    es: 'Coloca una corrida nueva y observa como se mueve cada valor de apalancamiento'
+  },
+  xRange: [10, 210],
+  yRange: [0, 0.75],
+  xLabel: { en: 'lot size X', es: 'tamaño de lote X' },
+  yLabel: { en: 'leverage value h_ii', es: 'valor de apalancamiento h_ii' },
+  ariaLabel: {
+    en: 'Leverage value plotted against lot size, a parabola with its minimum at the mean lot size, with the cut-off line 2p over n and a bar marking the new run.',
+    es: 'Valor de apalancamiento graficado contra el tamaño de lote, una parábola con su mínimo en el tamaño de lote medio, con la línea de corte 2p sobre n y una barra que marca la corrida nueva.'
+  },
+  params: [
+    { id: 'xnew',
+      label: { en: 'Lot size of the new run', es: 'Tamaño de lote de la corrida nueva' },
+      min: 20, max: 200, step: 5, value: 120, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { return hAt(design(p.xnew), x); } },
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function (p) { return 2 * 2 / design(p.xnew).n; } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.4,
+      lo: function () { return 0; },
+      hi: function (p, x) {
+        var g = design(p.xnew);
+        return Math.abs(x - p.xnew) <= 3 ? hAt(g, p.xnew) : 0;
+      } }
+  ],
+  readouts: [
+    { id: 'hnew', label: { en: 'h for the new run', es: 'h de la corrida nueva' },
+      accent: 1, digits: 4,
+      compute: function (p) { var g = design(p.xnew); return hAt(g, p.xnew); } },
+    { id: 'cut', label: { en: 'Cut-off 2p/n', es: 'Corte 2p/n' }, digits: 4,
+      compute: function (p) { return 4 / design(p.xnew).n; } },
+    { id: 'sum', label: { en: 'Sum of all h', es: 'Suma de todas las h' },
+      accent: 2, digits: 2,
+      compute: function (p) {
+        var g = design(p.xnew), s = 0;
+        for (var i = 0; i < g.n; i++) { s += hAt(g, g.xs[i]); }
+        return s;
+      } },
+    { id: 'hmax', label: { en: 'Largest h, first 25 runs', es: 'h mayor, primeras 25 corridas' },
+      digits: 4,
+      compute: function (p) {
+        var g = design(p.xnew), m = 0;
+        for (var i = 0; i < LOTS.length; i++) { m = Math.max(m, hAt(g, LOTS[i])); }
+        return m;
+      } }
+  ],
+  caption: {
+    en: 'The blue parabola is the leverage value h_ii = 1/n + (X_i - Xbar)^2 / Sxx ' +
+        'for the 25 Toluca runs plus the one new run you are placing. The dashed ' +
+        'amber line is the 2p/n cut-off and the amber bar marks the new run itself. ' +
+        'No response value is used anywhere in this picture.\n\n' +
+        '**Try this.** Slide the new run out to 200. Its own leverage value climbs ' +
+        'past 0.47, yet the sum of all 26 leverage values never leaves 2.00, so the ' +
+        'other runs have to give leverage value back and the whole parabola sinks ' +
+        'under the cut-off. The leverage values are a fixed budget of size p, shared ' +
+        'out by the predictor values alone.',
+    es: 'La parábola azul es el valor de apalancamiento h_ii = 1/n + (X_i - Xbarra)^2 / Sxx ' +
+        'para las 25 corridas de Toluca más la corrida nueva que estás colocando. La ' +
+        'línea ámbar discontinua es el corte 2p/n y la barra ámbar marca la corrida ' +
+        'nueva. En esta imagen no se usa ningún valor de la respuesta.\n\n' +
+        '**Prueba esto.** Desliza la corrida nueva hasta 200. Su propio apalancamiento ' +
+        'sube por encima de 0.47, pero la suma de los 26 valores de apalancamiento ' +
+        'nunca se aparta de 2.00, así que las demás corridas tienen que devolver ' +
+        'apalancamiento y toda la parábola se hunde bajo el corte. El apalancamiento es ' +
+        'un presupuesto fijo de tamaño p, repartido solo por los valores del predictor.'
+  }
+});
+</script>
+</body>
+</html>

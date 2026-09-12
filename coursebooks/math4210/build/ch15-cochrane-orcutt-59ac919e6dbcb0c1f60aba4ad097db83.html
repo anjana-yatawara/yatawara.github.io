@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Choosing the rho that quasi-differencing needs</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ---------------------------------------------------------------------------
+   Section 15.4. The real airline series, the real trend-plus-season design.
+   The slider is the rho used to quasi-difference. The plot is the residual
+   series of the transformed fit, standardized so that only the pattern moves,
+   and the readouts are the Durbin-Watson statistic and the lag-one
+   autocorrelation left behind.
+
+   Least squares is solved by modified Gram-Schmidt QR, which stays stable as
+   the quasi-differenced intercept column shrinks toward zero.
+   --------------------------------------------------------------------------- */
+
+var PASS = [
+  112, 118, 132, 129, 121, 135, 148, 148, 136, 119, 104, 118,
+  115, 126, 141, 135, 125, 149, 170, 170, 158, 133, 114, 140,
+  145, 150, 178, 163, 172, 178, 199, 199, 184, 162, 146, 166,
+  171, 180, 193, 181, 183, 218, 230, 242, 209, 191, 172, 194,
+  196, 196, 236, 235, 229, 243, 264, 272, 237, 211, 180, 201,
+  204, 188, 235, 227, 234, 264, 302, 293, 259, 229, 203, 229,
+  242, 233, 267, 269, 270, 315, 364, 347, 312, 274, 237, 278,
+  284, 277, 317, 313, 318, 374, 413, 405, 355, 306, 271, 306,
+  315, 301, 356, 348, 355, 422, 465, 467, 404, 347, 305, 336,
+  340, 318, 362, 348, 363, 435, 491, 505, 404, 359, 310, 337,
+  360, 342, 406, 396, 420, 472, 548, 559, 463, 407, 362, 405,
+  417, 391, 419, 461, 472, 535, 622, 606, 508, 461, 390, 432
+];
+var N = PASS.length;
+var LOGY = PASS.map(function (v) { return Math.log(v); });
+var TC = (N + 1) / 2;
+
+/* One row of the design: intercept, centered trend, eleven month indicators. */
+function designRow(t) {
+  var row = [1, t - TC];
+  var m = ((t - 1) % 12) + 1;
+  for (var k = 2; k <= 12; k++) { row.push(m === k ? 1 : 0); }
+  return row;
+}
+var X = [];
+for (var i = 1; i <= N; i++) { X.push(designRow(i)); }
+
+/* Least squares by modified Gram-Schmidt QR. */
+function qrFit(A, y) {
+  var n = A.length, p = A[0].length, j, k, r;
+  var Q = [], R = [];
+  for (j = 0; j < p; j++) {
+    R.push(new Array(p).fill(0));
+  }
+  for (j = 0; j < p; j++) {
+    var v = [];
+    for (r = 0; r < n; r++) { v.push(A[r][j]); }
+    for (k = 0; k < j; k++) {
+      var d = 0;
+      for (r = 0; r < n; r++) { d += Q[k][r] * v[r]; }
+      R[k][j] = d;
+      for (r = 0; r < n; r++) { v[r] -= d * Q[k][r]; }
+    }
+    var nrm = 0;
+    for (r = 0; r < n; r++) { nrm += v[r] * v[r]; }
+    nrm = Math.sqrt(nrm);
+    R[j][j] = nrm;
+    var q = [];
+    for (r = 0; r < n; r++) { q.push(nrm > 0 ? v[r] / nrm : 0); }
+    Q.push(q);
+  }
+  var qty = [];
+  for (j = 0; j < p; j++) {
+    var s = 0;
+    for (r = 0; r < n; r++) { s += Q[j][r] * y[r]; }
+    qty.push(s);
+  }
+  var b = new Array(p).fill(0);
+  for (j = p - 1; j >= 0; j--) {
+    var acc = qty[j];
+    for (k = j + 1; k < p; k++) { acc -= R[j][k] * b[k]; }
+    b[j] = R[j][j] > 0 ? acc / R[j][j] : 0;
+  }
+  var fitted = [], resid = [], sse = 0;
+  for (r = 0; r < n; r++) {
+    var f = 0;
+    for (j = 0; j < p; j++) { f += A[r][j] * b[j]; }
+    fitted.push(f);
+    resid.push(y[r] - f);
+    sse += (y[r] - f) * (y[r] - f);
+  }
+  return { coef: b, fitted: fitted, resid: resid, sse: sse, R: R, n: n, p: p,
+           mse: sse / (n - p) };
+}
+
+function dwStats(e) {
+  var num = 0, den = 0, cross = 0, k;
+  for (k = 0; k < e.length; k++) { den += e[k] * e[k]; }
+  for (k = 1; k < e.length; k++) {
+    num += (e[k] - e[k - 1]) * (e[k] - e[k - 1]);
+    cross += e[k] * e[k - 1];
+  }
+  return { D: num / den, r1: cross / den };
+}
+
+/* The uncorrected fit, computed once. */
+var BASE = qrFit(X, LOGY);
+var BASE_DW = dwStats(BASE.resid).D;
+
+var cache = { rho: null };
+
+function build(rho) {
+  if (cache.rho === rho) { return cache; }
+  var ystar = [], Xstar = [], k, j;
+  for (k = 1; k < N; k++) {
+    ystar.push(LOGY[k] - rho * LOGY[k - 1]);
+    var row = [];
+    for (j = 0; j < X[k].length; j++) { row.push(X[k][j] - rho * X[k - 1][j]); }
+    Xstar.push(row);
+  }
+  var f = qrFit(Xstar, ystar);
+  var st = dwStats(f.resid);
+  var sd = Sim.Stats.sd(f.resid);
+  var z = f.resid.map(function (v) { return sd > 0 ? v / sd : 0; });
+  cache = { rho: rho, z: z, D: st.D, r1: st.r1, b1: f.coef[1] };
+  return cache;
+}
+
+/* The transformed residuals run from t = 2 to t = 144. */
+function seriesAt(z, x) {
+  if (x < 2 || x > N) { return NaN; }
+  var k = Math.floor(x);
+  if (k >= N) { k = N - 1; }
+  var f = x - k;
+  return z[k - 2] + f * (z[k - 1] - z[k - 2]);
+}
+
+Sim.mount({
+  type: 'sliders',
+  seed: 4210,
+  title: {
+    en: 'Quasi-difference the airline model, and find the ρ that works',
+    es: 'Cuasi-diferencia el modelo aereo y encuentra la ρ que funciona'
+  },
+  xRange: [2, N],
+  yRange: [-3.6, 3.6],
+  xLabel: { en: 'month t', es: 'mes t' },
+  yLabel: { en: 'standardized residual', es: 'residuo estandarizado' },
+  ariaLabel: {
+    en: 'Residuals of the quasi-differenced airline model in time order.',
+    es: 'Residuos del modelo aereo cuasi-diferenciado en orden temporal.'
+  },
+  params: [
+    { id: 'rho', label: { en: 'ρ used to quasi-difference', es: 'ρ usada para cuasi-diferenciar' },
+      min: 0, max: 0.98, step: 0.01, value: 0, digits: 2 }
+  ],
+  curves: [
+    { accent: 2, width: 1.5, dash: [4, 4], fn: function () { return 0; } },
+    { accent: 1, width: 2,
+      fn: function (p, x) { return seriesAt(build(p.rho).z, x); } }
+  ],
+  readouts: [
+    { id: 'dwb', label: { en: 'D before', es: 'D antes' }, digits: 2,
+      compute: function () { return BASE_DW; } },
+    { id: 'dwa', label: { en: 'D after', es: 'D despues' }, accent: 2, digits: 2,
+      compute: function (p) { return build(p.rho).D; } },
+    { id: 'r1', label: { en: 'Lag-one r1 left', es: 'r1 de rezago uno restante' }, digits: 3,
+      compute: function (p) { return build(p.rho).r1; } },
+    { id: 'b1', label: { en: 'Trend b1', es: 'Tendencia b1' }, accent: 1, digits: 4,
+      compute: function (p) { return build(p.rho).b1; } }
+  ],
+  caption: {
+    en: 'This is the real airline model. At ρ = 0 nothing is corrected and D sits at 0.43. ' +
+        'Moving the slider quasi-differences the log counts and every predictor by ρ, refits, ' +
+        'and reports what autocorrelation survives.\n\n' +
+        '**Try this.** Slide up slowly. Around ρ = 0.71 the long runs break into noise, r1 ' +
+        'passes through zero and D lands next to 2: that is close to the value Cochrane-Orcutt ' +
+        'estimates. Keep going to 0.98, which is nearly a first difference. D overshoots to ' +
+        'about 2.4 and r1 turns negative, because subtracting too much of yesterday leaves ' +
+        'behind a correlation of the opposite sign. There is a right ρ, and 1 is not it.',
+    es: 'Este es el modelo aereo real. En ρ = 0 no se corrige nada y D vale 0.43. Mover el ' +
+        'deslizador cuasi-diferencia por ρ los conteos en logaritmo y cada predictor, reajusta ' +
+        'el modelo, e informa que autocorrelacion sobrevive.\n\n' +
+        '**Prueba esto.** Sube despacio. Cerca de ρ = 0.71 las rachas largas se rompen en ' +
+        'ruido, r1 pasa por cero y D queda junto a 2: ese es aproximadamente el valor que ' +
+        'estima Cochrane-Orcutt. Sigue hasta 0.98, que es casi una primera diferencia. D se ' +
+        'pasa hasta cerca de 2.4 y r1 se vuelve negativa, porque restar demasiado del dia ' +
+        'anterior deja una correlacion de signo contrario. Hay una ρ correcta, y no es 1.'
+  }
+});
+</script>
+</body>
+</html>

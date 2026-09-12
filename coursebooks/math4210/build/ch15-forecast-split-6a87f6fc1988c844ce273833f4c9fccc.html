@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Train on the past, score on the future</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ---------------------------------------------------------------------------
+   Section 15.5. Move the out-of-time split. The trend-plus-season model is
+   refitted on the training months only, then forecast forward across the
+   held-out months, back-transformed from the log scale. RMSE, MAPE and the
+   coverage of the back-transformed 95 percent prediction interval are all
+   computed on the held-out months only.
+
+   Least squares by modified Gram-Schmidt QR; the leverage h0 that the
+   prediction interval needs comes from a forward solve of R' z = x0, so
+   h0 = z'z with no matrix inverse formed.
+   --------------------------------------------------------------------------- */
+
+var PASS = [
+  112, 118, 132, 129, 121, 135, 148, 148, 136, 119, 104, 118,
+  115, 126, 141, 135, 125, 149, 170, 170, 158, 133, 114, 140,
+  145, 150, 178, 163, 172, 178, 199, 199, 184, 162, 146, 166,
+  171, 180, 193, 181, 183, 218, 230, 242, 209, 191, 172, 194,
+  196, 196, 236, 235, 229, 243, 264, 272, 237, 211, 180, 201,
+  204, 188, 235, 227, 234, 264, 302, 293, 259, 229, 203, 229,
+  242, 233, 267, 269, 270, 315, 364, 347, 312, 274, 237, 278,
+  284, 277, 317, 313, 318, 374, 413, 405, 355, 306, 271, 306,
+  315, 301, 356, 348, 355, 422, 465, 467, 404, 347, 305, 336,
+  340, 318, 362, 348, 363, 435, 491, 505, 404, 359, 310, 337,
+  360, 342, 406, 396, 420, 472, 548, 559, 463, 407, 362, 405,
+  417, 391, 419, 461, 472, 535, 622, 606, 508, 461, 390, 432
+];
+var N = PASS.length;
+var LOGY = PASS.map(function (v) { return Math.log(v); });
+var YMAX = 800;
+
+function designRow(t, tc) {
+  var row = [1, t - tc];
+  var m = ((t - 1) % 12) + 1;
+  for (var k = 2; k <= 12; k++) { row.push(m === k ? 1 : 0); }
+  return row;
+}
+
+function qrFit(A, y) {
+  var n = A.length, p = A[0].length, j, k, r;
+  var Q = [], R = [];
+  for (j = 0; j < p; j++) { R.push(new Array(p).fill(0)); }
+  for (j = 0; j < p; j++) {
+    var v = [];
+    for (r = 0; r < n; r++) { v.push(A[r][j]); }
+    for (k = 0; k < j; k++) {
+      var d = 0;
+      for (r = 0; r < n; r++) { d += Q[k][r] * v[r]; }
+      R[k][j] = d;
+      for (r = 0; r < n; r++) { v[r] -= d * Q[k][r]; }
+    }
+    var nrm = 0;
+    for (r = 0; r < n; r++) { nrm += v[r] * v[r]; }
+    nrm = Math.sqrt(nrm);
+    R[j][j] = nrm;
+    var q = [];
+    for (r = 0; r < n; r++) { q.push(nrm > 0 ? v[r] / nrm : 0); }
+    Q.push(q);
+  }
+  var qty = [];
+  for (j = 0; j < p; j++) {
+    var s = 0;
+    for (r = 0; r < n; r++) { s += Q[j][r] * y[r]; }
+    qty.push(s);
+  }
+  var b = new Array(p).fill(0);
+  for (j = p - 1; j >= 0; j--) {
+    var acc = qty[j];
+    for (k = j + 1; k < p; k++) { acc -= R[j][k] * b[k]; }
+    b[j] = R[j][j] > 0 ? acc / R[j][j] : 0;
+  }
+  var sse = 0;
+  for (r = 0; r < n; r++) {
+    var f = 0;
+    for (j = 0; j < p; j++) { f += A[r][j] * b[j]; }
+    sse += (y[r] - f) * (y[r] - f);
+  }
+  return { coef: b, R: R, n: n, p: p, sse: sse, mse: sse / (n - p) };
+}
+
+/* h0 = x0' (X'X)^{-1} x0, from a forward solve of R' z = x0. */
+function leverage(R, x0) {
+  var p = x0.length, z = new Array(p).fill(0), i, k;
+  for (i = 0; i < p; i++) {
+    var acc = x0[i];
+    for (k = 0; k < i; k++) { acc -= R[k][i] * z[k]; }
+    z[i] = R[i][i] > 0 ? acc / R[i][i] : 0;
+  }
+  var h = 0;
+  for (i = 0; i < p; i++) { h += z[i] * z[i]; }
+  return h;
+}
+
+var cache = { year: null };
+
+function build(endYear) {
+  if (cache.year === endYear) { return cache; }
+  var nTr = Math.round((endYear - 1948) * 12);
+  var tc = (nTr + 1) / 2;
+  var Xtr = [], t, k;
+  for (t = 1; t <= nTr; t++) { Xtr.push(designRow(t, tc)); }
+  var f = qrFit(Xtr, LOGY.slice(0, nTr));
+  var s = Math.sqrt(f.mse);
+  var tstar = Sim.Stats.qt(0.975, f.n - f.p);
+
+  var pred = [], lo = [], hi = [];
+  for (t = 1; t <= N; t++) {
+    var x0 = designRow(t, tc);
+    var yh = 0;
+    for (k = 0; k < x0.length; k++) { yh += x0[k] * f.coef[k]; }
+    var half = tstar * s * Math.sqrt(1 + leverage(f.R, x0));
+    pred.push(Math.exp(yh));
+    lo.push(Math.exp(yh - half));
+    hi.push(Math.exp(yh + half));
+  }
+
+  var trSse = 0, teSse = 0, teAbs = 0, cov = 0, nTe = N - nTr;
+  for (k = 0; k < nTr; k++) {
+    trSse += (PASS[k] - pred[k]) * (PASS[k] - pred[k]);
+  }
+  for (k = nTr; k < N; k++) {
+    teSse += (PASS[k] - pred[k]) * (PASS[k] - pred[k]);
+    teAbs += Math.abs(PASS[k] - pred[k]) / PASS[k];
+    if (PASS[k] >= lo[k] && PASS[k] <= hi[k]) { cov++; }
+  }
+
+  cache = {
+    year: endYear, nTrain: nTr, nTest: nTe,
+    pred: pred, lo: lo, hi: hi,
+    split: 1949 + nTr / 12,
+    rmseTrain: Math.sqrt(trSse / nTr),
+    rmseTest: Math.sqrt(teSse / nTe),
+    mapeTest: 100 * teAbs / nTe,
+    coverage: 100 * cov / nTe,
+    nCovered: cov
+  };
+  return cache;
+}
+
+function tOf(x) { return (x - 1949) * 12 + 1; }
+
+function seriesAt(arr, x) {
+  var t = tOf(x);
+  if (t < 1 - 1e-9 || t > N + 1e-9) { return NaN; }
+  t = Math.min(N, Math.max(1, t));
+  var k = Math.floor(t);
+  if (k >= N) { k = N - 1; }
+  var f = t - k;
+  return arr[k - 1] + f * (arr[k] - arr[k - 1]);
+}
+
+Sim.mount({
+  type: 'sliders',
+  seed: 4210,
+  title: {
+    en: 'Hide the last years from the model, then ask it to forecast them',
+    es: 'Esconde los ultimos anos al modelo y luego pidele que los pronostique'
+  },
+  xRange: [1949, 1949 + 143 / 12],
+  yRange: [0, YMAX],
+  xLabel: { en: 'year', es: 'ano' },
+  yLabel: { en: 'passengers (thousands)', es: 'pasajeros (miles)' },
+  ariaLabel: {
+    en: 'Observed airline passengers with the fitted and forecast values and a prediction band.',
+    es: 'Pasajeros aereos observados con los valores ajustados y pronosticados y una banda de prediccion.'
+  },
+  params: [
+    { id: 'yr', label: { en: 'Train through December of', es: 'Entrenar hasta diciembre de' },
+      min: 1952, max: 1959, step: 1, value: 1957, digits: 0 }
+  ],
+  curves: [
+    { accent: 2, width: 2, fn: function (p, x) { return seriesAt(PASS, x); } },
+    { accent: 1, width: 2,
+      fn: function (p, x) { return seriesAt(build(p.yr).pred, x); } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.08,
+      lo: function () { return 0; },
+      hi: function (p, x) { return x >= build(p.yr).split ? YMAX : 0; } },
+    { accent: 1, alpha: 0.13,
+      lo: function (p, x) { return seriesAt(build(p.yr).lo, x); },
+      hi: function (p, x) { return seriesAt(build(p.yr).hi, x); } }
+  ],
+  readouts: [
+    { id: 'rtr', label: { en: 'Train RMSE', es: 'RMSE de entrenamiento' }, accent: 1, digits: 1,
+      compute: function (p) { return build(p.yr).rmseTrain; } },
+    { id: 'rte', label: { en: 'Test RMSE', es: 'RMSE de prueba' }, accent: 2, digits: 1,
+      compute: function (p) { return build(p.yr).rmseTest; } },
+    { id: 'map', label: { en: 'Test MAPE %', es: 'MAPE de prueba %' }, accent: 2, digits: 1,
+      compute: function (p) { return build(p.yr).mapeTest; } },
+    { id: 'cov', label: { en: '95% interval coverage %', es: 'Cobertura del intervalo 95% %' },
+      digits: 1,
+      compute: function (p) { return build(p.yr).coverage; } }
+  ],
+  caption: {
+    en: 'The amber line is what actually happened. The blue line is the model, fitted on the ' +
+        'unshaded months and forecast across the shaded ones, with its back-transformed 95 ' +
+        'percent prediction band. Every score you see is computed on the shaded months only.\n\n' +
+        '**Try this.** Set the split at 1957, the chapter split, and compare the two RMSE ' +
+        'tiles: about 9 on the months it trained on and about 63 on the months it did not. ' +
+        'The forecast rides above the truth because it extrapolates the early growth rate into ' +
+        'years when growth slowed. Then watch the coverage tile, which promises 95 and delivers ' +
+        '19. Now drag the split back to 1952 and the forecast runs away entirely: the further ' +
+        'ahead you extrapolate a trend, the worse the honest score gets.',
+    es: 'La linea ambar es lo que realmente ocurrio. La linea azul es el modelo, ajustado en ' +
+        'los meses sin sombrear y pronosticado sobre los sombreados, con su banda de prediccion ' +
+        'del 95 por ciento retransformada. Todos los puntajes se calculan solo sobre los meses ' +
+        'sombreados.\n\n' +
+        '**Prueba esto.** Pon la division en 1957, la del capitulo, y compara las dos casillas ' +
+        'de RMSE: cerca de 9 en los meses con los que se entreno y cerca de 63 en los que no. ' +
+        'El pronostico va por encima de la verdad porque extrapola la tasa de crecimiento ' +
+        'temprana a anos en que el crecimiento se freno. Luego mira la casilla de cobertura, ' +
+        'que promete 95 y entrega 19. Ahora arrastra la division hasta 1952 y el pronostico se ' +
+        'dispara: cuanto mas lejos extrapolas una tendencia, peor es el puntaje honesto.'
+  }
+});
+</script>
+</body>
+</html>

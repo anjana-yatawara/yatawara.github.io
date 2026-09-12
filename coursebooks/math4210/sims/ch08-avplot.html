@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Building an added-variable plot</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-back { max-width: 860px; margin: 10px auto 0; font-size: 0.8125rem; }
+.sim-back a { color: var(--sim-accent); }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<p class="sim-back"><a id="back" href="../ch08/#ch08-avplots" target="_top">Back to 8.5</a></p>
+<script src="_engine.js"></script>
+<script>
+/* Dwaine Studios, 21 cities: targtpop, dispoinc, sales (data/dwaine.csv). */
+var DW = [
+  [68.5, 16.7, 174.4], [45.2, 16.8, 164.4], [91.3, 18.2, 244.2], [47.8, 16.3, 154.6],
+  [46.9, 17.3, 181.6], [66.1, 18.2, 207.5], [49.5, 15.9, 152.8], [52.0, 17.2, 163.2],
+  [48.9, 16.6, 145.4], [38.4, 16.0, 137.2], [87.9, 18.3, 241.9], [72.8, 17.1, 191.1],
+  [88.4, 17.4, 232.0], [42.9, 15.8, 145.3], [52.5, 17.8, 161.1], [85.7, 18.4, 209.7],
+  [41.3, 16.5, 146.4], [51.7, 16.3, 144.0], [89.6, 18.1, 232.6], [82.7, 19.1, 224.1],
+  [52.3, 16.0, 166.5]
+];
+
+var POP = DW.map(function (r) { return r[0]; });
+var INC = DW.map(function (r) { return r[1]; });
+var SAL = DW.map(function (r) { return r[2]; });
+
+var mInc = Sim.Stats.mean(INC), mSal = Sim.Stats.mean(SAL);
+var fInc = Sim.Stats.lsFit(POP, INC);   /* dispoinc on targtpop */
+var fSal = Sim.Stats.lsFit(POP, SAL);   /* sales    on targtpop */
+
+/* Centered raw variables, and the part of each that targtpop explains.
+   At t = 1 the two axes are exactly e_X and e_Y of Definition 8.8. */
+var XC = [], YC = [], XH = [], YH = [], i;
+for (i = 0; i < DW.length; i++) {
+  XC.push(INC[i] - mInc);
+  YC.push(SAL[i] - mSal);
+  XH.push(fInc.fitted[i] - mInc);
+  YH.push(fSal.fitted[i] - mSal);
+}
+
+/* The engine draws the point cloud before it evaluates the curves, so the
+   points read the live control values straight from the range inputs. */
+var INPUTS = null;
+function ctrl() {
+  if (!INPUTS || !INPUTS.length) {
+    INPUTS = document.querySelectorAll('.sim-controls input[type="range"]');
+  }
+  if (!INPUTS || INPUTS.length < 2) { return { t: 0, both: 1 }; }
+  return { t: parseFloat(INPUTS[0].value), both: parseFloat(INPUTS[1].value) };
+}
+
+function axisX(i, t, both) { return XC[i] - t * both * XH[i]; }
+function axisY(i, t) { return YC[i] - t * YH[i]; }
+
+function cloud(t, both) {
+  var xs = [], ys = [];
+  for (var j = 0; j < DW.length; j++) { xs.push(axisX(j, t, both)); ys.push(axisY(j, t)); }
+  return Sim.Stats.lsFit(xs, ys);
+}
+
+var PTS = [];
+for (i = 0; i < DW.length; i++) {
+  PTS.push((function (j) {
+    return {
+      get x() { var c = ctrl(); return axisX(j, c.t, c.both); },
+      get y() { var c = ctrl(); return axisY(j, c.t); }
+    };
+  }(i)));
+}
+
+var MULT_B2 = 9.3655;      /* b2 from the fitted plane, Example 8.1 */
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Clean target population off both axes and watch the partial slope appear',
+    es: 'Quita la población objetivo de ambos ejes y observa aparecer la pendiente parcial'
+  },
+  points: PTS,
+  xRange: [-1.75, 2.25],
+  yRange: [-52, 68],
+  xLabel: { en: 'income, with the removed part taken out',
+            es: 'ingreso, con la parte removida quitada' },
+  yLabel: { en: 'sales, with the removed part taken out',
+            es: 'ventas, con la parte removida quitada' },
+  ariaLabel: {
+    en: 'Scatter of sales against disposable income for 21 cities, both centered, with a fitted line through the origin. A slider removes what target population explains from each axis.',
+    es: 'Dispersión de ventas frente a ingreso disponible de 21 ciudades, ambas centradas, con una recta ajustada por el origen. Un deslizador quita de cada eje lo que explica la población objetivo.'
+  },
+  params: [
+    { id: 't', label: { en: 'How much of targtpop to remove',
+                        es: 'Cuánto de targtpop se quita' },
+      min: 0, max: 1, step: 0.05, value: 0, digits: 2 },
+    { id: 'both', label: { en: 'Clean the horizontal axis too, 1 = yes',
+                           es: 'Limpiar también el eje horizontal, 1 = sí' },
+      min: 0, max: 1, step: 1, value: 1, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { return cloud(p.t, p.both).slope * x; } }
+  ],
+  readouts: [
+    { id: 'slope', label: { en: 'Slope now', es: 'Pendiente ahora' }, accent: 1, digits: 3,
+      compute: function (p) { return cloud(p.t, p.both).slope; } },
+    { id: 'marg', label: { en: 'Marginal slope', es: 'Pendiente marginal' }, digits: 3,
+      compute: function () { return cloud(0, 1).slope; } },
+    { id: 'b2', label: { en: 'Coefficient b2', es: 'Coeficiente b2' }, accent: 2, digits: 3,
+      compute: function () { return MULT_B2; } },
+    { id: 'r', label: { en: 'r', es: 'r' }, digits: 3,
+      compute: function (p) { return cloud(p.t, p.both).r; } }
+  ],
+  caption: {
+    en: '**What to notice.** Both axes start as centered sales and income, so the cloud\'s slope is the ' +
+        'marginal 31.173; the slider subtracts the part of each that target population explains, and at ' +
+        '1.00 the axes are exactly the residuals e_X and e_Y.\n\n' +
+        '**Try this.** Push the top slider to 1 and watch the slope fall to 9.366, the b2 printed in the ' +
+        'coefficient table. Then set the second slider to 0, cleaning only the vertical axis, and the ' +
+        'slope settles at 3.649, neither number.',
+    es: '**Qué observar.** Ambos ejes empiezan como ventas e ingreso centrados, así que la pendiente de ' +
+        'la nube es la marginal 31.173; el deslizador resta la parte de cada uno que explica la población ' +
+        'objetivo, y en 1.00 los ejes son exactamente los residuos e_X y e_Y.\n\n' +
+        '**Prueba esto.** Lleva el deslizador de arriba a 1 y observa que la pendiente cae a 9.366, el b2 ' +
+        'que aparece en la tabla de coeficientes. Luego pon el segundo deslizador en 0, limpiando solo el ' +
+        'eje vertical, y la pendiente se queda en 3.649, que no es ninguno de los dos.'
+  }
+});
+
+(function () {
+  var es = false;
+  try { es = new URLSearchParams(location.search).get('lang') === 'es'; } catch (e) { es = false; }
+  var a = document.getElementById('back');
+  a.textContent = es ? 'Volver a 8.5 Gráficos de variable agregada'
+                     : 'Back to 8.5 Added-variable plots';
+  a.setAttribute('href', es ? '../ch08/es/#ch08-avplots-es'
+                            : '../ch08/#ch08-avplots');
+}());
+</script>
+</body>
+</html>

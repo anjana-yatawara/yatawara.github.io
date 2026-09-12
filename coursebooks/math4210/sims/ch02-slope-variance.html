@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The sampling distribution of b1</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Fresh samples from the model the Toluca fit estimated, at the 25 real lot
+   sizes: Y = 62.366 + 3.5702 X + e, with e ~ N(0, 48.82^2). */
+var BETA0 = 62.366, BETA1 = 3.5702, SIGMA = 48.82;
+var XS = [80, 30, 50, 90, 70, 60, 120, 80, 100, 50, 40, 70, 90, 20, 110,
+          100, 30, 50, 90, 110, 30, 90, 40, 80, 70];
+
+/* Sxx for the fixed lot sizes, and the variance formula of Theorem 2.9. */
+var SXX = (function () {
+  var m = Sim.Stats.mean(XS), s = 0;
+  for (var i = 0; i < XS.length; i++) { s += (XS[i] - m) * (XS[i] - m); }
+  return s;
+})();
+var THEORY_SD = Math.sqrt(SIGMA * SIGMA / SXX);
+
+Sim.mount({
+  type: 'sampling',
+  seed: 4210,
+  title: {
+    en: 'How wide is the pile of slopes, and did the formula call it?',
+    es: 'Que tan ancho es el monton de pendientes, y lo predijo la formula?'
+  },
+  draw: function (rng) {
+    var ys = [];
+    for (var i = 0; i < XS.length; i++) {
+      ys.push(BETA0 + BETA1 * XS[i] + rng.normal(0, SIGMA));
+    }
+    return { stat: Sim.Stats.lsFit(XS, ys).slope, sample: ys };
+  },
+  xRange: [2.15, 5.0],
+  sampleRange: [0, 650],
+  bins: 32,
+  showLastSample: true,
+  showNormal: true,
+  trueValue: BETA1,
+  trueValueLabel: { en: 'true 3.5702', es: 'real 3.5702' },
+  xLabel: { en: 'estimated slope b1', es: 'pendiente estimada b1' },
+  ariaLabel: {
+    en: 'A histogram of the fitted slope from repeated samples, with a marker at the true slope 3.5702.',
+    es: 'Un histograma de la pendiente ajustada de muestras repetidas, con un marcador en la pendiente real 3.5702.'
+  },
+  drawOneLabel: { en: 'Draw a sample', es: 'Tomar una muestra' },
+  drawManyLabel: { en: 'Draw 1000', es: 'Tomar 1000' },
+  readouts: [
+    { id: 'n', label: { en: 'Samples', es: 'Muestras' } },
+    { id: 'mean', label: { en: 'Mean of b1', es: 'Media de b1' }, accent: 1, digits: 4 },
+    { id: 'sd', label: { en: 'SD of b1', es: 'DE de b1' }, accent: 2, digits: 4 },
+    { id: 'theory', label: { en: 'sigma / sqrt(Sxx)', es: 'sigma / raiz(Sxx)' },
+      digits: 4, compute: function () { return THEORY_SD; } }
+  ],
+  caption: {
+    en: 'Every sample reuses the same 25 Toluca lot sizes and draws fresh errors around the ' +
+        'line 62.366 + 3.5702X. The amber dots on the strip are the work hours of the latest ' +
+        'sample; the histogram below collects the slope b1 fitted to every sample so far.\n\n' +
+        '**Try this.** Draw a handful of samples one at a time and notice that no single b1 ' +
+        'equals 3.5702. Then press Draw 1000. The pile centers on 3.5702, which is what ' +
+        'unbiasedness looks like, and its spread settles onto 0.3469, the number ' +
+        'sigma over the square root of Sxx predicted before you drew anything. The variance ' +
+        'formula is not an approximation, it is the width of this pile.',
+    es: 'Cada muestra reutiliza los mismos 25 tamanos de lote de Toluca y toma errores nuevos ' +
+        'alrededor de la recta 62.366 + 3.5702X. Los puntos ambar de la franja son las horas ' +
+        'de trabajo de la muestra mas reciente; el histograma de abajo reune la pendiente b1 ' +
+        'ajustada a cada muestra tomada hasta ahora.\n\n' +
+        '**Prueba esto.** Toma unas cuantas muestras de una en una y nota que ninguna b1 es ' +
+        'igual a 3.5702. Luego presiona Tomar 1000. El monton se centra en 3.5702, que es como ' +
+        'se ve la insesgadez, y su dispersion se asienta en 0.3469, el numero que sigma sobre ' +
+        'la raiz de Sxx predijo antes de que tomaras nada. La formula de la varianza no es una ' +
+        'aproximacion, es el ancho de este monton.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walking the O-ring curve into the cold</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 23 flights before Challenger: launch temperature in degrees Fahrenheit
+   and the fraction of six O-rings that showed heat damage. From data/orings.csv. */
+var FLIGHTS = [
+  { x: 53, y: 0.833333 }, { x: 57, y: 0.166667 }, { x: 58, y: 0.166667 },
+  { x: 63, y: 0.166667 }, { x: 66, y: 0 }, { x: 67, y: 0 }, { x: 67, y: 0 },
+  { x: 67, y: 0 }, { x: 68, y: 0 }, { x: 69, y: 0 }, { x: 70, y: 0.166667 },
+  { x: 70, y: 0 }, { x: 70, y: 0.166667 }, { x: 70, y: 0 }, { x: 72, y: 0 },
+  { x: 73, y: 0 }, { x: 75, y: 0 }, { x: 75, y: 0.166667 }, { x: 76, y: 0 },
+  { x: 76, y: 0 }, { x: 78, y: 0 }, { x: 79, y: 0 }, { x: 81, y: 0 }
+];
+
+/* Maximum-likelihood fit of logit(pi) = beta0 + beta1 * temp on the grouped
+   binomial response cbind(damage, 6 - damage). Matches glm to six decimals. */
+var B0 = 11.6629896953;
+var B1 = -0.2162336641;
+var COLDEST = 53;          /* coldest launch on record */
+var LO = 25, HI = 85;      /* plotted temperature range */
+
+function piHat(x) { return 1 / (1 + Math.exp(-(B0 + B1 * x))); }
+
+/* Sim.mount sets the document language before the first draw, so a readout
+   that returns a word can pick the right one. */
+function L(pair) {
+  var lang = document.documentElement.getAttribute('lang');
+  return pair[lang] || pair.en;
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Walk the fitted curve down to 31 degrees',
+    es: 'Recorre la curva ajustada hasta los 31 grados'
+  },
+  points: FLIGHTS,
+  xRange: [LO, HI],
+  yRange: [-0.05, 1.08],
+  xLabel: { en: 'launch temperature (F)', es: 'temperatura de lanzamiento (F)' },
+  yLabel: { en: 'P(O-ring damaged)', es: 'P(anillo danado)' },
+  ariaLabel: {
+    en: 'Fitted logistic curve for O-ring damage against launch temperature, with a movable temperature marker.',
+    es: 'Curva logistica ajustada del dano en los anillos contra la temperatura de lanzamiento, con un marcador movil de temperatura.'
+  },
+  params: [
+    { id: 'temp', label: { en: 'Launch temperature x (F)',
+                           es: 'Temperatura de lanzamiento x (F)' },
+      min: LO, max: HI, step: 1, value: 65, digits: 0 }
+  ],
+  bands: [
+    /* Everything colder than the coldest flight on record: no data lives here. */
+    { accent: 2, alpha: 0.12,
+      lo: function () { return -0.05; },
+      hi: function (p, x) { return x < COLDEST ? 1.08 : -0.05; } },
+    /* The movable temperature marker, drawn as a bar up to Yhat. */
+    { accent: 1, alpha: 0.85,
+      lo: function () { return -0.05; },
+      hi: function (p, x) {
+        return Math.abs(x - p.temp) < 0.8 ? piHat(p.temp) : -0.05;
+      } }
+  ],
+  curves: [
+    { fn: function (p, x) { return piHat(x); }, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'pihat', label: { en: 'Yhat = P(damage)', es: 'Yhat = P(dano)' },
+      accent: 1, digits: 3,
+      compute: function (p) { return piHat(p.temp); } },
+    { id: 'odds', label: { en: 'Odds of damage', es: 'Momios de dano' },
+      digits: 2,
+      compute: function (p) { var q = piHat(p.temp); return q / (1 - q); } },
+    { id: 'rings', label: { en: 'Expected rings of 6', es: 'Anillos esperados de 6' },
+      digits: 2,
+      compute: function (p) { return 6 * piHat(p.temp); } },
+    { id: 'range', label: { en: 'Evidence here', es: 'Evidencia aqui' },
+      accent: 2,
+      compute: function (p) {
+        return p.temp < COLDEST
+          ? L({ en: 'none: extrapolating', es: 'ninguna: extrapolando' })
+          : L({ en: 'flights on record', es: 'vuelos registrados' });
+      } }
+  ],
+  caption: {
+    en: 'The black dots are the 23 flights before Challenger. The blue curve is the ' +
+        'maximum-likelihood fit, b0 = 11.66 and b1 = -0.2162, and the shaded strip on the ' +
+        'left is colder than any launch that had ever flown.\n\n' +
+        '**Try this.** Slide from 81 degrees down to 31. The probability climbs slowly ' +
+        'through the data, then rises fast the moment you cross into the shaded strip, ' +
+        'where the readout switches to "extrapolating". Yhat reaches 0.993 at 31 degrees ' +
+        'even though no dot within twenty degrees supports it. That number comes from the ' +
+        'shape of the curve, not from evidence, which is exactly the risk the engineers ' +
+        'were arguing about.',
+    es: 'Los puntos negros son los 23 vuelos anteriores al Challenger. La curva azul es el ' +
+        'ajuste de maxima verosimilitud, b0 = 11.66 y b1 = -0.2162, y la franja sombreada ' +
+        'de la izquierda es mas fria que cualquier lanzamiento realizado.\n\n' +
+        '**Prueba esto.** Desliza desde 81 grados hasta 31. La probabilidad sube despacio ' +
+        'dentro de los datos y luego se dispara al entrar en la franja sombreada, donde el ' +
+        'indicador cambia a "extrapolando". Yhat llega a 0.993 a 31 grados aunque ningun ' +
+        'punto a menos de veinte grados lo respalde. Ese numero viene de la forma de la ' +
+        'curva, no de la evidencia, que es justo el riesgo que discutian los ingenieros.'
+  }
+});
+</script>
+</body>
+</html>

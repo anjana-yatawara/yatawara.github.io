@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Restriction of range</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* 220 of Galton's 934 children, drawn once and fixed here. The subsample was
+   chosen so that its overall correlation, 0.321, matches the full table to
+   three decimals, so the numbers in Section 4.6 read across unchanged. */
+var MP = [64.4, 64.86, 64.86, 65.15, 65.4, 65.79, 65.86, 65.86, 65.86, 66.32, 66.32, 66.4, 66.52, 66.52, 66.56, 66.56, 66.56, 66.59, 66.64, 66.77, 66.77, 66.82, 66.9, 66.9, 66.9, 67.0, 67.06, 67.06, 67.06, 67.23, 67.23, 67.27, 67.27, 67.4, 67.44, 67.52, 67.52, 67.6, 67.6, 67.6, 67.6, 67.6, 67.69, 67.75, 67.79, 67.79, 67.94, 67.98, 68.02, 68.02, 68.02, 68.02, 68.02, 68.02, 68.02, 68.02, 68.02, 68.06, 68.14, 68.14, 68.23, 68.23, 68.25, 68.25, 68.25, 68.25, 68.33, 68.35, 68.35, 68.35, 68.37, 68.52, 68.52, 68.54, 68.56, 68.56, 68.56, 68.56, 68.56, 68.56, 68.6, 68.6, 68.64, 68.64, 68.64, 68.73, 68.73, 68.73, 68.73, 68.79, 68.79, 68.79, 68.79, 68.85, 68.85, 68.85, 68.85, 68.87, 68.87, 68.87, 68.87, 68.94, 68.98, 68.98, 69.02, 69.09, 69.09, 69.1, 69.14, 69.16, 69.16, 69.16, 69.16, 69.18, 69.18, 69.18, 69.18, 69.18, 69.25, 69.25, 69.27, 69.27, 69.35, 69.35, 69.35, 69.35, 69.35, 69.37, 69.41, 69.48, 69.48, 69.52, 69.52, 69.52, 69.56, 69.56, 69.56, 69.56, 69.56, 69.56, 69.56, 69.58, 69.6, 69.62, 69.67, 69.79, 69.79, 69.81, 69.81, 69.81, 69.81, 69.81, 69.94, 70.02, 70.02, 70.02, 70.06, 70.06, 70.06, 70.06, 70.1, 70.1, 70.1, 70.1, 70.1, 70.14, 70.14, 70.14, 70.14, 70.16, 70.16, 70.35, 70.35, 70.41, 70.41, 70.43, 70.48, 70.48, 70.52, 70.52, 70.58, 70.66, 70.85, 70.85, 70.87, 70.87, 70.91, 70.91, 70.91, 71.06, 71.1, 71.1, 71.12, 71.14, 71.14, 71.14, 71.14, 71.14, 71.18, 71.18, 71.49, 71.49, 71.49, 71.6, 71.6, 71.6, 72.06, 72.06, 72.06, 72.18, 72.26, 72.26, 72.76, 72.76, 73.61, 73.61, 73.72, 73.72, 73.72, 75.43];
+var CH = [60.0, 67.0, 61.0, 67.0, 68.0, 68.5, 64.7, 64.0, 63.0, 65.0, 72.0, 60.0, 66.0, 63.0, 68.0, 62.0, 62.0, 71.5, 64.0, 63.5, 71.0, 69.0, 60.5, 69.0, 70.5, 62.5, 62.5, 60.5, 64.0, 69.5, 66.0, 63.0, 67.0, 65.0, 62.0, 69.0, 63.0, 59.0, 68.0, 64.5, 69.0, 69.0, 70.0, 68.5, 71.0, 70.2, 67.0, 72.0, 67.0, 66.0, 68.0, 64.0, 63.0, 62.0, 70.0, 66.0, 64.0, 71.5, 61.0, 65.0, 62.0, 70.0, 71.0, 70.0, 69.0, 70.0, 62.5, 68.5, 62.5, 60.5, 67.0, 66.0, 64.0, 70.0, 65.0, 61.0, 64.0, 62.0, 68.0, 71.2, 62.0, 65.5, 66.5, 65.0, 65.5, 68.0, 72.0, 72.0, 64.0, 62.0, 63.0, 70.5, 63.7, 62.0, 69.0, 71.0, 64.0, 70.0, 69.0, 63.0, 65.5, 65.7, 72.0, 70.5, 61.0, 72.0, 68.0, 72.0, 69.0, 71.7, 65.0, 63.5, 66.5, 70.5, 62.0, 64.0, 61.5, 66.0, 71.5, 70.0, 64.5, 72.5, 64.0, 66.0, 72.0, 70.5, 66.0, 70.7, 71.0, 64.0, 72.0, 63.5, 70.0, 64.0, 70.0, 68.0, 65.0, 65.0, 70.0, 67.0, 71.0, 60.0, 63.5, 67.5, 62.5, 67.0, 63.5, 74.0, 69.5, 65.0, 65.5, 68.0, 68.7, 66.5, 70.0, 70.5, 66.0, 66.5, 68.0, 68.0, 65.0, 67.0, 73.0, 62.5, 62.5, 70.0, 72.0, 65.0, 73.0, 69.0, 68.0, 68.5, 61.0, 70.5, 63.0, 71.0, 74.0, 66.0, 68.5, 72.0, 70.0, 67.5, 67.7, 68.5, 65.0, 72.0, 66.0, 69.2, 66.0, 66.0, 70.5, 74.2, 65.2, 66.0, 67.0, 69.0, 70.0, 71.0, 60.0, 67.5, 65.0, 64.0, 64.0, 70.2, 69.2, 70.2, 68.5, 64.5, 71.0, 73.0, 69.0, 66.0, 73.0, 78.0, 72.7, 68.5, 76.5, 73.0, 64.0, 69.0];
+
+var DATA = MP.map(function (v, i) { return { x: v, y: CH[i] }; });
+var FULL = Sim.Stats.lsFit(MP, CH);
+
+var XR = [63.5, 76];
+var YR = [56, 80];
+
+function inWindow(p, x) {
+  return x >= p.center - p.half && x <= p.center + p.half;
+}
+
+/* Recomputing the windowed fit is cheap, but the curve callback runs a couple
+   of hundred times per redraw, so cache it on the two slider values. */
+var CACHE = { key: null, fit: null, n: 0, sdx: 0 };
+function windowFit(p) {
+  var key = p.center + ':' + p.half;
+  if (CACHE.key !== key) {
+    var xs = [], ys = [];
+    for (var i = 0; i < MP.length; i++) {
+      if (inWindow(p, MP[i])) { xs.push(MP[i]); ys.push(CH[i]); }
+    }
+    CACHE.key = key;
+    CACHE.n = xs.length;
+    CACHE.sdx = xs.length > 1 ? Sim.Stats.sd(xs) : NaN;
+    CACHE.fit = xs.length > 2 ? Sim.Stats.lsFit(xs, ys) : null;
+  }
+  return CACHE;
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Narrow the range of X and watch r shrink',
+    es: 'Estrecha el rango de X y observa como r se encoge'
+  },
+  points: DATA,
+  xRange: XR,
+  yRange: YR,
+  xLabel: { en: 'midparent height (inches)', es: 'estatura media de los padres (pulgadas)' },
+  yLabel: { en: 'child height (inches)', es: 'estatura del hijo (pulgadas)' },
+  ariaLabel: {
+    en: 'A wide cloud of 220 children plotted against midparent height, with a shaded vertical band marking the slice of parent heights currently being correlated.',
+    es: 'Una nube amplia de 220 hijos graficada contra la estatura media de los padres, con una banda vertical sombreada que marca la franja de estaturas que se esta correlacionando.'
+  },
+  params: [
+    { id: 'center', min: 65, max: 74, step: 0.25, value: 70, digits: 2,
+      label: { en: 'Center of the band (inches)', es: 'Centro de la banda (pulgadas)' } },
+    { id: 'half', min: 0.5, max: 5, step: 0.25, value: 1, digits: 2,
+      label: { en: 'Half-width of the band (inches)', es: 'Semiancho de la banda (pulgadas)' } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.16,
+      lo: function () { return YR[0]; },
+      hi: function (p, x) { return inWindow(p, x) ? YR[1] : YR[0]; } }
+  ],
+  curves: [
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function (p, x) { return FULL.predict(x); } },
+    { accent: 1, width: 3,
+      fn: function (p, x) {
+        var w = windowFit(p);
+        return (w.fit && inWindow(p, x)) ? w.fit.predict(x) : NaN;
+      } }
+  ],
+  readouts: [
+    { id: 'rin', accent: 1, digits: 3,
+      label: { en: 'r inside the band', es: 'r dentro de la banda' },
+      compute: function (p) { var w = windowFit(p); return w.fit ? w.fit.r : NaN; } },
+    { id: 'nin', digits: 0,
+      label: { en: 'n inside', es: 'n dentro' },
+      compute: function (p) { return windowFit(p).n; } },
+    { id: 'sdin', accent: 2, digits: 3,
+      label: { en: 'SD of X inside', es: 'DE de X dentro' },
+      compute: function (p) { return windowFit(p).sdx; } },
+    { id: 'rall', digits: 3,
+      label: { en: 'r on all 220', es: 'r en los 220' },
+      compute: function () { return FULL.r; } }
+  ],
+  caption: {
+    en: 'All 220 children stay on screen the whole time. The shaded band is the ' +
+        'only slice of parent heights you are allowed to correlate; the solid blue ' +
+        'line is fitted to just those families, and the dashed amber line is the fit ' +
+        'to everybody.\n\n' +
+        '**Try this.** Start at the band running 69 to 71 inches, where **r** is ' +
+        '0.100 against 0.321 for the whole cloud, a fall of two thirds. Now widen the ' +
+        'band with the second slider and watch r climb back until the two lines lie ' +
+        'on top of each other. Heredity never changed. Only the spread of X you ' +
+        'chose to look at did.',
+    es: 'Los 220 hijos permanecen en pantalla todo el tiempo. La banda sombreada es ' +
+        'la unica franja de estaturas de padres que puedes correlacionar; la recta ' +
+        'azul continua se ajusta solo a esas familias, y la recta ambar discontinua ' +
+        'es el ajuste a todos.\n\n' +
+        '**Prueba esto.** Empieza con la banda de 69 a 71 pulgadas, donde **r** vale ' +
+        '0.100 frente a 0.321 de la nube completa, una caida de dos tercios. Ahora ' +
+        'ensancha la banda con el segundo deslizador y observa como r vuelve a subir ' +
+        'hasta que las dos rectas se superponen. La herencia nunca cambio. Lo unico ' +
+        'que cambio fue la dispersion de X que decidiste mirar.'
+  }
+});
+</script>
+</body>
+</html>

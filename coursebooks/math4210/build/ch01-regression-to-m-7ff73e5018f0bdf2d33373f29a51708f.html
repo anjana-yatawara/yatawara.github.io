@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Galton's shallow line</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Galton's 934 adult children, data/galton_heights.csv.
+   R: lm(childHeight ~ midparentHeight) gives b0 = 22.6362405, b1 = 0.6373609,
+   mean mid-parent 69.206773 in, mean child 66.745931 in.
+   The dots are a random sample of 120 of the 934 families (seed 4210); the
+   line is the least-squares fit to all 934. */
+var B0 = 22.6362405, B1 = 0.6373609;
+var MEAN_MP = 69.206773, MEAN_CHILD = 66.745931;
+
+function galton(x) { return B0 + B1 * x; }
+
+var FAMILIES = [
+{x:73.66,y:65.5},{x:72.06,y:67},{x:69.09,y:68},{x:69.09,y:66.5},{x:73.72,y:76.5},
+{x:70.48,y:68},{x:72.68,y:62},{x:71.6,y:68.7},{x:71.6,y:66.5},{x:71.33,y:74},
+{x:71.1,y:69.5},{x:71.37,y:65.5},{x:70.56,y:63},{x:70.02,y:70.5},{x:70.02,y:67},
+{x:70.02,y:70},{x:70.02,y:66.5},{x:70.54,y:67.2},{x:72.76,y:78},{x:71.14,y:70},
+{x:71.14,y:67},{x:71.14,y:64.5},{x:71.14,y:63},{x:70.87,y:72},{x:70.87,y:72},
+{x:70.87,y:66},{x:70.6,y:62},{x:70.06,y:66.5},{x:70.68,y:72},{x:70.58,y:66},
+{x:68.98,y:61.5},{x:69.25,y:70},{x:72.26,y:69},{x:72.26,y:66},{x:71.18,y:64},
+{x:70.91,y:64.2},{x:70.35,y:70.2},{x:70.35,y:65},{x:70.1,y:65},{x:70.1,y:64.5},
+{x:70.1,y:67},{x:69.938,y:72},{x:69.938,y:65.5},{x:69.56,y:65},{x:69.81,y:68},
+{x:69.398,y:63.7},{x:69.27,y:70},{x:69.27,y:68.5},{x:69.29,y:71},{x:69.29,y:67.5},
+{x:69.02,y:63.7},{x:69.008,y:63.5},{x:70.14,y:68.5},{x:70.14,y:68},{x:70.41,y:70.5},
+{x:70.39,y:70.5},{x:70.14,y:69},{x:69.6,y:70},{x:69.6,y:64},{x:69.6,y:63.5},
+{x:68.79,y:70.5},{x:68.23,y:69},{x:67.98,y:71},{x:68.23,y:65.2},{x:68.23,y:64.7},
+{x:68.23,y:62.5},{x:68.25,y:63.5},{x:68.25,y:62},{x:67.44,y:67.5},{x:67.44,y:63},
+{x:72.42,y:61.7},{x:70.16,y:70},{x:70.16,y:68.5},{x:70.16,y:68},{x:69.37,y:66},
+{x:69.35,y:61},{x:69.35,y:72},{x:69.35,y:63.5},{x:68.56,y:64},{x:68.56,y:69},
+{x:68.02,y:66},{x:68.02,y:64.5},{x:68.02,y:71},{x:68.02,y:67},{x:67.83,y:61.7},
+{x:66.4,y:60},{x:66.4,y:60},{x:65.86,y:64},{x:65.86,y:65},{x:69.248,y:65.5},
+{x:69.14,y:70},{x:69.14,y:68},{x:68.6,y:63.5},{x:68.87,y:65.5},{x:68.6,y:65},
+{x:68.85,y:69},{x:68.85,y:63},{x:68.06,y:71.5},{x:67.52,y:68},{x:67.52,y:63},
+{x:67.23,y:70},{x:69.18,y:70.5},{x:69.18,y:62},{x:68.64,y:67},{x:68.35,y:60.5},
+{x:68.37,y:65},{x:64.86,y:68},{x:64.86,y:61},{x:68.14,y:67},{x:67.6,y:65},
+{x:67.6,y:69.2},{x:67.06,y:62.5},{x:66.52,y:63},{x:66.52,y:66},{x:66.77,y:71},
+{x:66.56,y:70.5},{x:66.56,y:68},{x:66.56,y:64},{x:64.4,y:60},{x:65.27,y:57}
+];
+
+/* A short horizontal tick, drawn only in a narrow window around the slider. */
+function tickAt(h, value, x) {
+  return Math.abs(x - h) < 0.22 ? value : NaN;
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Pick a parent height and see how far the child comes back toward the middle',
+    es: 'Elige una estatura de padres y observa cuanto regresa el hijo hacia el centro'
+  },
+  points: FAMILIES,
+  xRange: [63.5, 76.5],
+  yRange: [56, 80],
+  xLabel: { en: 'mid-parent height (inches)', es: 'estatura media de los padres (pulgadas)' },
+  yLabel: { en: 'child height (inches)', es: 'estatura del hijo (pulgadas)' },
+  ariaLabel: {
+    en: 'Child height against mid-parent height for 120 of Galton families, with the equal-heights line and the shallower least-squares line.',
+    es: 'Estatura del hijo contra estatura media de los padres para 120 familias de Galton, con la recta de estaturas iguales y la recta de minimos cuadrados, mas plana.'
+  },
+  params: [
+    { id: 'mp', label: { en: 'Mid-parent height', es: 'Estatura media de los padres' },
+      min: 64, max: 75.5, step: 0.1, value: 74, digits: 1, unit: ' in' }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.18,
+      lo: function (p, x) {
+        var a = Math.min(MEAN_MP, p.mp), b = Math.max(MEAN_MP, p.mp);
+        if (x < a || x > b) { return galton(x); }
+        return Math.min(galton(x), x);
+      },
+      hi: function (p, x) {
+        var a = Math.min(MEAN_MP, p.mp), b = Math.max(MEAN_MP, p.mp);
+        if (x < a || x > b) { return galton(x); }
+        return Math.max(galton(x), x);
+      } }
+  ],
+  curves: [
+    { accent: 2, dash: [6, 4], width: 2,
+      fn: function (p, x) { return x; } },
+    { accent: 1, width: 3,
+      fn: function (p, x) { return galton(x); } },
+    { accent: 2, width: 6,
+      fn: function (p, x) { return tickAt(p.mp, p.mp, x); } },
+    { accent: 1, width: 6,
+      fn: function (p, x) { return tickAt(p.mp, galton(p.mp), x); } }
+  ],
+  readouts: [
+    { id: 'pdev', label: { en: 'Parents above average', es: 'Padres sobre el promedio' },
+      accent: 2, digits: 2,
+      compute: function (p) { return p.mp - MEAN_MP; } },
+    { id: 'yhat', label: { en: 'Predicted child Yhat', es: 'Hijo predicho Yhat' },
+      accent: 1, digits: 2,
+      compute: function (p) { return galton(p.mp); } },
+    { id: 'cdev', label: { en: 'Child above average', es: 'Hijo sobre el promedio' },
+      accent: 1, digits: 2,
+      compute: function (p) { return galton(p.mp) - MEAN_CHILD; } },
+    { id: 'kept', label: { en: 'Fraction kept (b1)', es: 'Fraccion conservada (b1)' },
+      digits: 3,
+      compute: function (p) {
+        var d = p.mp - MEAN_MP;
+        return Math.abs(d) < 1e-9 ? B1 : (galton(p.mp) - MEAN_CHILD) / d;
+      } }
+  ],
+  caption: {
+    en: 'The amber dashed line is where children would land if each matched their parents ' +
+        'exactly. The blue line is the least-squares fit to all 934 families, ' +
+        'Yhat = 22.64 + 0.637 times mid-parent. The two ticks mark the parents you chose ' +
+        'and the child the line predicts, and the amber wedge is the gap between them.\n\n' +
+        '**What to notice.** Slide the parent height out to 75 inches: the predicted child ' +
+        'is tall but well under the dashed line, and the wedge is at its widest. ' +
+        '**Try this.** Now slide down to 65 inches. The child is now predicted *above* the ' +
+        'dashed line, and the fraction kept never budges from 0.637. Every extreme parent, ' +
+        'tall or short, produces a less extreme child, and one number does all of it.',
+    es: 'La recta ambar discontinua es donde caerian los hijos si cada uno igualara ' +
+        'exactamente a sus padres. La recta azul es el ajuste de minimos cuadrados a las ' +
+        '934 familias, Yhat = 22.64 + 0.637 por la estatura media de los padres. Las dos ' +
+        'marcas senalan los padres que elegiste y el hijo que predice la recta, y la cuna ' +
+        'ambar es la distancia entre ambos.\n\n' +
+        '**Que observar.** Lleva la estatura de los padres a 75 pulgadas: el hijo predicho ' +
+        'es alto pero queda muy por debajo de la recta discontinua, y la cuna alcanza su ' +
+        'mayor ancho. **Prueba esto.** Ahora baja a 65 pulgadas. Ahora el hijo se predice ' +
+        '*por encima* de la recta discontinua, y la fraccion conservada nunca se mueve de ' +
+        '0.637. Todo padre extremo, alto o bajo, produce un hijo menos extremo, y un solo ' +
+        'numero lo explica.'
+  }
+});
+</script>
+</body>
+</html>

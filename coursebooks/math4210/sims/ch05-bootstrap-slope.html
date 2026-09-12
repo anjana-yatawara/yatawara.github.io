@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Case bootstrap for the punting slope</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* punting.csv, all thirteen punters. Observed slope b1 = 0.9020383,
+   classical formula standard error s{b1} = 0.2100. */
+var RSTR = [170, 140, 180, 160, 170, 150, 170, 110, 120, 130, 120, 140, 160];
+var DIST = [162.5, 144, 147.5, 163.5, 192, 171.75, 162, 104.93, 105.67,
+            117.59, 140.25, 150.17, 165.17];
+var CLASSICAL_SE = 0.2100;
+
+function slope(x, y) { return Sim.Stats.lsFit(x, y).slope; }
+
+Sim.mount({
+  type: 'resample',
+  mode: 'bootstrap',
+  seed: 2026,
+  manyCount: 1000,
+  oneSided: true,
+  title: {
+    en: 'Redraw the thirteen punters with replacement and refit the slope',
+    es: 'Vuelve a extraer los trece pateadores con reemplazo y reajusta la pendiente'
+  },
+  data: { x: RSTR, y: DIST },
+  stat: slope,
+  observed: 0.9020383,
+  statRange: [-0.5, 2.4],
+  bins: 34,
+  xRange: [100, 190],
+  yRange: [95, 205],
+  xLabel: { en: 'right-leg strength (pounds)', es: 'fuerza de pierna derecha (libras)' },
+  yLabel: { en: 'punt distance (feet)', es: 'distancia del punt (pies)' },
+  statLabel: {
+    en: 'slope b1* from one resample',
+    es: 'pendiente b1* de un remuestreo'
+  },
+  observedLabel: { en: 'b1 = 0.902', es: 'b1 = 0.902' },
+  dataAriaLabel: {
+    en: 'Scatterplot of punt distance against right-leg strength showing the current resample of thirteen rows, with its fitted line.',
+    es: 'Diagrama de dispersion de la distancia del punt frente a la fuerza de la pierna derecha con el remuestreo actual de trece filas y su recta ajustada.'
+  },
+  ariaLabel: {
+    en: 'Histogram of bootstrap slopes, centered on the observed slope rather than on zero.',
+    es: 'Histograma de pendientes bootstrap, centrado en la pendiente observada y no en cero.'
+  },
+  showFit: true,
+  readouts: [
+    { id: 'obs', label: { en: 'Observed b1', es: 'b1 observada' }, accent: 2, digits: 3 },
+    { id: 'n',   label: { en: 'Resamples B', es: 'Remuestreos B' } },
+    { id: 'se',  label: { en: 'Bootstrap SE', es: 'EE bootstrap' }, accent: 1, digits: 3,
+      compute: function (draws) {
+        return draws.length > 1 ? Sim.Stats.sd(draws) : NaN;
+      } },
+    { id: 'cse', label: { en: 'Formula SE', es: 'EE de formula' }, digits: 3,
+      compute: function () { return CLASSICAL_SE; } }
+  ],
+  caption: {
+    en: 'A resample draws thirteen punters from the thirteen with replacement, so some appear ' +
+        'twice and some vanish. Watch the top panel: points thicken or disappear, and the ' +
+        'refitted line b1* wobbles. Their spread is the bootstrap standard error of b1.\n\n' +
+        '**Try this.** Resample once a few times, then press Run 1000 three times. The pile ' +
+        'centers on the observed 0.902, not on zero, which is the whole difference from the ' +
+        'permutation null. Bootstrap SE settles near 0.25, a little above the formula\'s 0.210, ' +
+        'because redrawing punters also lets the set of strengths change.',
+    es: 'Un remuestreo extrae trece pateadores de los trece con reemplazo, asi que algunos ' +
+        'aparecen dos veces y otros desaparecen. Observa el panel superior: los puntos se ' +
+        'engrosan o se van, y la recta reajustada b1* oscila. Esa dispersion es el error ' +
+        'estandar bootstrap de b1.\n\n' +
+        '**Prueba esto.** Remuestrea una vez varias veces y luego presiona Correr 1000 tres ' +
+        'veces. El monton se centra en la pendiente observada 0.902, no en cero, y esa es toda ' +
+        'la diferencia con la distribucion nula de permutacion. El EE bootstrap se asienta cerca ' +
+        'de 0.25, algo por encima del 0.210 de la formula, porque volver a extraer pateadores ' +
+        'tambien deja variar el conjunto de fuerzas.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1589 @@
+---
+title: "8. Multiple regression in practice"
+subtitle: "MATH 4210, Chapter 8"
+---
+
+(ch08)=
+# 8. Multiple regression in practice
+
+:::{div}
+:class: lang-toggle
+[Español](./es.md)
+:::
+
+We return to the Dwaine Studios cities of Chapters 6 and 7 (@ch07-ls-matrix), where a chain of
+portrait studios in mid-sized towns wants to decide, for a city it has never entered, how much a new
+studio will sell. Two recorded numbers about each of its 21 cities plausibly drive that answer: the
+target population `targtpop` (thousands of persons under 16, the pool of potential family-portrait
+customers) and the disposable income `dispoinc` (thousands of dollars per person, how much those
+families have to spend), together predicting annual `sales` (thousands of dollars).
+
+In Chapter 6 we built this data into matrices, and in Chapter 7 we solved the normal equations
+$\mathbf{X}'\mathbf{X}\mathbf{b} = \mathbf{X}'\mathbf{Y}$ to get the least-squares coefficients
+$\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y} = (-68.86,\ 1.45,\ 9.37)$; see
+@ch07-ls-matrix. That was the FIT stage. This chapter is about what comes after: reading those
+three numbers honestly, deciding which predictors are earning their place, and knowing the traps
+that wait for anyone who reports a coefficient without thinking. @fig-ch08-dwaine-scatter shows the
+raw material, sales against each predictor one at a time.
+
+```{figure} figures/fig_ch08_dwaine_scatter.png
+:name: fig-ch08-dwaine-scatter
+:alt: Two side-by-side scatterplots for the 21 Dwaine Studios cities. The left panel plots sales in thousands of dollars against target population, showing a strong upward straight-line trend. The right panel plots sales against disposable income, showing a weaker but still positive upward trend with more scatter.
+Dwaine sales against each predictor separately. Both slopes are positive: bigger target population and higher income each go with higher sales. The chapter's work is to untangle these two overlapping stories into one model that holds both at once.
+```
+
+Both pictures slope up, so both predictors look useful. But the two predictors also move together
+(richer cities tend to have different age profiles), and that overlap is the whole difficulty of
+multiple regression. A coefficient in a multiple regression is not the slope you would see in a
+one-predictor scatterplot. It answers a more careful question, and this chapter is about asking
+that question correctly, testing whether a predictor belongs, and seeing the answer in a picture.
+
+:::{admonition} This lesson at a glance
+:class: important
+- **What we are doing:** Interpreting the fitted Dwaine multiple regression: reading each coefficient as a partial slope, testing whether a predictor belongs with extra sums of squares and the general linear test, and seeing the partial effect in an added-variable plot.
+- **Why we are doing it:** A multiple-regression coefficient is not a one-predictor scatterplot slope; correlated predictors make "holding the others fixed" subtle, and you need a principled way to decide which predictors earn their place.
+- **Main objective:** Interpret a partial slope correctly, compute and read extra sums of squares, and apply the general linear test to one coefficient or a subset.
+- **What changed from the last chapters:** Chapter 7 produced the fit $\mathbf{b} = (-68.86,\ 1.45,\ 9.37)$ (@ch07-ls-matrix); this chapter is the USE stage that turns those three numbers into defensible claims, and it builds the extra-sum-of-squares and general-linear-test engine (@ch08-general-linear-test) that Chapters 11 and 12 reuse.
+:::
+
+:::{admonition} Learning objectives
+:class: tip
+By the end of this chapter you will be able to:
+- **Interpret** a multiple regression coefficient as a partial slope, stating the units and the exact phrase "holding the other predictors fixed."
+- **Explain** the limits of the "holding others fixed" reading when predictors are correlated, and diagnose when the phrase describes a region with no data.
+- **Define and compute** extra sums of squares $\mathrm{SSR}(X_k \mid \text{others})$ and read a sequential ANOVA table.
+- **Derive and apply** the general linear test (full versus reduced $F$) for one coefficient or a subset of coefficients, and show it reduces to $t^2$ for a single coefficient.
+- **Construct and read** an added-variable plot, and prove that its slope equals the multiple regression coefficient.
+- **Compute and contrast** $R^2$, adjusted $R^2$, and standardized coefficients, and explain why $R^2$ never falls when a predictor is added.
+- **Recognize** hidden extrapolation in several dimensions and the way a lurking variable can flip a coefficient's sign.
+:::
+
+(ch08-interpret)=
+## 8.1 Reading the coefficients of a multiple regression
+
+### Intuition
+
+The fit handed us three numbers. This section is about what each one honestly means, because the
+obvious reading is the wrong one. The short version: a number in a multiple regression answers a more
+careful question than the same-looking number in a one-predictor plot.
+
+The Dwaine fit is $\widehat{\text{sales}} = -68.86 + 1.45\,\text{targtpop} + 9.37\,\text{dispoinc}$.
+It is tempting to read the $9.37$ the same way we read a simple-regression slope: "raise income by
+one unit and sales go up $9.37$." That reading is wrong in a specific and important way. In a
+one-predictor world, moving income means moving whatever else travels with income. In the multiple
+regression, the coefficient on income has already accounted for target population. It measures what
+income adds after target population has said everything it can say.
+
+The clean phrase is: a multiple regression coefficient is a **partial slope** (Definition 8.1). It
+is the change in the mean response for a one-unit change in that predictor, **holding the other
+predictors fixed**. "Holding fixed" is what makes it different from the marginal picture in
+@fig-ch08-dwaine-scatter, where nothing is held fixed and every predictor drifts along with every
+other.
+
+:::{admonition} Definition 8.1: Partial slope
+:class: note definition
+The **partial slope** $\beta_k$ of predictor $X_k$ in a multiple regression is the change in the
+mean response $E\{Y\}$ per one-unit increase in $X_k$, holding every other predictor in the model
+fixed. Its value depends on which other predictors are in the model.
+:::
+
+### Formula
+
+The **multiple linear regression model** with $p-1$ predictors is stated in Definition 8.2.
+
+:::{admonition} Definition 8.2: Multiple linear regression model
+:class: note definition
+The **multiple linear regression model** with $p-1$ predictors is
+
+$$
+Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \cdots + \beta_{p-1} X_{i,p-1} + \varepsilon_i,
+\qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2),
+$$
+
+where $Y_i$ is the response for case $i$, $X_{ik}$ is the $k$-th predictor for case $i$, each
+$\beta_k$ is a partial slope (Definition 8.1), $\beta_0$ is the intercept, and $p$ is the number of
+regression parameters including the intercept.
+:::
+
+Term by term:
+
+- $Y_i$ is the response for case $i$ (Dwaine sales for city $i$).
+- $X_{ik}$ is the $k$-th predictor for case $i$.
+- $\beta_k$ is the partial slope for predictor $k$: the change in $E\{Y\}$ per one-unit rise in
+  $X_k$ with every other predictor held fixed.
+- $\beta_0$ is the intercept, the mean response when all predictors equal zero.
+- $p$ is the number of regression parameters **including the intercept**; here $p = 3$. With $n$
+  cases, the error variance is estimated with divisor $n - p$, that is
+  $\mathrm{MSE} = \mathrm{SSE}/(n-p)$, exactly the estimator of @ch07-sigma2.
+
+In words: each $\beta_k$ is the effect of its own predictor after the other predictors in the model
+have been given their say. Change what else is in the model and you change the question, so you can
+change the coefficient.
+
+### R
+
+The fit itself is one line; the reading is the hard part. We start from the same 21 cities.
+
+```r
+dwaine <- read.csv("data/dwaine.csv")
+fit <- lm(sales ~ targtpop + dispoinc, data = dwaine)
+round(coef(fit), 4)
+```
+```text
+(Intercept)    targtpop    dispoinc
+   -68.8571      1.4546      9.3655
+```
+
+:::{admonition} Example 8.1: What the Dwaine coefficients say
+:class: note
+**Question.** State, in the units of the problem, what the fitted model claims about target
+population and about disposable income.
+
+**Intuition.** Read each coefficient as a partial slope: the effect of that predictor with the
+other one pinned in place.
+
+**Formula.** $\widehat{Y} = b_0 + b_1 X_1 + b_2 X_2$ with $b_1 = 1.4546$ (targtpop) and
+$b_2 = 9.3655$ (dispoinc).
+
+**Computation.**
+
+```r
+summary(fit)
+```
+```text
+Call:
+lm(formula = sales ~ targtpop + dispoinc, data = dwaine)
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept) -68.8571    60.0170  -1.147   0.2663
+targtpop      1.4546     0.2118   6.868 2.00e-06 ***
+dispoinc      9.3655     4.0640   2.305   0.0333 *
+---
+Residual standard error: 11.01 on 18 degrees of freedom
+Multiple R-squared:  0.9167,	Adjusted R-squared:  0.9075
+F-statistic:  99.1 on 2 and 18 DF,  p-value: 1.921e-10
+```
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+dwaine = pd.read_csv("data/dwaine.csv")
+fit = smf.ols("sales ~ targtpop + dispoinc", data=dwaine).fit()
+print(fit.params.round(4))
+```
+```text
+Intercept   -68.8571
+targtpop      1.4546
+dispoinc      9.3655
+dtype: float64
+```
+
+**Interpretation.** Among two cities with the **same** disposable income, the one with 1,000 more
+young residents is predicted to sell about $1.45$ thousand dollars more per year. Among two cities
+with the **same** target population, the one whose residents have $1,000 more disposable income
+each is predicted to sell about $9.37$ thousand dollars more. The intercept $-68.86$ is the mean
+sales at zero population and zero income, which is far outside any real city, so it is a
+mathematical anchor for the plane, not a meaningful sales figure. Both partial slopes are positive
+and, as the $t$ column shows, both are distinguishable from zero, income more weakly
+($p = 0.033$) than population ($p = 2 \times 10^{-6}$).
+:::
+
+The fitted model is no longer a line but a plane sitting above the (targtpop, dispoinc) floor, as
+in @fig-ch08-fitted-plane. Each coefficient is the tilt of that plane in one direction. The partial
+slope for income is how steeply the plane rises as you walk in the income direction while keeping
+your population coordinate fixed.
+
+```{figure} figures/fig_ch08_fitted_plane.png
+:name: fig-ch08-fitted-plane
+:alt: A three-dimensional scatterplot of the 21 Dwaine cities with target population and disposable income on the floor axes and sales on the vertical axis, with the fitted least-squares plane drawn through the point cloud. The plane tilts upward in both floor directions, more steeply along the population axis.
+The Dwaine fit is a plane, not a line. Walking in the target-population direction with income held fixed climbs the plane at rate 1.45; walking in the income direction with population held fixed climbs it at rate 9.37. The two partial slopes are the two tilts of this one surface.
+```
+
+::::{admonition} Try it 8.1
+:class: important
+The simple regression of `sales` on `dispoinc` alone (no target population in the model) has slope
+$31.17$. The multiple regression coefficient on `dispoinc` is only $9.37$. Which one answers the
+question "compare two cities with the same target population but different income," and why are the
+two numbers so different?
+
+:::{admonition} Solution
+:class: dropdown
+The multiple regression coefficient $9.37$ answers that question, because it is the partial slope
+that holds target population fixed. The simple-regression slope $31.17$ holds nothing fixed: in the
+raw data, higher-income cities also tend to have larger target populations (the two predictors are
+positively correlated), so the $31.17$ mixes income's own effect with the population that rides
+along with it. Once population is in the model and given credit for its share, only $9.37$ of the
+rise is left to attribute to income. The next section makes this mechanism precise.
+:::
+::::
+
+(ch08-holding-fixed)=
+## 8.2 The limits of "holding the others fixed"
+
+### Intuition
+
+"Holding the other predictors fixed" is the correct interpretation, and it is also where careful
+people get into trouble. The phrase is a statement about the arithmetic of the fitted plane: it is
+always true that the coefficient is the plane's tilt in one direction with the other coordinates
+pinned. The trouble is that the sentence quietly promises something the data may not support, that
+you could actually find, or create, two cities identical in every predictor but one. When
+predictors move together, that promise is fiction.
+
+Look again at the Dwaine predictors. Target population and disposable income have a correlation of
+$0.78$. Cities with many young families are systematically different in income from cities with
+few. So "two cities with the same target population but different income" describes a thinner slice
+of reality than it sounds, and "hold population fixed and push income far" can walk you clean off
+the cloud of cities that ever existed. The coefficient is still computable and still meaningful as
+a description of the fitted surface. What weakens is the causal daydream that you could intervene on
+one predictor and leave the others undisturbed.
+
+### The mechanism: a coefficient depends on its companions
+
+A coefficient is not a property of a predictor. It is a property of a predictor **and the company
+it keeps**. Add or remove another predictor and the coefficient can move, sometimes a little,
+sometimes enough to change sign. @fig-ch08-coef-shift shows the Dwaine income story both ways: the
+steep marginal slope when income stands alone, and the gentler partial slope once population is
+accounted for.
+
+:::{admonition} Key idea
+:class: tip keyidea
+A regression coefficient belongs to a predictor and its companions together, not to the predictor
+alone. Change what else is in the model and you change the question the coefficient answers, so the
+number itself can change. Always report a coefficient alongside the other predictors it was
+adjusted for.
+:::
+
+```{figure} figures/fig_ch08_coef_shift.png
+:name: fig-ch08-coef-shift
+:alt: A scatterplot of Dwaine sales against disposable income, with points colored by target population from light (low) to dark (high). A steep dashed line shows the simple regression of sales on income alone, slope 31.17. Shorter solid segments within bands of similar population color show a gentler within-band slope near 9.37, illustrating that at fixed population the income effect is smaller.
+Two answers to "how does income relate to sales." The steep dashed line ignores population and reports slope 31.17. Within groups of cities that share a population level (same color), the income slope is much gentler, near the partial slope 9.37. The difference is the population that rides along with income in the raw data.
+```
+
+:::{admonition} Example 8.2: A coefficient that moves when its companions change
+:class: note
+**Question.** Fit `sales` on `dispoinc` alone, then on `dispoinc` with `targtpop`. Report the
+income coefficient each time and explain the change.
+
+**Intuition.** With population absent, income is credited with population's overlapping pull; with
+population present, income keeps only its own share.
+
+**Formula.** Simple slope $b_{\text{income}}^{\text{simple}} = S_{xy}/S_{xx}$, where
+$S_{xy} = \sum_i (X_i - \bar X)(Y_i - \bar Y)$ and $S_{xx} = \sum_i (X_i - \bar X)^2$, versus the
+partial slope $b_2$ from the two-predictor normal equations of @ch07-ls-matrix.
+
+**Computation.**
+
+```r
+coef(lm(sales ~ dispoinc, data = dwaine))["dispoinc"]
+coef(lm(sales ~ targtpop + dispoinc, data = dwaine))["dispoinc"]
+```
+```text
+dispoinc
+31.17319
+dispoinc
+  9.3655
+```
+
+```python
+simple = smf.ols("sales ~ dispoinc", data=dwaine).fit()
+multiple = smf.ols("sales ~ targtpop + dispoinc", data=dwaine).fit()
+print(round(simple.params["dispoinc"], 4), round(multiple.params["dispoinc"], 4))
+```
+```text
+31.1732 9.3655
+```
+
+**Interpretation.** The income coefficient falls from $31.17$ to $9.37$ when target population
+joins the model. Nothing about income changed; the question changed. The first number answers "how
+do sales differ across cities that differ in income," and those cities also differ in population.
+The second answers "how do sales differ across cities that differ in income but not in population."
+Neither is a lie, but only the second earns the phrase "holding population fixed," and reporting the
+first as if it did would overstate income's own contribution by more than threefold.
+:::
+
+:::{admonition} Durable skill: Name what is held fixed
+:class: tip
+Every regression coefficient is an answer to a comparison, and the comparison is defined by what
+else is in the model. Before you report any coefficient, finish this sentence out loud: "comparing
+two cases that differ in $X_k$ by one unit but are equal in ___." If you cannot fill the blank with
+the actual list of other predictors, you do not yet understand your own number. This habit, stating
+the controlled comparison behind an estimate, is exactly what separates a defensible claim from a
+misleading headline in any field that uses data, from medicine to economics to your own project.
+:::
+
+### When "holding fixed" describes empty space
+
+The deeper limit is geometric. Holding population fixed and varying income traces a line across the
+(targtpop, dispoinc) floor. If the data cloud is a tilted ellipse, because the two predictors are
+correlated, then most of that line lies outside the cloud. The model will still return a fitted
+value there, but it is extrapolating into a region where no city has ever been observed, and no
+data constrain the answer. We return to this in @ch08-dangers with a picture; for now, hold the
+warning: a coefficient can be perfectly estimated and still describe a comparison you can never
+actually make.
+
+::::{admonition} Try it 8.2
+:class: important
+A colleague fits `sales ~ targtpop + dispoinc`, sees the income coefficient $9.37$, and writes:
+"If Dwaine could raise a city's disposable income by one unit, sales would rise by $9.37$." Name the
+two separate things wrong with that sentence.
+
+:::{admonition} Solution
+:class: dropdown
+First, the causal leap. The coefficient is a comparison between cities that already differ in
+income, not the effect of an intervention that raises income in a fixed city. Observational data
+cannot promise that acting on income yields the same change as observing it. Second, the "holding
+population fixed" fine print. Because income and population are correlated ($r = 0.78$), a real city
+that gained income would typically differ in population too, so the pure "income up, population
+unchanged" move the coefficient describes may not correspond to any achievable change. The number is
+a fine description of the fitted surface and a poor basis for a policy promise.
+:::
+::::
+
+(ch08-extra-ss)=
+## 8.3 Extra sums of squares
+
+### Intuition
+
+We need a way to ask "how much does a predictor add?" that does not depend on staring at a
+coefficient. The natural measure is how much unexplained variation a predictor removes when it
+joins a model that already has the others. Fit the model without the predictor and record its error
+sum of squares; add the predictor and record the new, smaller error sum of squares; the drop is the
+predictor's **extra sum of squares** (Definition 8.3). It is the variation that only this predictor
+could mop up, once the others have done their part.
+
+Two facts make this work. First, adding a predictor can never make the error sum of squares larger
+(we prove this below), so the drop is never negative. Second, the total variation $\mathrm{SSTO}$ in
+$Y$ does not depend on the model, so a smaller $\mathrm{SSE}$ means a larger $\mathrm{SSR}$: the
+extra sum of squares is variation moved from the "unexplained" column to the "explained" column.
+
+A picture makes the "only this predictor could mop up" idea concrete. Think of the response's
+variation as a target, and each predictor as a circle that covers the part it can explain. When two
+predictors are correlated, their circles overlap, and the shared piece can be credited to only one of
+them: whichever entered the model first. The extra sum of squares of the second predictor is just its
+own crescent, the part of its circle that the first predictor's circle did not already cover.
+@fig-ch08-extra-ss-venn draws this for the body-fat predictors we work with next.
+
+```{figure} figures/fig_ch08_extra_ss_venn.png
+:name: fig-ch08-extra-ss-venn
+:alt: A schematic Venn diagram. A large faint circle is the total variation in body fat. A blue circle labeled SSR(triceps) = 352.3 and an orange circle labeled SSR(thigh given triceps) = 33.2 sit inside it and overlap in a shared region. An arrow points to the part of the big circle outside both predictor circles, labeled error SSE. Areas are schematic, not to scale.
+Extra sum of squares as overlapping circles. Triceps enters first and claims the whole shared overlap, so thigh, entering second, gets credit only for its own crescent (33.2), not the larger region it shares with triceps. This is why a later predictor's extra sum of squares is small when the predictors overlap, and why reordering them changes the split.
+```
+
+### Formula
+
+For a model already containing a set of predictors, write $\mathrm{SSE}(\cdot)$ for its error sum of
+squares. The **extra sum of squares** of $X_2$ given $X_1$ is defined in Definition 8.3.
+
+:::{admonition} Definition 8.3: Extra sum of squares
+:class: note definition
+The **extra sum of squares** of $X_2$ given $X_1$ is the reduction in the error sum of squares when
+$X_2$ is added to a model that already contains $X_1$:
+
+$$
+\mathrm{SSR}(X_2 \mid X_1) = \mathrm{SSE}(X_1) - \mathrm{SSE}(X_1, X_2) = \mathrm{SSR}(X_1, X_2) - \mathrm{SSR}(X_1).
+$$
+
+The vertical bar reads "given" or "adjusted for." The same definition extends to a set of added
+predictors given a set already present.
+:::
+
+- $\mathrm{SSE}(X_1)$ is the error sum of squares of the model with $X_1$ only.
+- $\mathrm{SSE}(X_1, X_2)$ is the error sum of squares once $X_2$ is added.
+- The two right-hand expressions are equal because $\mathrm{SSTO} = \mathrm{SSR} + \mathrm{SSE}$ is
+  the same total for both models (@ch03-anova-table), so any drop in $\mathrm{SSE}$ is an equal rise
+  in $\mathrm{SSR}$.
+
+In words: $\mathrm{SSR}(X_2 \mid X_1)$ is the extra explained variation you buy by adding $X_2$ to a
+model that already has $X_1$. The vertical bar reads "given" or "adjusted for."
+
+Extra sums of squares chain into a decomposition of the total regression sum of squares. Adding
+predictors one at a time,
+
+$$
+\mathrm{SSR}(X_1, X_2, X_3) = \mathrm{SSR}(X_1) + \mathrm{SSR}(X_2 \mid X_1) + \mathrm{SSR}(X_3 \mid X_1, X_2),
+$$
+
+which is exactly what the sequential (Type I) ANOVA table prints, one row per predictor in the order
+you list them. Because the order is a choice, so is the split: reorder the predictors and the pieces
+change, though their total $\mathrm{SSR}$ does not.
+
+### Derivation (adding a predictor cannot increase SSE)
+
+:::{admonition} Theorem 8.4: Monotonicity of SSE
+:class: important theorem
+Under the multiple regression model, adding one or more predictors to a model can never increase the
+error sum of squares:
+
+$$
+\mathrm{SSE}(\text{full}) \le \mathrm{SSE}(\text{reduced})
+$$
+
+whenever the reduced model's predictors are a subset of the full model's. Consequently every extra
+sum of squares is nonnegative, $\mathrm{SSR}(X_2 \mid X_1) \ge 0$.
+:::
+
+**Proof.** Let the reduced model use the predictors in a set $R$ and the
+full model use $R$ together with one more predictor, so the full model's columns span a larger
+space. By @ch07-geometry, the fitted vector is the orthogonal projection of $\mathbf{Y}$ onto the
+column space of the design matrix, and $\mathrm{SSE}$ is the squared distance from $\mathbf{Y}$ to
+that space. Every fitted vector the reduced model can produce is also available to the full model
+(set the extra coefficient to zero), so the full model's column space contains the reduced model's.
+Projecting onto a larger subspace lands at least as close to $\mathbf{Y}$:
+
+$$
+\mathrm{SSE}(\text{full}) = \min_{\mathbf{v} \in \text{full space}} \lVert \mathbf{Y} - \mathbf{v}\rVert^2
+\;\le\; \min_{\mathbf{v} \in \text{reduced space}} \lVert \mathbf{Y} - \mathbf{v}\rVert^2 = \mathrm{SSE}(\text{reduced}).
+$$
+
+Therefore $\mathrm{SSR}(X_2 \mid X_1) = \mathrm{SSE}(X_1) - \mathrm{SSE}(X_1, X_2) \ge 0$, with
+equality only when the added predictor buys nothing (its fitted contribution is already in the
+reduced space). $\blacksquare$
+
+### R and Python
+
+The classic worked example is not Dwaine but the ALRM body-fat data: 20 men, percent body fat
+measured by underwater weighing, against three tape-measure predictors, triceps skinfold, thigh
+circumference, and midarm circumference. It is built for this section because the predictors overlap
+heavily, so order matters a lot.
+
+:::{admonition} Example 8.3: Extra sums of squares for body fat
+:class: note
+**Question.** How much variation in body fat does thigh circumference explain **after** triceps is
+already in the model? How much does midarm explain after both?
+
+**Intuition.** Fit the models by accumulation, read the drop in $\mathrm{SSE}$ at each step. The
+sequential ANOVA table does exactly this in one call.
+
+**Formula.** $\mathrm{SSR}(\text{thigh} \mid \text{triceps}) = \mathrm{SSE}(\text{triceps}) - \mathrm{SSE}(\text{triceps}, \text{thigh})$, and similarly for midarm given the first two.
+
+**Computation.**
+
+```r
+bodyfat <- read.csv("data/bodyfat3.csv")
+anova(lm(bodyfat ~ triceps + thigh + midarm, data = bodyfat))
+```
+```text
+Analysis of Variance Table
+
+Response: bodyfat
+          Df Sum Sq Mean Sq F value    Pr(>F)
+triceps    1 352.27  352.27 57.2768 1.131e-06 ***
+thigh      1  33.17   33.17  5.3931   0.03373 *
+midarm     1  11.55   11.55  1.8773   0.18956
+Residuals 16  98.40    6.15
+```
+
+In Python we read the same drops straight from the residual sums of squares, which makes the
+definition explicit.
+
+```python
+bodyfat = pd.read_csv("data/bodyfat3.csv")
+sse1  = smf.ols("bodyfat ~ triceps", data=bodyfat).fit().ssr
+sse12 = smf.ols("bodyfat ~ triceps + thigh", data=bodyfat).fit().ssr
+sse123 = smf.ols("bodyfat ~ triceps + thigh + midarm", data=bodyfat).fit().ssr
+print(round(sse1, 4), round(sse12, 4), round(sse123, 4))
+print("SSR(thigh|triceps) =", round(sse1 - sse12, 4))
+print("SSR(midarm|triceps,thigh) =", round(sse12 - sse123, 4))
+```
+```text
+143.1197 109.9508 98.4049
+SSR(thigh|triceps) = 33.1689
+SSR(midarm|triceps,thigh) = 11.5459
+```
+
+**Interpretation.** Triceps alone explains $352.27$ of the total. Adding thigh removes another
+$33.17$ from the error pile, so $\mathrm{SSR}(\text{thigh} \mid \text{triceps}) = 33.17$. Adding
+midarm on top of both removes only $11.55$ more. The sequential table's rows are these extra sums of
+squares in the listed order, and they add to the model's total $\mathrm{SSR}$. Notice how small the
+later contributions are: once triceps is in, the other two skinfold measures are telling much the
+same story, because the three body measurements are strongly correlated. That overlap is why order
+matters, and it previews the multicollinearity theme of Chapter 12, which takes up these same
+tape-measure correlations on a larger body-fat study (a different, 252-man dataset, not this 20-man one).
+:::
+
+@fig-ch08-extra-ss draws the decomposition as a stacked bar: the total variation in body fat split
+into the sequential pieces plus the leftover error.
+
+```{figure} figures/fig_ch08_extra_ss.png
+:name: fig-ch08-extra-ss
+:alt: A single horizontal stacked bar showing the total sum of squares of body fat, 495.4, divided into four segments: a large segment for triceps (352.3), a smaller one for thigh given triceps (33.2), a still smaller one for midarm given triceps and thigh (11.5), and the residual error (98.4). Each segment is labeled with its value.
+The total variation in body fat, split by sequential extra sums of squares. The first predictor claims the lion's share; each later predictor adds less because the tape-measure predictors overlap. The rightmost segment is the variation no predictor explained.
+```
+
+::::{admonition} Try it 8.3
+:class: important
+Using the numbers in Example 8.3, compute $\mathrm{SSR}(\text{thigh, midarm} \mid \text{triceps})$,
+the extra sum of squares of the two predictors together given triceps. Confirm it equals
+$\mathrm{SSR}(\text{thigh} \mid \text{triceps}) + \mathrm{SSR}(\text{midarm} \mid \text{triceps, thigh})$.
+
+:::{admonition} Solution
+:class: dropdown
+$\mathrm{SSR}(\text{thigh, midarm} \mid \text{triceps}) = \mathrm{SSE}(\text{triceps}) - \mathrm{SSE}(\text{triceps, thigh, midarm}) = 143.12 - 98.40 = 44.72$. And
+$\mathrm{SSR}(\text{thigh} \mid \text{triceps}) + \mathrm{SSR}(\text{midarm} \mid \text{triceps, thigh}) = 33.17 + 11.55 = 44.72$. They match, because extra sums of squares telescope: the intermediate
+$\mathrm{SSE}(\text{triceps, thigh})$ cancels. This telescoping is what lets a single sequential
+table encode every "given the earlier ones" contribution at once.
+:::
+::::
+
+(ch08-general-linear-test)=
+## 8.4 The general linear test
+
+### Intuition
+
+Extra sums of squares measure how much a predictor adds; now we ask whether that addition is more
+than noise would produce. The tool is a comparison of two models, one **reduced** (without the terms
+in question) and one **full** (with them). If the extra terms are worthless, the full model's error
+sum of squares will be only trivially smaller than the reduced model's, a drop no bigger than random
+scatter would give. If the extra terms matter, the drop will be large relative to the noise level.
+The **general linear test** (Definition 8.5) turns "large relative to noise" into a single $F$
+statistic.
+
+:::{admonition} Definition 8.5: General linear test
+:class: note definition
+The **general linear test** compares a **reduced model** (some coefficients forced to zero) against
+the **full model** that contains them, scoring the extra sum of squares the full model explains, per
+dropped coefficient, against the full model's estimate of the noise variance. A large value is
+evidence that the dropped coefficients are not all zero.
+:::
+
+:::{admonition} Key idea
+:class: tip keyidea
+The general linear test is the single engine behind almost every hypothesis in the rest of the book.
+Testing one coefficient, testing a group of coefficients, testing lack of fit, comparing a simple
+model to a richer one: each is one reduced model against one full model, scored the same way. Learn
+it once here.
+:::
+
+### Formula
+
+Let the full model have $\mathrm{SSE}(F)$ on $df_F = n - p_F$ degrees of freedom and the reduced
+model $\mathrm{SSE}(R)$ on $df_R = n - p_R$, where the reduced model is the full model with some
+coefficients forced to zero. The **general linear test statistic** and its null distribution are
+stated in Theorem 8.6.
+
+:::{admonition} Theorem 8.6: General linear test statistic and distribution
+:class: important theorem
+Consider the multiple regression model with normal errors. Let the full model have error sum of
+squares $\mathrm{SSE}(F)$ on $df_F = n - p_F$ degrees of freedom, and let the reduced model, obtained
+by forcing $q$ of its coefficients to zero, have $\mathrm{SSE}(R)$ on $df_R = n - p_R$, so
+$q = p_F - p_R = df_R - df_F$. The test statistic
+
+$$
+F^{*} = \frac{\mathrm{SSE}(R) - \mathrm{SSE}(F)}{df_R - df_F} \;\Big/\; \frac{\mathrm{SSE}(F)}{df_F}
+$$
+
+satisfies $F^{*} \sim F(q,\ n - p_F)$ when the reduced model is correct (the $q$ dropped coefficients
+are all zero). Large $F^{*}$ is evidence against the reduced model.
+:::
+
+- $\mathrm{SSE}(R) - \mathrm{SSE}(F)$ is the extra sum of squares explained by the terms the reduced
+  model dropped: variation the full model can account for and the reduced model cannot.
+- $df_R - df_F = p_F - p_R$ is the number of coefficients set to zero under the reduced model, call
+  it $q$.
+- The denominator $\mathrm{SSE}(F)/df_F = \mathrm{MSE}(F)$ is the full model's estimate of $\sigma^2$.
+
+In words: $F^{*}$ is the extra variation explained per dropped coefficient, measured in units of the
+noise variance. Under the reduced model (the dropped coefficients really are zero) with normal
+errors, $F^{*} \sim F(q,\ n - p_F)$, and a large $F^{*}$ is evidence against the reduced model. We
+reject the reduced model when $F^{*}$ exceeds the upper $F$ critical value, equivalently when its
+$p$-value is small.
+
+### Derivation (the test statistic and its distribution)
+
+**Proof.** Write $\widehat{\mathbf{Y}}_F$ and
+$\widehat{\mathbf{Y}}_R$ for the fitted vectors of the full and reduced models. By @ch07-geometry
+each is the orthogonal projection of $\mathbf{Y}$ onto a column space, and the reduced space is a
+subspace of the full space. Split the reduced model's residual through the full fit:
+
+$$
+\mathbf{Y} - \widehat{\mathbf{Y}}_R = \underbrace{(\mathbf{Y} - \widehat{\mathbf{Y}}_F)}_{\text{full residual}} + \underbrace{(\widehat{\mathbf{Y}}_F - \widehat{\mathbf{Y}}_R)}_{\text{extra fit}}.
+$$
+
+The full residual is orthogonal to the entire full column space, and $\widehat{\mathbf{Y}}_F - \widehat{\mathbf{Y}}_R$ lies inside that space, so the two pieces are perpendicular. Pythagoras gives
+
+$$
+\mathrm{SSE}(R) = \mathrm{SSE}(F) + \lVert \widehat{\mathbf{Y}}_F - \widehat{\mathbf{Y}}_R \rVert^2,
+$$
+
+so the numerator sum of squares $\mathrm{SSE}(R) - \mathrm{SSE}(F) = \lVert \widehat{\mathbf{Y}}_F - \widehat{\mathbf{Y}}_R\rVert^2$ is the squared length of the extra-fit vector, which lives in a
+subspace of dimension $q = p_F - p_R$. That is where its $q$ degrees of freedom come from.
+@fig-ch08-glt-geometry draws this right triangle. $\blacksquare$
+
+```{figure} figures/fig_ch08_glt_geometry.png
+:name: fig-ch08-glt-geometry
+:alt: A right-triangle diagram. The response vector Y sits at the top. A long leg drops from Y to the full-model fit Y-hat-F, labeled as the full residual with length-squared SSE(F). A short horizontal leg runs from Y-hat-F to the reduced-model fit Y-hat-R inside the reduced subspace, labeled the extra fit. The hypotenuse from Y to Y-hat-R is labeled the reduced residual with length-squared SSE(R). A right-angle marker sits at Y-hat-F.
+The general linear test is Pythagoras. The reduced residual (hypotenuse, SSE(R)) splits into the full residual (long leg, SSE(F)) and the extra-fit vector (short leg), which meet at a right angle. The test compares the short leg's squared length, per dropped coefficient, to the noise level.
+```
+
+The distributional claim needs one more layer. Under the reduced model with normal errors, the two
+perpendicular pieces are independent, and each squared length divided by $\sigma^2$ is a chi-square:
+$\mathrm{SSE}(F)/\sigma^2 \sim \chi^2_{n - p_F}$ and $(\mathrm{SSE}(R) - \mathrm{SSE}(F))/\sigma^2 \sim \chi^2_{q}$. Dividing each chi-square by its degrees of freedom and taking the ratio gives an
+$F(q,\ n-p_F)$ variable. The independence and chi-square facts rest on the normal-theory geometry of
+projections built in @ch07-hat-matrix. The full argument uses Cochran's theorem on quadratic forms,
+which is beyond the matrix algebra this book proves. So we take those two distributional facts on the
+authority of that geometry, and verify the whole machine numerically below. The ALRM text, Chapter 7,
+gives the quadratic-form details for the reader who wants them.
+
+### Tests on a subset of coefficients
+
+The savings data give a clean subset test, and they carry the second running thread of this chapter.
+In Chapter 4 you used these 50 countries to study correlation and its traps (@ch04-r-and-slope); we
+now fit them as a multiple regression. The response `sr` is the aggregate personal savings rate, and
+the predictors are the percent of population under 15 (`pop15`), the percent over 75 (`pop75`),
+per-capita disposable income (`dpi`), and its growth rate (`ddpi`). Life-cycle savings theory says
+the two dependency measures, `pop75` and `dpi`, might not matter once age structure and growth are
+in the model. That is a hypothesis about two coefficients at once, and the general linear test is
+built for it.
+
+:::{admonition} Example 8.4: Do pop75 and dpi belong in the savings model?
+:class: note
+**Question.** Test whether `pop75` and `dpi` can both be dropped from the four-predictor savings
+model.
+
+**Intuition.** Fit the full four-predictor model and the reduced two-predictor model, compare their
+error sums of squares with the general linear test. Two coefficients are set to zero, so $q = 2$.
+
+**Formula.** $F^{*} = \dfrac{[\mathrm{SSE}(R) - \mathrm{SSE}(F)]/q}{\mathrm{SSE}(F)/(n - p_F)}$ with
+$q = 2$, $n = 50$, $p_F = 5$.
+
+**Computation.**
+
+```r
+savings <- read.csv("data/savings.csv")
+full    <- lm(sr ~ pop15 + pop75 + dpi + ddpi, data = savings)
+reduced <- lm(sr ~ pop15 + ddpi, data = savings)
+anova(reduced, full)
+```
+```text
+Analysis of Variance Table
+
+Model 1: sr ~ pop15 + ddpi
+Model 2: sr ~ pop15 + pop75 + dpi + ddpi
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1     47 700.55
+2     45 650.71  2    49.839 1.7233   0.19
+```
+
+```python
+savings = pd.read_csv("data/savings.csv")
+sse_F = smf.ols("sr ~ pop15 + pop75 + dpi + ddpi", data=savings).fit().ssr
+sse_R = smf.ols("sr ~ pop15 + ddpi", data=savings).fit().ssr
+q, n, p_F = 2, 50, 5
+F_star = ((sse_R - sse_F) / q) / (sse_F / (n - p_F))
+print(round(sse_R, 4), round(sse_F, 4), round(F_star, 4))
+```
+```text
+700.5519 650.713 1.7233
+```
+
+**Interpretation.** Dropping `pop75` and `dpi` raises the error sum of squares only from $650.71$ to
+$700.55$, an extra sum of squares of $49.84$ split over two coefficients. Measured against the
+noise level $\mathrm{MSE}(F) = 650.71/45 = 14.46$, that gives $F^{*} = 1.72$, with a $p$-value of
+$0.19$. This is not enough to reject the reduced model: the two predictors together do not clearly
+improve the fit, and a parsimonious analyst would consider dropping them. Chapter 9 returns to these
+same 50 countries and finds that a couple of unusual cases, Libya and Zambia, deserve a hard look
+before you trust it, with Libya in particular quietly shaping the fit; a conclusion like "drop pop75
+and dpi" is only as trustworthy as the diagnostics
+that come next.
+:::
+
+### One coefficient: the test is exactly $t^2$
+
+When the reduced model drops a single coefficient ($q = 1$), the general linear test must agree with
+the $t$-test that software already prints for that coefficient. It does, exactly.
+
+:::{admonition} Theorem 8.7: One-coefficient test equals $t^2$
+:class: important theorem
+In the multiple regression model, the general linear test that drops the single coefficient $\beta_k$
+($q = 1$) has statistic equal to the square of that coefficient's $t$ statistic:
+
+$$
+F^{*} = \frac{b_k^2}{s^2\{b_k\}} = t_k^2,
+$$
+
+and an $F(1,\ n - p)$ variable is the square of a $t_{n-p}$ variable. The subset test and the
+coefficient $t$-test are one test.
+:::
+
+**Proof.** From @ch07-sampling the estimated variance
+of $b_k$ is $s^2\{b_k\} = \mathrm{MSE}\cdot c_{kk}$, where $c_{kk}$ is the $k$-th diagonal entry of
+$(\mathbf{X}'\mathbf{X})^{-1}$. The extra sum of squares for dropping the single predictor $X_k$ works
+out to $\mathrm{SSR}(X_k \mid \text{others}) = b_k^2 / c_{kk}$. Substituting both into the general
+linear test with $q = 1$,
+
+$$
+F^{*} = \frac{\mathrm{SSR}(X_k \mid \text{others})/1}{\mathrm{MSE}} = \frac{b_k^2 / c_{kk}}{\mathrm{MSE}} = \frac{b_k^2}{\mathrm{MSE}\cdot c_{kk}} = \frac{b_k^2}{s^2\{b_k\}} = \left(\frac{b_k}{s\{b_k\}}\right)^2 = t_k^2.
+$$
+
+So the subset test with one dropped coefficient is the square of the ordinary $t$ statistic, and an
+$F(1, n-p)$ variable is the square of a $t_{n-p}$ variable. The two tests are one test. $\blacksquare$
+
+:::{admonition} Example 8.5: The one-coefficient test two ways
+:class: note
+**Question.** For `midarm` in the full body-fat model, confirm that the general linear test $F^{*}$
+equals the square of the coefficient's $t$ statistic.
+
+**Intuition.** Drop midarm, run the general linear test ($q=1$); separately read midarm's $t$ from
+the summary and square it.
+
+**Formula.** $F^{*} = t_{\text{midarm}}^2$.
+
+**Computation.**
+
+```r
+full3 <- lm(bodyfat ~ triceps + thigh + midarm, data = bodyfat)
+red2  <- lm(bodyfat ~ triceps + thigh, data = bodyfat)
+F_star <- anova(red2, full3)$F[2]
+t_mid  <- summary(full3)$coefficients["midarm", "t value"]
+round(c(F_star = F_star, t_squared = t_mid^2), 4)
+```
+```text
+   F_star t_squared
+   1.8773    1.8773
+```
+
+```python
+full3 = smf.ols("bodyfat ~ triceps + thigh + midarm", data=bodyfat).fit()
+t_mid = full3.tvalues["midarm"]
+sse_F = full3.ssr
+sse_R = smf.ols("bodyfat ~ triceps + thigh", data=bodyfat).fit().ssr
+F_star = (sse_R - sse_F) / (sse_F / full3.df_resid)
+print(round(F_star, 4), round(t_mid**2, 4))
+```
+```text
+1.8773 1.8773
+```
+
+**Interpretation.** Both routes give $1.8773$. The general linear test and the coefficient $t$-test
+are not two opinions to reconcile; they are the same computation. This is why you can test a single
+predictor either by reading its $t$ row or by comparing two models, and it is why the $F$ and $t$
+columns in regression output never disagree.
+:::
+
+::::{admonition} Try it 8.4
+:class: important
+In the Dwaine model, the extra sum of squares for `dispoinc` given `targtpop` is
+$\mathrm{SSR}(\text{dispoinc} \mid \text{targtpop}) = 643.5$, and $\mathrm{MSE} = 121.2$. Compute
+$F^{*}$ for dropping `dispoinc`, and check it against the coefficient's $t = 2.305$ from Example 8.1.
+
+:::{admonition} Solution
+:class: dropdown
+$F^{*} = (643.5/1)/121.2 = 5.31$. The coefficient $t$ is $2.305$, and $2.305^2 = 5.31$. They agree,
+as the derivation $F^{*} = t_k^2$ guarantees. Both say income's contribution beyond population is
+real but modest: significant at the 5% level ($p = 0.033$), not overwhelming.
+:::
+::::
+
+(ch08-avplots)=
+## 8.5 Added-variable plots
+
+### Intuition
+
+A coefficient is a single number; sometimes you want to see the partial relationship it summarizes.
+The obstacle is that you cannot simply plot $Y$ against $X_k$, because that picture mixes in every
+other predictor. The **added-variable plot** (Definition 8.8), also called a partial regression plot,
+removes the other predictors from both axes first, then plots what is left.
+
+:::{admonition} Definition 8.8: Added-variable plot
+:class: note definition
+The **added-variable plot** for predictor $X_k$ is the scatter of $e_Y$ against $e_X$, where $e_Y$
+is the residual from regressing $Y$ on all the other predictors and $e_X$ is the residual from
+regressing $X_k$ on all the other predictors. Both axes have the other predictors removed, so the
+plot shows the partial relationship between $Y$ and $X_k$.
+:::
+
+Here is the recipe. To see the partial effect of $X_k$: regress $Y$ on all the **other** predictors
+and keep the residuals $e_Y$, the part of $Y$ the others do not explain. Regress $X_k$ on all the
+other predictors and keep the residuals $e_X$, the part of $X_k$ the others do not explain. Now plot
+$e_Y$ against $e_X$. Both axes have been purged of the other predictors, so the plot shows the
+relationship between $Y$ and $X_k$ that is genuinely new. Its slope is exactly the multiple
+regression coefficient $b_k$, a fact we prove below, so the plot is a picture of the very number in
+the coefficient table.
+
+The one rule people break is forgetting to clean the horizontal axis: they residualize $Y$ but then
+plot it against the raw predictor. @fig-ch08-avplot-recipe lays out the three steps so both axes get
+the same treatment.
+
+```{figure} figures/fig_ch08_avplot_recipe.png
+:name: fig-ch08-avplot-recipe
+:alt: A three-step flowchart. Step 1, a blue box, regress Y on the other predictors and keep the residuals e_Y, the part of Y the others miss. Step 2, an orange box, regress X_k on the other predictors and keep the residuals e_X, the part of X_k the others miss. Arrows from both lead to Step 3, a green box, plot e_Y against e_X and read the slope, which equals the coefficient b_k. A heading reads that both axes must have the other predictors removed, and a footnote warns that skipping either cleaning step breaks the equality.
+The added-variable plot in three steps. Both axes must be purged of the other predictors before plotting, not just the response. Clean only one axis and the slope is no longer the coefficient, which is the mistake Try it 8.5 walks through.
+```
+
+### Formula
+
+For predictor $X_k$ in a model whose other predictors are collected as $X_{(-k)}$,
+
+$$
+e_Y = Y - \widehat{Y}\big(\text{from } X_{(-k)}\big), \qquad e_X = X_k - \widehat{X}_k\big(\text{from } X_{(-k)}\big),
+$$
+
+and the added-variable plot is the scatter of $e_Y$ against $e_X$. The least-squares slope of that
+scatter equals $b_k$, the full-model coefficient on $X_k$.
+
+- $e_Y$ is the response with the other predictors' explanation removed.
+- $e_X$ is predictor $k$ with the other predictors' explanation removed, its unique part.
+- The slope of $e_Y$ on $e_X$ is $b_k$; the scatter around the line shows how cleanly $X_k$'s unique
+  part predicts $Y$'s unmatched part.
+
+### Derivation (the added-variable slope equals $b_k$)
+
+:::{admonition} Theorem 8.9: Added-variable slope (Frisch-Waugh)
+:class: important theorem
+In a multiple regression, the least-squares slope of the added-variable plot for $X_k$, that is the
+slope of $e_Y$ on $e_X$, equals the full-model coefficient $b_k$ on $X_k$:
+
+$$
+\text{slope of } e_Y \text{ on } e_X = b_k.
+$$
+:::
+
+**Proof (Frisch-Waugh, two-predictor case).** Take the full model $Y = b_0 + b_1 X_1 + b_2 X_2 + e$ and let $X_1$ play the role of "the other predictor" while we build the added-variable plot for
+$X_2$. Split $X_2$ into its projection onto $\{\mathbf{1}, X_1\}$ and the leftover:
+$X_2 = \widehat{X}_2 + e_X$, where $e_X \perp \{\mathbf{1}, X_1\}$ by construction. Substitute into
+the fitted equation and group the terms that live in $\operatorname{span}\{\mathbf{1}, X_1\}$:
+
+$$
+Y = \underbrace{(b_0 + b_1 X_1 + b_2 \widehat{X}_2)}_{\text{in } \operatorname{span}\{\mathbf{1},\,X_1\}} + b_2\, e_X + e.
+$$
+
+Now form $e_Y$ by removing the $\{\mathbf{1}, X_1\}$ part of $Y$, that is, projecting $Y$ onto the
+orthogonal complement of $\operatorname{span}\{\mathbf{1}, X_1\}$. The first group vanishes under
+this projection. The term $e_X$ is already orthogonal to $\{\mathbf{1}, X_1\}$, so it survives
+untouched. The full residual $e$ is orthogonal to $\{\mathbf{1}, X_1, X_2\}$, hence to
+$\{\mathbf{1}, X_1\}$, so it survives too. Therefore
+
+$$
+e_Y = b_2\, e_X + e.
+$$
+
+Finally regress $e_Y$ on $e_X$ through the origin (both residual vectors have mean zero). The slope is
+
+$$
+\frac{\langle e_Y, e_X\rangle}{\langle e_X, e_X\rangle} = \frac{\langle b_2 e_X + e,\ e_X\rangle}{\lVert e_X\rVert^2} = b_2 + \frac{\langle e, e_X\rangle}{\lVert e_X\rVert^2} = b_2,
+$$
+
+because $\langle e, e_X\rangle = 0$: the full residual $e$ is orthogonal to $X_2$ and to
+$\{\mathbf{1}, X_1\}$, hence to $e_X = X_2 - \widehat{X}_2$. The added-variable slope is exactly the
+multiple regression coefficient. The same argument works with any number of other predictors in
+place of $X_1$. $\blacksquare$
+
+### R and Python
+
+:::{admonition} Example 8.6: The added-variable plot for income in Dwaine
+:class: note
+**Question.** Draw the partial relationship between sales and disposable income, with target
+population removed from both, and confirm its slope is the coefficient $9.37$.
+
+**Intuition.** Residualize sales on population, residualize income on population, plot one against
+the other; the slope is $b_{\text{dispoinc}}$.
+
+**Formula.** $e_Y = \text{sales} - \widehat{\text{sales}}(\text{targtpop})$,
+$e_X = \text{dispoinc} - \widehat{\text{dispoinc}}(\text{targtpop})$; slope of $e_Y$ on $e_X$ is
+$b_{\text{dispoinc}}$.
+
+**Computation.**
+
+```r
+eY <- resid(lm(sales    ~ targtpop, data = dwaine))
+eX <- resid(lm(dispoinc ~ targtpop, data = dwaine))
+round(coef(lm(eY ~ eX))["eX"], 4)
+```
+```text
+    eX
+9.3655
+```
+
+```python
+eY = smf.ols("sales ~ targtpop", data=dwaine).fit().resid
+eX = smf.ols("dispoinc ~ targtpop", data=dwaine).fit().resid
+avfit = smf.ols("eY ~ eX", data=pd.DataFrame({"eY": eY, "eX": eX})).fit()
+print(round(avfit.params["eX"], 4))
+```
+```text
+9.3655
+```
+
+**Interpretation.** The added-variable slope is $9.3655$, identical to the coefficient in the full
+model, as the derivation promised. @fig-ch08-avplot-dwaine plots the two residual sets. The upward
+tilt is real, which is why income survives as a predictor; the modest, scattered cloud is why it
+survives only weakly. The plot also flags cases: a point far to the right is a city whose income is
+unusually high **for its population**, and such a point can pull the slope on its own, a lead
+Chapter 9 follows up.
+:::
+
+```{figure} figures/fig_ch08_avplot_dwaine.png
+:name: fig-ch08-avplot-dwaine
+:alt: An added-variable plot for disposable income in the Dwaine model. The horizontal axis is disposable income with target population removed, the vertical axis is sales with target population removed. The 21 points scatter around an upward-sloping line whose slope is labeled 9.37, matching the multiple regression coefficient.
+The added-variable plot for income, with target population purged from both axes. Its slope is the multiple regression coefficient 9.37 exactly. The upward tilt confirms income adds information beyond population; the scatter shows how much.
+```
+
+An added-variable plot can also reveal the opposite, a predictor with almost nothing left to add.
+@fig-ch08-avplot-savings shows the plot for growth rate `ddpi` in the savings model, whose partial
+slope is a positive but gentle $0.41$.
+
+```{figure} figures/fig_ch08_avplot_savings.png
+:name: fig-ch08-avplot-savings
+:alt: An added-variable plot for the income growth rate ddpi in the savings model. The horizontal axis is ddpi with the other three predictors removed, the vertical axis is the savings rate with those predictors removed. The 50 country points scatter around a gently upward-sloping line labeled with slope 0.41.
+The added-variable plot for income growth in the savings model. The gentle upward slope, 0.41, is the partial effect of growth on savings once age structure and income are accounted for. The wide scatter is why the effect, though real, is only marginally significant.
+```
+
+::::{admonition} Try it 8.5
+:class: important
+A student builds an added-variable plot for `dispoinc` but forgets to residualize the horizontal
+axis: they plot $e_Y$ (sales residualized on population) against raw `dispoinc` instead of against
+$e_X$. Will the slope still equal $9.37$? Explain what has gone wrong.
+
+:::{admonition} Solution
+:class: dropdown
+No. The theorem requires **both** axes to have the other predictors removed. Raw `dispoinc` still
+carries the part of income that overlaps with population, so plotting against it re-mixes the very
+confounding the added-variable plot exists to strip out. The slope you get is neither the simple
+slope $31.17$ nor the partial slope $9.37$ in general; it is an uninterpretable hybrid. The
+discipline of the method is that the horizontal axis must be $X_k$'s **unique** part, $e_X$, not
+$X_k$ itself.
+:::
+::::
+
+(ch08-r2-adj)=
+## 8.6 $R^2$, adjusted $R^2$, and standardized coefficients
+
+### Intuition
+
+We can now test which predictors belong; the next job is to summarize a whole model in one number and
+compare models of different sizes fairly. $R^2$ is the fraction of the response's variation the model
+explains, and it has one seductive flaw:
+it never goes down when you add a predictor, even a column of random noise. That makes it useless for
+comparing models of different sizes, because the biggest model always wins. **Adjusted $R^2$**
+(Definition 8.10) fixes this by charging rent for each predictor: it goes up only if the new
+predictor explains more than an average predictor's worth of noise would. **Standardized
+coefficients** (Definition 8.11) solve a different problem: raw coefficients live in different units
+(dollars, thousands of people, percents), so you cannot compare their sizes; putting everything in
+standard-deviation units makes the comparison fair.
+
+### Formula
+
+$$
+R^2 = 1 - \frac{\mathrm{SSE}}{\mathrm{SSTO}}, \qquad
+R^2_a = 1 - \frac{\mathrm{SSE}/(n-p)}{\mathrm{SSTO}/(n-1)} = 1 - \frac{n-1}{n-p}\,(1 - R^2).
+$$
+
+- $\mathrm{SSTO} = \sum (Y_i - \bar Y)^2$ is the total variation in $Y$, fixed regardless of the model.
+- $R^2$ compares raw sums of squares; $R^2_a$ compares them **per degree of freedom**, so adding a
+  parameter (raising $p$) is penalized through the factor $(n-1)/(n-p)$.
+- A standardized coefficient is $b_k^{*} = b_k \cdot (s_{X_k}/s_Y)$, the coefficient you get by
+  fitting the regression on variables first rescaled to have standard deviation one.
+
+In words: $R^2$ measures explained fraction, $R^2_a$ measures explained fraction after paying for
+model size, and $b_k^{*}$ measures effect size in standard deviations, so different predictors can be
+ranked on one scale.
+
+:::{admonition} Definition 8.10: Adjusted $R^2$
+:class: note definition
+**Adjusted $R^2$** is the coefficient of determination penalized for model size,
+
+$$
+R^2_a = 1 - \frac{\mathrm{SSE}/(n-p)}{\mathrm{SSTO}/(n-1)} = 1 - \frac{n-1}{n-p}\,(1 - R^2),
+$$
+
+where $p$ is the number of parameters including the intercept. Unlike $R^2$, it can decrease when a
+predictor does not earn its degree of freedom.
+:::
+
+:::{admonition} Definition 8.11: Standardized coefficient
+:class: note definition
+The **standardized coefficient** of predictor $X_k$ is $b_k^{*} = b_k\,(s_{X_k}/s_Y)$, the
+coefficient obtained by fitting the regression on variables first rescaled to have standard deviation
+one. It expresses the effect of $X_k$ in standard-deviation units, so predictors measured in
+different units can be compared.
+:::
+
+### Derivation ($R^2$ never falls; $R^2_a$ can)
+
+:::{admonition} Theorem 8.12: $R^2$ is monotone in added predictors
+:class: important theorem
+Adding a predictor to a model can never decrease $R^2$: $R^2$ stays equal or rises with every added
+predictor, so $R^2$ alone cannot choose among models of different sizes. Adjusted $R^2$ has no such
+guarantee: it decreases whenever an added predictor lowers $\mathrm{SSE}$ by less than its lost
+degree of freedom demands.
+:::
+
+**Proof.** By the monotonicity result of @ch08-extra-ss (Theorem 8.4), adding a predictor cannot
+raise $\mathrm{SSE}$, and $\mathrm{SSTO}$ does not depend on the model. Hence $\mathrm{SSE}/\mathrm{SSTO}$
+cannot rise, so $R^2 = 1 - \mathrm{SSE}/\mathrm{SSTO}$ cannot fall: **every** added predictor leaves
+$R^2$ equal or higher, which is why $R^2$ alone cannot choose a model. Adjusted $R^2$ behaves
+differently because it uses $\mathrm{MSE} = \mathrm{SSE}/(n-p)$. Adding a useless predictor lowers
+$\mathrm{SSE}$ by a little but also lowers the divisor $n-p$ by one; if the shrinkage in $\mathrm{SSE}$
+is smaller than the shrinkage in $n-p$ demands, $\mathrm{MSE}$ rises and $R^2_a$ falls. So $R^2_a$ can
+go down when a predictor does not earn its degree of freedom, which is exactly the behavior we want
+from a model-size-aware measure. $\blacksquare$
+
+@fig-ch08-r2-inflation makes this concrete: starting from the real savings model, we add columns of
+pure random noise one at a time and watch $R^2$ climb while $R^2_a$ sags.
+
+```{figure} figures/fig_ch08_r2_inflation.png
+:name: fig-ch08-r2-inflation
+:alt: A line plot with the number of added junk predictors on the horizontal axis, from zero to ten, and two curves. The R-squared curve rises steadily from about 0.34 toward 0.45 as noise predictors are added. The adjusted R-squared curve starts at the same point but drifts downward, ending below its starting value.
+Adding pure noise predictors to the savings model. R-squared (upper curve) rises with every junk column, because it never falls when a predictor is added. Adjusted R-squared (lower curve) drifts down, correctly reporting that the noise columns are not worth their degrees of freedom.
+```
+
+### R and Python
+
+:::{admonition} Example 8.7: Ranking the savings predictors fairly
+:class: note
+**Question.** Which savings predictor has the largest effect, once the different units are removed?
+
+**Intuition.** Raw coefficients cannot be compared: `pop15` is in percent, `dpi` in dollars. Refit on
+standardized variables so every coefficient is in standard-deviation units.
+
+**Formula.** $b_k^{*} = b_k\,(s_{X_k}/s_Y)$, obtained by regressing the standardized response on the
+standardized predictors.
+
+**Computation.**
+
+```r
+savings <- read.csv("data/savings.csv")
+z <- as.data.frame(scale(savings[, c("sr","pop15","pop75","dpi","ddpi")]))
+round(coef(lm(sr ~ pop15 + pop75 + dpi + ddpi, data = z)), 4)
+```
+```text
+(Intercept)       pop15       pop75         dpi        ddpi
+     0.0000     -0.9420     -0.4873     -0.0745      0.2624
+```
+
+```python
+cols = ["sr", "pop15", "pop75", "dpi", "ddpi"]
+z = (savings[cols] - savings[cols].mean()) / savings[cols].std()
+print(smf.ols("sr ~ pop15 + pop75 + dpi + ddpi", data=z).fit().params.round(4))
+```
+```text
+Intercept    0.0000
+pop15       -0.9420
+pop75       -0.4873
+dpi         -0.0745
+ddpi         0.2624
+dtype: float64
+```
+
+**Interpretation.** On the standardized scale the age-structure variable `pop15` dominates: a
+one-standard-deviation rise in the young-population share is associated with a $0.94$-standard-deviation
+fall in the savings rate, holding the rest fixed. Growth `ddpi` has a moderate positive standardized
+effect ($0.26$), and income `dpi` almost none ($-0.07$), consistent with its tiny $t$ statistic. The
+standardized intercept is zero because standardized variables have mean zero. Standardized
+coefficients rank effects, but they do not license causal claims any more than raw ones do; they are
+a comparison of associations on a common ruler.
+:::
+
+@fig-ch08-std-coefs ranks the four standardized coefficients on one axis, which the raw coefficients,
+living in incompatible units, could never share.
+
+```{figure} figures/fig_ch08_std_coefs.png
+:name: fig-ch08-std-coefs
+:alt: A horizontal bar chart of the four standardized coefficients of the savings model. pop15 is a long bar to the left at -0.94, pop75 a shorter left bar at -0.49, ddpi a right bar at 0.26, and dpi a tiny left bar at -0.07. A vertical reference line marks zero.
+The savings coefficients on a common standard-deviation ruler. Young-population share (pop15) has by far the largest standardized effect, and it is negative; income (dpi) has almost none. Only after standardizing can predictors in percent and in dollars be compared this way.
+```
+
+::::{admonition} Try it 8.6
+:class: important
+The savings model has $R^2 = 0.3385$ with $n = 50$ and $p = 5$. Compute adjusted $R^2$ from the
+formula and confirm it is smaller than $R^2$.
+
+:::{admonition} Solution
+:class: dropdown
+$R^2_a = 1 - \frac{n-1}{n-p}(1 - R^2) = 1 - \frac{49}{45}(1 - 0.3385) = 1 - (1.0889)(0.6615) = 1 - 0.7203 = 0.2797$. This matches the summary's adjusted $R^2 = 0.2797$ and is below the raw
+$R^2 = 0.3385$, as it must be whenever $p > 1$: the factor $(n-1)/(n-p)$ exceeds one, so the penalty
+always pulls adjusted $R^2$ below $R^2$.
+:::
+::::
+
+(ch08-dangers)=
+## 8.7 Two dangers: hidden extrapolation and lurking variables
+
+### Intuition
+
+Two failures deserve their own section because they are invisible in the coefficient table and fatal
+to a conclusion. The first is **hidden extrapolation** (Definition 8.13): predicting at a combination
+of predictor values that is inside the range of each predictor separately but outside the region
+where they occur together. The second is the **lurking variable** (Definition 8.14): an omitted
+predictor that, if included, would move or reverse the coefficients you reported.
+
+### Hidden extrapolation
+
+:::{admonition} Definition 8.13: Hidden extrapolation
+:class: note definition
+**Hidden extrapolation** is prediction at a combination of predictor values that lies inside the
+observed range of each predictor separately but outside the joint region where the predictors are
+observed together. It cannot be caught by checking each predictor's range one at a time.
+:::
+
+With one predictor, extrapolation is easy to police: stay inside the observed range of $X$. With
+several predictors, the observed region is not a box but a cloud, usually a tilted one because
+predictors are correlated. A query point can sit inside every predictor's own range and still fall
+far outside the cloud. @fig-ch08-hidden-extrapolation shows the Dwaine case: a city with target
+population $75$ and disposable income $16$ is unremarkable on each axis alone, yet no real city
+combines a population that large with income that low, so a prediction there is an extrapolation the
+one-variable ranges would never flag.
+
+```{figure} figures/fig_ch08_hidden_extrapolation.png
+:name: fig-ch08-hidden-extrapolation
+:alt: A scatterplot of the 21 Dwaine cities with target population on the horizontal axis and disposable income on the vertical axis, forming an upward-tilted elliptical cloud. A shaded convex hull outlines the observed cities. A red query point at population 75, income 16 sits inside both the horizontal and vertical ranges but clearly outside the shaded hull, in the empty lower-right region.
+Hidden extrapolation in two predictors. The red query point lies within the observed range of population and within the observed range of income, but outside the tilted cloud where the two occur together. A prediction there is an extrapolation that no single-variable range check would catch.
+```
+
+The practical check is to ask whether a query point lies within the joint region of the data, not
+merely within each margin. Chapter 9 makes this rigorous with the hat matrix: the leverage
+value $h_{ii}$ of @ch07-hat-matrix measures how far a point sits from the center of the predictor
+cloud, and a new point whose leverage value would exceed the observed ones is a hidden extrapolation.
+
+### Lurking variables
+
+:::{admonition} Definition 8.14: Lurking variable
+:class: note definition
+A **lurking variable** is a variable not in the model that is correlated with both the response and
+an included predictor. Because it is omitted, the reported coefficient absorbs its influence and can
+be biased or even reversed.
+:::
+
+A regression can only adjust for the predictors you give it. If an important variable is missing and
+it correlates with both the response and an included predictor, the coefficient you report absorbs
+the missing variable's influence and can be badly wrong, even reversed. This is the multiple
+regression version of the correlation-is-not-causation warning from @ch04-r-and-slope, and it is why
+an observational coefficient is always provisional: some unmeasured factor might be doing the work.
+
+"Even reversed" sounds like an exaggeration until you see it. @fig-ch08-lurking-signflip shows the
+mechanism on a schematic dataset. Ignore the lurking variable and the points march up from left to
+right, so the slope looks positive. Color the points by the hidden group and each group tips the
+other way: within any single group the slope is negative. A model that never saw the group reports the
+upward trend and gets the sign exactly backwards.
+
+```{figure} figures/fig_ch08_lurking_signflip.png
+:name: fig-ch08-lurking-signflip
+:alt: A schematic scatterplot of response Y against predictor X. Points fall into three colored groups, blue lower-left, green middle, orange upper-right. A dashed overall line through all points slopes upward, labeled overall slope positive with the lurking variable ignored. Within each colored group a solid line slopes downward, labeled that within each group the slope is negative. The overall and within-group slopes have opposite signs.
+A lurking variable can flip a slope's sign. The dashed overall line slopes up because the groups sit at different heights; the solid within-group lines all slope down. If the group is a variable you never measured, your fitted coefficient reports the up-slope and misses the true down-slope entirely.
+```
+
+The honest posture is to name the lurking variables you can think of and admit the ones you cannot.
+In the Dwaine study, local competition, the age of each studio, and regional advertising are all
+plausibly related to both sales and the city characteristics; none is in the model, so each partial
+slope is "the best we can say from these three columns," not a final truth. No amount of arithmetic
+inside a fixed set of predictors can rule out a variable you never measured.
+
+:::{admonition} Durable skill: Distrust a coefficient until you have listed what is missing
+:class: tip
+When you read or report a regression coefficient, spend one minute writing down variables that are
+not in the model but plausibly affect both the response and this predictor. If your list is long and
+the coefficient is the headline of the analysis, the analysis is fragile. This reflex, asking "what
+did this model not get to see," is the single most valuable check you can run on any data-driven
+claim, including the ones produced for you by software or an AI assistant that will happily fit
+whatever columns it is handed.
+:::
+
+::::{admonition} Try it 8.7
+:class: important
+Explain why a query point at target population $75$ and income $16$ counts as a hidden extrapolation
+for Dwaine even though $75$ is within the observed population range ($38$ to $91$) and $16$ is within
+the observed income range ($15.8$ to $19.1$).
+
+:::{admonition} Solution
+:class: dropdown
+The two predictors are positively correlated ($r = 0.78$): in these data, large-population cities
+tend to have higher income, not lower. A population of $75$ typically comes paired with income near
+the upper part of its range, not near $16$. So although each coordinate is individually ordinary, the
+**combination** falls in a corner of the predictor space with no observed cities, outside the tilted
+data cloud. The model will still return a number there, but it is extrapolating beyond any evidence,
+and only a joint check (or the leverage values $h_{ii}$ of Chapter 9), not the separate ranges,
+reveals it.
+:::
+::::
+
+## 8.8 Chapter summary
+
+You can now take a fitted multiple regression and do the work that matters after the fit. You can
+read each coefficient as a partial slope, stating in words the controlled comparison it makes and the
+exact phrase "holding the other predictors fixed," and you can explain why that phrase weakens when
+predictors are correlated and can describe a region with no data. You can compute extra sums of
+squares and read a sequential ANOVA table as a decomposition of $\mathrm{SSR}$. You can run the
+general linear test for one coefficient or a group, derive its $F$ statistic from the Pythagorean
+split of nested models, and show it collapses to $t^2$ for a single coefficient. You can build an
+added-variable plot and prove its slope is the multiple regression coefficient. You can compute
+$R^2$, adjusted $R^2$, and standardized coefficients, and explain why only the last two are safe for
+comparing models or effects. And you can spot the two dangers that a coefficient table hides: hidden
+extrapolation in the joint predictor space and the lurking variable no model ever measured.
+
+**Key results at a glance**
+
+| Result | Statement or formula | Valid when |
+|---|---|---|
+| Partial slope (Definition 8.1) | $b_k$ is the change in $E\{Y\}$ per unit of $X_k$, other predictors held fixed | multiple regression model |
+| Extra sum of squares (Definition 8.3) | $\mathrm{SSR}(X_2\mid X_1) = \mathrm{SSE}(X_1) - \mathrm{SSE}(X_1,X_2)$ | any nested pair of models |
+| Monotonicity of SSE (Theorem 8.4) | $\mathrm{SSE}(\text{full}) \le \mathrm{SSE}(\text{reduced})$, so $\mathrm{SSR}(X_2\mid X_1)\ge 0$ | reduced predictors a subset of the full |
+| General linear test (Theorem 8.6) | $F^{*} = \dfrac{[\mathrm{SSE}(R)-\mathrm{SSE}(F)]/q}{\mathrm{SSE}(F)/(n-p_F)} \sim F(q, n-p_F)$ | normal errors, reduced model true |
+| One-coefficient identity (Theorem 8.7) | $F^{*} = b_k^2/s^2\{b_k\} = t_k^2$ | dropping a single coefficient ($q=1$) |
+| Added-variable slope (Theorem 8.9) | slope of $e_Y$ on $e_X$ equals $b_k$ | any multiple regression (Frisch-Waugh) |
+| $R^2$ monotonicity (Theorem 8.12) | $R^2$ never falls as predictors are added; $R^2_a$ can | comparing nested models |
+| Adjusted $R^2$ (Definition 8.10) | $R^2_a = 1 - \frac{n-1}{n-p}(1-R^2)$ | comparing models of different size |
+| Standardized coefficient (Definition 8.11) | $b_k^{*} = b_k\,(s_{X_k}/s_Y)$ | ranking effects across different units |
+
+**Key terms**
+
+**partial slope**, **multiple linear regression model**, **extra sum of squares**, **sequential
+(Type I) ANOVA**, **general linear test**, **full model**, **reduced model**, **added-variable
+plot**, **coefficient of determination** ($R^2$), **adjusted $R^2$**, **standardized coefficient**,
+**hidden extrapolation**, **lurking variable**, **multicollinearity**.
+
+**You should now be able to**
+
+- [ ] Read each coefficient as a partial slope, with its units and the phrase "holding the other predictors fixed."
+- [ ] Explain why "holding fixed" weakens under correlated predictors and can describe a region with no data.
+- [ ] Compute an extra sum of squares and read a sequential ANOVA table as a decomposition of $\mathrm{SSR}$.
+- [ ] Run the general linear test for one coefficient or a group, and show it reduces to $F^{*} = t^2$ when $q = 1$.
+- [ ] Build an added-variable plot and prove its slope equals the multiple regression coefficient.
+- [ ] Compute and contrast $R^2$, adjusted $R^2$, and standardized coefficients, and say why $R^2$ never falls when a predictor is added.
+- [ ] Spot hidden extrapolation in the joint predictor space and explain how a lurking variable can flip a coefficient's sign.
+
+**Where this fits.** In the workflow spine of @ch02-workflow this chapter is mostly USE: it takes the
+fit that Chapter 7 produced for Dwaine in matrix form and turns it into interpretation, tests, and
+honest caveats, with the general linear test also serving FIT by deciding which terms belong. Chapter
+7 gave the estimator and its variance; this chapter gave the reasoning that makes an estimate a claim.
+What we deferred is the CHECK stage: whether any single case is quietly running the fit, and whether
+the model's assumptions hold at all. That is Chapter 9's job. It returns to the savings data, singling
+out Libya as the case that bends the fit and Zambia as a large-residual outlier, and builds the
+influence diagnostics (@ch09-cooks-distance) and the leverage statistic that @ch09-leverage points to,
+which together decide how much of this chapter's confidence survives contact with real data. The general linear test you learned
+here is the testing engine that Chapter 11 reuses for categorical predictors and interactions
+(@ch11-dummy-coding) and Chapter 12 for variable selection (@ch12-criteria), neither re-deriving it.
+
+## 8.9 Frequently asked questions
+
+**Q1. Why is the multiple regression coefficient on income so different from the simple-regression
+slope?** Because they answer different questions. The simple slope $31.17$ compares cities that differ
+in income and lets population differ along with it; the partial slope $9.37$ compares cities that
+differ in income but share population. When predictors are correlated, the two questions have
+different answers, and only the partial slope earns the phrase "holding population fixed."
+
+**Q2. Does "holding the other predictors fixed" mean I can intervene on one predictor and expect that
+coefficient's change?** No. The coefficient describes a comparison across cases that already differ,
+not the effect of an action. With observational data, and especially with correlated predictors or a
+lurking variable, acting on a predictor need not reproduce the observed association. The coefficient
+is a description of the fitted surface, not a promise about interventions.
+
+**Q3. The sequential ANOVA gives different sums of squares when I reorder the predictors. Which order
+is right?** None is uniquely right; the order is a choice about what "given the others" means. The
+first predictor gets its full simple-regression sum of squares, each later one gets only what it adds
+beyond those before it. The pieces always total the same $\mathrm{SSR}$. If you want each predictor
+adjusted for **all** the others at once, use its $t$-test (or the general linear test dropping just
+that predictor), which does not depend on order.
+
+**Q4. When should I use the general linear test instead of just reading $t$ statistics?** Use it
+whenever you want to test **several** coefficients at once, such as "do these two predictors together
+add anything." A group of individually non-significant $t$'s does not tell you whether the group as a
+whole matters, because the predictors may share their explanatory power; the general linear test asks
+the joint question directly. For a single coefficient, the general linear test and the $t$-test are
+identical ($F^{*} = t^2$).
+
+**Q5. Why does $R^2$ always go up when I add a predictor, even a useless one?** Because adding a
+predictor can only lower (or not change) $\mathrm{SSE}$, and $\mathrm{SSTO}$ is fixed, so
+$R^2 = 1 - \mathrm{SSE}/\mathrm{SSTO}$ can only rise. That is exactly why $R^2$ cannot be used to
+choose between models of different sizes; use adjusted $R^2$, which penalizes each added parameter, or
+a formal test.
+
+**Q6. My added-variable plot slope matches the coefficient exactly. Is that a coincidence?** No, it is
+a theorem (Frisch-Waugh). Removing the other predictors from both the response and the target
+predictor, then regressing the leftovers, reproduces the full-model coefficient exactly. That is what
+makes the added-variable plot a faithful picture of the coefficient rather than a rough sketch.
+
+**Q7. All three body-fat coefficients are non-significant, yet the overall $F$ is highly significant.
+How can the model be useful if no single predictor is?** This is the fingerprint of multicollinearity.
+The three tape-measure predictors overlap so much that no one of them adds much **given the other
+two**, so each individual $t$ is small; but together they explain body fat well, so the overall $F$ is
+large. The predictors are substitutes, not independent contributors. Chapter 12 takes up this
+multicollinearity theme on a larger body-fat study and measures the overlap with the variance inflation factor.
+
+## 8.10 Practice problems
+
+:::{note}
+Unless a problem says otherwise, use `dwaine.csv` with the fitted model
+$\widehat{\text{sales}} = -68.86 + 1.4546\,\text{targtpop} + 9.3655\,\text{dispoinc}$
+($R^2 = 0.9167$, $\mathrm{MSE} = 121.16$, $n = 21$, $p = 3$), the body-fat model on `bodyfat3.csv`,
+or the savings model $\text{sr} \sim \text{pop15} + \text{pop75} + \text{dpi} + \text{ddpi}$ on
+`savings.csv`. Problems are marked (A) concepts, (B) theory, or (C) data analysis. Odd-numbered
+answers appear in Appendix H; full solutions are in the instructor materials.
+:::
+
+1. (A) State in one sentence what the Dwaine coefficient $1.4546$ on `targtpop` means, naming its units and what is held fixed.
+2. (A) Explain the difference between the simple-regression slope of `sales` on `dispoinc` ($31.17$) and the multiple regression coefficient ($9.37$). Which holds population fixed?
+3. (A) Define the extra sum of squares $\mathrm{SSR}(X_2 \mid X_1)$ in words, and explain why it can never be negative.
+4. (A) A reduced model drops three predictors from a full model. State the numerator degrees of freedom of the general linear test comparing them.
+5. (A) Why does $R^2$ never decrease when a predictor is added? Answer using the identity $R^2 = 1 - \mathrm{SSE}/\mathrm{SSTO}$.
+6. (A) A colleague reports that adjusted $R^2$ fell when they added a variable, and concludes they made an error. Are they right? Explain.
+7. (A) In your own words, what does an added-variable plot put on each axis, and why is neither axis the raw variable?
+8. (A) Give an example, in the Dwaine context, of a lurking variable that could distort the income coefficient, and say why it would matter.
+9. (A) Explain why a query point can be a hidden extrapolation even when each predictor value is inside its own observed range.
+10. (A) All three body-fat coefficients are individually non-significant but the overall $F$ is highly significant. Explain how both can be true.
+11. (B) Prove that adding a predictor to a model cannot increase $\mathrm{SSE}$ (Theorem 8.4), using the projection characterization of least squares from @ch07-geometry.
+12. (B) Show that $\mathrm{SSR}(X_2 \mid X_1) = \mathrm{SSR}(X_1, X_2) - \mathrm{SSR}(X_1)$ is equivalent to $\mathrm{SSE}(X_1) - \mathrm{SSE}(X_1, X_2)$, citing which quantity is model-independent.
+13. (B) Derive the Pythagorean identity $\mathrm{SSE}(R) = \mathrm{SSE}(F) + \lVert \widehat{\mathbf{Y}}_F - \widehat{\mathbf{Y}}_R\rVert^2$ for nested models, stating where orthogonality is used.
+14. (B) Starting from $s^2\{b_k\} = \mathrm{MSE}\cdot c_{kk}$ and $\mathrm{SSR}(X_k \mid \text{others}) = b_k^2/c_{kk}$, prove that the general linear test with $q = 1$ gives $F^{*} = t_k^2$ (Theorem 8.7).
+15. (B) Prove that the slope of the added-variable plot for $X_k$ equals the full-model coefficient $b_k$, in the two-predictor case (Theorem 8.9, Frisch-Waugh).
+16. (B) Derive $R^2_a = 1 - \frac{n-1}{n-p}(1 - R^2)$ from the definition $R^2_a = 1 - \frac{\mathrm{SSE}/(n-p)}{\mathrm{SSTO}/(n-1)}$, and explain when adding a predictor lowers it.
+17. (B) Show that the standardized coefficient satisfies $b_k^{*} = b_k\,(s_{X_k}/s_Y)$ by relating the regression on standardized variables to the regression on raw variables.
+18. (B) Explain why reordering predictors changes the sequential sums of squares but never changes their total or the full-model coefficients. Tie your answer to which quantities the order affects.
+19. (B) The general linear test for the overall regression compares the full model to the intercept-only model. Show that its $F^{*}$ equals $\mathrm{MSR}/\mathrm{MSE}$ with $\mathrm{MSR} = \mathrm{SSR}/(p-1)$.
+20. (C) Fit the Dwaine model in R or Python and reproduce $b_0, b_1, b_2$, $R^2$, and the residual standard error. Confirm $\mathrm{MSE} = \mathrm{SSE}/(n-p)$ from the residuals.
+21. (C) On `bodyfat3.csv`, print the sequential ANOVA in both predictor orders (triceps-then-thigh and thigh-then-triceps) and report how $\mathrm{SSR}(\text{thigh})$ and $\mathrm{SSR}(\text{thigh} \mid \text{triceps})$ differ. Explain the difference.
+22. (C) Run the general linear test dropping `pop75` and `dpi` from the savings model, first with the built-in model comparison and then by hand from the two error sums of squares. Confirm they agree and report $F^{*}$ and its $p$-value.
+23. (C) For the savings model, verify $F^{*} = t^2$ for the single predictor `ddpi`: compute the general linear test dropping `ddpi` and compare to the square of `ddpi`'s $t$ statistic.
+24. (C) Build the added-variable plot for `pop15` in the savings model. Report the slope, confirm it equals the full-model coefficient on `pop15`, and describe the scatter.
+25. (C) Add three columns of standard normal noise (seed `4210`) to the savings data, refit with the extra columns, and report how $R^2$ and adjusted $R^2$ change. Which one behaves sensibly?
+26. (C) Standardize the Dwaine variables and refit; report the two standardized coefficients and say which predictor has the larger standardized effect. Does the ranking match the raw $t$ statistics?
+27. (C) Predict Dwaine sales at target population $75$ and income $16$, and separately at the sample means. Argue from @fig-ch08-hidden-extrapolation which prediction you would trust and why.
+28. (C) Fit the full three-predictor body-fat model and report all three $t$ statistics and the overall $F$. Explain, using the correlations among the predictors, why the individual and joint verdicts disagree.
+29. (B) A student claims that because $\mathrm{SSR}(X_2 \mid X_1) \ge 0$ always, adding any predictor always improves the model. Explain precisely what "improves" can and cannot mean here, distinguishing $\mathrm{SSE}$, $R^2$, adjusted $R^2$, and out-of-sample prediction.
+30. (C) Using the Dwaine model, compute a 95% confidence interval for mean sales and a 95% prediction interval for a new city's sales at target population $65.4$ and income $17.6$. Explain in one sentence why the prediction interval is wider, citing @ch03-prediction-interval.
+
+## 8.11 Exam practice
+
+These five questions are written in the style of the course exams: each one asks you to explain your
+reasoning in full sentences, not just to produce a number. Read the output, decide what it says, and
+write the argument you would want a grader to read. Work each one before opening its model answer.
+
+**EP 8.1.** The four-predictor savings model is fit to the 50 countries, and R prints the coefficient
+table below.
+
+```text
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  28.5661     7.3545  3.8842   0.0003
+pop15        -0.4612     0.1446 -3.1885   0.0026
+pop75        -1.6915     1.0836 -1.5610   0.1255
+dpi          -0.0003     0.0009 -0.3618   0.7192
+ddpi          0.4097     0.1962  2.0882   0.0425
+```
+
+Interpret the coefficient on `pop15` as a partial slope, giving its units and the exact phrase for
+what is held fixed. Then, using the $t$ value and $p$-value, explain whether `pop15` is
+distinguishable from zero at the 5% level. Finally, a classmate reads the near-zero `dpi` coefficient
+$(-0.0003)$ and concludes that disposable income has no relationship with the savings rate; explain
+in full sentences why that conclusion overreaches.
+
+:::{admonition} Model answer
+:class: dropdown
+The coefficient $-0.4612$ on `pop15` is a partial slope: comparing two countries that share the same
+values of `pop75`, `dpi`, and `ddpi`, the one whose share of population under 15 is one percentage
+point higher is predicted to have a savings rate about $0.46$ percentage points lower. The units are
+percentage points of savings rate per percentage point of young-population share, and the phrase that
+earns the interpretation is "holding `pop75`, `dpi`, and `ddpi` fixed." Because $t = -3.19$ with a
+$p$-value of $0.0026$, far below $0.05$, `pop15` is clearly distinguishable from zero at the 5% level;
+the data give strong evidence that its partial slope is not zero. The classmate overreaches on two
+counts. First, the coefficient is tiny in size mainly because `dpi` is measured in raw dollars, so a
+one-dollar change is a minuscule move and its per-dollar effect is naturally small; size on a raw
+scale is not the same as importance, which is why we standardize before ranking effects. Second, and
+more basic, the coefficient measures the partial effect of income given the other three predictors,
+not income's total relationship with saving. A large simple correlation between `dpi` and the savings
+rate could still exist and be absorbed by `pop15` and `pop75`, which are themselves correlated with
+income. The honest statement is that income adds little once age structure and growth are in the
+model, not that income is unrelated to saving.
+
+A weak answer reports "not significant" or "significant" without stating the controlled comparison
+and units behind `pop15`, and accepts the classmate's leap from a small coefficient to "no
+relationship" without separating raw scale from importance or partial effect from total association.
+:::
+
+**EP 8.2.** A student fits the three body-fat predictors in two different orders and prints the
+sequential (Type I) ANOVA table each time.
+
+```text
+Response: bodyfat        (order: triceps, thigh, midarm)
+          Df Sum Sq Mean Sq F value    Pr(>F)
+triceps    1 352.27  352.27 57.2768 1.131e-06
+thigh      1  33.17   33.17  5.3931   0.03373
+midarm     1  11.55   11.55  1.8773   0.18956
+Residuals 16  98.40    6.15
+```
+
+```text
+Response: bodyfat        (order: thigh, triceps, midarm)
+          Df Sum Sq Mean Sq F value    Pr(>F)
+thigh      1 381.97  381.97 62.1052 6.735e-07
+triceps    1   3.47    3.47  0.5647   0.46330
+midarm     1  11.55   11.55  1.8773   0.18956
+Residuals 16  98.40    6.15
+```
+
+The student writes: "Thigh gets a sum of squares of $381.97$ in the second table but only $33.17$ in
+the first. The same variable cannot have two different sums of squares, so one of these tables must
+be a software error." Evaluate this claim, and explain in full sentences what the two thigh numbers
+actually represent.
+
+:::{admonition} Model answer
+:class: dropdown
+The student is wrong; both tables are correct, and they are not reporting the same quantity. A
+sequential ANOVA table gives each predictor the extra sum of squares it earns given the predictors
+listed before it, so the row for a variable depends on its position. In the first table thigh enters
+second, so its row is $\mathrm{SSR}(\text{thigh} \mid \text{triceps}) = 33.17$: the variation thigh
+explains after triceps has already claimed everything the two share. In the second table thigh enters
+first, so its row is $\mathrm{SSR}(\text{thigh}) = 381.97$: the variation thigh explains on its own,
+including the large piece it shares with triceps. The two numbers differ precisely because triceps
+and thigh are strongly correlated, so most of thigh's marginal explanatory power overlaps triceps
+and gets credited to whichever predictor enters first. Nothing is inconsistent: both tables have the
+same residual sum of squares $98.40$ and the same total, and both give midarm the same last-place row
+$11.55$ because in both orders midarm enters after the other two. The lesson is that a Type I sum of
+squares answers "given the earlier predictors," not "for this predictor alone," so reordering is
+expected to move the middle rows while leaving the total $\mathrm{SSR}$ and the full-model
+coefficients unchanged.
+
+A weak answer just says "order matters" without naming that the two numbers are
+$\mathrm{SSR}(\text{thigh})$ versus $\mathrm{SSR}(\text{thigh} \mid \text{triceps})$, and misses that
+the overlap exists because the predictors are correlated, which is the reason the split changes.
+:::
+
+**EP 8.3.** In the savings model you want to know whether the two economic predictors, `dpi` and
+`ddpi`, can be dropped once the two demographic predictors `pop15` and `pop75` are in the model. The
+model comparison prints:
+
+```text
+Model 1: sr ~ pop15 + pop75
+Model 2: sr ~ pop15 + pop75 + dpi + ddpi
+  Res.Df    RSS Df Sum of Sq     F  Pr(>F)
+1     47 726.17
+2     45 650.71  2    75.455 2.609 0.08471
+```
+
+State the null and alternative hypotheses this test evaluates and your decision at the 5% level. Then,
+recalling from the full-model summary in EP 8.1 that `dpi` has $t = -0.36$ ($p = 0.72$) while `ddpi`
+has $t = 2.09$ ($p = 0.0425$), explain in full sentences why it would be a mistake to react to this
+non-significant joint test by dropping both `dpi` and `ddpi`.
+
+:::{admonition} Model answer
+:class: dropdown
+The test compares the reduced model, which forces both economic coefficients to zero, against the
+full model that keeps them. The null hypothesis is that $\beta_{\text{dpi}} = \beta_{\text{ddpi}} = 0$
+together, and the alternative is that at least one of them is nonzero. The statistic is
+$F^{*} = (75.455/2)/(650.71/45) = 2.609$ on $2$ and $45$ degrees of freedom, with a $p$-value of
+$0.085$. At the 5% level this is not significant, so the joint test does not reject the reduced model:
+the two economic predictors do not clearly improve the fit as a pair. It would still be a mistake to
+drop both. The joint test asks a single yes-or-no question about the two coefficients at once, and its
+answer is diluted by `dpi`, which contributes almost nothing (its individual $t$ is $-0.36$). But
+`ddpi` on its own is individually significant at the 5% level ($t = 2.09$, $p = 0.0425$), meaning
+growth in disposable income does add information beyond the demographics. Averaging a useful predictor
+with a useless one can push a joint $F$ below significance even though one member of the pair belongs
+in the model. The sensible move is to drop `dpi` alone and re-examine `ddpi`, not to discard both on
+the strength of one blurred joint test.
+
+A weak answer stops at "$p = 0.085 > 0.05$, so drop both," treating the joint test as if it licensed
+dropping each predictor individually, and never notices that `ddpi` is significant on its own.
+:::
+
+**EP 8.4.** For the savings model, the added-variable plot for `pop15` is built by residualizing both
+the response and `pop15` on the other three predictors, and its slope is computed.
+
+```text
+AV slope pop15 = -0.4612   full coef pop15 = -0.4612
+```
+
+Explain why the added-variable plot slope must equal the full-model coefficient, naming the result
+that guarantees it. Then explain what would change if a student residualized only the response `sr` on
+the other predictors but plotted those residuals against the raw `pop15` values instead of the
+residualized `pop15`: would the slope still be $-0.4612$, and what quantity would that botched slope
+represent?
+
+:::{admonition} Model answer
+:class: dropdown
+The added-variable plot puts $e_Y$, the response with the other three predictors removed, on the
+vertical axis, and $e_X$, `pop15` with the same three predictors removed, on the horizontal axis. By
+the Frisch-Waugh result (Theorem 8.9), the least-squares slope of $e_Y$ on $e_X$ equals the
+full-model coefficient $b_{\text{pop15}}$ exactly, which is why both numbers print as $-0.4612$: the
+plot is a faithful picture of the coefficient, not an approximation to it. If the student cleans only
+the vertical axis and plots $e_Y$ against raw `pop15`, the equality breaks. The horizontal axis still
+carries the part of `pop15` that overlaps `pop75`, `dpi`, and `ddpi`, so the confounding that the
+added-variable plot exists to strip out has only been removed from one axis, not both. The resulting
+slope would not be $-0.4612$ in general, and it would not be the simple regression slope of `sr` on
+`pop15` either; it is an uninterpretable hybrid, the slope of a partly-cleaned response on a
+not-cleaned predictor, that answers no well-posed question. The discipline of the method is that both
+axes must have the same other predictors removed; residualizing one axis and not the other is the
+single most common way people break the construction.
+
+A weak answer says only "the slope changes" without explaining that the raw horizontal axis re-mixes
+the confounding, and without recognizing that the botched slope equals neither the partial slope
+$-0.4612$ nor the simple-regression slope.
+:::
+
+**EP 8.5.** Starting from the four-predictor savings model, three columns of pure standard-normal
+noise (seed `4210`) are added and the model is refit.
+
+```text
+model                     R2       adj R2
+sr ~ 4 predictors         0.3385   0.2797
+sr ~ 4 predictors + 3 noise 0.3980   0.2977
+```
+
+Explain why $R^2$ rose from $0.3385$ to $0.3980$ even though the three added columns are pure noise.
+Then explain why this rise is not evidence that the larger model is better, and say what adjusted
+$R^2$ and out-of-sample prediction each tell you here.
+
+:::{admonition} Model answer
+:class: dropdown
+$R^2 = 1 - \mathrm{SSE}/\mathrm{SSTO}$, and by the monotonicity of $\mathrm{SSE}$ (Theorem 8.12)
+adding any predictor, useful or useless, can only lower $\mathrm{SSE}$ or leave it unchanged, while
+$\mathrm{SSTO}$ is fixed because it depends only on the response. So $R^2$ can only rise or stay flat,
+and here it rose by about $0.06$. That rise is an in-sample artifact: with only $50$ countries, three
+random columns can be tuned by least squares to soak up a little of the idiosyncratic wiggle in this
+particular sample, which lowers $\mathrm{SSE}$ even though the columns carry no real signal. It is not
+evidence of a better model, because $R^2$ never falls when predictors are added and therefore cannot
+distinguish a real improvement from noise fitting. Adjusted $R^2$ is the honest comparison: it charges
+a degrees-of-freedom rent through the factor $(n-1)/(n-p)$, and here it barely moved, rising only from
+$0.2797$ to $0.2977$ against $R^2$'s much larger jump, so it does not reward the noise columns the way
+$R^2$ does. Adjusted $R^2$ is not forced upward, and over many junk columns it drifts down, as
+@fig-ch08-r2-inflation shows. Out-of-sample prediction would be the sharpest verdict: on new countries
+the noise columns carry no signal, so the larger model would predict as well or worse than the
+four-predictor model, exposing the $R^2$ gain as overfitting.
+
+A weak answer treats the higher $R^2$ as a genuine improvement, or claims adjusted $R^2$ is guaranteed
+to fall when noise is added; the correct point is that $R^2$ must not fall by construction, while
+adjusted $R^2$ merely stops rewarding size automatically.
+:::
+
+:::{admonition} Resumen del capítulo (en español)
+:class: dropdown
+Este capítulo trata lo que sigue tras ajustar una **regresión múltiple (multiple regression)**.
+Retomamos a Dwaine Studios del Capítulo 7, donde resolvimos las ecuaciones normales para obtener
+$\mathbf{b} = (-68.86,\ 1.45,\ 9.37)$, y aprendemos a interpretarlos con honestidad. Un coeficiente de
+regresión múltiple es una **pendiente parcial (partial slope)**: el cambio en la respuesta media por
+cada unidad del predictor, **manteniendo fijos los demás predictores**. Esta frase describe bien la
+superficie ajustada, pero se debilita cuando los predictores están correlacionados, porque "mantener
+fijo" puede describir una región sin datos.
+
+El **coeficiente cambia según qué otros predictores lo acompañan**: la pendiente de `sales` sobre
+`dispoinc` cae de $31.17$ a $9.37$ al agregar `targtpop`, porque el segundo número controla la
+población. Definimos las **sumas de cuadrados adicionales (extra sums of squares)**,
+$\mathrm{SSR}(X_2 \mid X_1) = \mathrm{SSE}(X_1) - \mathrm{SSE}(X_1, X_2)$, que miden cuánta variación
+explica un predictor una vez incluidos los demás, calculadas con los datos de grasa corporal:
+$\mathrm{SSR}(\text{thigh} \mid \text{triceps}) = 33.17$.
+
+La **prueba lineal general (general linear test)** compara un modelo completo con uno reducido mediante
+$F^{*} = \frac{[\mathrm{SSE}(R) - \mathrm{SSE}(F)]/q}{\mathrm{SSE}(F)/(n - p_F)}$, derivada con el
+teorema de Pitágoras para modelos anidados; para un solo coeficiente se reduce a $F^{*} = t_k^2$.
+Con los datos de ahorro mostramos que `pop75` y `dpi` pueden eliminarse ($F^{*} = 1.72$, $p = 0.19$).
+Los **gráficos de variable agregada (added-variable plots)** muestran la relación parcial: su pendiente
+es exactamente el coeficiente. Distinguimos también $R^2$, que nunca baja al agregar predictores, del
+$R^2$ **ajustado (adjusted)**, que penaliza el tamaño del modelo, definimos los **coeficientes
+estandarizados (standardized coefficients)** para comparar efectos, y advertimos sobre dos peligros: la
+**extrapolación oculta (hidden extrapolation)** en varias dimensiones y las **variables ocultas
+(lurking variables)** que ningún modelo llegó a medir. El Capítulo 9 revisa estos mismos datos con
+diagnósticos de influencia.
+:::
+
+## 8.12 Chapter game
+
+:::{admonition} Play the Chapter 8 game
+:class: tip
+Play the Chapter 8 game on your phone or laptop: 10 quick rounds, no setup.
+[Open the game](../games/ch08.html)
+
+It trains the chapter's practical reflexes on real book data: reading a coefficient as a partial
+slope, watching a slope shift when its companions change, reading extra sums of squares from a
+sequential ANOVA, ordering the general linear test, matching the pieces of an added-variable plot,
+spotting hidden extrapolation on the Dwaine cloud, and telling $R^2$ from adjusted $R^2$.
+:::

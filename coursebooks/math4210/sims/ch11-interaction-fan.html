@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The interaction coefficient fans the lines apart</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-backlink { margin: 10px 0 0; font-size: 0.8125rem; }
+.sim-backlink a { color: var(--sim-accent); text-decoration: none; }
+.sim-backlink a:hover { text-decoration: underline; }
+.sim-backlink a:focus-visible {
+  outline: 3px solid var(--sim-accent); outline-offset: 2px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Section 11.3. Yhat = b0 + b1 X + b2 D + b3 X D on salaries.csv, in
+   thousands of dollars. X is years of service, D the discipline-B indicator.
+   The reference (discipline A) line is held at the fitted values of
+   Example 11.3: b0 = 98.038, b1 = 0.5268 per year. */
+
+var LANG = (window.location.search.indexOf('lang=es') >= 0) ? 'es' : 'en';
+
+var B0 = 98.0380407;      /* intercept of the theoretical (A) line, k$      */
+var B1 = 0.5268293;       /* slope of the theoretical (A) line, k$ per year */
+
+function lineA(p, x) { return B0 + B1 * x; }
+function lineB(p, x) { return (B0 + p.b2) + (B1 + p.b3) * x; }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Set b3 to zero for parallel lines, then open it up',
+    es: 'Pon b3 en cero para rectas paralelas, luego ábrela'
+  },
+  xRange: [0, 40],
+  yRange: [60, 185],
+  xLabel: { en: 'years of service X', es: 'años de servicio X' },
+  yLabel: { en: 'fitted salary (thousands)', es: 'salario ajustado (miles)' },
+  ariaLabel: {
+    en: 'Two fitted salary lines against years of service, one per discipline, with a shaded gap at the marked year',
+    es: 'Dos rectas ajustadas de salario contra años de servicio, una por disciplina, con la brecha sombreada en el año marcado'
+  },
+  params: [
+    { id: 'b2', label: { en: 'b2, gap at X = 0 (k$)', es: 'b2, brecha en X = 0 (miles)' },
+      min: -10, max: 15, step: 0.05, value: 0.85, digits: 2 },
+    { id: 'b3', label: { en: 'b3, interaction (k$ per year)',
+                         es: 'b3, interacción (miles por año)' },
+      min: -0.5, max: 1.2, step: 0.005, value: 0.695, digits: 3 },
+    { id: 'xs', label: { en: 'Read the gap at X years', es: 'Lee la brecha en X años' },
+      min: 0, max: 40, step: 1, value: 30, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 2.5, fn: lineA },
+    { accent: 2, width: 3, fn: lineB }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.45,
+      lo: function (p, x) { return lineA(p, x); },
+      hi: function (p, x) {
+        return Math.abs(x - p.xs) < 0.3 ? lineB(p, x) : lineA(p, x);
+      } }
+  ],
+  readouts: [
+    { id: 'sA', label: { en: 'Slope A (b1)', es: 'Pendiente A (b1)' }, accent: 1, digits: 3,
+      compute: function () { return B1; } },
+    { id: 'sB', label: { en: 'Slope B (b1 + b3)', es: 'Pendiente B (b1 + b3)' },
+      accent: 2, digits: 3,
+      compute: function (p) { return B1 + p.b3; } },
+    { id: 'g0', label: { en: 'Gap at X = 0', es: 'Brecha en X = 0' }, digits: 2,
+      compute: function (p) { return p.b2; } },
+    { id: 'gx', label: { en: 'Gap at the marked X', es: 'Brecha en la X marcada' },
+      accent: 2, digits: 2,
+      compute: function (p) { return p.b2 + p.b3 * p.xs; } }
+  ],
+  caption: {
+    en: '**What to notice.** The shaded ribbon is the discipline gap at the year you marked, ' +
+        'and it equals b2 + b3 X, which is b2 alone only at the far-left edge of the plot.\n\n' +
+        '**Try this.** Leave b2 near zero, where its p-value would call it not significant, ' +
+        'then slide the marked year from 0 out to 40 and watch a gap of almost nothing grow ' +
+        'past 28 thousand dollars. Now set b3 to 0.000 and the lines snap parallel, which is ' +
+        'the reduced model the general linear test compares against.',
+    es: '**Qué observar.** La cinta sombreada es la brecha entre disciplinas en el año que ' +
+        'marcaste, y vale b2 + b3 X, que es b2 sola solo en el borde izquierdo del gráfico.\n\n' +
+        '**Prueba esto.** Deja b2 cerca de cero, donde su valor p la declararía no ' +
+        'significativa, y luego desliza el año marcado de 0 a 40 para ver una brecha casi nula ' +
+        'crecer por encima de 28 mil dólares. Ahora pon b3 en 0.000 y las rectas se vuelven ' +
+        'paralelas, que es el modelo reducido con el que compara la prueba lineal general.'
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var root = document.querySelector('.sim-root');
+  if (!root) { return; }
+  var p = document.createElement('p');
+  p.className = 'sim-backlink';
+  var a = document.createElement('a');
+  a.href = (LANG === 'es') ? '../ch11/es/#ch11-interaction-slopes-es'
+                           : '../ch11/#ch11-interaction-slopes';
+  a.target = '_top';
+  a.textContent = (LANG === 'es') ? 'Volver a la sección 11.3'
+                                  : 'Back to section 11.3';
+  p.appendChild(a);
+  root.appendChild(p);
+});
+</script>
+</body>
+</html>

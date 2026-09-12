@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hunting the smallest SSE by hand</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 25 Toluca production runs: lot size, work hours. */
+var TOLUCA = [
+  [80, 399], [30, 121], [50, 221], [90, 376], [70, 361],
+  [60, 224], [120, 546], [80, 352], [100, 353], [50, 157],
+  [40, 160], [70, 252], [90, 389], [20, 113], [110, 435],
+  [100, 420], [30, 212], [50, 268], [90, 377], [110, 421],
+  [30, 273], [90, 468], [40, 244], [80, 342], [70, 323]
+];
+
+var PTS = TOLUCA.map(function (d) { return { x: d[0], y: d[1] }; });
+var XS = TOLUCA.map(function (d) { return d[0]; });
+var YS = TOLUCA.map(function (d) { return d[1]; });
+
+/* The least-squares answer, computed once so the sim can report how far a
+   student's hand-chosen line sits above the true minimum. */
+var BEST = Sim.Stats.lsFit(XS, YS);
+
+function candidate(p, x) { return p.b0 + p.b1 * x; }
+
+/* Q(b0, b1) = sum of squared vertical gaps to the candidate line. */
+function Q(p) {
+  var s = 0;
+  for (var i = 0; i < PTS.length; i++) {
+    var d = PTS[i].y - candidate(p, PTS[i].x);
+    s += d * d;
+  }
+  return s;
+}
+
+function sumResiduals(p) {
+  var s = 0;
+  for (var i = 0; i < PTS.length; i++) {
+    s += PTS[i].y - candidate(p, PTS[i].x);
+  }
+  return s;
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Move the line yourself and try to beat least squares',
+    es: 'Mueve la recta tu mismo e intenta ganarle a los minimos cuadrados'
+  },
+  points: PTS,
+  xRange: [0, 130],
+  yRange: [0, 600],
+  xLabel: { en: 'lot size X', es: 'tamano de lote X' },
+  yLabel: { en: 'work hours Y', es: 'horas de trabajo Y' },
+  ariaLabel: {
+    en: 'The 25 Toluca runs with a candidate line you control, and a dashed stick from every point to that line.',
+    es: 'Las 25 corridas de Toluca con una recta candidata que tu controlas, y un trazo discontinuo de cada punto a esa recta.'
+  },
+  params: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      min: -40, max: 160, step: 0.5, value: 20, digits: 1 },
+    { id: 'b1', label: { en: 'Slope b1 (hours per unit)',
+                         es: 'Pendiente b1 (horas por unidad)' },
+      min: 1.5, max: 5.5, step: 0.01, value: 4.6, digits: 2 }
+  ],
+  residualsFrom: candidate,
+  curves: [
+    { fn: candidate, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'q', label: { en: 'Your Q(b0, b1)', es: 'Tu Q(b0, b1)' },
+      accent: 2, digits: 1, compute: function (p) { return Q(p); } },
+    { id: 'qmin', label: { en: 'Smallest possible SSE', es: 'SSE mas pequena posible' },
+      digits: 1, compute: function () { return BEST.sse; } },
+    { id: 'excess', label: { en: 'Excess above the minimum', es: 'Exceso sobre el minimo' },
+      accent: 1, digits: 1, compute: function (p) { return Q(p) - BEST.sse; } },
+    { id: 'sume', label: { en: 'Sum of residuals', es: 'Suma de residuos' },
+      digits: 2, compute: function (p) { return sumResiduals(p); } }
+  ],
+  caption: {
+    en: 'The blue line is yours: the two sliders set its intercept b0 and its slope b1. ' +
+        'The amber sticks are the vertical gaps that line leaves, and **Q(b0, b1)** adds up ' +
+        'their squares.\n\n' +
+        '**Try this.** Drive the excess above the minimum down as far as you can. ' +
+        'You will not get Q below 54825.5 whatever you try, and the sliders that take you ' +
+        'there read 62.5 and 3.57, the least-squares estimates b0 and b1. Watch the sum of ' +
+        'residuals along the way: it passes through zero well before Q is smallest, because ' +
+        'balancing the residuals settles b0 for whatever slope you are holding, and only one ' +
+        'slope finishes the job.',
+    es: 'La recta azul es tuya: los dos deslizadores fijan su intercepto b0 y su pendiente b1. ' +
+        'Los trazos ambar son las brechas verticales que deja esa recta, y **Q(b0, b1)** suma ' +
+        'sus cuadrados.\n\n' +
+        '**Prueba esto.** Baja el exceso sobre el minimo tanto como puedas. No lograras que Q ' +
+        'quede por debajo de 54825.5 hagas lo que hagas, y los deslizadores que te llevan ahi ' +
+        'marcan 62.5 y 3.57, las estimaciones de minimos cuadrados b0 y b1. Observa de paso la ' +
+        'suma de residuos: pasa por cero bastante antes de que Q sea minima, porque equilibrar ' +
+        'los residuos fija b0 para la pendiente que tengas puesta, y solo una pendiente ' +
+        'termina el trabajo.'
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1586 @@
+---
+title: "13. Regresión logística (en espanol)"
+subtitle: "MATH 4210, Capítulo 13"
+---
+
+(ch13-es)=
+# 13. Regresión logística
+
+:::{div}
+:class: lang-toggle
+[Read in English](./index.md)
+:::
+
+La noche del 27 de enero de 1986, ingenieros de Morton Thiokol y de la NASA discutían en una
+llamada de conferencia si debían lanzar el transbordador espacial Challenger a la mañana
+siguiente. El pronóstico para Cabo Cañaveral era frío, cerca del punto de congelación, más frío
+que cualquier lanzamiento anterior. La preocupación eran las juntas tóricas de goma (O-rings) que
+sellaban las uniones de los cohetes aceleradores sólidos. Con el frío la goma se endurece, y una
+junta tórica rígida podría no sellar a tiempo para contener el gas ardiente. Los ingenieros tenían
+datos de 23 vuelos anteriores: para cada uno, la temperatura en el lanzamiento y el número de
+juntas tóricas, de seis, que mostraron daño por calor después.
+
+@fig-ch13-orings-temp-es muestra esos datos. El daño ocurrió tanto en vuelos cálidos como fríos,
+pero los lanzamientos más fríos cargaron los peores incidentes, y el lanzamiento en discusión sería
+mucho más frío que cualquier cosa en el registro. Esa es la parte difícil. Todo vuelo que había
+volado alguna vez lo hizo a 53 grados Fahrenheit o más cálido. La temperatura de lanzamiento
+pronosticada era de unos 31 grados, fuera del borde izquierdo de toda la experiencia. Para decir
+algo sobre el riesgo a 31 grados, hay que extender un patrón más allá del último punto de datos, que
+es exactamente el movimiento que un estadístico está entrenado para desconfiar.
+
+```{figure} figures/fig_ch13_orings_temp.png
+:name: fig-ch13-orings-temp-es
+:alt: Un diagrama de dispersión de la fracción de seis juntas tóricas dañadas en el eje vertical contra la temperatura de lanzamiento en grados Fahrenheit en el eje horizontal, para 23 vuelos del transbordador. Los puntos se sitúan entre 53 y 81 grados; los vuelos más fríos cerca de 53 grados muestran las fracciones de daño más altas, y los vuelos cálidos por encima de 70 grados en su mayoría no muestran daño. Una línea roja discontinua marca la temperatura de lanzamiento de 31 grados muy a la izquierda de toda observación, dentro de una banda sombreada más fría que cualquier vuelo registrado.
+Los 23 vuelos anteriores al Challenger. El daño fue peor en los lanzamientos más fríos, y la decisión de lanzamiento a 31 grados (línea discontinua) quedó muy por debajo de cualquier temperatura a la que el programa había volado, así que juzgar su riesgo significa extrapolar.
+```
+
+La respuesta aquí no es un número como horas de trabajo o tasa de ahorro. Está más cerca de un sí o
+no: ¿falló una junta tórica o no? La regresión de recta, la herramienta de los últimos once
+capítulos, está construida para una respuesta continua y se rompe de maneras específicas cuando el
+resultado es binario. Este capítulo construye la herramienta correcta. Aprenderás el modelo de
+regresión logística, los momios y el logaritmo de los momios que lo hacen lineal, cómo ajustarlo por
+máxima verosimilitud cuando ninguna fórmula da las estimaciones, cómo leer sus coeficientes como
+razones de momios sin los errores habituales, cómo probarlos, y cómo juzgar qué tan bien el modelo
+separa los dos resultados. Al terminar podrás poner un número al riesgo sobre el que discutían los
+ingenieros del Challenger, y decir honestamente cuánto confiar en él.
+
+:::{admonition} Esta lección de un vistazo
+:class: important
+- **Qué estamos haciendo:** Construir la regresión logística para una respuesta de sí o no: el modelo, los momios y el logaritmo de los momios, el ajuste por máxima verosimilitud, la lectura de coeficientes como razones de momios, su prueba, y el juicio del ajuste con una tabla de clasificación y una curva ROC, sobre los datos de las juntas tóricas del Challenger.
+- **Por qué lo hacemos:** La respuesta ahora es binaria (¿falló una junta tórica?), y el modelo de recta de los últimos once capítulos se rompe de tres maneras específicas cuando el resultado es 0 o 1.
+- **Objetivo principal:** Enunciar el modelo logístico, ajustarlo por máxima verosimilitud, interpretar un coeficiente como una razón de momios sin los errores habituales, y evaluar el ajuste con la devianza, la clasificación y una curva ROC.
+- **Qué cambió respecto a los capítulos anteriores:** Los capítulos 2 a 12 supusieron una respuesta continua, de varianza constante y normal; este capítulo mantiene el predictor lineal pero lo envuelve en un enlace para un resultado binario, reutilizando la codificación de indicadores (@ch11-dummy-coding-es), la prueba lineal general en forma de devianza (@ch08-general-linear-test-es) y la mentalidad de validación (@ch12-cross-validation-es).
+:::
+
+:::{admonition} Objetivos de aprendizaje
+:class: tip
+Al terminar este capítulo serás capaz de:
+- **Explicar** por qué los mínimos cuadrados ordinarios son el modelo equivocado para una respuesta binaria, nombrando las tres fallas específicas.
+- **Enunciar** el modelo de regresión logística y conectar probabilidad, momios y logaritmo de los momios.
+- **Deducir** las ecuaciones de puntaje de la regresión logística y describir cómo los mínimos cuadrados reponderados iterativamente (IRLS) las resuelven.
+- **Interpretar** un coeficiente logístico como una razón de momios, y corregir sus lecturas erróneas comunes.
+- **Probar** coeficientes con la prueba de Wald y la prueba de razón de verosimilitud, y explicar cuándo discrepan.
+- **Calcular** la devianza y usarla para comparar modelos anidados.
+- **Evaluar** un modelo ajustado con una tabla de clasificación y una curva ROC, y diagnosticar problemas de datos antes de confiar en cualquiera de las dos.
+:::
+
+(ch13-logistic-model-es)=
+## 13.1 Por qué una recta falla, y qué usar en su lugar
+
+### Intuición
+
+Empecemos con lo que sale mal. Supón que codificas la respuesta como $Y = 1$ para un resultado
+positivo (una junta tórica dañada, una prueba de diabetes positiva) y $Y = 0$ en caso contrario, y
+ajustas la recta ordinaria $Y = \beta_0 + \beta_1 X + \varepsilon$. Tres cosas se rompen.
+
+Primero, la recta ajustada no tiene cota. Una recta sigue subiendo a medida que $X$ crece, así que
+con el tiempo predice probabilidades por encima de 1 y, en el otro sentido, por debajo de 0.
+@fig-ch13-why-not-ols-es muestra la recta de mínimos cuadrados a través de los datos de diabetes
+deslizándose directamente fuera del rango $[0, 1]$ donde una probabilidad tiene que vivir.
+
+Segundo, la dispersión no es constante. Una respuesta $0/1$ tiene varianza $\pi(1 - \pi)$, donde
+$\pi$ es la probabilidad de que $Y = 1$. Esa varianza es mayor cerca de $\pi = 0.5$ y se encoge
+hacia cero cuando $\pi$ se acerca a 0 o a 1, la parábola invertida de @fig-ch13-binvar-es. Una
+moneda cerca de 50-50 es la más difícil de predecir, así que su resultado es el más variable; una
+moneda que casi siempre cae cara es casi una certeza, así que apenas varía. La dispersión queda
+fijada por la media. Así que el supuesto de varianza constante detrás de los mínimos cuadrados
+(@ch02-slr-model-es) es falso por construcción, y la ponderación que lo arreglaría cambia con la
+media, una idea que vimos en los mínimos cuadrados ponderados (@ch10-wls-es).
+
+Tercero, los errores no pueden ser normales. Si $Y$ solo es alguna vez 0 o 1, entonces para un $X$
+dado el error toma solo dos valores, así que el modelo de error normal que justificó nuestra
+inferencia $t$ y $F$ simplemente no aplica.
+
+```{figure} figures/fig_ch13_why_not_ols.png
+:name: fig-ch13-why-not-ols-es
+:alt: Un diagrama de dispersión del resultado de la prueba de diabetes, codificado 0 o 1 y con ruido vertical, contra la glucosa plasmática. Una línea recta roja discontinua sube a través de la nube y pasa por debajo de 0 con glucosa baja y por encima de 1 con glucosa alta. Una curva logística azul en forma de S sube desde cerca de 0 hasta cerca de 1 pero se mantiene dentro de la banda de 0 a 1 todo el camino. Dos líneas horizontales grises delgadas marcan 0 y 1.
+La recta de mínimos cuadrados (roja discontinua) sale del rango en el que una probabilidad debe permanecer, cayendo por debajo de 0 y subiendo por encima de 1. La curva logística (azul) se dobla para caber dentro de la banda.
+```
+
+```{figure} figures/fig_ch13_binvar.png
+:name: fig-ch13-binvar-es
+:alt: Una curva de la varianza de una respuesta cero-uno en el eje vertical contra la probabilidad pi de un resultado positivo en el eje horizontal. La curva es una parábola invertida igual a pi por uno menos pi, subiendo desde cero en pi igual a 0 hasta un pico de 0.25 en pi igual a 0.5 y bajando de nuevo a cero en pi igual a 1. El pico está marcado con un punto rojo y etiquetado como mayor dispersión, y ambos extremos están etiquetados como casi sin dispersión.
+La varianza de un resultado de sí o no no es una constante libre: es igual a $\pi(1-\pi)$, con su máximo en $\pi = 0.5$ y anulándose en ambos extremos. Como la dispersión está soldada a la media, el supuesto de varianza constante de los mínimos cuadrados no puede cumplirse para una respuesta binaria.
+```
+
+La solución es modelar la probabilidad $\pi$ directamente y doblar la recta para que nunca pueda
+salir de $[0, 1]$. La curva es la curva logística en forma de S de la figura.
+
+### De la probabilidad a los momios al logaritmo de los momios
+
+El puente son los **momios** (Definición 13.1).
+
+:::{admonition} Definición 13.1: Momios
+:class: note definition
+Los **momios (odds)** de un evento con probabilidad $\pi$ son $\text{odds} = \pi/(1 - \pi)$, la
+probabilidad de que el evento ocurra dividida por la probabilidad de que no ocurra. Los momios van
+de $0$ (el evento nunca ocurre) a $\infty$ (es seguro).
+:::
+
+Una probabilidad de $0.5$ son momios de 1 (dinero parejo). Una probabilidad de $0.75$ son momios de
+3 (tres a uno). A medida que $\pi$ sube hacia 1 los momios se disparan al infinito, y a medida que
+$\pi$ baja hacia 0 los momios caen hacia 0 pero nunca se vuelven negativos. @fig-ch13-odds-prob-es
+dibuja este mapeo. Los momios estiran la escala acotada de probabilidad $[0, 1]$ sobre la semirrecta
+$[0, \infty)$.
+
+```{figure} figures/fig_ch13_odds_prob.png
+:name: fig-ch13-odds-prob-es
+:alt: Una curva que muestra los momios en el eje vertical como función de la probabilidad en el eje horizontal. La curva comienza cerca del origen, pasa por el punto donde la probabilidad es un medio y los momios son uno, y luego sube cada vez más pronunciadamente, dirigiéndose al infinito a medida que la probabilidad se acerca a uno. Líneas guía punteadas marcan probabilidades de 0.1, 0.5, 0.75 y 0.9 con sus momios de aproximadamente 0.11, 1, 3 y 9.
+Los momios como función de la probabilidad. Pasos iguales en probabilidad no son pasos iguales en momios: de 0.5 a 0.75 los momios se triplican, pero de 0.75 a 0.9 se triplican de nuevo, así que la escala de momios se expande a medida que te acercas a la certeza.
+```
+
+Dando un paso más, el **logaritmo de los momios** o **logit** (Definición 13.2) es el logaritmo
+natural de los momios:
+
+$$
+\operatorname{logit}(\pi) = \log\!\left(\frac{\pi}{1 - \pi}\right) .
+$$
+
+:::{admonition} Definición 13.2: Logaritmo de los momios (logit)
+:class: note definition
+El **logaritmo de los momios (log-odds)** o **logit** de una probabilidad $\pi$ es
+$\operatorname{logit}(\pi) = \log[\pi/(1 - \pi)]$, el logaritmo natural de los momios. Mapea el
+rango acotado $(0, 1)$ sobre toda la recta real $(-\infty, \infty)$.
+:::
+
+En palabras: el logit es el logaritmo de los momios. El logaritmo envía $[0, \infty)$ sobre toda la
+recta real $(-\infty, \infty)$, el mismo rango que puede tomar un predictor lineal $\beta_0 +
+\beta_1 X$. Ese es todo el truco. No podemos igualar una probabilidad a una recta, porque una está
+acotada y la otra no, pero sí podemos igualar el logit de la probabilidad a una recta.
+
+:::{admonition} Idea clave
+:class: tip keyidea
+Una probabilidad vive en $[0, 1]$ y una recta no, así que las dos nunca pueden ser iguales. El
+logit quita las paredes: estira la escala acotada de probabilidad sobre toda la recta real, y allí
+un modelo lineal puede alcanzarla. Todo modelo lineal generalizado funciona de esta misma manera,
+transformando la media hasta que una recta pueda ajustarla.
+:::
+
+### El modelo de regresión logística
+
+El **modelo de regresión logística** (Definición 13.3) para una respuesta binaria dice que el
+logaritmo de los momios es lineal en los predictores:
+
+$$
+\operatorname{logit}(\pi_i) = \log\!\left(\frac{\pi_i}{1 - \pi_i}\right)
+= \beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1} X_{i,p-1} ,
+$$
+
+donde $\pi_i = P(Y_i = 1 \mid X_i)$ es la probabilidad de que el caso $i$ tenga un resultado
+positivo, las $\beta$ son los parámetros de regresión (con $p$ de ellos contando el intercepto), y
+$X_{i1}, \dots, X_{i,p-1}$ son los predictores del caso $i$. Escribiendo $\eta_i = \beta_0 +
+\beta_1 X_{i1} + \dots$ para el **predictor lineal**, resolvemos la ecuación del logit para $\pi_i$
+y obtenemos el modelo en la escala de probabilidad:
+
+$$
+\pi_i = \frac{1}{1 + e^{-\eta_i}} = \frac{e^{\eta_i}}{1 + e^{\eta_i}} .
+$$
+
+:::{admonition} Definición 13.3: Modelo de regresión logística
+:class: note definition
+El **modelo de regresión logística** para una respuesta binaria $Y_i$ con probabilidad de éxito
+$\pi_i = P(Y_i = 1 \mid X_i)$ hace del logaritmo de los momios una función lineal de los
+predictores, $\operatorname{logit}(\pi_i) = \beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1}
+X_{i,p-1} = \eta_i$, equivalentemente $\pi_i = 1/(1 + e^{-\eta_i})$. La cantidad $\eta_i$ es el
+predictor lineal y el logit es la función de enlace.
+:::
+
+En palabras: la probabilidad es el predictor lineal pasado a través de la función logística
+$1/(1 + e^{-\eta})$, la curva en S de @fig-ch13-sigmoid-es. La función está comprimida para quedar
+estrictamente entre 0 y 1, así que sin importar cuáles sean los coeficientes, la probabilidad
+predicha es siempre una probabilidad válida.
+
+```{figure} figures/fig_ch13_sigmoid.png
+:name: fig-ch13-sigmoid-es
+:alt: Dos paneles lado a lado. El panel izquierdo muestra la probabilidad pi en el eje vertical como una función logística en forma de S del predictor lineal eta en el eje horizontal, subiendo desde cerca de 0 en eta de menos 6 pasando por 0.5 en eta de 0 hasta cerca de 1 en eta de 6. El panel derecho muestra el logaritmo de los momios de pi como una línea diagonal recta contra eta, confirmando que el logit de la probabilidad es igual al predictor lineal.
+Izquierda: la función logística convierte cualquier predictor lineal en una probabilidad entre 0 y 1. Derecha: en la escala del logaritmo de los momios la misma relación es una línea recta, y por eso la regresión logística es un modelo lineal disfrazado.
+```
+
+Los dos vínculos en el término **modelo lineal generalizado** son visibles aquí. Hay una parte
+aleatoria, $Y_i$ siendo 0 o 1 con probabilidad $\pi_i$, y una parte sistemática, el predictor
+lineal $\eta_i$, unidas por la **función de enlace** logit que mapea la media sobre la escala
+lineal. La regresión ordinaria es la misma imagen con el enlace identidad y una respuesta normal;
+el Capítulo 14 hace explícita la familia y añade el miembro de Poisson (@ch14-glm-es).
+
+### R y Python
+
+Para los datos de las juntas tóricas la respuesta está agrupada: cada vuelo aporta seis juntas
+tóricas, de las cuales $Y_i$ resultaron dañadas. Eso es un conteo binomial, y la regresión
+logística lo maneja con la misma maquinaria, modelando la probabilidad $\pi_i$ de que una sola
+junta tórica esté dañada a la temperatura $X_i$. En R pasas la respuesta de dos columnas
+`cbind(successes, failures)` a `glm` con `family = binomial`; en Python le das a statsmodels los dos
+conteos a la izquierda de la fórmula.
+
+:::{admonition} Ejemplo 13.1: El modelo de las juntas tóricas
+:class: note
+**Pregunta.** ¿Cómo depende la probabilidad de que una junta tórica esté dañada de la temperatura
+de lanzamiento, y qué dice el modelo a 31 grados?
+
+**Intuición.** Ajusta el modelo logístico con la temperatura como único predictor, luego lee la
+probabilidad ajustada a la temperatura de lanzamiento y en un par de puntos de referencia.
+
+**Fórmula.** $\operatorname{logit}(\pi_i) = \beta_0 + \beta_1 X_i$, con $X_i$ la temperatura de
+lanzamiento; la probabilidad ajustada a la temperatura $x$ es $\hat\pi(x) = 1/(1 + e^{-(b_0 +
+b_1 x)})$.
+
+**Cálculo.**
+
+```r
+orings <- read.csv("data/orings.csv")
+dim(orings)
+head(orings, 3)
+```
+```text
+[1] 23  2
+  temp damage
+1   53      5
+2   57      1
+3   58      1
+```
+
+```r
+fit <- glm(cbind(damage, 6 - damage) ~ temp, family = binomial, data = orings)
+summary(fit)
+```
+```text
+Call:
+glm(formula = cbind(damage, 6 - damage) ~ temp, family = binomial,
+    data = orings)
+
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)
+(Intercept) 11.66299    3.29626   3.538 0.000403 ***
+temp        -0.21623    0.05318  -4.066 4.78e-05 ***
+---
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 38.898  on 22  degrees of freedom
+Residual deviance: 16.912  on 21  degrees of freedom
+AIC: 33.675
+
+Number of Fisher Scoring iterations: 6
+```
+
+```r
+newtemps <- data.frame(temp = c(31, 53, 65))
+round(predict(fit, newdata = newtemps, type = "response"), 4)
+```
+```text
+     1      2      3
+0.9930 0.5505 0.0838
+```
+
+Ahora el mismo ajuste en Python con statsmodels.
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+
+orings = pd.read_csv("data/orings.csv")
+orings = orings.assign(notdamaged=6 - orings["damage"])
+fit = smf.glm("damage + notdamaged ~ temp",
+              data=orings, family=sm.families.Binomial()).fit()
+print(fit.summary())
+```
+```text
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     11.6630      3.296      3.538      0.000       5.202      18.124
+temp          -0.2162      0.053     -4.066      0.000      -0.320      -0.112
+==============================================================================
+```
+
+```python
+newtemps = pd.DataFrame({"temp": [31, 53, 65]})
+print(fit.predict(newtemps).round(4))
+```
+```text
+0    0.9930
+1    0.5505
+2    0.0838
+```
+
+**Interpretación.** El logaritmo de los momios ajustado es $11.66 - 0.2162\,X$. La pendiente
+negativa significa que los lanzamientos más fríos cargan momios de daño más altos. A 65 grados el
+modelo pone la probabilidad de daño a una junta tórica dada en cerca de $0.08$; a 53 grados, el
+vuelo más frío en el registro, cerca de $0.55$; y a la temperatura de lanzamiento de 31 grados,
+cerca de $0.99$. @fig-ch13-orings-fit-es dibuja la curva ajustada bajando hacia esa región fría. El
+número $0.99$ es una extrapolación mucho más allá de los datos, así que léelo con cuidado. Pero su
+mensaje no es sutil: el modelo que ajusta los 23 vuelos implica una angustia casi segura de las
+juntas tóricas a 31 grados.
+:::
+
+```{figure} figures/fig_ch13_orings_fit.png
+:name: fig-ch13-orings-fit-es
+:alt: La fracción de daño de las juntas tóricas graficada contra la temperatura con una curva logística ajustada superpuesta en azul. La curva es alta, cerca de 1, en las temperaturas frías a la izquierda, cae a través de aproximadamente 0.55 a 53 grados, y se aplana hacia 0 en las temperaturas cálidas a la derecha. Un punto rojo a 31 grados se sitúa cerca de una probabilidad de 0.99, dentro de una banda sombreada más fría que cualquier vuelo observado, etiquetada 31 F: pi-sombrero igual a 0.99, y la curva ajustada misma está etiquetada pi-sombrero de temperatura.
+La curva logística ajustada extendida hasta la temperatura de lanzamiento. A 31 grados (punto rojo, región de extrapolación sombreada) el modelo predice una probabilidad de cerca de 0.99 de daño a cualquier junta tórica dada.
+```
+
+::::{admonition} Inténtalo 13.1
+:class: important
+Un compañero dice: "el modelo predice que las juntas tóricas estarán dañadas el 99 por ciento de
+las veces a 31 grados, así que deberíamos haber esperado exactamente $0.99 \times 6 \approx 6$
+anillos dañados". Dos cosas están ligeramente mal en esa frase. Corrígelas.
+
+:::{admonition} Solución
+:class: dropdown
+Primero, $0.99$ es la probabilidad del modelo de que una *sola* junta tórica esté dañada, así que
+el conteo esperado de seis es $6 \times 0.99 \approx 5.9$, que redondea a 6, pero la frase "el 99
+por ciento de las veces" pertenece a un anillo, no al vuelo. Segundo, y más importante, $0.99$ es
+una extrapolación a una temperatura 22 grados por debajo de cualquier vuelo en los datos, así que
+carga mucha más incertidumbre de la que sugiere el número pulcro. La lectura honesta es "el modelo
+implica una probabilidad de daño muy alta a 31 grados, fuera del rango donde podemos verificarla",
+no "exactamente 0.99".
+:::
+::::
+
+(ch13-mle-es)=
+## 13.2 Ajuste por máxima verosimilitud
+
+### Intuición
+
+En la regresión simple teníamos fórmulas: $b_1 = S_{xy}/S_{xx}$ y $b_0 = \bar Y - b_1 \bar X$. La
+regresión logística no tiene tal forma cerrada. La razón es la curva en S: la probabilidad $\pi_i$
+es una función no lineal de los coeficientes, así que igualar las derivadas a cero da ecuaciones que
+no puedes resolver con álgebra. En su lugar elegimos los coeficientes que hacen que los datos
+observados sean lo más probables, el principio de **máxima verosimilitud** que encontramos por
+primera vez para el modelo normal en el Capítulo 2, y los hallamos escalando la colina de
+verosimilitud numéricamente.
+
+### La verosimilitud y la log-verosimilitud
+
+Sea el caso $i$ con $m_i$ ensayos y $Y_i$ éxitos (para una respuesta binaria simple $m_i = 1$ y
+$Y_i \in \{0, 1\}$; para las juntas tóricas $m_i = 6$). Dadas las probabilidades $\pi_i$, los éxitos
+son conteos binomiales independientes, así que la **verosimilitud**, la probabilidad de los datos
+observados como función de los coeficientes, es
+
+$$
+L(\beta) = \prod_{i=1}^{n} \binom{m_i}{Y_i}\, \pi_i^{\,Y_i}\,(1 - \pi_i)^{\,m_i - Y_i} ,
+$$
+
+donde cada $\pi_i = 1/(1 + e^{-\eta_i})$ depende de $\beta$ a través del predictor lineal
+$\eta_i = X_i'\beta$. En palabras: la verosimilitud multiplica entre sí, a través de todos los
+casos, la probabilidad binomial de ver exactamente los éxitos que observamos, así que valores más
+grandes apuntan a coeficientes que los datos favorecen. Tomar logaritmos convierte el producto en
+una suma, la **log-verosimilitud**:
+
+$$
+\ell(\beta) = \sum_{i=1}^{n}\Big[\, Y_i \log \pi_i + (m_i - Y_i)\log(1 - \pi_i) \,\Big] + C ,
+$$
+
+donde $C$ agrupa los coeficientes binomiales $\log\binom{m_i}{Y_i}$, que no involucran a $\beta$ y
+por lo tanto no afectan dónde queda el máximo. En palabras: la log-verosimilitud premia a los
+coeficientes que ponen alta probabilidad en los éxitos que vimos y alta no-probabilidad en los
+fracasos que vimos.
+
+### Las ecuaciones de puntaje
+
+:::{admonition} Teorema 13.4: Ecuaciones de puntaje para la regresión logística
+:class: important theorem
+Bajo el modelo de regresión logística, la estimación de máxima verosimilitud $\hat\beta$ satisface
+las **ecuaciones de puntaje**
+$$
+\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) = \mathbf{0}, \qquad \mu_i = m_i \pi_i ,
+$$
+equivalentemente $\sum_{i=1}^n (Y_i - m_i \pi_i) X_{ij} = 0$ para cada coeficiente
+$j = 0, 1, \dots, p-1$. Como $\boldsymbol{\mu}$ se dobla a través del enlace logístico, estas
+ecuaciones son no lineales en $\beta$ y no tienen solución en forma cerrada.
+:::
+
+**Demostración.** Queremos el $\beta$ que maximiza $\ell$, así que diferenciamos e igualamos el
+resultado a cero. Dos hechos sobre el enlace logístico hacen que el álgebra se colapse. Primero, a
+partir de $\pi_i = e^{\eta_i}/(1 + e^{\eta_i})$,
+
+$$
+\log \pi_i = \eta_i - \log(1 + e^{\eta_i}), \qquad \log(1 - \pi_i) = -\log(1 + e^{\eta_i}).
+$$
+
+Sustituyendo estos en $\ell$ y agrupando términos,
+
+$$
+\ell(\beta) = \sum_{i=1}^n \Big[\, Y_i \eta_i - m_i \log(1 + e^{\eta_i}) \,\Big] + C .
+$$
+
+Segundo, diferencia $\log(1 + e^{\eta_i})$ con respecto a $\eta_i$ para obtener exactamente $\pi_i$.
+Usando la regla de la cadena con $\partial \eta_i / \partial \beta_j = X_{ij}$ (el valor del
+$j$-ésimo predictor para el caso $i$, con $X_{i0} = 1$ para el intercepto),
+
+$$
+\frac{\partial \ell}{\partial \beta_j}
+= \sum_{i=1}^n \big(Y_i - m_i \pi_i\big) X_{ij}, \qquad j = 0, 1, \dots, p-1 .
+$$
+
+Igualar las $p$ derivadas parciales a cero da las **ecuaciones de puntaje**. Apilándolas con la
+matriz de diseño $\mathbf{X}$ (filas $X_i'$), el vector de medias ajustadas $\boldsymbol{\mu}$ con
+entradas $\mu_i = m_i \pi_i$, y el vector de respuesta $\mathbf{Y}$,
+
+$$
+\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) = \mathbf{0} .
+$$
+
+En palabras: en la estimación de máxima verosimilitud, cada predictor es ortogonal a los residuos
+$Y_i - \mu_i$, exactamente la condición que las ecuaciones normales de mínimos cuadrados
+$\mathbf{X}'(\mathbf{Y} - \mathbf{X}\mathbf{b}) = \mathbf{0}$ impusieron en @ch07-ls-matrix-es. La
+diferencia es que $\boldsymbol{\mu}$ aquí se dobla a través del enlace logístico, así que las
+ecuaciones son no lineales en $\beta$ y no pueden resolverse en forma cerrada. $\blacksquare$
+
+### Newton-Raphson e IRLS
+
+:::{admonition} Teorema 13.5: Mínimos cuadrados reponderados iterativamente
+:class: important theorem
+El paso de Newton-Raphson para las ecuaciones de puntaje logísticas es un ajuste de mínimos
+cuadrados ponderados,
+$$
+\beta^{(t+1)} = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{z} ,
+$$
+con la matriz de pesos $\mathbf{W} = \operatorname{diag}(m_i \pi_i(1 - \pi_i))$ y la respuesta de
+trabajo $z_i = \eta_i + (Y_i - \mu_i)/w_i$, ambas evaluadas en $\beta^{(t)}$. Como $\mathbf{W}$ y
+$\mathbf{z}$ cambian en cada pasada, el ajuste se repite hasta la convergencia; esto es **mínimos
+cuadrados reponderados iterativamente (IRLS)**.
+:::
+
+**Demostración.** Para resolver $\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) = \mathbf{0}$ usamos el
+método de Newton, que necesita la matriz de segundas derivadas. Diferenciando el puntaje una vez
+más, y usando $\partial \pi_i / \partial \eta_i = \pi_i(1 - \pi_i)$,
+
+$$
+\frac{\partial^2 \ell}{\partial \beta_j \partial \beta_k}
+= -\sum_{i=1}^n m_i \pi_i (1 - \pi_i)\, X_{ij} X_{ik} ,
+$$
+
+así que el hessiano es $-\mathbf{X}'\mathbf{W}\mathbf{X}$ con la matriz diagonal de pesos
+$\mathbf{W} = \operatorname{diag}\!\big(m_i \pi_i (1 - \pi_i)\big)$. Cada peso $w_i = m_i
+\pi_i(1 - \pi_i)$ es la varianza de $Y_i$, mayor para los casos cercanos a $\pi_i = 0.5$ y pequeña
+para los casos de los que el modelo ya está seguro. Un paso de Newton desde una estimación actual
+$\beta^{(t)}$ es
+
+$$
+\beta^{(t+1)} = \beta^{(t)} + (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) ,
+$$
+
+con $\mathbf{W}$, $\boldsymbol{\mu}$ evaluadas en $\beta^{(t)}$. Ahora la parte elegante. Define la
+**respuesta de trabajo** $z_i = \eta_i + (Y_i - \mu_i)/w_i$. Entonces
+
+$$
+\mathbf{X}'\mathbf{W}\mathbf{z}
+= \mathbf{X}'\mathbf{W}\boldsymbol{\eta} + \mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu})
+= \mathbf{X}'\mathbf{W}\mathbf{X}\beta^{(t)} + \mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) ,
+$$
+
+usando $\boldsymbol{\eta} = \mathbf{X}\beta^{(t)}$. Multiplicar el paso de Newton por
+$\mathbf{X}'\mathbf{W}\mathbf{X}$ muestra que es equivalente a
+
+$$
+\beta^{(t+1)} = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{z} .
+$$
+
+Esa es la fórmula para un ajuste de **mínimos cuadrados ponderados** de la respuesta de trabajo
+$\mathbf{z}$ sobre $\mathbf{X}$ con pesos $w_i$ (@ch10-wls-es). Como $\mathbf{W}$ y $\mathbf{z}$
+cambian cada vez que $\beta$ se actualiza, recalculamos y reajustamos, y por eso el método se llama
+**mínimos cuadrados reponderados iterativamente (IRLS)**. Partiendo de cualquier estimación
+razonable, las iteraciones escalan la log-verosimilitud cóncava hasta su único máximo. $\blacksquare$
+
+### R y Python
+
+Vale la pena hacer la pieza central a mano una vez, para que IRLS deje de ser una caja negra dentro
+de `glm`.
+
+:::{admonition} Ejemplo 13.2: IRLS a mano sobre los datos de las juntas tóricas
+:class: note
+**Pregunta.** Partiendo de coeficientes de cero, ¿convergen las actualizaciones de IRLS a las
+estimaciones de `glm` $b_0 = 11.663$ y $b_1 = -0.2162$?
+
+**Intuición.** Cada paso forma los pesos $w_i = m_i \pi_i(1 - \pi_i)$ y la respuesta de trabajo
+$z_i$ en los coeficientes actuales, luego resuelve un problema de mínimos cuadrados ponderados para
+los siguientes coeficientes. Repite hasta que los números dejen de moverse.
+
+**Fórmula.** $\beta^{(t+1)} = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}
+\mathbf{z}$, con $w_i = m_i \pi_i(1 - \pi_i)$ y $z_i = \eta_i + (Y_i - m_i\pi_i)/w_i$.
+
+**Cálculo.**
+
+```r
+X <- cbind(1, orings$temp)     # design matrix, intercept then temp
+y <- orings$damage             # damaged O-rings (successes) out of m = 6
+m <- 6
+beta <- c(0, 0)                # start at all-zero coefficients
+for (it in 1:6) {
+  eta <- as.vector(X %*% beta)
+  pi  <- 1 / (1 + exp(-eta))
+  w   <- m * pi * (1 - pi)             # IRLS weights
+  z   <- eta + (y - m * pi) / w        # working response
+  beta <- solve(t(X) %*% (w * X), t(X) %*% (w * z))
+  beta <- as.vector(beta)
+  cat(sprintf("iter %d:  b0 = %9.5f   b1 = %9.5f\n", it, beta[1], beta[2]))
+}
+```
+```text
+iter 1:  b0 =   2.85714   b1 =  -0.06524
+iter 2:  b0 =   6.96681   b1 =  -0.13563
+iter 3:  b0 =  10.11986   b1 =  -0.18936
+iter 4:  b0 =  11.45043   b1 =  -0.21250
+iter 5:  b0 =  11.65831   b1 =  -0.21615
+iter 6:  b0 =  11.66299   b1 =  -0.21623
+```
+
+```python
+X = np.column_stack([np.ones(len(orings)), orings["temp"].to_numpy()])
+y = orings["damage"].to_numpy().astype(float)   # successes out of m = 6
+m = 6.0
+beta = np.array([0.0, 0.0])                      # start at all-zero coefficients
+for it in range(1, 7):
+    eta = X @ beta
+    pi = 1 / (1 + np.exp(-eta))
+    w = m * pi * (1 - pi)                         # IRLS weights
+    z = eta + (y - m * pi) / w                    # working response
+    beta = np.linalg.solve(X.T @ (w[:, None] * X), X.T @ (w * z))
+    print(f"iter {it}:  b0 = {beta[0]:9.5f}   b1 = {beta[1]:9.5f}")
+```
+```text
+iter 1:  b0 =   2.85714   b1 =  -0.06524
+iter 2:  b0 =   6.96681   b1 =  -0.13563
+iter 3:  b0 =  10.11986   b1 =  -0.18936
+iter 4:  b0 =  11.45043   b1 =  -0.21250
+iter 5:  b0 =  11.65831   b1 =  -0.21615
+iter 6:  b0 =  11.66299   b1 =  -0.21623
+```
+
+**Interpretación.** Para la sexta pasada ambos coeficientes coinciden con `glm` a cinco decimales, y
+`glm` mismo reportó "6 Fisher Scoring iterations", el mismo conteo. @fig-ch13-irls-es muestra la
+devianza cayendo a su piso y la pendiente asentándose en su valor final en un puñado de pasos. El
+código a mano hace exactamente lo que hace la función incorporada: mínimos cuadrados ponderados
+repetidos.
+:::
+
+```{figure} figures/fig_ch13_irls.png
+:name: fig-ch13-irls-es
+:alt: Dos paneles que rastrean las iteraciones de IRLS 0 a 6 sobre el ajuste de las juntas tóricas. El panel izquierdo muestra la devianza binomial cayendo abruptamente desde cerca de 153 en la iteración 0 hasta cerca de 17 y aplanándose para la iteración 4. El panel derecho muestra el coeficiente de temperatura subiendo desde 0 y asentándose en cerca de menos 0.216 para la iteración 5, marcado como la pendiente de máxima verosimilitud.
+IRLS converge rápido. La devianza (izquierda) se colapsa a su mínimo y el coeficiente de temperatura (derecha) alcanza su valor de máxima verosimilitud en unos cinco pasos, porque la log-verosimilitud es cóncava con un único pico.
+```
+
+::::{admonition} Inténtalo 13.2
+:class: important
+En la ecuación de puntaje $\sum_i (Y_i - m_i \pi_i) X_{ij} = 0$, toma $j = 0$ de modo que
+$X_{i0} = 1$ para cada caso. ¿Qué dice la ecuación resultante sobre las probabilidades ajustadas, y
+cómo es el eco logístico del hecho de mínimos cuadrados $\sum e_i = 0$?
+
+:::{admonition} Solución
+:class: dropdown
+Con $X_{i0} = 1$ la ecuación de puntaje del intercepto es $\sum_i (Y_i - m_i \hat\pi_i) = 0$, es
+decir $\sum_i Y_i = \sum_i m_i \hat\pi_i$. El número total de éxitos observados es igual al total
+predicho por el modelo. Para una respuesta binaria simple ($m_i = 1$) esto dice que la probabilidad
+ajustada promedio es igual a la proporción observada de unos. Es el análogo directo de la identidad
+de mínimos cuadrados $\sum e_i = 0$ de @ch02-least-squares-es: incluir un intercepto obliga a que
+los residuos $Y_i - \hat\mu_i$ sumen cero.
+:::
+::::
+
+:::{admonition} Habilidad duradera: cuando no hay fórmula, itera
+:class: tip
+Los mínimos cuadrados nos entregaron una fórmula, pero la mayoría de los modelos más allá de este
+curso no tienen una: la regresión logística, la regresión de Poisson, los modelos mixtos y los
+objetivos dentro de las redes neuronales se ajustan todos partiendo de una estimación y mejorándola
+paso a paso. El patrón que acabas de programar, linealiza el problema, resuelve la versión fácil,
+relinealiza, repite, es el motor bajo una enorme cantidad de estadística y aprendizaje automático
+moderno. Cuando encuentres un método nuevo, pregunta qué está optimizando y cómo se ve un paso de
+mejora; lo entenderás mucho más rápido que memorizando su salida.
+:::
+
+(ch13-odds-ratio-es)=
+## 13.3 Leer los coeficientes como razones de momios
+
+### Intuición
+
+Una pendiente en la regresión ordinaria es fácil de decir en voz alta: una unidad más de $X$ agrega
+$b_1$ a la respuesta predicha. La pendiente logística no es eso, y decirlo de esa manera es el error
+más común en la regresión logística aplicada. El coeficiente vive en la escala del logaritmo de los
+momios, así que antes de interpretarlo tenemos que deshacer el logaritmo.
+
+Aquí va primero la lectura incorrecta, porque la escucharás constantemente. Para el modelo de
+diabetes de abajo, el coeficiente de glucosa es de cerca de $0.04$. La frase tentadora es "cada
+unidad extra de glucosa eleva la probabilidad de una prueba positiva en $0.04$". Eso está mal dos
+veces. El coeficiente no es un cambio en probabilidad en absoluto, y el efecto sobre la probabilidad
+ni siquiera es constante: depende de dónde empieces en la curva en S, minúsculo en las colas planas
+y mayor en el centro empinado. Lo que es constante es el efecto sobre los *momios*.
+@fig-ch13-prob-vs-odds-step-es hace visible la separación: un paso fijo a lo largo de la curva da
+tres saltos de probabilidad diferentes pero siempre el mismo multiplicador de momios.
+
+### Fórmula
+
+Exponencia el coeficiente. Como $\log(\text{odds}) = \beta_0 + \beta_1 X$, subir $X$ en una unidad
+cambia el logaritmo de los momios en $\beta_1$, así que multiplica los momios por $e^{\beta_1}$:
+
+$$
+\frac{\text{odds}(X + 1)}{\text{odds}(X)}
+= \frac{e^{\beta_0 + \beta_1(X+1)}}{e^{\beta_0 + \beta_1 X}} = e^{\beta_1} .
+$$
+
+La cantidad $e^{\beta_1}$ es la **razón de momios** (Definición 13.6) para un aumento de una unidad
+en $X$. En palabras: un aumento de una unidad en $X$ multiplica los momios de un resultado positivo
+por $e^{\beta_1}$, cualesquiera que fueran los momios iniciales. Una razón de momios de 1 significa
+que no hay efecto; por encima de 1 los momios suben, por debajo de 1 bajan. Esta es la misma lógica
+de "los logaritmos lo hacen multiplicativo" que la respuesta transformada por logaritmo en
+@ch10-log-interpretation-es, trasladada a la escala de los momios. Para un paso de $c$ unidades la
+razón de momios es $e^{c\beta_1}$, que es como reportas un efecto por 10 unidades o por década de
+edad.
+
+:::{admonition} Definición 13.6: Razón de momios
+:class: note definition
+La **razón de momios (odds ratio)** para un aumento de una unidad en un predictor $X_j$ es
+$e^{\beta_j}$: subir $X_j$ en una unidad multiplica los momios de un resultado positivo por
+$e^{\beta_j}$, cualesquiera que sean los momios iniciales. Para un paso de $c$ unidades es
+$e^{c\beta_j}$. Una razón de momios de $1$ significa que no hay efecto, por encima de $1$ eleva los
+momios, por debajo de $1$ los baja.
+:::
+
+:::{admonition} Idea clave
+:class: tip keyidea
+Un coeficiente logístico tiene una lectura honesta de una sola línea: exponéncialo para obtener una
+razón de momios, el factor constante por el que se multiplican los momios por unidad del predictor.
+El efecto sobre la probabilidad no es constante; depende de dónde te sitúes en la curva en S,
+pequeño en las colas planas y mayor en el centro empinado. Di "momios", no "probabilidad", y
+evitarás el error más común en la regresión logística aplicada.
+:::
+
+```{figure} figures/fig_ch13_prob_vs_odds_step.png
+:name: fig-ch13-prob-vs-odds-step-es
+:alt: Una curva logística en forma de S de la probabilidad contra el predictor lineal. Se dibujan tres pasos de una unidad a lo largo de ella, uno en la cola plana izquierda, uno a través del centro empinado, y uno en la cola plana derecha. El salto vertical de probabilidad de cada paso se marca con una barra roja y se etiqueta: cerca de 0.07 en la cola izquierda, cerca de 0.24 en el centro, y cerca de 0.03 en la cola derecha. Un recuadro de texto señala que el mismo paso de una unidad siempre multiplica los momios por e a la primera potencia, cerca de 2.72, aunque el salto de probabilidad cambie.
+El mismo paso de una unidad multiplica los momios por el mismo factor fijo en todas partes (aquí cerca de 2.72), pero el salto en la probabilidad es grande en el centro empinado y pequeño en las colas planas. Por eso la razón de momios es un solo número honesto pero "el cambio en la probabilidad" no lo es.
+```
+
+### R y Python
+
+:::{admonition} Ejemplo 13.3: Razones de momios para la temperatura y la glucosa
+:class: note
+**Pregunta.** ¿Por qué factor cambian los momios de daño de las juntas tóricas por grado de
+enfriamiento, y por qué factor cambian los momios de una prueba de diabetes positiva por cada 10
+unidades de glucosa?
+
+**Intuición.** Exponencia los coeficientes ajustados (por el tamaño del paso) para pasar de la
+escala del logaritmo de los momios a una razón de momios.
+
+**Fórmula.** La razón de momios para un paso de $c$ en $X$ es $e^{c\,b_1}$.
+
+**Cálculo.**
+
+```r
+exp(coef(fit))                        # odds ratio for a 1 F increase
+exp(-10 * coef(fit)["temp"])          # odds ratio for a 10 F drop
+```
+```text
+ (Intercept)         temp
+1.161909e+05 8.055471e-01
+    temp
+8.691423
+```
+
+```python
+print(np.exp(fit.params).round(4))               # odds ratio for a 1 F increase
+print(np.exp(-10 * fit.params["temp"]).round(4)) # odds ratio for a 10 F drop
+```
+```text
+Intercept    116190.8870
+temp              0.8055
+dtype: float64
+8.6914
+```
+
+Ahora los datos de tamizaje de diabetes. El archivo `pima` registra 768 mujeres, con `test` igual a
+1 para una prueba de diabetes positiva. Primero léelo y busca problemas, luego ajusta la glucosa
+sola.
+
+```r
+pima <- read.csv("data/pima.csv")
+c(n = nrow(pima), positives = sum(pima$test), rate = mean(pima$test))
+sapply(pima[c("glucose", "diastolic", "triceps", "insulin", "bmi")],
+       function(v) sum(v == 0))
+```
+```text
+          n   positives        rate
+768.0000000 268.0000000   0.3489583
+  glucose diastolic   triceps   insulin       bmi
+        5        35       227       374        11
+```
+
+Esos ceros son imposibles para una persona viva y son valores faltantes disfrazados; volvemos a
+ellos en @ch13-fit-es. Por ahora pon los dos que usaremos en `NA` y ajusta.
+
+```r
+pima$glucose[pima$glucose == 0] <- NA
+pima$bmi[pima$bmi == 0] <- NA
+gfit <- glm(test ~ glucose, family = binomial, data = pima)
+summary(gfit)$coefficients
+```
+```text
+               Estimate  Std. Error   z value     Pr(>|z|)
+(Intercept) -5.71508764 0.438100187 -13.04516 6.771345e-39
+glucose      0.04063362 0.003382078  12.01439 2.985479e-33
+```
+
+```r
+exp(10 * coef(gfit)["glucose"])       # odds ratio for +10 glucose units
+round(predict(gfit, newdata = data.frame(glucose = c(100, 140)),
+              type = "response"), 4)
+```
+```text
+ glucose
+1.501307
+     1      2
+0.1609 0.4934
+```
+
+```python
+pima = pd.read_csv("data/pima.csv")
+pima.loc[pima["glucose"] == 0, "glucose"] = np.nan
+pima.loc[pima["bmi"] == 0, "bmi"] = np.nan
+gfit = smf.glm("test ~ glucose", data=pima,
+               family=sm.families.Binomial()).fit()
+print(gfit.summary().tables[1])
+```
+```text
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -5.7151      0.438    -13.045      0.000      -6.574      -4.856
+glucose        0.0406      0.003     12.014      0.000       0.034       0.047
+==============================================================================
+```
+
+```python
+print(np.exp(10 * gfit.params["glucose"]).round(4))   # odds ratio, +10 glucose
+print(gfit.predict(pd.DataFrame({"glucose": [100, 140]})).round(4))
+```
+```text
+1.5013
+0    0.1609
+1    0.4934
+```
+
+**Interpretación.** Para las juntas tóricas, $e^{b_1} = 0.806$: cada grado extra multiplica los
+momios de daño por $0.806$, una caída de aproximadamente 19 por ciento en los momios por grado de
+calentamiento. Enfriar 10 grados multiplica los momios por $e^{-10 b_1} = 8.69$, casi nueve veces.
+Para la glucosa, los momios de una prueba positiva se multiplican por $e^{10 b_1} = 1.50$ por cada
+10 unidades, un aumento de 50 por ciento en los momios. Nota lo que la razón de momios no es: la
+probabilidad misma se mueve de forma diferente según dónde empieces. En glucosa 100 el modelo da
+probabilidad $0.16$, y en 140 da $0.49$, un salto de $0.33$; el mismo paso de 40 unidades más abajo
+en la curva movería la probabilidad mucho menos. La razón de momios es constante; el cambio de
+probabilidad no lo es.
+:::
+
+@fig-ch13-pima-glucose-es muestra el ajuste de un solo predictor. La probabilidad sube suavemente
+con la glucosa, empinadamente a través del centro del rango y aplanándose en ambos extremos, la
+curva en S haciendo su trabajo.
+
+```{figure} figures/fig_ch13_pima_glucose.png
+:name: fig-ch13-pima-glucose-es
+:alt: Un diagrama de dispersión del resultado de la prueba de diabetes, con ruido cerca de 0 y 1, contra la glucosa plasmática, con una curva logística azul, etiquetada pi-sombrero, que sube desde cerca de 0.05 con glucosa baja hasta cerca de 0.85 con glucosa alta. La mayoría de los puntos cerca de test igual a 1 se sitúan en glucosa más alta, y la mayoría de los puntos cerca de test igual a 0 se sitúan en glucosa más baja, aunque las dos nubes se traslapan fuertemente en el centro.
+El ajuste logístico de un solo predictor a los datos Pima. La probabilidad de una prueba positiva sube con la glucosa, pero el fuerte traslape de las dos bandas de resultado advierte que la glucosa sola no separará limpiamente los positivos de los negativos.
+```
+
+::::{admonition} Inténtalo 13.3
+:class: important
+Un artículo de noticias reporta "cada punto adicional de glucosa se asocia con un 4 por ciento más
+de probabilidad de diabetes". Usando el coeficiente de glucosa ajustado $0.0406$, di de qué número
+tomó el escritor el 4 por ciento, y reescribe la frase para que sea correcta.
+
+:::{admonition} Solución
+:class: dropdown
+El escritor calculó $e^{0.0406} = 1.0414$ y leyó el $0.0414$ como "4 por ciento más de
+probabilidad". Ese coeficiente exponenciado es la razón de momios, no un cambio en la probabilidad,
+así que "probabilidad" (que los lectores oyen como probabilidad) es la palabra equivocada. Una
+versión correcta: "cada punto adicional de glucosa multiplica los *momios* de una prueba positiva
+por cerca de $1.04$, un aumento de 4 por ciento en los momios". Cuánto se mueve la probabilidad
+misma depende del nivel inicial de glucosa.
+:::
+::::
+
+:::{admonition} Habilidad duradera: interpreta en la escala que el modelo realmente usa
+:class: tip
+Todo modelo reporta sus coeficientes en alguna escala, y el número solo tiene sentido una vez que
+sabes cuál. Los coeficientes logísticos son logaritmos de momios; exponéncialos para obtener razones
+de momios. Una respuesta transformada por logaritmo da cambios porcentuales
+(@ch10-log-interpretation-es). Un coeficiente estandarizado está en unidades de desviación estándar.
+Antes de decir un coeficiente en voz alta, pregunta "¿en qué escala vive esto, y qué significa un
+paso de una unidad allí?". Acertar la escala es la diferencia entre una frase precisa y una segura
+pero equivocada, y editores, clínicos y jurados han sido todos engañados por la segura pero
+equivocada.
+:::
+
+## 13.4 Probar coeficientes: Wald y razón de verosimilitud
+
+### Intuición
+
+La primera sección ajustó el modelo; la siguiente pregunta obvia es cuáles predictores están
+cumpliendo su parte. Hay dos pruebas estándar, y responden la misma pregunta por rutas diferentes.
+La **prueba de Wald** pregunta a cuántos errores estándar de cero se sitúa un coeficiente, usando
+solo el modelo ajustado. La **prueba de razón de verosimilitud** pregunta cuánto empeora el ajuste
+cuando eliminas el predictor y reajustas, comparando dos modelos anidados de la manera en que la
+prueba lineal general los comparó para la regresión ordinaria (@ch08-general-linear-test-es).
+
+### Fórmula
+
+Para la prueba de Wald de $H_0: \beta_j = 0$, el estadístico es
+
+$$
+z_j = \frac{b_j}{s\{b_j\}}, \qquad z_j \overset{\text{approx}}{\sim} N(0, 1) \text{ bajo } H_0 ,
+$$
+
+En palabras: el estadístico de Wald cuenta a cuántos errores estándar de cero se sitúa la estimación
+$b_j$, y bajo la nula esa distancia sigue una curva normal estándar. Aquí $s\{b_j\}$ es el error
+estándar impreso por el ajuste. Puedes comparar $z_j^2$ con una chi-cuadrada con un grado de
+libertad en su lugar, lo que da la misma prueba. El intervalo de confianza de Wald para $\beta_j$ es
+$b_j \pm z^* s\{b_j\}$, y exponenciar sus extremos da un intervalo de confianza para la razón de
+momios. Estos errores estándar y la referencia normal son aproximaciones de muestra grande, exactas
+solo cuando $n \to \infty$. Con una muestra pequeña o un predictor casi perfecto pueden engañar.
+
+La prueba de razón de verosimilitud usa la **devianza** (Definición 13.7). Para un modelo ajustado
+con log-verosimilitud maximizada $\ell(\hat\beta)$, la devianza es
+
+$$
+D = 2\big[\ell_{\text{sat}} - \ell(\hat\beta)\big]
+= 2\sum_{i=1}^n\left[ Y_i \log\frac{Y_i}{\hat\mu_i} + (m_i - Y_i)\log\frac{m_i - Y_i}{m_i - \hat\mu_i}\right] ,
+$$
+
+donde $\ell_{\text{sat}}$ es la log-verosimilitud del **modelo saturado** que ajusta cada observación
+perfectamente ($\hat\mu_i = Y_i$), y $\hat\mu_i = m_i \hat\pi_i$ son los conteos ajustados.
+
+:::{admonition} Definición 13.7: Devianza
+:class: note definition
+La **devianza (deviance)** de un modelo ajustado con log-verosimilitud maximizada $\ell(\hat\beta)$
+es $D = 2[\ell_{\text{sat}} - \ell(\hat\beta)]$, dos veces la brecha de log-verosimilitud hasta el
+**modelo saturado** que ajusta cada observación exactamente ($\hat\mu_i = Y_i$). Mide la falta de
+ajuste, siendo mejor cuanto menor, y es el sustituto logístico de la suma de cuadrados de los
+residuos.
+:::
+
+En palabras: la devianza mide qué tan lejos se sitúa el modelo ajustado de un ajuste perfecto,
+siendo mejor cuanto menor; es el sustituto logístico de la suma de cuadrados de los residuos. Para
+comparar un modelo **completo** con un modelo **reducido** anidado que elimina $q$ predictores, el
+estadístico de razón de verosimilitud es el aumento en la devianza,
+
+$$
+G^2 = D_{\text{reduced}} - D_{\text{full}}
+= 2\big[\ell(\hat\beta_{\text{full}}) - \ell(\hat\beta_{\text{reduced}})\big]
+\overset{\text{approx}}{\sim} \chi^2_q \text{ bajo } H_0 ,
+$$
+
+con $q$ el número de coeficientes igualados a cero. El caso especial que compara el modelo completo
+con el modelo de solo intercepto usa la **devianza nula** como $D_{\text{reduced}}$ y prueba si algún
+predictor importa en absoluto.
+
+### R y Python
+
+:::{admonition} Ejemplo 13.4: Un modelo logístico múltiple para la diabetes
+:class: note
+**Pregunta.** Con la glucosa, el IMC, la edad, el pedigrí de diabetes y el número de embarazos en el
+modelo, ¿cuáles predictores importan, y coinciden las pruebas de Wald y de razón de verosimilitud?
+
+**Intuición.** Ajusta el modelo de cinco predictores, lee las pruebas de Wald y los intervalos de
+razón de momios del resumen, luego corre pruebas de razón de verosimilitud eliminando un predictor a
+la vez y comparando el modelo completo con el nulo.
+
+**Fórmula.** Wald $z_j = b_j/s\{b_j\}$; razón de verosimilitud $G^2 = D_{\text{reduced}} -
+D_{\text{full}} \sim \chi^2_q$.
+
+**Cálculo.**
+
+```r
+mfit <- glm(test ~ glucose + bmi + age + diabetes + pregnant,
+            family = binomial, data = pima)
+summary(mfit)
+```
+```text
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)
+(Intercept) -9.322789   0.737279 -12.645  < 2e-16 ***
+glucose      0.035941   0.003555  10.110  < 2e-16 ***
+bmi          0.087529   0.014722   5.945 2.76e-09 ***
+age          0.011366   0.009315   1.220 0.222405
+diabetes     0.920583   0.300832   3.060 0.002212 **
+pregnant     0.115058   0.032341   3.558 0.000374 ***
+---
+    Null deviance: 974.75  on 751  degrees of freedom
+Residual deviance: 703.24  on 746  degrees of freedom
+AIC: 715.24
+```
+
+```r
+round(exp(cbind(OR = coef(mfit), confint.default(mfit))), 4)
+```
+```text
+                OR  2.5 % 97.5 %
+(Intercept) 0.0001 0.0000 0.0004
+glucose     1.0366 1.0294 1.0438
+bmi         1.0915 1.0604 1.1234
+age         1.0114 0.9931 1.0301
+diabetes    2.5108 1.3923 4.5276
+pregnant    1.1219 1.0530 1.1954
+```
+
+```r
+drop1(mfit, test = "LRT")
+```
+```text
+Single term deletions
+
+Model:
+test ~ glucose + bmi + age + diabetes + pregnant
+         Df Deviance    AIC     LRT  Pr(>Chi)
+<none>        703.24 715.24
+glucose   1   833.20 843.20 129.957 < 2.2e-16 ***
+bmi       1   742.05 752.05  38.804 4.685e-10 ***
+age       1   704.72 714.72   1.476 0.2243419
+diabetes  1   712.90 722.90   9.658 0.0018857 **
+pregnant  1   716.30 726.30  13.055 0.0003024 ***
+```
+
+```r
+G2 <- mfit$null.deviance - mfit$deviance
+df <- mfit$df.null - mfit$df.residual
+c(G2 = G2, df = df, p_value = pchisq(G2, df, lower.tail = FALSE))
+```
+```text
+          G2           df      p_value
+2.715053e+02 5.000000e+00 1.329409e-56
+```
+
+```python
+mfit = smf.glm("test ~ glucose + bmi + age + diabetes + pregnant",
+               data=pima, family=sm.families.Binomial()).fit()
+print(mfit.summary())
+```
+```text
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -9.3228      0.737    -12.645      0.000     -10.768      -7.878
+glucose        0.0359      0.004     10.110      0.000       0.029       0.043
+bmi            0.0875      0.015      5.945      0.000       0.059       0.116
+age            0.0114      0.009      1.220      0.222      -0.007       0.030
+diabetes       0.9206      0.301      3.060      0.002       0.331       1.510
+pregnant       0.1151      0.032      3.558      0.000       0.052       0.178
+==============================================================================
+```
+
+```python
+pima_cc = pima.dropna(subset=["glucose", "bmi"])   # same 752 rows mfit used
+reduced = smf.glm("test ~ glucose + age + diabetes + pregnant",
+                  data=pima_cc, family=sm.families.Binomial()).fit()
+G2_bmi = reduced.deviance - mfit.deviance
+from scipy import stats
+print({"LRT_drop_bmi": round(G2_bmi, 3), "p_value": float(stats.chi2.sf(G2_bmi, 1))})
+```
+```text
+{'LRT_drop_bmi': 38.804, 'p_value': 4.685177726292527e-10}
+```
+
+**Interpretación.** La glucosa, el IMC, el puntaje de pedigrí de diabetes y el número de embarazos
+resultan todos claramente distintos de cero tanto por la columna de Wald como por las caídas de
+razón de verosimilitud; la edad no (Wald $p = 0.22$, razón de verosimilitud $p = 0.22$). Las dos
+pruebas coinciden estrechamente aquí, como suelen hacerlo. Las razones de momios se leen limpiamente:
+manteniendo las otras fijas, cada punto extra de IMC multiplica los momios de una prueba positiva por
+cerca de $1.09$, y un puntaje de pedigrí de diabetes una unidad mayor los multiplica por cerca de
+$2.51$, con un intervalo de 95 por ciento de $1.39$ a $4.53$ que supera el 1. La prueba de razón de
+verosimilitud del modelo completo contra el nulo es $G^2 = 271.5$ sobre 5 grados de libertad,
+abrumadoramente significativa: los predictores juntos cargan información real sobre el resultado de
+la prueba.
+:::
+
+@fig-ch13-odds-ratios-es grafica las razones de momios y sus intervalos en escala logarítmica, cada
+una reescalada a un paso interpretable. Un intervalo que supera la línea vertical en 1 señala un
+predictor distinguible de ningún efecto; el intervalo de la edad la abarca.
+
+```{figure} figures/fig_ch13_odds_ratios.png
+:name: fig-ch13-odds-ratios-es
+:alt: Un diagrama de bosque horizontal de razones de momios con intervalos de confianza de 95 por ciento en un eje logarítmico, una fila por predictor: glucosa por 10 unidades, IMC por 5 unidades, pedigrí de diabetes por 1 unidad, embarazos por 1, y edad por 10 años. Una línea vertical roja discontinua marca una razón de momios de 1. Todos los intervalos se sitúan claramente a la derecha de 1 excepto la edad, cuyo intervalo cruza la línea.
+Razones de momios por paso interpretable para el modelo Pima, con intervalos de Wald de 95 por ciento en escala logarítmica. El intervalo de cada predictor supera la línea de ningún efecto en 1 excepto la edad, coincidiendo con su prueba no significativa.
+```
+
+Las pruebas de Wald y de razón de verosimilitud suelen coincidir, pero no siempre. La prueba de
+razón de verosimilitud es en general la más confiable de las dos, porque usa la forma real de la
+log-verosimilitud en lugar de una sola aproximación cuadrática en la estimación. En el caso incómodo
+de un coeficiente muy grande (un predictor que casi separa los dos resultados), el error estándar de
+Wald puede inflarse y empujar su $z$ hacia cero, ocultando un efecto fuerte. La prueba de razón de
+verosimilitud no sufre esa falla. Cuando las dos discrepan, confía en la prueba de razón de
+verosimilitud. @fig-ch13-wald-vs-lrt-es muestra la razón en una sola imagen: la prueba de Wald
+reemplaza la log-verosimilitud verdadera con una parábola simétrica igualada en el pico, y cuando la
+curva verdadera es asimétrica la parábola se aleja de ella, así que las dos pruebas miden caídas
+diferentes hacia la nula.
+
+:::{admonition} Idea clave
+:class: tip keyidea
+La prueba de Wald lee la log-verosimilitud a través de una sola aproximación cuadrática en la
+estimación; la prueba de razón de verosimilitud usa su forma real reajustando. Suelen coincidir,
+pero cuando un predictor casi separa los dos resultados el error estándar de Wald se infla y puede
+ocultar un efecto real. Cuando las dos discrepan, confía en la prueba de razón de verosimilitud.
+:::
+
+```{figure} figures/fig_ch13_wald_vs_lrt.png
+:name: fig-ch13-wald-vs-lrt-es
+:alt: Un gráfico de una log-verosimilitud como función de un solo coeficiente beta. La log-verosimilitud verdadera es una curva azul continua que está sesgada, subiendo abruptamente por la izquierda y cayendo suavemente por la derecha, con su pico en la estimación cerca de beta igual a 2.2. Una parábola naranja discontinua, la aproximación de Wald, está igualada a la curva azul en el pico pero es simétrica, así que se sitúa por encima de la curva azul por la izquierda. Una línea vertical roja punteada marca la nula en beta igual a cero, donde la curva azul y la parábola naranja alcanzan alturas claramente diferentes, mostrando que las dos pruebas discrepan.
+La prueba de Wald juzga un coeficiente por una parábola simétrica ajustada en el pico de la log-verosimilitud, mientras que la prueba de razón de verosimilitud usa la curva verdadera. Cuando la curva es sesgada, las dos se separan lejos del pico y pueden alcanzar la nula a alturas diferentes, y por eso pueden discrepar y por eso la prueba de razón de verosimilitud es la de confiar.
+```
+
+::::{admonition} Inténtalo 13.4
+:class: important
+La devianza nula es $974.75$ y la devianza residual es $703.24$. Sin software, calcula el estadístico
+de razón de verosimilitud del modelo completo y sus grados de libertad, y di en una frase qué
+concluye la prueba.
+
+:::{admonition} Solución
+:class: dropdown
+$G^2 = D_{\text{null}} - D_{\text{model}} = 974.75 - 703.24 = 271.51$, sobre $5$ grados de libertad
+(las cinco pendientes igualadas a cero bajo la nula). Comparado con una distribución $\chi^2_5$ esto
+es enorme ($\chi^2_5$ tiene media 5), así que rechazamos la nula de que todas las pendientes son
+cero: los predictores juntos explican una porción grande y significativa de la variación en la
+prueba de diabetes.
+:::
+::::
+
+(ch13-fit-es)=
+## 13.5 ¿Qué tan bueno es el ajuste? Clasificación, ROC y verificaciones de datos
+
+### Intuición
+
+Un modelo puede tener coeficientes significativos y aun así clasificar mal, así que el último paso es
+preguntar qué tan bien separan realmente las probabilidades ajustadas los dos resultados. Lo
+mantenemos ligero: una tabla de clasificación, una curva ROC y, primero, una mirada a si los datos
+merecen confianza en absoluto.
+
+### Los datos primero: los ceros disfrazados
+
+Recuerda los ceros imposibles de @ch13-odds-ratio-es. @fig-ch13-pima-zeros-es los cuenta. La insulina
+sérica es cero para 374 de 768 mujeres y el grosor del pliegue cutáneo para 227; una persona viva no
+tiene ninguno de los dos. Estos son valores faltantes registrados como ceros, y un modelo que se los
+traga enteros estimará, por ejemplo, una pendiente de insulina sin sentido impulsada por un pico de
+ceros falsos. Por eso pusimos los ceros de glucosa e IMC en `NA` antes de ajustar y por eso dejamos
+la insulina y el tríceps completamente fuera del modelo. La lección se generaliza: mira tus
+predictores antes de confiar en cualquier coeficiente, porque el software ajustará lo que sea que le
+des.
+
+```{figure} figures/fig_ch13_pima_zeros.png
+:name: fig-ch13-pima-zeros-es
+:alt: Un gráfico de barras que cuenta valores cero imposibles en cinco predictores Pima. La insulina tiene la barra más alta en 374, el pliegue cutáneo del tríceps le sigue en 227, la presión arterial diastólica 35, el IMC 11, y la glucosa 5. Los conteos están etiquetados encima de cada barra.
+Datos faltantes disfrazados en los predictores Pima. La insulina y el tríceps son cero para cientos de mujeres, lo cual es fisiológicamente imposible, así que esos ceros son valores faltantes disfrazados y deben manejarse antes de modelar.
+```
+
+### Tabla de clasificación y ROC
+
+Para convertir probabilidades en predicciones de sí o no, elige un umbral (0.5 es el predeterminado)
+y predice positivo cuando $\hat\pi_i$ lo supera. Tabular las predicciones contra la verdad da una
+tabla de clasificación, de la cual se siguen la **sensibilidad** (la fracción de verdaderos
+positivos capturados) y la **especificidad** (la fracción de verdaderos negativos correctamente
+descartados) (Definición 13.8). Como un umbral es una elección arbitraria, la **curva ROC** barre
+cada umbral a la vez, graficando la sensibilidad contra uno menos la especificidad; el **área bajo la
+curva (AUC)** resume todo el barrido como la probabilidad de que el modelo puntúe un positivo
+aleatorio por encima de un negativo aleatorio (Definición 13.9).
+
+:::{admonition} Definición 13.8: Sensibilidad y especificidad
+:class: note definition
+En un umbral de probabilidad elegido, la **sensibilidad** es la fracción de verdaderos positivos que
+el clasificador señala, $\text{TP}/(\text{TP} + \text{FN})$, y la **especificidad** es la fracción
+de verdaderos negativos que descarta, $\text{TN}/(\text{TN} + \text{FP})$.
+:::
+
+:::{admonition} Definición 13.9: Curva ROC y AUC
+:class: note definition
+La **curva ROC** grafica la sensibilidad contra uno menos la especificidad a través de todos los
+umbrales. El **área bajo la curva (AUC)** la resume como la probabilidad de que el modelo dé a un
+positivo aleatorio una probabilidad predicha mayor que a un negativo aleatorio; $0.5$ es azar y $1$
+es ordenamiento perfecto.
+:::
+
+:::{admonition} Ejemplo 13.5: Clasificar los casos Pima
+:class: note
+**Pregunta.** En el umbral de 0.5, ¿qué tan preciso es el modelo de cinco predictores, y cuál es su
+AUC?
+
+**Intuición.** Convierte las probabilidades ajustadas en predicciones 0/1 en 0.5, tabula contra la
+verdad para la precisión, la sensibilidad y la especificidad, luego calcula el AUC a través de todos
+los umbrales.
+
+**Fórmula.** Sensibilidad $= \frac{\text{verdaderos positivos}}{\text{positivos reales}}$,
+especificidad $= \frac{\text{verdaderos negativos}}{\text{negativos reales}}$; AUC $= P(\hat\pi
+\text{ para un positivo aleatorio} > \hat\pi \text{ para un negativo aleatorio})$.
+
+**Cálculo.**
+
+```r
+phat <- predict(mfit, type = "response")
+actual <- mfit$model$test
+predicted <- ifelse(phat > 0.5, 1, 0)
+table(predicted, actual)
+c(accuracy = mean(predicted == actual),
+  sensitivity = sum(predicted == 1 & actual == 1) / sum(actual == 1),
+  specificity = sum(predicted == 0 & actual == 0) / sum(actual == 0))
+```
+```text
+         actual
+predicted   0   1
+        0 431 114
+        1  57 150
+   accuracy sensitivity specificity
+  0.7726064   0.5681818   0.8831967
+```
+
+```r
+pos <- phat[actual == 1]
+neg <- phat[actual == 0]
+auc <- mean(outer(pos, neg, function(a, b) (a > b) + 0.5 * (a == b)))
+round(auc, 4)
+```
+```text
+[1] 0.8433
+```
+
+```python
+phat = mfit.predict()
+actual = mfit.model.endog
+predicted = (phat > 0.5).astype(int)
+print(pd.crosstab(pd.Series(predicted, name="predicted"),
+                  pd.Series(actual.astype(int), name="actual")))
+print({"accuracy": round(np.mean(predicted == actual), 4),
+       "sensitivity": round(np.sum((predicted == 1) & (actual == 1)) /
+                            np.sum(actual == 1), 4),
+       "specificity": round(np.sum((predicted == 0) & (actual == 0)) /
+                            np.sum(actual == 0), 4)})
+```
+```text
+actual       0    1
+predicted
+0          431  114
+1           57  150
+{'accuracy': 0.7726, 'sensitivity': 0.5682, 'specificity': 0.8832}
+```
+
+```python
+pos = phat[actual == 1]
+neg = phat[actual == 0]
+auc = np.mean((pos[:, None] > neg[None, :]) + 0.5 * (pos[:, None] == neg[None, :]))
+print(round(float(auc), 4))
+```
+```text
+0.8433
+```
+
+**Interpretación.** En 0.5 el modelo acierta el 77 por ciento de las veces, pero ese titular esconde
+una división: descarta el 88 por ciento de los verdaderos negativos (especificidad) pero captura
+solo el 57 por ciento de los verdaderos positivos (sensibilidad), perdiendo 114 de 264 mujeres que
+dieron positivo. Para una herramienta de tamizaje ese intercambio puede ser incorrecto, y bajar el
+umbral capturaría más positivos a costa de más falsas alarmas. El AUC de $0.84$ dice que un caso
+positivo aleatorio obtiene una probabilidad predicha mayor que uno negativo aleatorio cerca del 84
+por ciento de las veces, una separación decente pero lejos de perfecta. @fig-ch13-roc-es traza el
+barrido completo de umbrales.
+:::
+
+```{figure} figures/fig_ch13_roc.png
+:name: fig-ch13-roc-es
+:alt: Una curva ROC para el modelo Pima, que grafica la tasa de verdaderos positivos contra la tasa de falsos positivos. La curva azul se arquea muy por encima de la línea diagonal punteada de azar, alcanzando hacia la esquina superior izquierda, con un área bajo la curva etiquetada 0.843. Un punto rojo marca el punto de operación en el umbral de 0.5, en una tasa de falsos positivos cerca de 0.12 y una tasa de verdaderos positivos cerca de 0.57.
+La curva ROC barre cada umbral de clasificación. La curva se arquea por encima de la diagonal (azar), con AUC 0.84; el punto rojo es el umbral predeterminado de 0.5, mostrando su alta especificidad pero modesta sensibilidad.
+```
+
+::::{admonition} Inténtalo 13.5
+:class: important
+Estos números de precisión, sensibilidad y AUC se calcularon sobre las mismas 752 mujeres usadas
+para ajustar el modelo. ¿Por qué es probable que sean optimistas, y qué del Capítulo 12 daría una
+estimación honesta?
+
+:::{admonition} Solución
+:class: dropdown
+El modelo fue afinado a estos casos exactos, así que ajusta sus peculiaridades tan bien como su
+señal, y por lo tanto la precisión y el AUC dentro de la muestra sobrestiman cómo le irá con
+pacientes nuevos. Una estimación honesta reserva datos que el modelo nunca vio: una división de
+entrenamiento/prueba o, mejor, validación cruzada de $k$ pliegues (@ch12-cross-validation-es),
+ajustando en una parte y midiendo la precisión y el AUC en la parte intacta. La brecha entre el
+desempeño dentro de la muestra y fuera de la muestra es el optimismo, y crece con el número de
+predictores.
+:::
+::::
+
+:::{admonition} Habilidad duradera: nunca confíes en un solo número de precisión
+:class: tip
+Una sola cifra de precisión esconde casi todo lo que importa. Si el 90 por ciento de los casos son
+negativos, un modelo que predice "negativo" para todos obtiene 90 por ciento mientras captura cero
+positivos. Mira siempre la sensibilidad y la especificidad por separado, considera el costo de cada
+tipo de error para la decisión en cuestión, y juzga el modelo a través de los umbrales con una curva
+ROC en lugar de en un solo corte arbitrario. Cada vez que alguien te muestre la precisión de un
+clasificador, pregunta "¿precisión en qué umbral, y qué pierde?", antes de creerla.
+:::
+
+## 13.6 Resumen del capítulo
+
+Este capítulo construyó un modelo de regresión para una respuesta binaria o binomial. Los mínimos
+cuadrados ordinarios fallan para un resultado de sí o no de tres maneras (ajustes sin cota, varianza
+no constante, errores no normales), y la regresión logística arregla las tres haciendo lineal el
+logaritmo de los momios. Como la curva en S hace no lineales las ecuaciones de verosimilitud, no hay
+estimación en forma cerrada: la máxima verosimilitud encuentra los coeficientes, e IRLS los calcula
+por mínimos cuadrados ponderados repetidos. Cada coeficiente se lee como una razón de momios, probada
+por las pruebas de Wald y de razón de verosimilitud, y las probabilidades ajustadas se juzgan por la
+devianza, una tabla de clasificación y una curva ROC, después de verificar en los datos los valores
+faltantes disfrazados.
+
+**Resultados clave de un vistazo**
+
+| Resultado | Enunciado o fórmula | Válido cuando |
+|---|---|---|
+| Momios (Def 13.1) | $\text{odds} = \pi/(1-\pi)$ | cualquier probabilidad $\pi \in (0,1)$ |
+| Logit (Def 13.2) | $\operatorname{logit}(\pi) = \log[\pi/(1-\pi)]$ | $0 < \pi < 1$ |
+| Modelo logístico (Def 13.3) | $\operatorname{logit}(\pi_i) = \eta_i$, $\pi_i = 1/(1 + e^{-\eta_i})$ | respuesta binaria o binomial, casos independientes |
+| Ecuaciones de puntaje (Teo 13.4) | $\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) = \mathbf{0}$, $\mu_i = m_i \pi_i$ | en la estimación de máxima verosimilitud |
+| IRLS (Teo 13.5) | $\beta^{(t+1)} = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{z}$ | cada paso de Newton; log-verosimilitud cóncava |
+| Razón de momios (Def 13.6) | $e^{\beta_j}$ (o $e^{c\beta_j}$ por $c$ unidades) | logaritmo de los momios lineal en $X_j$ |
+| Devianza (Def 13.7) | $D = 2[\ell_{\text{sat}} - \ell(\hat\beta)]$ | modelo ajustado vs modelo saturado |
+| Estadístico de Wald | $z_j = b_j / s\{b_j\} \sim N(0,1)$ | muestra grande |
+| Razón de verosimilitud | $G^2 = D_{\text{red}} - D_{\text{full}} \sim \chi^2_q$ | modelos anidados, muestra grande |
+| Sensibilidad, especificidad (Def 13.8) | $\text{TP}/(\text{TP}+\text{FN})$, $\text{TN}/(\text{TN}+\text{FP})$ | un umbral elegido |
+| AUC (Def 13.9) | $P(\hat\pi_{\text{pos}} > \hat\pi_{\text{neg}})$ | calidad de ordenamiento, todos los umbrales |
+
+**Términos clave**
+
+**regresión logística**, **momios**, **logaritmo de los momios (logit)**, **predictor lineal**,
+**función de enlace**, **máxima verosimilitud**, **verosimilitud**, **log-verosimilitud**,
+**ecuaciones de puntaje**, **mínimos cuadrados reponderados iterativamente (IRLS)**, **respuesta de
+trabajo**, **razón de momios**, **prueba de Wald**, **prueba de razón de verosimilitud**,
+**devianza**, **modelo saturado**, **tabla de clasificación**, **sensibilidad**, **especificidad**,
+**curva ROC**, **área bajo la curva (AUC)**.
+
+**Ahora deberías ser capaz de**
+
+- [ ] Explicar por qué los mínimos cuadrados ordinarios son el modelo equivocado para una respuesta binaria, nombrando sus tres fallas.
+- [ ] Enunciar el modelo de regresión logística y moverte entre probabilidad, momios y logaritmo de los momios.
+- [ ] Deducir las ecuaciones de puntaje (Teorema 13.4) y describir cómo IRLS (Teorema 13.5) las resuelve.
+- [ ] Interpretar un coeficiente logístico como una razón de momios y corregir las lecturas erróneas comunes.
+- [ ] Probar coeficientes con las pruebas de Wald y de razón de verosimilitud, y explicar cuándo discrepan.
+- [ ] Calcular la devianza y usarla para comparar modelos anidados.
+- [ ] Evaluar un modelo ajustado con una tabla de clasificación y una curva ROC, después de diagnosticar problemas de datos.
+
+**Dónde encaja esto.** En el flujo de trabajo de @ch02-workflow-es este capítulo es sobre todo FIT y
+USE para un nuevo tipo de respuesta: ASK una pregunta de sí o no, EXPLORE con las mismas gráficas
+(ahora de proporciones), FIT por máxima verosimilitud en lugar de mínimos cuadrados, CHECK con la
+devianza y la auditoría de ceros disfrazados, y USE las probabilidades ajustadas para interpretar
+razones de momios y para clasificar. La maquinaria lleva consigo los capítulos anteriores: las
+ecuaciones de puntaje hacen eco de las ecuaciones normales de @ch07-ls-matrix-es, IRLS son mínimos
+cuadrados ponderados (@ch10-wls-es) corridos en un bucle, la prueba de razón de verosimilitud es la
+prueba lineal general (@ch08-general-linear-test-es) en forma de devianza, los predictores
+categóricos entran a través de la codificación de indicadores de @ch11-dummy-coding-es, y la
+evaluación honesta necesita la mentalidad de validación de @ch12-cross-validation-es. El Capítulo 14
+da el último paso, manteniendo la maquinaria de máxima verosimilitud y devianza pero cambiando la
+familia binomial por la de Poisson para modelar conteos, y nombra la familia de modelos lineales
+generalizados que mantiene juntas la regresión lineal, logística y de Poisson (@ch14-glm-es).
+
+## 13.7 Preguntas frecuentes
+
+**P1. ¿Por qué máxima verosimilitud en lugar de mínimos cuadrados aquí?** Los mínimos cuadrados
+minimizan el error al cuadrado, que es el criterio correcto cuando la respuesta es continua con ruido
+normal de varianza constante. Una respuesta binaria no tiene ninguno de los dos, así que el error al
+cuadrado ya no es la pérdida natural. La máxima verosimilitud pregunta cuáles coeficientes hacen que
+el patrón 0/1 observado sea el más probable bajo el modelo logístico, que es la elección de
+principios para esta respuesta, y para el modelo normal resulta que reproduce los mínimos cuadrados
+de todos modos (Capítulo 2).
+
+**P2. ¿Es una razón de momios lo mismo que un riesgo relativo?** No, y confundirlos es un error
+común. El riesgo relativo es una razón de probabilidades; la razón de momios es una razón de momios.
+Cuando el resultado es raro (pequeño $\pi$) los dos están cerca, porque los momios $\approx$
+probabilidad allí, pero para un resultado común divergen, y la razón de momios es siempre el número
+más extremo. Reporta una razón de momios como una razón de momios.
+
+**P3. ¿Qué significa un coeficiente negativo?** Significa que el predictor baja el logaritmo de los
+momios, así que su razón de momios $e^{\beta_j}$ está por debajo de 1 y la probabilidad de un
+resultado positivo cae a medida que el predictor sube. El coeficiente de temperatura de las juntas
+tóricas es negativo: los lanzamientos más cálidos tienen momios de daño más bajos.
+
+**P4. ¿Por qué es la devianza la versión logística de la suma de cuadrados de los residuos?** Ambas
+miden qué tan lejos se sitúa el modelo ajustado de los datos. En la regresión ordinaria, dos veces la
+brecha negativa de log-verosimilitud entre tu modelo y un ajuste perfecto es exactamente la suma de
+cuadrados de los residuos (salvo una constante); para la regresión logística esa misma brecha es la
+devianza. Menor devianza es mejor ajuste, y las diferencias de devianza entre modelos anidados siguen
+una distribución chi-cuadrada, tal como las diferencias en la suma de cuadrados daban estadísticos
+$F$ antes.
+
+**P5. ¿Puedo usar $R^2$ para un modelo logístico?** No el ordinario, porque no hay suma de cuadrados
+de los residuos para dividir. Existen varias medidas de "pseudo-$R^2$" (de McFadden, Cox-Snell,
+Nagelkerke), cada una construida a partir de log-verosimilitudes, y el software las reporta, pero no
+tienen el significado limpio de "fracción de varianza explicada" del $R^2$ lineal. Para juzgar un
+modelo logístico, la devianza, la prueba de razón de verosimilitud y el AUC son más informativos.
+
+**P6. Mi probabilidad predicha en un $X$ extremo es 0.999. ¿Debería creerla?** Trátala como tratarías
+cualquier extrapolación. Si el $X$ extremo está dentro del rango de tus datos, la probabilidad es tan
+confiable como el ajuste. Si está fuera, como con las juntas tóricas a 31 grados, se le pide a la
+curva en S que siga doblándose donde no tienes evidencia sobre su forma, y el número pulcro esconde
+incertidumbre real. Repórtala, pero di claramente que es una extrapolación.
+
+**P7. ¿Por qué `glm` eliminó 16 observaciones del modelo de diabetes?** Porque pusimos los ceros
+imposibles en la glucosa (5 de ellos) y el IMC (11) en `NA`, y `glm` usa solo casos completos por
+defecto. Esas 16 mujeres carecen de un predictor que el modelo necesita. Eliminarlas es defendible
+aquí, pero para un análisis serio considerarías si la falta de datos se relaciona con el resultado,
+lo que puede sesgar el ajuste, y posiblemente imputar en lugar de borrar.
+
+## 13.8 Problemas de práctica
+
+:::{note}
+A menos que un problema diga lo contrario, usa `orings.csv` con el modelo ajustado
+$\operatorname{logit}(\hat\pi) = 11.663 - 0.2162\,\text{temp}$, o el modelo de cinco predictores de
+`pima.csv` del Ejemplo 13.4 (devianza $703.24$, devianza nula $974.75$, $n = 752$ después de
+limpiar). Los problemas están marcados (A) conceptos, (B) teoría, o (C) análisis de datos. Las
+respuestas de número impar aparecen en el Apéndice H; las soluciones completas están en los
+materiales del instructor.
+:::
+
+1. (A) En una frase cada una, nombra las tres maneras en que los mínimos cuadrados ordinarios fallan para una respuesta binaria.
+2. (A) Convierte estas probabilidades a momios: $0.2$, $0.5$, $0.8$. Luego convierte estos momios a probabilidades: $0.25$, $1$, $4$.
+3. (A) El coeficiente de temperatura de las juntas tóricas es $-0.2162$. Enuncia su razón de momios para un aumento de un grado y di en palabras qué significa ese número.
+4. (A) Explica la diferencia entre el error $Y_i - \pi_i$ con el que trabaja la regresión logística y la probabilidad ajustada $\hat\pi_i$. ¿Cuál se observa?
+5. (A) Un estudiante escribe "la razón de momios de la glucosa es $1.04$, así que una prueba positiva es 4 por ciento más probable por unidad". Identifica el error conceptual y corrígelo.
+6. (A) ¿Por qué la regresión logística no tiene fórmula en forma cerrada para sus coeficientes, a diferencia de la regresión lineal simple?
+7. (A) El AUC de un modelo es $0.5$. ¿Qué dice eso sobre la capacidad del modelo para ordenar casos?
+8. (A) Da la sensibilidad y la especificidad de la tabla de clasificación Pima del Ejemplo 13.5, y di qué tipo de error debería querer evitar más una prueba de tamizaje de diabetes.
+9. (A) La razón de momios del pedigrí de diabetes es $2.51$ con un intervalo de 95 por ciento $(1.39, 4.53)$. ¿Es su efecto distinguible de ningún efecto? ¿Cómo puedes saberlo por el intervalo?
+10. (A) Explica por qué el coeficiente de la edad puede ser no significativo en el modelo múltiple aunque las mujeres mayores sean, marginalmente, más propensas a dar positivo.
+11. (B) Partiendo de $\ell(\beta) = \sum_i [Y_i \log \pi_i + (m_i - Y_i)\log(1 - \pi_i)]$ y $\pi_i = 1/(1 + e^{-\eta_i})$, muestra que $\ell = \sum_i [Y_i \eta_i - m_i \log(1 + e^{\eta_i})] + C$.
+12. (B) Diferencia la log-verosimilitud del Problema 11 para deducir las ecuaciones de puntaje $\sum_i (Y_i - m_i \pi_i) X_{ij} = 0$ (Teorema 13.4), indicando dónde usas $\partial \pi_i / \partial \eta_i = \pi_i(1 - \pi_i)$.
+13. (B) Muestra que la segunda derivada de la log-verosimilitud es $-\sum_i m_i \pi_i(1 - \pi_i) X_{ij} X_{ik}$, y concluye que el hessiano es $-\mathbf{X}'\mathbf{W}\mathbf{X}$ con $\mathbf{W} = \operatorname{diag}(m_i \pi_i(1 - \pi_i))$. Explica por qué esto hace cóncava a $\ell$.
+14. (B) Deduce la actualización de IRLS $\beta^{(t+1)} = (\mathbf{X}'\mathbf{W}\mathbf{X})^{-1}\mathbf{X}'\mathbf{W}\mathbf{z}$ (Teorema 13.5) a partir del paso de Newton, identificando la respuesta de trabajo $z_i$.
+15. (B) Usando la ecuación de puntaje del intercepto, demuestra que un modelo logístico con intercepto tiene $\sum_i Y_i = \sum_i m_i \hat\pi_i$. Interprétalo para una respuesta binaria simple.
+16. (B) Deduce la razón de momios $e^{c\beta_1}$ para un aumento de $c$ unidades en un predictor, partiendo de $\operatorname{logit}(\pi) = \beta_0 + \beta_1 X$.
+17. (B) Muestra que para un resultado raro (pequeño $\pi$) la razón de momios y el riesgo relativo son aproximadamente iguales, expandiendo ambos para probabilidades pequeñas.
+18. (B) Escribe la devianza para un modelo logístico binario ($m_i = 1$) y explica por qué cada término es cero exactamente cuando $\hat\pi_i$ es igual al $Y_i$ observado, de modo que el modelo saturado tiene devianza 0.
+19. (B) Explica, en términos de la forma de la log-verosimilitud, por qué la prueba de razón de verosimilitud puede discrepar de la prueba de Wald cuando un coeficiente es muy grande, y en cuál confiar.
+20. (B) La función logística es $\pi(\eta) = 1/(1 + e^{-\eta})$. Muestra que $\pi'(\eta) = \pi(\eta)(1 - \pi(\eta))$, y explica por qué esto hace que el cambio de probabilidad por unidad de $\eta$ sea mayor en $\eta = 0$.
+21. (C) Ajusta el modelo de las juntas tóricas en R o Python y reproduce $b_0 = 11.663$ y $b_1 = -0.2162$. Predice la probabilidad de daño a 50 y 75 grados e interpreta ambas.
+22. (C) Reajusta el modelo de las juntas tóricas tratando cada vuelo como un solo resultado binario de "algún daño" (`damage > 0`) en lugar del conteo de seis. Compara el coeficiente de temperatura con el ajuste agrupado y comenta qué cambió.
+23. (C) Sobre los datos Pima, ajusta `test ~ glucose` y `test ~ glucose + bmi`. Reporta la razón de momios de la glucosa en cada uno y explica por qué cambia cuando se añade el IMC.
+24. (C) Reproduce la tabla de clasificación Pima de cinco predictores en el umbral de 0.5, luego recalcula la sensibilidad y la especificidad en los umbrales 0.3 y 0.7. Describe el intercambio a medida que se mueve el umbral.
+25. (C) Agrupa `age` en un factor con niveles "under 30", "30 to 45" y "over 45", añádelo a `test ~ glucose + bmi` como un predictor categórico (como en @ch11-dummy-coding-es), e interpreta las razones de momios de sus niveles respecto a la referencia.
+26. (C) Calcula el estadístico de razón de verosimilitud del modelo completo para `test ~ glucose + bmi + age + diabetes + pregnant` a partir de sus devianzas nula y residual, y confirma tu número contra `drop1` o una comparación manual con el modelo nulo.
+27. (C) Realiza una validación aproximada: divide los datos Pima 70/30 (semilla 4210), ajusta el modelo de cinco predictores en la parte de entrenamiento, y calcula el AUC en la parte reservada. Compáralo con el AUC dentro de la muestra de $0.84$ y explica cualquier brecha usando @ch12-cross-validation-es.
+28. (C) Dibuja la curva de probabilidad ajustada para `test ~ glucose` y añade la tasa observada de positivos dentro de deciles de glucosa como puntos. ¿Sigue la curva a las tasas agrupadas? ¿Cómo se vería un mal ajuste aquí?
+
+## 13.9 Práctica de examen
+
+Estas cinco preguntas están escritas al estilo de los exámenes del curso. Cada una te pide explicar
+tu razonamiento en frases completas, no reportar un número desnudo: en el examen real un número
+correcto sin palabras de apoyo gana poco crédito, y un razonamiento claro con un pequeño desliz
+aritmético gana la mayor parte. Donde una pregunta muestra salida de software, se produjo en la
+máquina del curso (R 4.6.0) a partir de los mismos archivos CSV en `data/` que usaste todo el
+semestre; Python con `statsmodels` da los mismos números. Trabaja cada una antes de abrir su
+respuesta modelo.
+
+**EP 13.1 (interpreta esta salida en contexto).** Una clínica ajusta un modelo logístico para una
+prueba de diabetes positiva sobre los datos `pima` limpios (los ceros imposibles en `glucose` y `bmi`
+puestos en `NA` y eliminados), usando la glucosa plasmática, el índice de masa corporal y el número
+de embarazos.
+
+```r
+pima <- read.csv("data/pima.csv")
+pima$glucose[pima$glucose == 0] <- NA
+pima$bmi[pima$bmi == 0] <- NA
+fit <- glm(test ~ glucose + bmi + pregnant, family = binomial, data = pima)
+summary(fit)
+```
+```text
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)
+(Intercept) -8.780034   0.684606 -12.825  < 2e-16 ***
+glucose      0.037079   0.003459  10.720  < 2e-16 ***
+bmi          0.089899   0.014598   6.158 7.35e-10 ***
+pregnant     0.131273   0.027299   4.809 1.52e-06 ***
+---
+    Null deviance: 974.75  on 751  degrees of freedom
+Residual deviance: 714.58  on 748  degrees of freedom
+```
+
+Interpreta el coeficiente `pregnant` como una razón de momios en palabras que un clínico podría usar.
+Luego, para una mujer con `glucose = 150`, `bmi = 30` y `pregnant = 4`, el predictor lineal reportado
+es $\hat\eta = 0.004$; calcula su probabilidad estimada de una prueba positiva, muestra la
+aritmética, y di en una frase por qué esa probabilidad no es cuatro veces la historia de la razón de
+momios.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+El coeficiente `pregnant` es $0.1313$ en la escala del logaritmo de los momios, así que su razón de
+momios es $e^{0.1313} = 1.14$. En palabras que un clínico podría usar: manteniendo fijos la glucosa
+plasmática y el índice de masa corporal, cada embarazo adicional multiplica los momios de una prueba
+de diabetes positiva por cerca de $1.14$, un aumento de aproximadamente 14 por ciento en los momios
+por parto. La palabra momios importa, porque el coeficiente no agrega una cantidad fija a la
+probabilidad. Para la mujer específica, el modelo pasa su predictor lineal a través de la función
+logística,
+$$
+\hat\pi = \frac{e^{\hat\eta}}{1 + e^{\hat\eta}} = \frac{e^{0.004}}{1 + e^{0.004}}
+= \frac{1.004}{2.004} = 0.50 ,
+$$
+así que su probabilidad estimada de una prueba positiva es de cerca de $0.50$, momios parejos. Ese
+solo número viene de los tres predictores juntos a través de la curva en S, no de multiplicar la
+razón de momios del embarazo por algo: la razón de momios $1.14$ describe cómo cambiarían sus momios
+si tuviera un embarazo más con la glucosa y el IMC fijos, mientras que $0.50$ es donde ella se sitúa
+realmente en la curva dados todos sus valores.
+
+Una respuesta débil reporta $e^{0.1313} = 1.14$ pero la llama una "probabilidad 14 por ciento mayor"
+de una prueba positiva, confundiendo el multiplicador constante de momios con un cambio en la
+probabilidad.
+:::
+
+**EP 13.2 (un estudiante afirma algo; evalúalo).** Mirando el ajuste en EP 13.1, un estudiante
+escribe: "El coeficiente del IMC es $0.0899$, y su razón de momios es $e^{0.0899} = 1.094$, así que
+una mujer con un IMC de 45 es cerca de 9 por ciento más propensa a dar positivo que una mujer con un
+IMC de 44". Evalúa la afirmación. Di con precisión qué está bien, qué está mal, y da la frase
+corregida.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+La aritmética está bien y una palabra está mal, y esa palabra cambia el significado. El número
+$e^{0.0899} = 1.094$ es correcto, y es la razón de momios para un aumento de una unidad en el IMC
+manteniendo fijos la glucosa y los embarazos. Lo que está mal es "9 por ciento más propensa a dar
+positivo", porque "propensa" se lee como probabilidad, y el coeficiente actúa sobre los momios, no
+sobre la probabilidad. El efecto sobre la probabilidad no es un 9 por ciento fijo: depende de dónde
+se sitúe la mujer en la curva en S, mayor en el centro empinado cerca de la probabilidad $0.5$ y
+minúsculo en las colas planas, así que ir de un IMC de 44 a 45 mueve la probabilidad en cantidades
+diferentes para mujeres diferentes. La cantidad constante es el multiplicador de momios. Una frase
+corregida: "subir el IMC en una unidad, con la glucosa y los embarazos fijos, multiplica los momios
+de una prueba positiva por cerca de $1.094$, un aumento de 9.4 por ciento en los momios, no en la
+probabilidad". Cuánto se mueve la probabilidad misma depende de sus otros valores.
+
+Una respuesta débil solo dice "el estudiante está equivocado porque es una razón de momios" sin
+explicar que el cambio de probabilidad ni siquiera es constante, que es la razón más profunda por la
+que la afirmación engaña.
+:::
+
+**EP 13.3 (explica por qué).** La regresión lineal simple tiene fórmulas en forma cerrada para sus
+coeficientes, $b_1 = S_{xy}/S_{xx}$ y $b_0 = \bar Y - b_1 \bar X$, pero la regresión logística no
+tiene tal fórmula y se ajusta con mínimos cuadrados reponderados iterativamente en su lugar. Explica
+por qué no existe forma cerrada, qué hace realmente IRLS en cada paso, y por qué el procedimiento
+tiene garantizado escalar hasta un único mejor conjunto de coeficientes en lugar de quedarse
+atascado.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+No existe forma cerrada porque la probabilidad ajustada $\pi_i = 1/(1 + e^{-\eta_i})$ es una función
+no lineal de los coeficientes. Cuando igualas a cero las derivadas de la log-verosimilitud obtienes
+las ecuaciones de puntaje $\sum_i (Y_i - m_i \pi_i) X_{ij} = 0$, y como cada $\pi_i$ se dobla a
+través del enlace logístico, estas son no lineales en $\beta$ y no pueden reordenarse en una solución
+algebraica como sí pueden las ecuaciones normales lineales. IRLS las resuelve por aproximación
+repetida. En cada paso mantiene fijos los coeficientes actuales, forma los pesos $w_i = m_i
+\pi_i(1 - \pi_i)$ y una respuesta de trabajo $z_i = \eta_i + (Y_i - m_i\pi_i)/w_i$, y luego hace un
+ajuste ordinario de mínimos cuadrados ponderados de $z$ sobre los predictores para obtener
+coeficientes actualizados; como los pesos y la respuesta de trabajo cambian a medida que se mueven
+los coeficientes, reajusta hasta que los números dejan de cambiar. Tiene garantizado alcanzar una
+única mejor respuesta porque la log-verosimilitud es cóncava: su matriz de segundas derivadas es
+$-\mathbf{X}'\mathbf{W}\mathbf{X}$, que es definida negativa (los pesos $w_i$ son todos positivos),
+así que la superficie es una sola colina con un pico y sin cumbres falsas, y cada paso de Newton
+escala hacia él.
+
+Una respuesta débil dice solo "las ecuaciones son no lineales" sin conectar la concavidad de la
+log-verosimilitud con la garantía de que IRLS encuentra el único máximo verdadero.
+:::
+
+**EP 13.4 (qué cambiaría si).** El modelo Pima de cinco predictores del Ejemplo 13.4 clasifica en el
+corte de probabilidad predeterminado de 0.5 con la tabla de la izquierda abajo. Una clínica de
+tamizaje propone bajar el corte a 0.3, lo que da la tabla de la derecha.
+
+```text
+   cutoff 0.5                        cutoff 0.3
+          actual 0  actual 1                  actual 0  actual 1
+predict 0      431       114        predict 0      348        57
+predict 1       57       150        predict 1      140       207
+```
+
+Explica qué cambia cuando la clínica mueve el corte de 0.5 a 0.3. Calcula la sensibilidad y la
+especificidad en cada corte, describe el intercambio en términos sencillos, y di si el movimiento es
+una buena idea para una prueba de tamizaje y por qué.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+Bajar el corte hace que el modelo llame positivas a más mujeres, porque ahora señala a cualquiera
+cuya probabilidad estimada supere $0.3$ en lugar de $0.5$. En $0.5$ la sensibilidad es
+$150/(150 + 114) = 0.57$ y la especificidad es $431/(431 + 57) = 0.88$. En $0.3$ la sensibilidad sube
+a $207/(207 + 57) = 0.78$ y la especificidad baja a $348/(348 + 140) = 0.71$. Así que el intercambio
+es claro: el corte más bajo captura muchos más de los verdaderos positivos (perdiendo 57 mujeres en
+lugar de 114) a costa de más falsas alarmas (140 mujeres sanas señaladas en lugar de 57). Para una
+prueba de tamizaje este movimiento es defendible y probablemente sabio. Una prueba de tamizaje existe
+para detectar enfermedad, así que un positivo perdido (un falso negativo) es el error costoso, porque
+a una mujer que tiene diabetes se le dice que está bien y pierde el cuidado de seguimiento, mientras
+que un falso positivo usualmente solo desencadena una prueba confirmatoria. Cambiar algo de
+especificidad por una gran ganancia en sensibilidad se ajusta al propósito del tamizaje. El corte
+correcto en última instancia depende de los costos reales de los dos errores, que es exactamente por
+qué uno debería mirar toda la curva ROC en lugar de cualquier corte único.
+
+Una respuesta débil calcula los cuatro números pero no conecta la elección con el propósito del
+tamizaje, así que no puede decir por qué capturar más verdaderos positivos vale las falsas alarmas
+extra.
+:::
+
+**EP 13.5 (interpreta esta salida en contexto).** Para preguntar si la edad, el pedigrí de diabetes
+y el número de embarazos agregan algo más allá de la glucosa y el IMC, un analista corre una prueba
+de razón de verosimilitud sobre los datos `pima` limpios y también reporta el AUC dentro de la
+muestra del modelo más grande.
+
+```text
+Model 1: test ~ glucose + bmi                     Residual deviance 738.51 on 749 df
+Model 2: test ~ glucose + bmi + age + diabetes + pregnant   Residual deviance 703.24 on 746 df
+Likelihood-ratio test: deviance drop = 35.27 on 3 df, p-value = 1.1e-07
+in-sample AUC (Model 2) = 0.843
+```
+
+Enuncia la hipótesis nula, muestra de dónde viene el estadístico $35.27$, da su distribución de
+referencia y conclusión, y luego explica por qué el AUC de $0.843$ es probablemente optimista y qué
+herramienta del Capítulo 12 daría una estimación honesta.
+
+:::{admonition} Respuesta modelo
+:class: dropdown
+La hipótesis nula es que los tres coeficientes extra, sobre la edad, el pedigrí de diabetes y el
+número de embarazos, son todos cero, así que esos predictores no agregan nada una vez que la glucosa
+y el IMC están en el modelo. El estadístico de razón de verosimilitud es la caída en la devianza
+residual entre los modelos anidados, $G^2 = D_{\text{reduced}} - D_{\text{full}} = 738.51 - 703.24 =
+35.27$, y se refiere a una distribución chi-cuadrada con $3$ grados de libertad, el número de
+coeficientes igualados a cero bajo la nula. Como una $\chi^2_3$ tiene media 3 y $35.27$ está muy
+lejos en su cola ($p = 1.1 \times 10^{-7}$), rechazamos la nula: los tres predictores juntos cargan
+información real más allá de la glucosa y el IMC. (Si una prueba de Wald sobre uno de estos
+coeficientes hubiera discrepado con este resultado de razón de verosimilitud, la prueba de razón de
+verosimilitud sería la de confiar, porque usa la forma real de la log-verosimilitud en lugar de una
+sola aproximación cuadrática.) El AUC de $0.843$ es probablemente optimista porque se calculó sobre
+las mismas mujeres usadas para ajustar el modelo, así que los coeficientes ajustados están afinados a
+las peculiaridades de esta muestra tanto como a su señal real, y el modelo se ve mejor aquí de lo que
+se vería con pacientes nuevos. Una estimación honesta reserva datos que el modelo nunca vio: una
+división de entrenamiento-prueba o, mejor, validación cruzada de $k$ pliegues (@ch12-cross-validation-es),
+ajustando en parte de los datos y midiendo el AUC en la parte intacta. La brecha entre el AUC dentro
+de la muestra y fuera de la muestra es el optimismo, y crece con el número de predictores.
+
+Una respuesta débil resta las devianzas correctamente pero olvida que los grados de libertad son
+iguales al número de predictores eliminados, o trata el AUC dentro de la muestra como una medida
+honesta del desempeño futuro.
+:::
+
+## Juego del capítulo
+
+:::{admonition} Juega el juego del Capítulo 13
+:class: tip
+[Juega el juego del Capítulo 13 en tu teléfono o computadora portátil](../games/ch13.html): 10 rondas
+rápidas, sin preparación. Ejercita los movimientos centrales del capítulo: leer el modelo logístico y
+sus predicciones extrapoladas, ordenar el bucle de ajuste de IRLS, leer un coeficiente como una razón
+de momios en lugar de un cambio en la probabilidad, y juzgar un ajuste por clasificación, devianza y
+AUC, con un párrafo de razonamiento después de cada respuesta.
+:::
+
+:::{admonition} Chapter summary (in English)
+:class: dropdown
+This chapter introduces **logistic regression**, the model for a binary (yes-or-no) response. The
+opening story is the 1986 Challenger shuttle launch decision: 23 prior flights, each with the launch
+temperature and the number of O-rings damaged out of six. The response is not continuous, so ordinary
+least squares fails in three ways: it predicts probabilities outside $[0, 1]$, the variance
+$\pi(1 - \pi)$ is not constant, and the errors cannot be normal.
+
+The fix models $\pi$ through the **odds** $\pi/(1 - \pi)$ and the **log-odds (logit)**. The logistic
+model says $\operatorname{logit}(\pi) = \beta_0 + \beta_1 X_1 + \dots$, so that
+$\pi = 1/(1 + e^{-\eta})$, an S-shaped curve that always stays between 0 and 1. For the O-rings, the
+fit gives $\operatorname{logit}(\hat\pi) = 11.66 - 0.2162\,\text{temp}$; at 31 degrees Fahrenheit the
+model predicts a damage probability near $0.99$, though this is an extrapolation far from the data.
+
+There is no closed-form formula for the coefficients: they are estimated by **maximum likelihood**,
+deriving the **score equations** $\mathbf{X}'(\mathbf{Y} - \boldsymbol{\mu}) = \mathbf{0}$ and solving
+them with **iteratively reweighted least squares (IRLS)**. Each coefficient is read as an **odds
+ratio** $e^{\beta_j}$, not a change in probability. Coefficients are tested with the **Wald test** and
+the **likelihood-ratio test**, built on the **deviance**. Finally the model is evaluated with a
+classification table, the **ROC curve** and its area (AUC $= 0.84$ on Pima), after checking the
+impossible zeros that are disguised missing data. Chapter 14 extends this machinery to Poisson
+regression and the generalized linear model framework.
+:::

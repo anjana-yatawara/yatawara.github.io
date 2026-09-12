@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pure error against lack of fit</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Five distinct lot sizes, three runs at each: c = 5, n = 15, so the
+   lack-of-fit test has c - 2 = 3 and n - c = 10 degrees of freedom. */
+var PTS = [
+  { x: 2, y: 4.7 },  { x: 2, y: 7.1 },  { x: 2, y: 9.3 },
+  { x: 4, y: 8.9 },  { x: 4, y: 11.2 }, { x: 4, y: 13.4 },
+  { x: 6, y: 13.0 }, { x: 6, y: 15.4 }, { x: 6, y: 17.3 },
+  { x: 8, y: 16.9 }, { x: 8, y: 19.3 }, { x: 8, y: 21.8 },
+  { x: 10, y: 21.2 }, { x: 10, y: 23.5 }, { x: 10, y: 25.6 }
+];
+var GROUP_SIZE = 3;
+var C_LEVELS = PTS.length / GROUP_SIZE;
+var DF_LF = C_LEVELS - 2;
+var DF_PE = PTS.length - C_LEVELS;
+var LOCK_X = PTS.map(function (p) { return p.x; });
+
+/* ---- F tail probability -------------------------------------------------
+   P(F > f) on d1 and d2 degrees of freedom equals the regularized incomplete
+   beta I_z(d2/2, d1/2) at z = d2 / (d2 + d1 f). Lanczos log gamma plus the
+   Numerical Recipes continued fraction for the incomplete beta. */
+function logGamma(a) {
+  var g = [76.18009172947146, -86.50532032941677, 24.01409824083091,
+           -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
+  var x = a, y = a, tmp = x + 5.5;
+  tmp -= (x + 0.5) * Math.log(tmp);
+  var ser = 1.000000000190015;
+  for (var j = 0; j < 6; j++) { ser += g[j] / ++y; }
+  return -tmp + Math.log(2.5066282746310005 * ser / x);
+}
+
+function betacf(a, b, z) {
+  var FPMIN = 1e-300, qab = a + b, qap = a + 1, qam = a - 1;
+  var c = 1, d = 1 - qab * z / qap;
+  if (Math.abs(d) < FPMIN) { d = FPMIN; }
+  d = 1 / d;
+  var h = d;
+  for (var m = 1; m <= 300; m++) {
+    var m2 = 2 * m;
+    var aa = m * (b - m) * z / ((qam + m2) * (a + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) { d = FPMIN; }
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) { c = FPMIN; }
+    d = 1 / d; h *= d * c;
+    aa = -(a + m) * (qab + m) * z / ((a + m2) * (qap + m2));
+    d = 1 + aa * d; if (Math.abs(d) < FPMIN) { d = FPMIN; }
+    c = 1 + aa / c; if (Math.abs(c) < FPMIN) { c = FPMIN; }
+    d = 1 / d;
+    var del = d * c; h *= del;
+    if (Math.abs(del - 1) < 3e-16) { break; }
+  }
+  return h;
+}
+
+function betai(a, b, z) {
+  if (z <= 0) { return 0; }
+  if (z >= 1) { return 1; }
+  var bt = Math.exp(logGamma(a + b) - logGamma(a) - logGamma(b) +
+                    a * Math.log(z) + b * Math.log(1 - z));
+  return z < (a + 1) / (a + b + 2)
+    ? bt * betacf(a, b, z) / a
+    : 1 - bt * betacf(b, a, 1 - z) / b;
+}
+
+function pfUpper(f, d1, d2) {
+  if (f <= 0) { return 1; }
+  if (!isFinite(f)) { return 0; }
+  return betai(d2 / 2, d1 / 2, d2 / (d2 + d1 * f));
+}
+
+/* ---- the decomposition SSE = SSPE + SSLF -------------------------------- */
+function decompose(fit, pts) {
+  var sspe = 0, j, k;
+  for (j = 0; j < C_LEVELS; j++) {
+    var m = 0;
+    for (k = 0; k < GROUP_SIZE; k++) { m += pts[j * GROUP_SIZE + k].y; }
+    m /= GROUP_SIZE;
+    for (k = 0; k < GROUP_SIZE; k++) {
+      var d = pts[j * GROUP_SIZE + k].y - m;
+      sspe += d * d;
+    }
+  }
+  var sslf = Math.max(0, fit.sse - sspe);
+  var F = (sspe > 0) ? (sslf / DF_LF) / (sspe / DF_PE) : Infinity;
+  return { sspe: sspe, sslf: sslf, F: F, p: pfUpper(F, DF_LF, DF_PE) };
+}
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Move the repeats, and see which sum of squares pays for it',
+    es: 'Mueve las repeticiones y observa cuál suma de cuadrados lo paga'
+  },
+  points: PTS,
+  lockX: true,
+  xRange: [0, 12],
+  yRange: [2, 30],
+  xLabel: { en: 'lot size X (three runs each)', es: 'tamaño de lote X (tres corridas cada uno)' },
+  yLabel: { en: 'hours Y', es: 'horas Y' },
+  showLine: true,
+  showResiduals: true,
+  ariaLabel: {
+    en: 'Fifteen points in five vertical groups of three at lot sizes 2, 4, 6, 8 and 10, with a fitted least-squares line. Points move up and down only.',
+    es: 'Quince puntos en cinco grupos verticales de tres en los tamaños de lote 2, 4, 6, 8 y 10, con una recta de mínimos cuadrados ajustada. Los puntos solo se mueven hacia arriba y hacia abajo.'
+  },
+  readouts: [
+    { id: 'sspe', label: { en: 'SSPE (pure error)', es: 'SSPE (error puro)' }, digits: 2,
+      compute: function (f, pts) { return decompose(f, pts).sspe; } },
+    { id: 'sslf', label: { en: 'SSLF (lack of fit)', es: 'SSLF (falta de ajuste)' },
+      accent: 2, digits: 2,
+      compute: function (f, pts) { return decompose(f, pts).sslf; } },
+    { id: 'F', label: { en: 'F* on 3 and 10 df', es: 'F* con 3 y 10 gl' }, accent: 1, digits: 2,
+      compute: function (f, pts) { return decompose(f, pts).F; } },
+    { id: 'p', label: { en: 'p-value', es: 'valor p' }, digits: 4,
+      compute: function (f, pts) { return decompose(f, pts).p; } }
+  ],
+  /* lockX keeps every run at its own lot size under a pointer drag, so the
+     five levels survive. The engine's arrow-key path clamps a moved case to
+     the first case's X instead, so restore X here and ask for one more draw
+     (a hairline width change wakes the engine's own resize observer). */
+  onUpdate: function (fit, pts) {
+    var fixed = false, i;
+    for (i = 0; i < pts.length; i++) {
+      if (pts[i].x !== LOCK_X[i]) { pts[i].x = LOCK_X[i]; fixed = true; }
+    }
+    if (!fixed) { return; }
+    var wrap = document.querySelector('.sim-plot-wrap');
+    if (!wrap) { return; }
+    wrap.style.width = '99.9%';
+    /* The revert has to land in a later frame: a resize observer only
+       reports the size it sees at the end of a frame. */
+    setTimeout(function () { wrap.style.width = ''; }, 50);
+  },
+  caption: {
+    en: 'Each lot size was run three times, so the spread inside a vertical group is ' +
+        'pure noise. SSPE is that spread, SSLF is how far the five group means sit ' +
+        'from the line, and F* compares the two.\n\n' +
+        '**Try this.** Drag all three runs at X = 6 up by about 6, keeping their ' +
+        'spacing. SSPE does not move, SSLF climbs past 86, and the p-value falls from ' +
+        '1.0000 to 0.017. Then drag only one of the three: SSPE absorbs the move and F* ' +
+        'stays quiet. Repeats are what make the test possible.',
+    es: 'Cada tamaño de lote se corrió tres veces, así que la dispersión dentro de un ' +
+        'grupo es ruido puro: eso es SSPE. SSLF mide cuánto se alejan de la recta las ' +
+        'medias de grupo.\n\n' +
+        '**Prueba esto.** Sube unas 6 unidades las tres corridas en X = 6, conservando ' +
+        'su separación. SSPE no se mueve, SSLF sube por encima de 86 y el valor p cae a ' +
+        '0.017. Luego sube solo una de las tres: SSPE absorbe el movimiento y F* se ' +
+        'queda callado. Las repeticiones hacen posible la prueba.'
+  }
+});
+</script>
+</body>
+</html>

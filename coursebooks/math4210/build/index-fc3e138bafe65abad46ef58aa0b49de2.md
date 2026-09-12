@@ -1,0 +1,1893 @@
+---
+title: "6. Matrix algebra for regression"
+subtitle: "MATH 4210, Chapter 6"
+---
+
+(ch06)=
+# 6. Matrix algebra for regression
+
+:::{div}
+:class: lang-toggle
+[Leer en espanol](./es.md)
+:::
+
+Dwaine Studios runs a chain of portrait studios and wants to grow. It already
+operates in 21 cities, and its managers track two numbers for each: the population
+aged 16 and younger, the pool of children whose parents buy portraits, and
+per-capita disposable income, how much money families have to spend. They want to
+use these two numbers to predict studio sales, so they can rank new cities and open
+where the forecast is highest. The question is a forecasting one, but underneath it
+is a modeling one: how do sales depend on both predictors at once?
+
+In Chapter 2 you fit a line with a single predictor by solving two normal
+equations for the intercept and slope (@ch02-least-squares). That worked because
+there were only two unknowns. Dwaine has three, one intercept and two slopes, and
+a realistic study might have twenty. Writing out a separate normal equation for
+each and solving the tangle by hand is not something anyone wants to do twice.
+Matrix algebra is the better language: it packs a whole dataset into two symbols,
+the normal equations into one, and the solution into a formula you write in a
+single line and compute in a single command.
+
+None of what follows requires you to have seen a matrix before. We build every
+idea from its definition, test it on a small example you could check with a
+pencil, then run it on the real 21-city dataset in both R and Python. If you have
+taken linear algebra, this will read like review with a statistical accent; if not,
+you will still finish able to fit and explain a multiple regression, the only
+matrix algebra this course asks of you.
+
+```{figure} figures/fig_ch06_dwaine_scatter.png
+:name: fig-ch06-dwaine-scatter
+:alt: A scatterplot of studio sales in thousands of dollars on the vertical axis against target population under 16 in thousands on the horizontal axis, for 21 cities. Points rise from lower left to upper right. Each point is shaded from light to dark blue according to its disposable income, with darker (higher-income) points tending to sit higher for a given population.
+Dwaine Studios sales against a city's under-16 population, with disposable income shown by shade. Both predictors track higher sales, so a good forecast needs to use them together, which is exactly what the matrix machinery in this chapter lets us do.
+```
+
+@fig-ch06-dwaine-scatter shows that both predictors matter: sales climb as the
+young population grows, and for a given population the higher-income cities
+(darker points) tend to sell more. A model that uses both at once is a
+**multiple regression** model, and every such model is built, fit, and understood
+through matrices. By the end you will have built, for the real Dwaine data, the
+design matrix $\mathbf{X}$, the product $\mathbf{X}'\mathbf{X}$, its inverse, the
+coefficient estimates, the hat matrix, and every coefficient's standard error,
+each from operations you can also do by hand on a small example.
+
+:::{admonition} This lesson at a glance
+:class: important
+- **What we are doing:** Learning just enough matrix algebra to write and solve a regression with several predictors at once, using the 21-city Dwaine Studios data as the running example.
+- **Why we are doing it:** Chapter 2's two normal equations (@ch02-least-squares) worked for one predictor, but Dwaine has two and a real study may have twenty; solving them predictor by predictor by hand is hopeless, so we need a compact language.
+- **Main objective:** Represent the data as $\mathbf{X}$ and $\mathbf{Y}$, form $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$, solve $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, build the hat matrix, and read each coefficient's variance off $\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$, checking every step on a small example first.
+- **What changed from the last chapters:** Until now, one predictor and scalar algebra; from here, many predictors packed into vectors and matrices, still the same least-squares idea seen through a new notation. The exact Dwaine $\mathbf{X}'\mathbf{X}$ built here is the object Chapter 7 reuses (@ch07-ls-matrix).
+:::
+
+:::{admonition} Learning objectives
+:class: tip
+By the end of this chapter you will be able to:
+- **Represent** a regression dataset as a response vector $\mathbf{Y}$ and a design matrix $\mathbf{X}$, and write the model as $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$.
+- **Compute** transposes and matrix products, and in particular build $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$, by hand and with software.
+- **Decide** when a square matrix has an inverse, using rank and the determinant, and explain what perfect collinearity does to $\mathbf{X}'\mathbf{X}$.
+- **Solve** the normal equations $\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y}$ for the coefficient vector $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$.
+- **Verify** that the hat matrix $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ is symmetric and idempotent, and explain why fitted values and residuals are projections.
+- **Express** SSE, SSR, and SSTO as quadratic forms, and connect positive definiteness to nonnegative sums of squares.
+- **Derive** the mean vector and covariance matrix of a random vector, and use them to show $\operatorname{Cov}\{\mathbf{b}\} = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1}$.
+- **State** the multivariate normal model for $\mathbf{Y}$ and $\mathbf{b}$ and describe how it powers the inference of later chapters.
+:::
+
+## 6.1 The data as a vector and a matrix
+
+### Intuition
+
+Start with the response. Dwaine has 21 sales figures, one per city. Stack them
+into a single column and you have a **vector** (Definition 6.1), an ordered list
+of numbers written vertically. Call it $\mathbf{Y}$. A vector is the simplest
+matrix: many rows, one column.
+
+Now the predictors. Each city carries two numbers, so the predictors form a
+table with 21 rows and 2 columns, and a table of numbers with rows and columns is
+a **matrix** (Definition 6.1). For regression we glue one extra column of all ones
+onto the front: a bookkeeping trick that lets the intercept ride along as just
+another coefficient. The result is the **design matrix** $\mathbf{X}$
+(Definition 6.2), with 21 rows and 3 columns. @fig-ch06-model-arrays shows how the
+whole model lines up as stacked arrays.
+
+```{figure} figures/fig_ch06_model_arrays.png
+:name: fig-ch06-model-arrays
+:alt: A diagram showing the regression model as four stacked boxes. A tall thin box labeled Y, 21 by 1, equals a wide box labeled X, 21 by 3, with its first column outlined and labeled ones, times a short box labeled beta, 3 by 1, plus a tall thin box labeled epsilon, 21 by 1. A note says the inner dimensions match: 21 by 3 times 3 by 1 gives 21 by 1.
+The regression model in matrix form. The response Y and errors are 21 by 1, the design matrix X is 21 by 3 with a leading column of ones for the intercept, and the coefficient vector beta is 3 by 1. The inner dimensions match, so the product is defined.
+```
+
+Reading across a row gives one city's complete record: a $1$, its young
+population, its disposable income, and, in $\mathbf{Y}$, its sales. Stacking the
+rows turns 21 separate little equations into the single statement
+$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$. That
+compression is the reason to learn matrices: the same three symbols describe a
+dataset with 21 rows or 21 million.
+
+### Formula
+
+:::{admonition} Definition 6.1: Matrix, vector, and dimension
+:class: note definition
+A **matrix** is a rectangular array of numbers arranged in rows and columns. Its
+**dimension** is written (rows) $\times$ (columns), so $\mathbf{X}$ is
+$21 \times 3$, and the entry in row $i$, column $j$ is denoted $X_{ij}$. A
+**vector** is a matrix with a single column (a **column vector**) or a single row
+(a **row vector**).
+:::
+
+For a regression with $n$ observations and $p$ parameters (counting the
+intercept), the pieces are
+
+$$
+\mathbf{Y} = \begin{pmatrix} Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{pmatrix}_{n \times 1}, \qquad
+\mathbf{X} = \begin{pmatrix} 1 & X_{11} & \cdots & X_{1,p-1} \\ 1 & X_{21} & \cdots & X_{2,p-1} \\ \vdots & \vdots & & \vdots \\ 1 & X_{n1} & \cdots & X_{n,p-1} \end{pmatrix}_{n \times p}, \qquad
+\boldsymbol{\beta} = \begin{pmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_{p-1} \end{pmatrix}_{p \times 1}.
+$$
+
+- $\mathbf{Y}$ is the response vector; row $i$ is the response for case $i$.
+- $\mathbf{X}$ is the design matrix; its first column is all ones, and column $k+1$ holds the values of predictor $k$.
+- $\boldsymbol{\beta}$ is the parameter vector: the intercept $\beta_0$ followed by the slopes.
+- $p$ is the number of regression parameters including the intercept ($p = 3$ for Dwaine), and $n$ is the number of observations ($n = 21$).
+
+:::{admonition} Definition 6.2: Design matrix
+:class: note definition
+The **design matrix** $\mathbf{X}$ is the $n \times p$ matrix whose first column
+is all ones, carrying the intercept, and whose remaining $p - 1$ columns hold the
+predictor values, one row per observation. With the response vector $\mathbf{Y}$
+and parameter vector $\boldsymbol{\beta}$ it packs the whole model into
+$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$.
+:::
+
+For Dwaine, $n = 21$ and $p = 3$: one column of ones, one column of under-16
+populations, one column of disposable incomes. The whole model of Chapter 2
+generalizes to $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$,
+which we unpack in @ch07-ls-matrix. In words: each observed response equals a
+weighted sum of that row's predictors, using the same weights $\boldsymbol{\beta}$
+for every row, plus a random error.
+
+### R and Python
+
+:::{admonition} Example 6.1: Building the Dwaine design matrix
+:class: note
+**Question.** Read the Dwaine data and assemble the response vector $\mathbf{Y}$ and the design matrix $\mathbf{X}$, with its leading column of ones.
+
+**Intuition.** The response is just the sales column. The design matrix is the two predictor columns with a column of ones bolted onto the left.
+
+**Formula.** $\mathbf{X}$ is $n \times p = 21 \times 3$; column 1 is ones, column 2 is `targtpop`, column 3 is `dispoinc`.
+
+**Computation.**
+
+```r
+dwaine <- read.csv("data/dwaine.csv")
+dim(dwaine)
+head(dwaine, 3)
+```
+```text
+[1] 21  3
+  targtpop dispoinc sales
+1     68.5     16.7 174.4
+2     45.2     16.8 164.4
+3     91.3     18.2 244.2
+```
+
+```r
+n <- nrow(dwaine)
+X <- cbind(1, dwaine$targtpop, dwaine$dispoinc)
+colnames(X) <- c("intercept", "targtpop", "dispoinc")
+Y <- dwaine$sales
+head(X, 3)
+```
+```text
+     intercept targtpop dispoinc
+[1,]         1     68.5     16.7
+[2,]         1     45.2     16.8
+[3,]         1     91.3     18.2
+```
+
+Now in Python, with numpy assembling the same array from the same CSV.
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+dwaine = pd.read_csv("data/dwaine.csv")
+print(dwaine.shape)
+print(dwaine.head(3))
+```
+```text
+(21, 3)
+   targtpop  dispoinc  sales
+0      68.5      16.7  174.4
+1      45.2      16.8  164.4
+2      91.3      18.2  244.2
+```
+
+```python
+n = len(dwaine)
+X = np.column_stack([np.ones(n), dwaine["targtpop"], dwaine["dispoinc"]])
+Y = dwaine["sales"].to_numpy()
+print(X[:3])
+```
+```text
+[[ 1.  68.5 16.7]
+ [ 1.  45.2 16.8]
+ [ 1.  91.3 18.2]]
+```
+
+**Interpretation.** The first city has 68,500 young residents and $16,700 per-capita income, and the leading $1$ is the placeholder that will multiply the intercept. Every row of $\mathbf{X}$ reads "one, then this city's predictors." R's `cbind` and Python's `np.column_stack` built the same array from the same file, so the two languages share one object, and the whole fit becomes a short sequence of matrix operations.
+:::
+
+::::{admonition} Try it 6.1
+:class: important
+A regression uses one intercept and four predictors on $n = 30$ observations.
+Give the dimensions of $\mathbf{Y}$, $\mathbf{X}$, and $\boldsymbol{\beta}$, and
+say what the very first column of $\mathbf{X}$ contains.
+
+:::{admonition} Solution
+:class: dropdown
+Here $n = 30$ and $p = 5$ (four slopes plus the intercept). So $\mathbf{Y}$ is
+$30 \times 1$, $\mathbf{X}$ is $30 \times 5$, and $\boldsymbol{\beta}$ is
+$5 \times 1$. The first column of $\mathbf{X}$ is all ones, the placeholder that
+carries the intercept $\beta_0$.
+:::
+::::
+
+(ch06-matrix-mult)=
+## 6.2 Transpose and matrix multiplication
+
+### Intuition
+
+We have the data in matrices; now we need to combine them. Two operations do
+almost all the work. The **transpose** (Definition 6.3) flips a matrix on its
+diagonal so rows become columns. **Matrix multiplication** (Definition 6.4) is the
+engine that turns the design matrix into the sums of squares and cross-products a
+regression runs on.
+
+Matrix multiplication is not what a newcomer expects. One entry of the product is
+built from a whole row of the left matrix and a whole column of the right: line
+them up, multiply term by term, and add. Applied to $\mathbf{X}'\mathbf{X}$, that
+rule produces exactly the sums $\sum X_{ik} X_{ij}$ you would otherwise compute one
+painful sum at a time. @fig-ch06-matmul shows it on a small example.
+
+```{figure} figures/fig_ch06_matmul.png
+:name: fig-ch06-matmul
+:alt: A diagram of matrix multiplication. A 2 by 3 matrix A with its first row shaded blue is multiplied by a 3 by 2 matrix B with its second column shaded green, giving a 2 by 2 product AB with the top-right entry highlighted yellow. Below, the arithmetic reads one times zero plus two times one plus three times one equals five, labeled as row one of A dotted with column two of B.
+Matrix multiplication, entry by entry. The highlighted product entry in row 1, column 2 comes from row 1 of A and column 2 of B, multiplied term by term and summed. Every entry of a product is one such row-times-column dot product.
+```
+
+:::{admonition} A common wrong turn
+:class: warning
+A frequent first mistake is to think $\mathbf{X}'\mathbf{X}$ means "square each
+entry of $\mathbf{X}$," or that multiplying two matrices multiplies matching
+cells. Neither is true. Matrix multiplication mixes a full row with a full
+column. Because of that, order matters: $\mathbf{A}\mathbf{B}$ and
+$\mathbf{B}\mathbf{A}$ are usually different, and often only one of them is even
+defined.
+:::
+
+Two products, and only two, matter for the fit: $\mathbf{X}'\mathbf{X}$ summarizes
+the predictors by themselves, and $\mathbf{X}'\mathbf{Y}$ summarizes how each
+predictor moves with the response. Between them they hold every summary least
+squares needs, which is why a whole dataset can shrink to a handful of numbers:
+the fit does not care about individual rows once these sums are known.
+
+:::{admonition} Key idea
+:class: tip keyidea
+A regression sees the data only through the two products $\mathbf{X}'\mathbf{X}$
+and $\mathbf{X}'\mathbf{Y}$. Twenty-one cities or twenty-one million, once those
+sums are formed the individual rows are never needed again, and the entire fit is
+a fixed sequence of operations on those two small objects.
+:::
+
+### Formula
+
+:::{admonition} Definition 6.3: Transpose
+:class: note definition
+The **transpose** of a matrix $\mathbf{A}$, written $\mathbf{A}'$, swaps rows and
+columns: the entry in row $i$, column $j$ of $\mathbf{A}'$ is the entry in row
+$j$, column $i$ of $\mathbf{A}$. If $\mathbf{A}$ is $m \times k$, then
+$\mathbf{A}'$ is $k \times m$.
+:::
+
+Picture it as tipping a matrix over its top-left corner: each row stands up to
+become a column, so a wide matrix tips into a tall one and back. A column vector,
+tipped over, becomes a single row, which is why $\mathbf{u}'\mathbf{u}$ multiplies
+a lying-down copy of a vector by a standing-up copy and collapses to one number.
+
+:::{admonition} Definition 6.4: Matrix multiplication and conformability
+:class: note definition
+Two matrices are **conformable** for multiplication when the number of columns of
+the left equals the number of rows of the right. If $\mathbf{A}$ is $m \times k$
+and $\mathbf{B}$ is $k \times q$, the product $\mathbf{A}\mathbf{B}$ is
+$m \times q$, with entries
+
+$$
+(\mathbf{A}\mathbf{B})_{ij} = \sum_{\ell=1}^{k} A_{i\ell}\, B_{\ell j},
+$$
+
+This row-by-column rule is **matrix multiplication**: entry $(i,j)$ is row $i$ of
+$\mathbf{A}$ multiplied with column $j$ of $\mathbf{B}$, term by term and summed.
+:::
+
+- The inner dimensions ($k$ and $k$) must match; they are what you sum over.
+- The outer dimensions ($m$ and $q$) give the shape of the answer.
+- Entry $(i,j)$ is row $i$ of $\mathbf{A}$ dotted with column $j$ of $\mathbf{B}$.
+
+Two products carry the whole load in regression. With $\mathbf{X}$ of size
+$n \times p$, the transpose $\mathbf{X}'$ is $p \times n$, so
+
+$$
+\mathbf{X}'\mathbf{X} \ \text{is}\ p \times p, \qquad \mathbf{X}'\mathbf{Y}\ \text{is}\ p \times 1.
+$$
+
+In words: $\mathbf{X}'\mathbf{X}$ collects every sum of squares and cross-product
+of the predictor columns into a small square table, and $\mathbf{X}'\mathbf{Y}$
+collects every predictor-times-response sum into a short column, the raw materials
+of the normal equations. A rule we will use constantly is that transposing a
+product reverses the order of its factors.
+
+:::{admonition} Theorem 6.5: Transpose of a product
+:class: important theorem
+For any conformable matrices $\mathbf{A}$ and $\mathbf{B}$,
+
+$$
+(\mathbf{A}\mathbf{B})' = \mathbf{B}'\mathbf{A}'.
+$$
+:::
+
+**Proof.** We show $(\mathbf{A}\mathbf{B})' = \mathbf{B}'\mathbf{A}'$
+by comparing entries. The $(i,j)$ entry of $(\mathbf{A}\mathbf{B})'$ is, by the
+definition of transpose, the $(j,i)$ entry of $\mathbf{A}\mathbf{B}$, which is
+$\sum_{\ell} A_{j\ell} B_{\ell i}$. The $(i,j)$ entry of $\mathbf{B}'\mathbf{A}'$
+is row $i$ of $\mathbf{B}'$ dotted with column $j$ of $\mathbf{A}'$, that is
+$\sum_{\ell} (\mathbf{B}')_{i\ell} (\mathbf{A}')_{\ell j} = \sum_{\ell} B_{\ell i} A_{j \ell}$.
+The two sums have the same terms, so the matrices are equal. $\blacksquare$
+
+### R and Python
+
+First the small example from @fig-ch06-matmul, so the mechanics are concrete
+before we turn the engine loose on the real data. In R, `%*%` is matrix
+multiplication (a plain `*` multiplies entry by entry instead); in Python the
+operator is `@`.
+
+```r
+A <- matrix(c(1, 2, 3,
+              4, 5, 6), nrow = 2, byrow = TRUE)
+B <- matrix(c(1, 0,
+              0, 1,
+              1, 1), nrow = 3, byrow = TRUE)
+A %*% B
+```
+```text
+     [,1] [,2]
+[1,]    4    5
+[2,]   10   11
+```
+
+```python
+A = np.array([[1, 2, 3],
+              [4, 5, 6]])
+B = np.array([[1, 0],
+              [0, 1],
+              [1, 1]])
+print(A @ B)
+```
+```text
+[[ 4  5]
+ [10 11]]
+```
+
+:::{admonition} Example 6.2: The matrices $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$ for Dwaine
+:class: note
+**Question.** Form $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$ for the Dwaine data. What do the individual entries mean?
+
+**Intuition.** $\mathbf{X}'\mathbf{X}$ is a $3 \times 3$ table whose entries are sums of products of the predictor columns; $\mathbf{X}'\mathbf{Y}$ is a length-3 column pairing each predictor column with sales.
+
+**Formula.** $(\mathbf{X}'\mathbf{X})_{jk} = \sum_i X_{ij} X_{ik}$ and $(\mathbf{X}'\mathbf{Y})_j = \sum_i X_{ij} Y_i$.
+
+**Computation.**
+
+```r
+XtX <- t(X) %*% X
+XtX
+```
+```text
+          intercept targtpop dispoinc
+intercept      21.0  1302.40   360.00
+targtpop     1302.4 87707.94 22609.19
+dispoinc      360.0 22609.19  6190.26
+```
+
+```r
+XtY <- t(X) %*% Y
+XtY
+```
+```text
+               [,1]
+intercept   3820.00
+targtpop  249643.35
+dispoinc   66072.75
+```
+
+```python
+XtX = X.T @ X
+print(XtX)
+```
+```text
+[[2.100000e+01 1.302400e+03 3.600000e+02]
+ [1.302400e+03 8.770794e+04 2.260919e+04]
+ [3.600000e+02 2.260919e+04 6.190260e+03]]
+```
+
+```python
+XtY = X.T @ Y
+print(XtY)
+```
+```text
+[  3820.   249643.35  66072.75]
+```
+
+**Interpretation.** The top-left entry of $\mathbf{X}'\mathbf{X}$ is $21 = \sum 1 \cdot 1 = n$, the sample size. The rest of the first row and column are the predictor sums $\sum \text{targtpop} = 1302.4$ and $\sum \text{dispoinc} = 360.0$. The diagonal entries $87707.94$ and $6190.26$ are the sums of squared predictor values, and the off-diagonal $22609.19$ is the cross-product $\sum (\text{targtpop})(\text{dispoinc})$. In $\mathbf{X}'\mathbf{Y}$, the first entry $3820$ is $\sum Y$, and the other two are $\sum(\text{targtpop})Y$ and $\sum(\text{dispoinc})Y$. Chapter 7 reuses this exact $\mathbf{X}'\mathbf{X}$ (@ch07-ls-matrix).
+:::
+
+::::{admonition} Try it 6.2
+:class: important
+Let $\mathbf{u} = (1, 2, 3)'$ be a $3 \times 1$ column vector. Without software,
+compute $\mathbf{u}'\mathbf{u}$ and say in words what it equals. Then give the
+dimension of $\mathbf{u}\mathbf{u}'$ (you need not compute all its entries).
+
+:::{admonition} Solution
+:class: dropdown
+$\mathbf{u}'\mathbf{u}$ multiplies a $1 \times 3$ row by a $3 \times 1$ column,
+giving a $1 \times 1$ number: $1^2 + 2^2 + 3^2 = 14$, the sum of squared entries.
+Reversing the order, $\mathbf{u}\mathbf{u}'$ multiplies a $3 \times 1$ column by a
+$1 \times 3$ row, giving a $3 \times 3$ matrix. Same vectors, opposite order,
+different shapes: order matters in matrix multiplication.
+:::
+::::
+
+:::{admonition} Durable skill: Check the shapes before you trust the numbers
+:class: tip
+Every matrix expression has a shape, and the shapes must fit before any answer can
+be right. When you meet a formula like $\mathbf{X}'\mathbf{Y}$, read off the
+dimensions first: $\mathbf{X}'$ is $p \times n$, $\mathbf{Y}$ is $n \times 1$, the
+inner $n$'s match, so the result is $p \times 1$. If they did not match, the
+expression would be nonsense and you would stop before computing a number. This
+dimension check catches a large share of real matrix bugs in seconds; practice it
+by narrating the shape of every product you write.
+:::
+
+## 6.3 Identity, symmetry, independence, and rank
+
+### Intuition
+
+Before inverting anything, we need vocabulary for the shapes of matrices that show
+up in regression, and one idea that decides whether a fit is even possible. The
+**identity matrix** $\mathbf{I}$ (Definition 6.6) is the matrix version of the
+number $1$: multiplying by it changes nothing. A **symmetric** matrix
+(Definition 6.7) equals its own transpose, and $\mathbf{X}'\mathbf{X}$ is always
+symmetric, which is why its table looks like a mirror across the diagonal.
+
+The idea that decides feasibility is **linear independence** (Definition 6.8) of
+the predictor columns. If one predictor column is an exact linear combination of
+the others, say `dispoinc` were exactly twice `targtpop` plus a constant, then the
+columns carry redundant information, the matrix $\mathbf{X}$ is **rank deficient**,
+and
+$\mathbf{X}'\mathbf{X}$ cannot be inverted. There is then no unique best fit,
+because the data cannot tell the redundant coefficients apart. This is the matrix
+face of a problem you will meet again as multicollinearity in @ch12-vif.
+
+A picture makes independence concrete. Think of two columns as arrows drawn from
+the origin. If they point in genuinely different directions, they open up an area
+between them, and the matrix has full rank. If one is just a stretched copy of the
+other, both arrows lie on a single line, the area between them is zero, and the
+matrix is rank deficient. @fig-ch06-rank-area shows both cases side by side.
+
+```{figure} figures/fig_ch06_rank_area.png
+:name: fig-ch06-rank-area
+:alt: Two side-by-side panels, each showing two arrows drawn from the origin. In the left panel, labeled independent columns frame an area, a blue arrow and a green arrow point in different directions and the parallelogram between them is shaded, marked area greater than zero, full rank, determinant not zero, unique fit. In the right panel, labeled dependent columns collapse to a line, the green arrow is a stretched copy of the blue arrow so both lie on one dashed line, marked area equals zero, rank deficient, determinant zero, no unique fit.
+Rank seen as geometry. Independent columns spread out and enclose an area, so the fit is unique; dependent columns fall on one line and enclose nothing, so the fit is not. The enclosed area is exactly the determinant of the next section, and its collapse to zero is what makes a matrix singular.
+```
+
+These names earn their keep: a named property is a fact you can cite instead of
+recompute. Showing the hat matrix is a projection becomes a one-line argument,
+"it is symmetric and idempotent," in place of pages of entry-by-entry checking.
+
+### Formula
+
+:::{admonition} Definition 6.6: Identity matrix
+:class: note definition
+The **identity matrix** $\mathbf{I}_n$ is the $n \times n$ matrix with ones on
+the diagonal and zeros elsewhere. For any conformable $\mathbf{A}$,
+$\mathbf{I}\mathbf{A} = \mathbf{A}$ and $\mathbf{A}\mathbf{I} = \mathbf{A}$.
+:::
+
+:::{admonition} Definition 6.7: Symmetric matrix
+:class: note definition
+A square matrix $\mathbf{A}$ is **symmetric** if $\mathbf{A}' = \mathbf{A}$.
+:::
+
+The product $\mathbf{X}'\mathbf{X}$ is always symmetric, because
+$(\mathbf{X}'\mathbf{X})' = \mathbf{X}'(\mathbf{X}')' = \mathbf{X}'\mathbf{X}$ by
+the order-reversing rule (Theorem 6.5) of @ch06-matrix-mult.
+
+:::{admonition} Definition 6.8: Linear independence, rank, and full column rank
+:class: note definition
+Columns $\mathbf{v}_1, \dots, \mathbf{v}_p$ are **linearly independent** if the
+only weights $c_1, \dots, c_p$ making
+
+$$
+c_1 \mathbf{v}_1 + c_2 \mathbf{v}_2 + \cdots + c_p \mathbf{v}_p = \mathbf{0}
+$$
+
+are all zero; that is, no column can be written using the others. The **rank** of
+a matrix is the number of linearly independent columns it has, and the design
+matrix $\mathbf{X}$ has **full column rank** when its rank equals $p$.
+:::
+
+The central fact of this section connects rank to invertibility.
+
+:::{admonition} Theorem 6.9: Invertibility and full column rank
+:class: important theorem
+The matrix $\mathbf{X}'\mathbf{X}$ is invertible if and only if $\mathbf{X}$ has
+full column rank. When it does, the least-squares fit is unique; when it does not,
+it is not.
+:::
+
+A tiny example makes rank concrete: $(1, 0)'$ and $(0, 1)'$ are independent, but
+$(1, 2)'$ and $(2, 4)'$ are dependent because the second is exactly twice the
+first, so together they span only a line and have rank $1$, not $2$. In a design
+matrix, such a dependent column is a predictor that repeats information already
+present.
+
+### R and Python
+
+Software reports symmetry, rank, and the determinant (the single number, covered
+in @ch06-inverse, whose vanishing signals rank deficiency) directly.
+
+```r
+isSymmetric(XtX)
+qr(X)$rank
+round(det(XtX), 2)
+```
+```text
+[1] TRUE
+[1] 3
+[1] 1068302
+```
+
+```python
+print(np.allclose(XtX, XtX.T))
+print(np.linalg.matrix_rank(X))
+print(round(np.linalg.det(XtX), 2))
+```
+```text
+True
+3
+1068302.4
+```
+
+The design matrix has rank $3$, its full column count, so the two predictors plus
+the intercept carry three genuinely different pieces of information, and the
+nonzero determinant confirms that $\mathbf{X}'\mathbf{X}$ is invertible and the
+Dwaine fit is well posed.
+
+The habit to build: before trusting any multiple regression, ask whether the
+predictors are genuinely distinct. Software will happily invert a nearly singular
+matrix and return coefficients with enormous standard errors, the early warning
+that two predictors carry almost the same information. Rank is the yes-or-no
+version of that question; Chapter 12 sharpens it into "how close to dependent are
+they?"
+
+::::{admonition} Try it 6.3
+:class: important
+Suppose someone adds a third predictor to the Dwaine model: `targtpop` measured
+in hundreds instead of thousands, that is, exactly $10 \times \text{targtpop}$.
+What is the rank of the new $21 \times 4$ design matrix, and can
+$\mathbf{X}'\mathbf{X}$ be inverted? Explain.
+
+:::{admonition} Solution
+:class: dropdown
+The new column is exactly $10$ times an existing one, so it adds no independent
+information. The rank stays at $3$, not $4$, so $\mathbf{X}$ is rank deficient and
+$\mathbf{X}'\mathbf{X}$ (now $4 \times 4$) is singular and cannot be inverted:
+there is no unique least-squares solution, because the data cannot split one effect
+between two copies of the same predictor.
+:::
+::::
+
+(ch06-inverse)=
+## 6.4 The inverse and the normal equations
+
+### Intuition
+
+Here is where the machinery pays off. In ordinary algebra, to solve $ax = c$ you
+divide by $a$, which is the same as multiplying by $a^{-1}$. Matrices have no
+division, but they have the next best thing: for a square matrix $\mathbf{A}$
+with full rank, there is an **inverse** $\mathbf{A}^{-1}$ (Definition 6.10) that
+undoes it, meaning $\mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$. To solve a matrix equation
+$\mathbf{A}\mathbf{x} = \mathbf{c}$, multiply both sides on the left by
+$\mathbf{A}^{-1}$ and get $\mathbf{x} = \mathbf{A}^{-1}\mathbf{c}$.
+
+The normal equations of least squares, which in Chapter 2 were two scalar
+equations, collapse in matrix form to the single equation
+$\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y}$. Chapter 7 derives
+this from minimizing squared error (@ch07-ls-matrix); for now take it as the
+matrix twin of the Chapter 2 normal equations (@ch02-least-squares). Solving it
+is now a one-liner: multiply by $(\mathbf{X}'\mathbf{X})^{-1}$.
+
+With numbers, $a^{-1}$ exists for every $a$ except zero. With matrices,
+$\mathbf{A}^{-1}$ exists for every square matrix except the rank-deficient ones,
+so "can I solve this uniquely," "is the determinant nonzero," and "are the columns
+independent" are three ways of asking one question. For Dwaine, all three say yes.
+
+:::{admonition} A common wrong turn
+:class: warning
+There is no such thing as "dividing by a matrix," and you cannot cancel
+$\mathbf{X}'$ from both sides of $\mathbf{X}'\mathbf{X}\mathbf{b} = \mathbf{X}'\mathbf{Y}$
+to get $\mathbf{X}\mathbf{b} = \mathbf{Y}$. That step would need
+$(\mathbf{X}')^{-1}$, but $\mathbf{X}'$ is $p \times n$ and not even square, so it
+has no inverse. The only legal move is to invert the square matrix
+$\mathbf{X}'\mathbf{X}$.
+:::
+
+### Formula
+
+:::{admonition} Definition 6.10: Inverse and determinant
+:class: note definition
+A square matrix $\mathbf{A}$ is **invertible** (or nonsingular) if there is a
+matrix $\mathbf{A}^{-1}$ with
+
+$$
+\mathbf{A}^{-1}\mathbf{A} = \mathbf{A}\,\mathbf{A}^{-1} = \mathbf{I}.
+$$
+
+Such an inverse exists exactly when $\mathbf{A}$ has full rank, equivalently when
+its **determinant**, a single number computed from the entries, is nonzero. For a
+$2 \times 2$ matrix,
+
+$$
+\det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc, \qquad
+\begin{pmatrix} a & b \\ c & d \end{pmatrix}^{-1} = \frac{1}{ad - bc}\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}.
+$$
+:::
+
+- The determinant $ad - bc$ measures whether the columns are independent; if it is zero, the inverse formula divides by zero and no inverse exists.
+- For larger matrices the determinant is more involved, so we let software compute it, but the rule "invertible if and only if determinant nonzero" stays exact.
+
+This connects back to the picture of rank in @fig-ch06-rank-area: the two columns
+of a two-by-two matrix frame a parallelogram, and the determinant is its area. When
+the columns point along the same line the parallelogram is squashed flat, its area
+is zero, and the matrix is singular, so "determinant zero" and "the columns collapse
+onto one line" are the same event.
+
+:::{admonition} Definition 6.11: Normal equations (matrix form)
+:class: note definition
+The **normal equations** of least squares are the linear system
+
+$$
+\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y},
+$$
+
+whose solution $\mathbf{b}$ is the least-squares coefficient vector. This is the
+matrix twin of the two scalar normal equations of Chapter 2
+(@ch02-least-squares).
+:::
+
+Applying the inverse to the normal equations gives the **least-squares estimator**
+in one line.
+
+:::{admonition} Theorem 6.12: Least-squares solution
+:class: important theorem
+If $\mathbf{X}$ has full column rank, so that $\mathbf{X}'\mathbf{X}$ is
+invertible, then the normal equations $\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y}$
+have the unique solution
+
+$$
+\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}.
+$$
+:::
+
+In words: multiply the stored cross-products $\mathbf{X}'\mathbf{Y}$ by the
+inverse of the cross-product matrix $\mathbf{X}'\mathbf{X}$, and out come all $p$
+coefficient estimates at once. This one formula is the whole of least-squares
+estimation, for any number of predictors.
+
+### R and Python
+
+First the $2 \times 2$ inverse formula, checked on a small symmetric matrix, so
+you can see $\mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$ happen. Both languages invert
+with a single call: `solve` in R, `np.linalg.inv` in Python.
+
+```r
+M <- matrix(c(2, 1,
+              1, 2), nrow = 2, byrow = TRUE)
+Minv <- solve(M)
+Minv
+round(M %*% Minv, 6)
+```
+```text
+           [,1]       [,2]
+[1,]  0.6666667 -0.3333333
+[2,] -0.3333333  0.6666667
+     [,1] [,2]
+[1,]    1    0
+[2,]    0    1
+```
+
+```python
+M = np.array([[2.0, 1.0],
+              [1.0, 2.0]])
+Minv = np.linalg.inv(M)
+print(Minv)
+print(np.round(M @ Minv, 6))
+```
+```text
+[[ 0.66666667 -0.33333333]
+ [-0.33333333  0.66666667]]
+[[1. 0.]
+ [0. 1.]]
+```
+
+The determinant is $2\cdot 2 - 1 \cdot 1 = 3$, so the inverse is
+$\tfrac{1}{3}\left(\begin{smallmatrix} 2 & -1 \\ -1 & 2 \end{smallmatrix}\right)$,
+matching the printout, and $\mathbf{M}^{-1}\mathbf{M}$ returns the identity.
+
+You will almost never invert a matrix bigger than this by hand; working the
+two-by-two case once is enough to see where the answer comes from and watch the
+identity appear, so a software inverse is never magic. From here on we let `solve`
+and `np.linalg.inv` do the arithmetic, and the next example turns the inverse loose
+on the full Dwaine fit.
+
+:::{admonition} Example 6.3: Solving the normal equations for Dwaine
+:class: note
+**Question.** Invert $\mathbf{X}'\mathbf{X}$ and compute the coefficient vector $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$. Do the numbers match what `lm` and `statsmodels` report?
+
+**Intuition.** We already stored $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$. Inverting the first and multiplying by the second solves for all three coefficients at once.
+
+**Formula.** $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$.
+
+**Computation.**
+
+```r
+XtX_inv <- solve(XtX)
+round(XtX_inv, 6)
+round(XtX %*% XtX_inv, 6)
+```
+```text
+          intercept  targtpop  dispoinc
+intercept 29.728923  0.072183 -1.992553
+targtpop   0.072183  0.000370 -0.005550
+dispoinc  -1.992553 -0.005550  0.136311
+          intercept targtpop dispoinc
+intercept         1        0        0
+targtpop          0        1        0
+dispoinc          0        0        1
+```
+
+```r
+b <- XtX_inv %*% XtY
+b
+```
+```text
+               [,1]
+intercept -68.85707
+targtpop    1.45456
+dispoinc    9.36550
+```
+
+```r
+fit <- lm(sales ~ targtpop + dispoinc, data = dwaine)
+coef(fit)
+```
+```text
+(Intercept)    targtpop    dispoinc
+  -68.85707     1.45456     9.36550
+```
+
+Now the same computation in Python.
+
+```python
+XtX_inv = np.linalg.inv(XtX)
+print(np.round(XtX_inv, 6))
+print(np.round(XtX @ XtX_inv, 6))
+```
+```text
+[[ 2.9728923e+01  7.2183000e-02 -1.9925530e+00]
+ [ 7.2183000e-02  3.7000000e-04 -5.5500000e-03]
+ [-1.9925530e+00 -5.5500000e-03  1.3631100e-01]]
+[[ 1. -0. -0.]
+ [ 0.  1. -0.]
+ [-0. -0.  1.]]
+```
+
+```python
+b = XtX_inv @ XtY
+print(b)
+```
+```text
+[-68.85707315   1.45455958   9.36550038]
+```
+
+```python
+fit = smf.ols("sales ~ targtpop + dispoinc", data=dwaine).fit()
+print(fit.params)
+```
+```text
+Intercept   -68.857073
+targtpop      1.454560
+dispoinc      9.365500
+dtype: float64
+```
+
+**Interpretation.** The hand-built estimator gives $\mathbf{b} = (-68.86,\ 1.4546,\ 9.3655)'$, and both `lm` and `statsmodels` return the identical numbers, confirming that the built-in routines do exactly this matrix computation. The fitted model is $\widehat{\text{sales}} = -68.86 + 1.4546\,(\text{targtpop}) + 9.3655\,(\text{dispoinc})$. Each extra thousand young residents adds about $1.45$ thousand dollars of predicted sales, holding income fixed, and each extra thousand dollars of income adds about $9.37$ thousand, holding population fixed. Chapter 8 unpacks that "holding fixed" reading (@ch08-extra-ss); here, one matrix inverse produced the entire fit.
+:::
+
+::::{admonition} Try it 6.4
+:class: important
+Using the $2 \times 2$ formula, invert $\mathbf{A} = \left(\begin{smallmatrix} 4 & 2 \\ 1 & 3 \end{smallmatrix}\right)$
+by hand. Then explain why $\mathbf{B} = \left(\begin{smallmatrix} 2 & 4 \\ 1 & 2 \end{smallmatrix}\right)$
+has no inverse.
+
+:::{admonition} Solution
+:class: dropdown
+For $\mathbf{A}$, the determinant is $4 \cdot 3 - 2 \cdot 1 = 10$, so
+$\mathbf{A}^{-1} = \tfrac{1}{10}\left(\begin{smallmatrix} 3 & -2 \\ -1 & 4 \end{smallmatrix}\right)
+= \left(\begin{smallmatrix} 0.3 & -0.2 \\ -0.1 & 0.4 \end{smallmatrix}\right)$.
+For $\mathbf{B}$, the determinant is $2 \cdot 2 - 4 \cdot 1 = 0$, so no inverse
+exists. The reason is visible in the columns: column 2 is exactly twice column 1,
+so the columns are linearly dependent and $\mathbf{B}$ is rank deficient.
+:::
+::::
+
+(ch06-projection)=
+## 6.5 Idempotent and projection matrices
+
+### Intuition
+
+The coefficients are done, so the model can now make its own predictions. The
+question of this section is where those predictions come from and what they look
+like as a picture. The answer is a single table of numbers that turns the observed
+sales into the model's fitted sales in one step, and that step is a shadow: it
+flattens the data onto the surface the predictors can reach.
+
+With $\mathbf{b}$ in hand, the fitted values are $\widehat{\mathbf{Y}} = \mathbf{X}\mathbf{b}$.
+Substitute the estimator and something remarkable appears:
+
+$$
+\widehat{\mathbf{Y}} = \mathbf{X}\mathbf{b} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y} = \mathbf{H}\mathbf{Y}, \qquad \mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'.
+$$
+
+:::{admonition} Definition 6.13: Hat matrix
+:class: note definition
+The **hat matrix** is $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$,
+the single matrix that turns the observed responses $\mathbf{Y}$ into the fitted
+values $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$: it "puts the hat on
+$\mathbf{Y}$."
+:::
+
+Geometrically the hat matrix is a **projection** (Definition 6.14). Picture
+$\mathbf{Y}$ as an
+arrow in $n$-dimensional space; the fitted values a regression can produce all lie
+in a flat subspace, the span of the columns of $\mathbf{X}$. The hat matrix drops
+$\mathbf{Y}$ straight down onto that subspace, landing at the closest point, and
+the residual is the perpendicular leftover. @fig-ch06-projection shows this
+picture, the subject of @ch07-geometry.
+
+```{figure} figures/fig_ch06_projection.png
+:name: fig-ch06-projection
+:alt: A three-dimensional sketch. A shaded plane labeled column space of X sits near the floor. A blue arrow labeled Y points up from the origin above the plane. An orange arrow labeled Y-hat equals H Y lies in the plane, directly below the tip of Y. A red arrow labeled e equals I minus H times Y connects the tip of Y-hat up to the tip of Y, meeting the plane at a right angle marked with a small square.
+Least squares as a projection. The fitted vector Y-hat is the shadow of the response Y on the column space of X, and the residual e joins them at a right angle. The hat matrix H performs the projection onto the plane; I minus H produces the perpendicular residual.
+```
+
+Two algebraic properties make $\mathbf{H}$ a projection, and they are the
+workhorses of the diagnostics in Chapter 9. First, $\mathbf{H}$ is **symmetric**.
+Second, $\mathbf{H}$ is **idempotent**: applying it twice is the same as applying
+it once, $\mathbf{H}\mathbf{H} = \mathbf{H}$. That makes sense for a projection,
+since once a vector is flattened onto the plane, flattening again does nothing.
+
+The shadow picture is worth holding onto. Your shadow on flat ground keeps your
+left-right and forward-back position but flattens your height to zero; the hat
+matrix does the same to $\mathbf{Y}$, flattening away the part of the response
+that no combination of the predictors could reproduce, which is the residual.
+
+These properties are not decoration: Chapter 9 reads the diagonal of $\mathbf{H}$
+to find which cities pull hardest on the fitted surface, Chapter 7 uses its trace
+to count degrees of freedom, and the perpendicular picture is what makes least
+squares the closest fit, with no point in the plane nearer to $\mathbf{Y}$ than its
+own shadow.
+
+:::{admonition} Key idea
+:class: tip keyidea
+Least squares is a projection. The hat matrix drops the response $\mathbf{Y}$
+straight down onto the space of values the predictors can reproduce, landing at the
+closest point $\widehat{\mathbf{Y}}$, and the residual is the perpendicular
+leftover. "Best fit" and "shortest residual" are the same geometric fact.
+:::
+
+### Formula
+
+:::{admonition} Definition 6.14: Idempotent and projection matrix
+:class: note definition
+A square matrix $\mathbf{P}$ is **idempotent** if $\mathbf{P}\mathbf{P} = \mathbf{P}$:
+applying it twice is the same as applying it once. A symmetric idempotent matrix
+is a **projection matrix**.
+:::
+
+The two projections of regression are
+
+$$
+\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}', \qquad \mathbf{I} - \mathbf{H},
+$$
+
+with $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$ the fitted values and
+$\mathbf{e} = \mathbf{Y} - \widehat{\mathbf{Y}} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$
+the residuals. In words: $\mathbf{H}$ projects onto the space of fittable values,
+and $\mathbf{I} - \mathbf{H}$ projects onto the leftover space of residuals.
+
+:::{admonition} Definition 6.15: Trace
+:class: note definition
+The **trace** of a square matrix is the sum of its diagonal entries. For the hat
+matrix, $\operatorname{tr}(\mathbf{H}) = p$, the number of parameters, a fact
+Chapter 7 uses to explain the $n - p$ divisor for $s^2$.
+:::
+
+The two defining properties of $\mathbf{H}$ are what make it a projection.
+
+:::{admonition} Theorem 6.16: The hat matrix is a projection
+:class: important theorem
+The hat matrix $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ is
+symmetric and idempotent, and so is $\mathbf{I} - \mathbf{H}$. Hence both are
+projection matrices: $\mathbf{H}$ projects onto the column space of $\mathbf{X}$
+and $\mathbf{I} - \mathbf{H}$ onto the residual space.
+:::
+
+**Proof.** Write $\mathbf{G} = (\mathbf{X}'\mathbf{X})^{-1}$,
+which is symmetric because $\mathbf{X}'\mathbf{X}$ is (its inverse inherits
+symmetry: $\mathbf{G}' = ((\mathbf{X}'\mathbf{X})^{-1})' = ((\mathbf{X}'\mathbf{X})')^{-1} = (\mathbf{X}'\mathbf{X})^{-1} = \mathbf{G}$).
+For symmetry of $\mathbf{H}$, apply the order-reversing transpose rule of
+@ch06-matrix-mult twice:
+
+$$
+\mathbf{H}' = (\mathbf{X}\mathbf{G}\mathbf{X}')' = (\mathbf{X}')'\mathbf{G}'\mathbf{X}' = \mathbf{X}\mathbf{G}\mathbf{X}' = \mathbf{H}.
+$$
+
+For idempotency, multiply $\mathbf{H}$ by itself and cancel the inner
+$\mathbf{X}'\mathbf{X}$ against its inverse:
+
+$$
+\mathbf{H}\mathbf{H} = \mathbf{X}\mathbf{G}(\mathbf{X}'\mathbf{X})\mathbf{G}\mathbf{X}' = \mathbf{X}\mathbf{G}\mathbf{X}' = \mathbf{H},
+$$
+
+using $(\mathbf{X}'\mathbf{X})\mathbf{G} = (\mathbf{X}'\mathbf{X})(\mathbf{X}'\mathbf{X})^{-1} = \mathbf{I}$.
+The same two steps show $\mathbf{I} - \mathbf{H}$ is symmetric and idempotent:
+$(\mathbf{I} - \mathbf{H})(\mathbf{I} - \mathbf{H}) = \mathbf{I} - 2\mathbf{H} + \mathbf{H}\mathbf{H} = \mathbf{I} - 2\mathbf{H} + \mathbf{H} = \mathbf{I} - \mathbf{H}$. $\blacksquare$
+
+### R and Python
+
+:::{admonition} Example 6.4: The hat matrix in action
+:class: note
+**Question.** Build $\mathbf{H}$ for Dwaine, confirm it is symmetric and idempotent with trace $3$, and use it to produce the fitted values and residuals.
+
+**Intuition.** $\mathbf{H}$ is $21 \times 21$. We check the two defining properties numerically, then apply $\mathbf{H}$ and $\mathbf{I} - \mathbf{H}$ to $\mathbf{Y}$.
+
+**Formula.** $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$, $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$, $\mathbf{e} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$.
+
+**Computation.**
+
+```r
+H <- X %*% XtX_inv %*% t(X)
+c(symmetric = isSymmetric(round(H, 10)),
+  idempotent = all(abs(H %*% H - H) < 1e-10))
+round(sum(diag(H)), 6)
+```
+```text
+ symmetric idempotent
+      TRUE       TRUE
+[1] 3
+```
+
+```r
+Yhat <- H %*% Y
+e <- (diag(n) - H) %*% Y
+round(head(cbind(Y, Yhat, e), 3), 3)
+```
+```text
+         Y
+[1,] 174.4 187.184 -12.784
+[2,] 164.4 154.229  10.171
+[3,] 244.2 234.396   9.804
+```
+
+```python
+H = X @ XtX_inv @ X.T
+print(np.allclose(H, H.T), np.allclose(H @ H, H))
+print(round(np.trace(H), 6))
+```
+```text
+True True
+3.0
+```
+
+```python
+Yhat = H @ Y
+e = (np.eye(n) - H) @ Y
+print(np.round(np.column_stack([Y, Yhat, e])[:3], 3))
+```
+```text
+[[174.4   187.184 -12.784]
+ [164.4   154.229  10.171]
+ [244.2   234.396   9.804]]
+```
+
+**Interpretation.** The hat matrix is symmetric and idempotent, with trace $3 = p$, exactly as the derivation promised. Applying it, city 1's fitted sales are $187.2$ against actual $174.4$, a residual of $-12.8$ (the model slightly overpredicts). The diagonal entries of $\mathbf{H}$, not printed here, are the leverage values $h_{ii}$ that Chapter 9 turns into influence diagnostics: a large one marks a city whose response has an outsized say in the fit. Every residual analysis in the book starts from this one matrix.
+:::
+
+::::{admonition} Try it 6.5
+:class: important
+A projection matrix $\mathbf{P}$ satisfies $\mathbf{P}\mathbf{P} = \mathbf{P}$.
+Show that if $\mathbf{P}$ is idempotent then so is $\mathbf{I} - \mathbf{P}$, and
+compute $(\mathbf{I} - \mathbf{P})\mathbf{P}$.
+
+:::{admonition} Solution
+:class: dropdown
+Expand $(\mathbf{I} - \mathbf{P})(\mathbf{I} - \mathbf{P}) = \mathbf{I} - \mathbf{P} - \mathbf{P} + \mathbf{P}\mathbf{P} = \mathbf{I} - 2\mathbf{P} + \mathbf{P} = \mathbf{I} - \mathbf{P}$,
+so $\mathbf{I} - \mathbf{P}$ is idempotent. And
+$(\mathbf{I} - \mathbf{P})\mathbf{P} = \mathbf{P} - \mathbf{P}\mathbf{P} = \mathbf{P} - \mathbf{P} = \mathbf{0}$.
+The two projections annihilate each other, which is the algebra behind fitted
+values and residuals being orthogonal.
+:::
+::::
+
+## 6.6 Quadratic forms and sums of squares
+
+### Intuition
+
+Every "sum of squares" in regression is secretly one matrix expression called a
+**quadratic form** (Definition 6.17). The error sum of squares is
+$\mathrm{SSE} = \sum e_i^2$, and a sum of squared entries of a vector is exactly
+that vector dotted with itself: $\mathrm{SSE} = \mathbf{e}'\mathbf{e}$. Because
+$\mathbf{e} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$, a little algebra rewrites SSE
+using only $\mathbf{Y}$ and a projection matrix in the middle. That middle-matrix
+pattern, $\mathbf{Y}'\mathbf{A}\mathbf{Y}$, is a quadratic form, and SSTO, SSR,
+and SSE are all of this shape.
+
+Why care? Two reasons. First, a quadratic form makes the degrees of freedom and
+the expected value of each sum of squares fall out of the middle matrix, how
+Chapter 7 explains the ANOVA table. Second, sums of squares can never be negative,
+and that is guaranteed by a property of the middle matrix called **positive
+semidefiniteness**. @fig-ch06-quadratic-form shows why a positive-definite form is
+shaped like a bowl that never dips below zero.
+
+```{figure} figures/fig_ch06_quadratic_form.png
+:name: fig-ch06-quadratic-form
+:alt: A three-dimensional surface plot of the quadratic form u-prime M u for a two-by-two positive-definite matrix M. The surface is a smooth upward bowl touching zero only at the origin, marked with a red dot labeled minimum zero at u equals zero, and rising in every direction away from it.
+A positive-definite quadratic form is a bowl. Its value is zero only at the origin and strictly positive in every other direction, which is exactly why a sum of squares written as such a form can never be negative.
+```
+
+The payoff is that this view survives even when the sum no longer looks like a sum
+of squares. Written as $\mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y}$, SSE does
+not visibly square anything, yet the middle matrix still guarantees it cannot go
+negative. The same reasoning applies to a variance, a sum of squares in disguise,
+so the covariance matrix of the next section can never hold a negative variance.
+
+### Formula
+
+:::{admonition} Definition 6.17: Quadratic form and positive definiteness
+:class: note definition
+A **quadratic form** in a vector $\mathbf{u}$ is a scalar
+$\mathbf{u}'\mathbf{A}\mathbf{u} = \sum_i \sum_j A_{ij} u_i u_j$ for a symmetric
+matrix $\mathbf{A}$, a weighted sum of all products of pairs of entries. The matrix
+$\mathbf{A}$ is **positive semidefinite** if $\mathbf{u}'\mathbf{A}\mathbf{u} \ge 0$
+for every $\mathbf{u}$, and **positive definite** if the form is strictly positive
+for every nonzero $\mathbf{u}$.
+:::
+
+The three regression sums of squares are all quadratic forms in $\mathbf{Y}$, and
+their middle matrices carry the ANOVA decomposition.
+
+:::{admonition} Theorem 6.18: Sums of squares as quadratic forms
+:class: important theorem
+With $\mathbf{J}$ the $n \times n$ matrix of all ones,
+
+$$
+\mathrm{SSE} = \mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y}, \qquad
+\mathrm{SSR} = \mathbf{Y}'\!\left(\mathbf{H} - \tfrac{1}{n}\mathbf{J}\right)\!\mathbf{Y}, \qquad
+\mathrm{SSTO} = \mathbf{Y}'\!\left(\mathbf{I} - \tfrac{1}{n}\mathbf{J}\right)\!\mathbf{Y},
+$$
+
+each with a symmetric, idempotent middle matrix. The middle matrices add,
+$(\mathbf{I} - \mathbf{H}) + (\mathbf{H} - \tfrac{1}{n}\mathbf{J}) = \mathbf{I} - \tfrac{1}{n}\mathbf{J}$,
+which is the matrix statement of $\mathrm{SSTO} = \mathrm{SSR} + \mathrm{SSE}$, and
+$\mathrm{SSE} \ge 0$ because its middle matrix is positive semidefinite.
+:::
+
+**Proof (nonnegativity).** Because $\mathbf{I} - \mathbf{H}$ is symmetric and
+idempotent, $\mathrm{SSE} = \mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y} = \mathbf{Y}'(\mathbf{I} - \mathbf{H})'(\mathbf{I} - \mathbf{H})\mathbf{Y} = \mathbf{e}'\mathbf{e} \ge 0$,
+so SSE is a genuine sum of squares and can never be negative; the same holds for
+SSR and SSTO. The additive decomposition of the middle matrices is the matrix
+statement of the ANOVA identity $\mathrm{SSTO} = \mathrm{SSR} + \mathrm{SSE}$
+(@ch03-anova-table). $\blacksquare$
+
+In words: the sums of squares are quadratic forms, and the idempotent middle
+matrices both guarantee nonnegativity and, in Chapter 7, hand us the degrees of
+freedom through their traces.
+
+### R and Python
+
+:::{admonition} Example 6.5: SSE as a quadratic form
+:class: note
+**Question.** Compute SSE for Dwaine as the quadratic form $\mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y}$, and use it to estimate the error variance $s^2 = \mathrm{MSE}$.
+
+**Intuition.** We already have $\mathbf{e} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$, so $\mathrm{SSE} = \mathbf{e}'\mathbf{e}$ is a single number. Dividing by $n - p$ degrees of freedom gives the variance estimate.
+
+**Formula.** $\mathrm{SSE} = \mathbf{e}'\mathbf{e}$, $\mathrm{MSE} = \mathrm{SSE}/(n - p)$ with $p = 3$.
+
+**Computation.**
+
+```r
+SSE <- as.numeric(t(e) %*% e)
+p <- ncol(X)
+MSE <- SSE / (n - p)
+round(c(SSE = SSE, df = n - p, MSE = MSE), 4)
+```
+```text
+      SSE        df       MSE
+2180.9274   18.0000  121.1626
+```
+
+```python
+SSE = float(e.T @ e)
+p = X.shape[1]
+MSE = SSE / (n - p)
+print(round(SSE, 4), n - p, round(MSE, 4))
+```
+```text
+2180.9274 18 121.1626
+```
+
+**Interpretation.** The residual quadratic form gives $\mathrm{SSE} = 2180.9$ on $n - p = 21 - 3 = 18$ degrees of freedom, so $\mathrm{MSE} = 121.2$ and the residual standard error is $s = \sqrt{121.2} \approx 11.0$ thousand dollars: even knowing a city's young population and income, the sales prediction is typically off by about $11$ thousand dollars. The divisor $18$ counts the observations left after spending $p = 3$ on the coefficients, the multiple-regression version of the $n - 2$ rule from Chapter 2; Chapter 7 reads this $n - p$ off the trace of the hat matrix and uses it to prove MSE is unbiased (@ch07-hat-matrix).
+:::
+
+::::{admonition} Try it 6.6
+:class: important
+Let $\mathbf{u} = (u_1, u_2)'$ and $\mathbf{A} = \left(\begin{smallmatrix} 2 & 0 \\ 0 & 3 \end{smallmatrix}\right)$.
+Write out the quadratic form $\mathbf{u}'\mathbf{A}\mathbf{u}$ as an ordinary
+expression in $u_1$ and $u_2$, and explain why it is positive definite.
+
+:::{admonition} Solution
+:class: dropdown
+$\mathbf{u}'\mathbf{A}\mathbf{u} = 2u_1^2 + 3u_2^2$. Both coefficients are
+positive, so the expression is a sum of two nonnegative terms and is zero only
+when $u_1 = u_2 = 0$. Hence $\mathbf{u}'\mathbf{A}\mathbf{u} > 0$ for every
+nonzero $\mathbf{u}$, which is the definition of positive definite. Its graph is
+the upward bowl of @fig-ch06-quadratic-form.
+:::
+::::
+
+(ch06-random-vectors)=
+## 6.7 Random vectors, expectation, and covariance matrices
+
+### Intuition
+
+So far the matrices held fixed numbers. But $\mathbf{Y}$ is random: rerun the 21
+cities under the same conditions and the sales would come out a little different,
+because of the errors $\boldsymbol{\varepsilon}$. To describe a vector of random
+variables we need two things: a vector of means and a table of variances and
+covariances.
+
+The vector of means is just the expectation applied entry by entry. The table is
+the **covariance matrix** (Definition 6.19): its diagonal holds the variance of
+each entry, and its off-diagonals hold the covariance between pairs of entries. For the regression
+errors, this table is simple: constant variance $\sigma^2$ down the diagonal
+(every error has the same spread) and zeros off it (distinct errors are
+uncorrelated), so $\operatorname{Cov}\{\boldsymbol{\varepsilon}\} = \sigma^2\mathbf{I}$.
+A two-line rule for how means and covariances travel through a linear map then
+yields the covariance matrix of $\mathbf{b}$, the source of every standard error.
+
+### Formula
+
+:::{admonition} Definition 6.19: Random vector, mean vector, and covariance matrix
+:class: note definition
+A **random vector** $\mathbf{W} = (W_1, \dots, W_m)'$ is a vector whose entries are
+random variables. Its **mean vector** and **covariance matrix** are
+
+$$
+E\{\mathbf{W}\} = \begin{pmatrix} E\{W_1\} \\ \vdots \\ E\{W_m\} \end{pmatrix}, \qquad
+\operatorname{Cov}\{\mathbf{W}\} = \begin{pmatrix} \operatorname{Var}\{W_1\} & \cdots & \operatorname{Cov}\{W_1, W_m\} \\ \vdots & \ddots & \vdots \\ \operatorname{Cov}\{W_m, W_1\} & \cdots & \operatorname{Var}\{W_m\} \end{pmatrix},
+$$
+
+with variances on the diagonal (always nonnegative) and a symmetric off-diagonal
+because $\operatorname{Cov}\{W_i, W_j\} = \operatorname{Cov}\{W_j, W_i\}$.
+:::
+
+The transformation rules for how these travel through a linear map are the heart of
+the section.
+
+:::{admonition} Theorem 6.20: Linear transformation of mean and covariance
+:class: important theorem
+For a random vector $\mathbf{W}$, a fixed matrix $\mathbf{A}$, and a fixed vector
+$\mathbf{c}$,
+
+$$
+E\{\mathbf{A}\mathbf{W} + \mathbf{c}\} = \mathbf{A}\,E\{\mathbf{W}\} + \mathbf{c}, \qquad
+\operatorname{Cov}\{\mathbf{A}\mathbf{W}\} = \mathbf{A}\operatorname{Cov}\{\mathbf{W}\}\mathbf{A}'.
+$$
+:::
+
+In words: expectation passes straight through a linear map, and a covariance
+matrix gets sandwiched between $\mathbf{A}$ and its transpose. Apply these to the
+regression model, where $E\{\mathbf{Y}\} = \mathbf{X}\boldsymbol{\beta}$ and
+$\operatorname{Cov}\{\mathbf{Y}\} = \sigma^2\mathbf{I}$, and the mean and
+covariance of $\mathbf{b}$ follow.
+
+:::{admonition} Theorem 6.21: Mean and covariance of the least-squares estimator
+:class: important theorem
+Under the linear model $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$
+with $E\{\boldsymbol{\varepsilon}\} = \mathbf{0}$ and
+$\operatorname{Cov}\{\boldsymbol{\varepsilon}\} = \sigma^2\mathbf{I}$, the estimator
+$\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ is unbiased with
+
+$$
+E\{\mathbf{b}\} = \boldsymbol{\beta}, \qquad
+\operatorname{Cov}\{\mathbf{b}\} = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1}.
+$$
+:::
+
+**Proof.** The estimator is a linear
+map of $\mathbf{Y}$: with $\mathbf{A} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$,
+we have $\mathbf{b} = \mathbf{A}\mathbf{Y}$. For the mean, use
+$E\{\mathbf{Y}\} = \mathbf{X}\boldsymbol{\beta}$:
+
+$$
+E\{\mathbf{b}\} = \mathbf{A}\,E\{\mathbf{Y}\} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{X}\boldsymbol{\beta} = \boldsymbol{\beta},
+$$
+
+so $\mathbf{b}$ is unbiased for $\boldsymbol{\beta}$. For the covariance, use
+$\operatorname{Cov}\{\mathbf{Y}\} = \sigma^2\mathbf{I}$ and the sandwich rule:
+
+$$
+\operatorname{Cov}\{\mathbf{b}\} = \mathbf{A}\,(\sigma^2\mathbf{I})\,\mathbf{A}' = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\,\mathbf{X}(\mathbf{X}'\mathbf{X})^{-1} = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1},
+$$
+
+where the middle $\mathbf{X}'\mathbf{X}$ cancels one inverse. So
+$\operatorname{Cov}\{\mathbf{b}\} = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1}$: the same
+inverse we used to compute $\mathbf{b}$ also gives, once scaled by $\sigma^2$, the
+variance of every coefficient and the covariance of every pair. $\blacksquare$
+
+Replacing the unknown $\sigma^2$ by its estimate MSE gives the **estimated
+covariance matrix** $s^2\{\mathbf{b}\} = \mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$,
+whose diagonal square roots are the standard errors $s\{b_k\}$ that software
+prints.
+
+:::{admonition} Key idea
+:class: tip keyidea
+The single matrix $(\mathbf{X}'\mathbf{X})^{-1}$ does two jobs. Multiplied by
+$\mathbf{X}'\mathbf{Y}$ it produces the coefficient estimates; scaled by $\sigma^2$
+it produces their entire covariance matrix, standard errors and correlations
+alike. Solve the fit once and the precision of every coefficient comes along for
+free.
+:::
+
+### R and Python
+
+:::{admonition} Example 6.6: Standard errors from the covariance matrix
+:class: note
+**Question.** Form the estimated covariance matrix $s^2\{\mathbf{b}\} = \mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$ for Dwaine, read off the coefficient standard errors, and check them against the software summary.
+
+**Intuition.** Scale the stored inverse by MSE; the diagonal holds the three coefficient variances, and their square roots are the standard errors.
+
+**Formula.** $s^2\{\mathbf{b}\} = \mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$, and $s\{b_k\} = \sqrt{[s^2\{\mathbf{b}\}]_{kk}}$.
+
+**Computation.**
+
+```r
+cov_b <- MSE * XtX_inv
+round(cov_b, 4)
+round(sqrt(diag(cov_b)), 4)
+```
+```text
+          intercept targtpop  dispoinc
+intercept 3602.0347   8.7459 -241.4230
+targtpop     8.7459   0.0449   -0.6724
+dispoinc  -241.4230  -0.6724   16.5158
+intercept  targtpop  dispoinc
+  60.0170    0.2118    4.0640
+```
+
+```r
+round(summary(fit)$coefficients[, 1:2], 4)
+```
+```text
+            Estimate Std. Error
+(Intercept) -68.8571    60.0170
+targtpop      1.4546     0.2118
+dispoinc      9.3655     4.0640
+```
+
+```python
+cov_b = MSE * XtX_inv
+print(np.round(cov_b, 4))
+print(np.round(np.sqrt(np.diag(cov_b)), 4))
+```
+```text
+[[ 3.6020347e+03  8.7459000e+00 -2.4142300e+02]
+ [ 8.7459000e+00  4.4900000e-02 -6.7240000e-01]
+ [-2.4142300e+02 -6.7240000e-01  1.6515800e+01]]
+[60.017   0.2118  4.064 ]
+```
+
+```python
+print(fit.summary2().tables[1].iloc[:, 0:2].round(4))
+```
+```text
+             Coef.  Std.Err.
+Intercept -68.8571   60.0170
+targtpop    1.4546    0.2118
+dispoinc    9.3655    4.0640
+```
+
+**Interpretation.** The diagonal of $s^2\{\mathbf{b}\}$ gives variances $3602.0$, $0.0449$, and $16.52$, whose square roots are the standard errors $60.02$, $0.2118$, and $4.064$, matching both software summaries to every printed digit. The off-diagonal $-0.6724$ between the two slopes says that over repeated samples an overestimate of one tends to come with an underestimate of the other, the consequence of the two predictors sharing information. Chapter 7 uses this full matrix, diagonal and off-diagonal alike, to build every confidence interval and joint test.
+:::
+
+::::{admonition} Try it 6.7
+:class: important
+A random vector $\mathbf{W}$ has covariance matrix
+$\operatorname{Cov}\{\mathbf{W}\} = \left(\begin{smallmatrix} 4 & 1 \\ 1 & 9 \end{smallmatrix}\right)$.
+Let $\mathbf{A} = (1, 1)$, a $1 \times 2$ row, so $\mathbf{A}\mathbf{W} = W_1 + W_2$.
+Use the covariance rule to find $\operatorname{Var}\{W_1 + W_2\}$.
+
+:::{admonition} Solution
+:class: dropdown
+By the rule, $\operatorname{Var}\{\mathbf{A}\mathbf{W}\} = \mathbf{A}\operatorname{Cov}\{\mathbf{W}\}\mathbf{A}'$.
+Compute $\mathbf{A}\operatorname{Cov}\{\mathbf{W}\} = (1,1)\left(\begin{smallmatrix} 4 & 1 \\ 1 & 9 \end{smallmatrix}\right) = (5, 10)$,
+then $(5, 10)(1, 1)' = 15$. So $\operatorname{Var}\{W_1 + W_2\} = 15$. This matches
+the scalar rule $\operatorname{Var}\{W_1\} + \operatorname{Var}\{W_2\} + 2\operatorname{Cov}\{W_1, W_2\} = 4 + 9 + 2(1) = 15$.
+:::
+::::
+
+:::{admonition} Durable skill: One object, many disguises
+:class: tip
+The quantity SSE appeared first as a plain sum $\sum e_i^2$, then as a dot product
+$\mathbf{e}'\mathbf{e}$, then as a quadratic form
+$\mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y}$. All three are the same number,
+written in the language that makes the next step easiest: the sum for hand
+computation, the dot product for code, the quadratic form for proving facts about
+its mean and degrees of freedom. Learning to recognize one object under its
+different notations is what lets you read advanced statistics. When a new formula
+looks unfamiliar, ask whether it is an old friend in matrix clothing.
+:::
+
+(ch06-mvn)=
+## 6.8 The multivariate normal, in brief
+
+### Intuition
+
+The mean vector and covariance matrix describe a random vector's center and
+spread, but not its full shape. For inference we add one assumption, the same one
+that turned Chapter 2's estimates into $t$ tests: the errors are normal. Stacked
+into a vector, normal errors with constant variance and no correlation follow a
+**multivariate normal** distribution (Definition 6.22), the several-variable
+generalization of the bell curve. Its contours are ellipses whose tilt and stretch
+are read directly off the covariance matrix, as in @fig-ch06-mvn.
+
+What the full distribution adds is how the probability thins out as you move from
+the center: the same bell-curve falloff you know from one variable, measured along
+the tilted axes of the covariance ellipse. That is what lets us compute the chance
+that a coefficient lands within a stated distance of the truth, exactly what a
+confidence interval reports in the next chapter.
+
+```{figure} figures/fig_ch06_mvn.png
+:name: fig-ch06-mvn
+:alt: A scatter of about twelve hundred points forming a tilted elliptical cloud centered at the origin, with concentric red elliptical density contours drawn over it. The cloud stretches along the forty-five degree diagonal because the two coordinates have a positive covariance of 0.8.
+A bivariate normal distribution. The two coordinates have covariance 0.8, so the cloud and its elliptical contours tilt along the diagonal. The shape of the ellipse is exactly the covariance matrix, which is why the sampling distribution of the coefficient vector b is described by its covariance matrix.
+```
+
+Why this matters: under normal errors the response is multivariate normal, and
+because $\mathbf{b}$ is a linear map of $\mathbf{Y}$, so is $\mathbf{b}$. That fact,
+$\mathbf{b} \sim N(\boldsymbol{\beta}, \sigma^2(\mathbf{X}'\mathbf{X})^{-1})$, is the
+foundation of every confidence interval, $t$ test, and $F$ test ahead.
+
+One caution keeps this honest. Multivariate normality of $\mathbf{b}$ is a
+consequence of assuming normal errors, not a fact the data hand you for free. If
+the errors are badly non-normal and the sample is small, that law is only
+approximate, one reason Chapter 5's permutation and bootstrap methods exist
+(@ch05-bootstrap). With a large sample, an averaging effect pulls $\mathbf{b}$
+toward normal even when the errors are not.
+
+### Formula
+
+:::{admonition} Definition 6.22: Multivariate normal
+:class: note definition
+A random vector $\mathbf{W}$ is **multivariate normal**, written
+$\mathbf{W} \sim N(\boldsymbol{\mu}, \boldsymbol{\Sigma})$, if it has mean vector
+$\boldsymbol{\mu}$, covariance matrix $\boldsymbol{\Sigma}$, and a joint density
+whose exponent is the quadratic form
+$-\tfrac{1}{2}(\mathbf{w} - \boldsymbol{\mu})'\boldsymbol{\Sigma}^{-1}(\mathbf{w} - \boldsymbol{\mu})$.
+Its defining property: any linear map of a multivariate normal vector is again
+multivariate normal, with mean and covariance given by the transformation rules of
+Theorem 6.20.
+:::
+
+Applying that property to regression under the normal error model gives the
+sampling law that drives every later inference.
+
+:::{admonition} Theorem 6.23: Sampling distribution of $\mathbf{b}$
+:class: important theorem
+Under the normal error model
+$\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2\mathbf{I})$, the response and
+the least-squares estimator are multivariate normal:
+
+$$
+\mathbf{Y} \sim N(\mathbf{X}\boldsymbol{\beta},\ \sigma^2\mathbf{I}), \qquad
+\mathbf{b} \sim N\!\left(\boldsymbol{\beta},\ \sigma^2(\mathbf{X}'\mathbf{X})^{-1}\right).
+$$
+:::
+
+The response is centered at the regression surface $\mathbf{X}\boldsymbol{\beta}$
+with independent, equal-variance coordinates, and the estimator $\mathbf{b}$ is
+centered at the truth $\boldsymbol{\beta}$ (unbiased) with the covariance matrix we
+derived.
+
+In words: normal errors make both the data and the estimates normal, so every
+coefficient is normally distributed with a variance we can read from
+$(\mathbf{X}'\mathbf{X})^{-1}$, and that is what makes exact inference possible.
+
+### R and Python
+
+We can demonstrate the covariance-recovery idea by simulation: draw many vectors
+with a target covariance and confirm the sample covariance matches. Starting from
+independent standard normals $\mathbf{Z}$, the transformation $\mathbf{V} = \mathbf{Z}\mathbf{L}'$,
+where $\mathbf{L}$ is a matrix square root of the target $\boldsymbol{\Sigma}$
+(the Cholesky factor), produces vectors with covariance $\boldsymbol{\Sigma}$,
+exactly the sandwich rule at work.
+
+```r
+set.seed(4210)
+mu <- c(0, 0)
+Sigma <- matrix(c(1, 0.8,
+                  0.8, 1), nrow = 2)
+L <- chol(Sigma)
+Z <- matrix(rnorm(2 * 5000), ncol = 2)
+V <- Z %*% L
+round(cov(V), 3)
+```
+```text
+      [,1]  [,2]
+[1,] 0.967 0.760
+[2,] 0.760 0.955
+```
+
+```python
+rng = np.random.default_rng(4210)
+Sigma = np.array([[1.0, 0.8],
+                  [0.8, 1.0]])
+L = np.linalg.cholesky(Sigma)
+Z = rng.standard_normal((5000, 2))
+V = Z @ L.T
+print(np.round(np.cov(V, rowvar=False), 3))
+```
+```text
+[[1.017 0.822]
+ [0.822 1.026]]
+```
+
+The sample covariance of the 5000 simulated vectors comes out close to the target
+$\left(\begin{smallmatrix} 1 & 0.8 \\ 0.8 & 1 \end{smallmatrix}\right)$ in both
+languages, differing only by sampling noise.
+
+The Cholesky factor can stay a black box for now; the point is that a covariance
+can be planted on purpose, by passing uncorrelated noise through a fixed matrix and
+letting the sandwich rule do the rest. The covariance of $\mathbf{b}$ is the same
+story: error noise $\sigma^2\mathbf{I}$ passed through the fixed matrix
+$(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$, so the simulation and the regression are
+two uses of one mechanism.
+
+::::{admonition} Try it 6.8
+:class: important
+Under the normal error model, $\mathbf{b} \sim N(\boldsymbol{\beta}, \sigma^2(\mathbf{X}'\mathbf{X})^{-1})$.
+For the Dwaine fit, which single stored matrix, once scaled, gives the variance of
+the `dispoinc` slope? Where is that variance in the printout of Example 6.6?
+
+:::{admonition} Solution
+:class: dropdown
+The covariance matrix of $\mathbf{b}$ is $\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$,
+estimated by $\mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$. The variance of the
+`dispoinc` slope is its diagonal entry, the bottom-right of the estimated
+covariance matrix, $16.52$ in Example 6.6. Its square root, $\sqrt{16.52} = 4.064$,
+is the standard error reported for `dispoinc`.
+:::
+::::
+
+## 6.9 Chapter summary
+
+You can now speak the matrix language the rest of the book is written in: lay a
+dataset out as a response vector $\mathbf{Y}$ and a design matrix $\mathbf{X}$,
+build the products $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$ every fit
+runs on, tell when a matrix is invertible, solve the normal equations for
+$\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, build the hat
+matrix and prove it is a projection, express the sums of squares as quadratic
+forms, and find the mean and covariance of a random vector. For the real Dwaine
+data, all of this was computed in both R and numpy: $\mathbf{b} = (-68.86,\ 1.4546,\ 9.3655)'$,
+$\mathrm{SSE} = 2180.9$ on $18$ degrees of freedom, $\mathrm{MSE} = 121.2$, and
+standard errors $(60.0,\ 0.212,\ 4.06)$. From these tools came the two facts that
+drive all of multiple regression: $\mathbf{b}$ is unbiased, and its covariance is
+$\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$.
+
+Every piece fits into one pipeline, drawn in @fig-ch06-pipeline: from the data you
+form two summaries, invert one of them, and everything else, the coefficients, the
+hat matrix, the residuals, and the standard errors, drops out in a fixed order. If
+you remember the shape of that pipeline, you can rebuild any single formula in it.
+
+```{figure} figures/fig_ch06_pipeline.png
+:name: fig-ch06-pipeline
+:alt: A flowchart with seven rounded boxes connected by orange arrows. At the top, a box reads data X and Y, section 6.1. It feeds two boxes: X-transpose-X and X-transpose-Y, the cross-products, section 6.2, and the inverse of X-transpose-X, section 6.4. Both of those feed a central box, b equals the inverse of X-transpose-X times X-transpose-Y, the coefficients, section 6.4. The coefficient box and the inverse box then feed three bottom boxes: the hat matrix H with fitted values and residuals, section 6.5; SSE and MSE, section 6.6; and the covariance matrix of b with standard errors, section 6.7. A caption reads: one fixed pipeline, form two summaries, invert one, read off everything else.
+The chapter as one pipeline. Every quantity of a multiple regression fit, the coefficients, fitted values, residuals, error variance, and standard errors, comes from the same two cross-product summaries and a single inverse, computed in a fixed order.
+```
+
+**Key results at a glance.**
+
+| Result | Statement or formula | Valid when |
+|---|---|---|
+| Transpose of a product (Theorem 6.5) | $(\mathbf{A}\mathbf{B})' = \mathbf{B}'\mathbf{A}'$ | any conformable $\mathbf{A}, \mathbf{B}$ |
+| Invertibility criterion (Theorem 6.9) | $\mathbf{X}'\mathbf{X}$ invertible $\Leftrightarrow \mathbf{X}$ has full column rank | $\mathbf{X}'\mathbf{X}$ square |
+| Least-squares solution (Theorem 6.12) | $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ | $\mathbf{X}$ full column rank |
+| Hat matrix is a projection (Theorem 6.16) | $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ symmetric, idempotent, $\operatorname{tr}\mathbf{H} = p$ | $\mathbf{X}$ full column rank |
+| Sums of squares as quadratic forms (Theorem 6.18) | $\mathrm{SSE} = \mathbf{Y}'(\mathbf{I}-\mathbf{H})\mathbf{Y}$; $\mathrm{SSTO} = \mathrm{SSR} + \mathrm{SSE}$; $\mathrm{SSE} \ge 0$ | any response $\mathbf{Y}$ |
+| Linear transformation rules (Theorem 6.20) | $E\{\mathbf{A}\mathbf{W}+\mathbf{c}\} = \mathbf{A}E\{\mathbf{W}\}+\mathbf{c}$; $\operatorname{Cov}\{\mathbf{A}\mathbf{W}\} = \mathbf{A}\operatorname{Cov}\{\mathbf{W}\}\mathbf{A}'$ | $\mathbf{A}, \mathbf{c}$ fixed |
+| Mean and covariance of $\mathbf{b}$ (Theorem 6.21) | $E\{\mathbf{b}\} = \boldsymbol{\beta}$; $\operatorname{Cov}\{\mathbf{b}\} = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$ | $E\{\boldsymbol{\varepsilon}\} = \mathbf{0}$, $\operatorname{Cov}\{\boldsymbol{\varepsilon}\} = \sigma^2\mathbf{I}$ |
+| Sampling distribution of $\mathbf{b}$ (Theorem 6.23) | $\mathbf{b} \sim N(\boldsymbol{\beta},\ \sigma^2(\mathbf{X}'\mathbf{X})^{-1})$ | normal errors $\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2\mathbf{I})$ |
+
+**Key terms.** **matrix**, **vector**, **design matrix**, **transpose**, **matrix
+multiplication**, **conformable**, **identity matrix**, **symmetric matrix**,
+**linear independence**, **rank**, **determinant**, **inverse**, **normal
+equations**, **hat matrix**, **idempotent matrix**, **projection matrix**,
+**trace**, **quadratic form**, **positive definite**, **random vector**,
+**covariance matrix**, **multivariate normal**.
+
+**You should now be able to.**
+
+- [ ] Represent a regression dataset as a response vector $\mathbf{Y}$ and a design matrix $\mathbf{X}$, and write the model as $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$.
+- [ ] Compute transposes and matrix products, and build $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$ by hand and with software.
+- [ ] Decide when a square matrix has an inverse using rank and the determinant, and explain what perfect collinearity does to $\mathbf{X}'\mathbf{X}$.
+- [ ] Solve the normal equations for $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$.
+- [ ] Verify that the hat matrix $\mathbf{H}$ is symmetric and idempotent, and explain why fitted values and residuals are projections.
+- [ ] Express SSE, SSR, and SSTO as quadratic forms, and connect positive definiteness to nonnegative sums of squares.
+- [ ] Derive the mean vector and covariance matrix of a random vector, and use them to show $\operatorname{Cov}\{\mathbf{b}\} = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$.
+- [ ] State the multivariate normal model for $\mathbf{Y}$ and $\mathbf{b}$ and describe how it powers the inference of later chapters.
+
+**Where this fits.** This chapter is the toolbox that makes the FIT and USE stages
+of the course workflow (@ch02-workflow) work for more than one predictor: the
+estimator $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ fits every
+multiple regression, and the covariance matrix $\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$
+is how every coefficient is later tested. Chapter 2 built these ideas for one
+predictor with scalar algebra (@ch02-least-squares); we have now generalized them to
+any number. Next, Chapter 7 takes the same Dwaine $\mathbf{X}'\mathbf{X}$ you computed
+and proves why these formulas are the right ones: it derives least squares two ways
+(@ch07-ls-matrix), reads the degrees of freedom off the hat matrix
+(@ch07-hat-matrix), and proves the Gauss-Markov theorem (@ch07-gauss-markov). It is
+the most abstract chapter in the course, and it is built almost entirely from the
+matrix facts you assembled here, so the work of this chapter is exactly what makes
+the next one readable.
+
+## 6.10 Frequently asked questions
+
+**Q1. Why do we glue a column of ones onto $\mathbf{X}$?** So the intercept can be
+treated as just another coefficient. Multiplying the ones column by $\beta_0$
+gives $\beta_0$ in every row, which is exactly what an intercept does. Without the
+ones column, the formula $\mathbf{X}\boldsymbol{\beta}$ would have no constant
+term, and you would be forcing the regression surface through the origin.
+
+**Q2. Is $\mathbf{X}'\mathbf{X}$ the same as squaring $\mathbf{X}$?** No.
+$\mathbf{X}$ is usually not square, so $\mathbf{X}^2 = \mathbf{X}\mathbf{X}$ is not
+even defined. $\mathbf{X}'\mathbf{X}$ multiplies the transpose ($p \times n$) by
+$\mathbf{X}$ ($n \times p$) to make a $p \times p$ matrix of sums of products. It
+is the closest matrix analogue of "sum of squares," which is why it sits at the
+center of least squares.
+
+**Q3. What actually goes wrong when $\mathbf{X}'\mathbf{X}$ is singular?** Two
+predictor columns carry the same information, so the data cannot decide how to
+split an effect between them. Infinitely many coefficient vectors fit equally well,
+the inverse does not exist, and software either errors out or silently drops a
+predictor. This is the extreme end of the multicollinearity you meet in
+@ch12-vif.
+
+**Q4. Do I have to invert $\mathbf{X}'\mathbf{X}$ by hand?** No. Past $2 \times 2$,
+let `solve` or `np.linalg.inv` do it, and in real work prefer the routines inside
+`lm` and `statsmodels`, which solve the normal equations without forming the
+inverse. Computing the inverse here just shows that the software does exactly the
+matrix algebra of this chapter, so it is never a black box.
+
+**Q5. Why is the hat matrix called a projection?** Because it takes the response
+vector $\mathbf{Y}$ and drops it perpendicularly onto the flat subspace of all
+fittable values (the column space of $\mathbf{X}$), landing at the closest point,
+$\widehat{\mathbf{Y}}$. Projecting a second time changes nothing, which is the
+algebraic property $\mathbf{H}\mathbf{H} = \mathbf{H}$. The residual is the part of
+$\mathbf{Y}$ left sticking out, at a right angle to the subspace.
+
+**Q6. Where does the normal distribution enter?** Only in @ch06-mvn, and only for
+inference. Building $\mathbf{X}$, computing $\mathbf{b}$, the hat matrix, SSE, and
+the covariance matrix all use no distributional assumption beyond mean zero,
+constant variance, and uncorrelated errors. Normality is added on top so that
+$\mathbf{b}$ is multivariate normal and we can build exact $t$ and $F$ procedures,
+which is Chapter 7's job.
+
+**Q7. Do I have to memorize all these identities, and should the negative entries
+in the covariance matrix of $\mathbf{b}$ worry me?** No on both counts. Hold on to
+three things: the model $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$,
+the estimator $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, and
+the covariance $\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$; everything else builds one of
+those or reads a number out of it, so the identities become things you rederive
+rather than recall. As for the negative entries, only the off-diagonal covariances
+can go negative (the diagonal variances never do), and a negative one between two
+slopes just means that across repeated samples overestimating one tends to
+accompany underestimating the other. It is information, not an error.
+
+## 6.11 Practice problems
+
+:::{note}
+Unless a problem says otherwise, use the `dwaine.csv` dataset, the design matrix
+$\mathbf{X}$ with columns (ones, `targtpop`, `dispoinc`), and the fitted model
+with $\mathbf{b} = (-68.86,\ 1.4546,\ 9.3655)'$, $\mathrm{MSE} = 121.2$, $n = 21$,
+$p = 3$. Problems are marked (A) concepts, (B) theory, or (C) data analysis.
+Odd-numbered answers appear in Appendix H; full solutions are in the instructor
+materials.
+:::
+
+1. (A) Give the dimensions of $\mathbf{X}$, $\mathbf{X}'$, $\mathbf{X}'\mathbf{X}$, $\mathbf{X}'\mathbf{Y}$, $\mathbf{b}$, and $\mathbf{H}$ for the Dwaine model, and say in one phrase what each represents.
+2. (A) Explain why the first column of the design matrix is all ones, and what would change in the model if it were removed.
+3. (A) State the rule for when two matrices can be multiplied, and use it to explain why $\mathbf{X}\mathbf{X}$ is undefined for the $21 \times 3$ Dwaine design matrix but $\mathbf{X}'\mathbf{X}$ is defined.
+4. (A) In words, what is the entry in row 1, column 1 of $\mathbf{X}'\mathbf{X}$ equal to, and why? What are the other entries of the first row?
+5. (A) Define an idempotent matrix and a symmetric matrix, and state which of these properties the hat matrix $\mathbf{H}$ has.
+6. (A) A colleague writes $\mathbf{X}\mathbf{b} = \mathbf{Y}$ and "cancels $\mathbf{X}$" from $\mathbf{X}'\mathbf{X}\mathbf{b} = \mathbf{X}'\mathbf{Y}$. Explain the two things wrong with this.
+7. (A) Explain what it means for the columns of $\mathbf{X}$ to be linearly dependent, and what that does to $\mathbf{X}'\mathbf{X}$ and to the least-squares fit.
+8. (A) The covariance matrix of $\mathbf{b}$ has a negative off-diagonal entry between the two slopes. Interpret its sign in one sentence.
+9. (B) Prove that $\mathbf{X}'\mathbf{X}$ is symmetric for any matrix $\mathbf{X}$, citing the transpose-of-a-product rule (Theorem 6.5).
+10. (B) Prove the transpose-of-a-product rule (Theorem 6.5), $(\mathbf{A}\mathbf{B})' = \mathbf{B}'\mathbf{A}'$, by comparing the $(i,j)$ entries of both sides.
+11. (B) Starting from the matrix normal equations $\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y}$, derive $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ (Theorem 6.12), stating the condition on $\mathbf{X}$ that the step requires.
+12. (B) Prove that the hat matrix $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$ is symmetric and idempotent (Theorem 6.16). Then show $\mathbf{I} - \mathbf{H}$ is idempotent.
+13. (B) Show that $\mathbf{H}\mathbf{X} = \mathbf{X}$, and explain geometrically why projecting each column of $\mathbf{X}$ onto the column space of $\mathbf{X}$ leaves it unchanged.
+14. (B) Using $\mathbf{e} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$ and $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$, prove that $\mathbf{X}'\mathbf{e} = \mathbf{0}$ and that $\widehat{\mathbf{Y}}'\mathbf{e} = 0$ (fitted values are orthogonal to residuals).
+15. (B) Prove the covariance transformation rule $\operatorname{Cov}\{\mathbf{A}\mathbf{W}\} = \mathbf{A}\operatorname{Cov}\{\mathbf{W}\}\mathbf{A}'$ (part of Theorem 6.20) for a fixed matrix $\mathbf{A}$, starting from the definition $\operatorname{Cov}\{\mathbf{W}\} = E\{(\mathbf{W} - \boldsymbol{\mu})(\mathbf{W} - \boldsymbol{\mu})'\}$.
+16. (B) Use the rules of problem 15 and $E\{\mathbf{Y}\} = \mathbf{X}\boldsymbol{\beta}$, $\operatorname{Cov}\{\mathbf{Y}\} = \sigma^2\mathbf{I}$ to derive $E\{\mathbf{b}\} = \boldsymbol{\beta}$ and $\operatorname{Cov}\{\mathbf{b}\} = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$ (Theorem 6.21).
+17. (B) Show that $\mathrm{SSE} = \mathbf{Y}'(\mathbf{I} - \mathbf{H})\mathbf{Y}$ equals $\mathbf{e}'\mathbf{e}$ (Theorem 6.18), using the symmetry and idempotency of $\mathbf{I} - \mathbf{H}$, and explain why this proves $\mathrm{SSE} \ge 0$.
+18. (B) For the $2 \times 2$ matrix $\mathbf{A} = \left(\begin{smallmatrix} a & b \\ b & d \end{smallmatrix}\right)$, write the quadratic form $\mathbf{u}'\mathbf{A}\mathbf{u}$ in terms of $u_1, u_2$, and give a condition on $a, b, d$ that makes it positive definite.
+19. (B) The fitted values satisfy $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$. Prove that $\operatorname{Cov}\{\widehat{\mathbf{Y}}\} = \sigma^2\mathbf{H}$ and $\operatorname{Cov}\{\mathbf{e}\} = \sigma^2(\mathbf{I} - \mathbf{H})$, using the covariance rule and the properties of $\mathbf{H}$.
+20. (C) Read `dwaine.csv`, build $\mathbf{X}$ and $\mathbf{Y}$, and reproduce $\mathbf{X}'\mathbf{X}$ and $\mathbf{X}'\mathbf{Y}$ in R or Python. Confirm the top-left entry of $\mathbf{X}'\mathbf{X}$ is $n$ and the first entry of $\mathbf{X}'\mathbf{Y}$ is $\sum Y$.
+21. (C) Compute $(\mathbf{X}'\mathbf{X})^{-1}$ and $\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$ in software, and check that $\mathbf{b}$ matches `lm`/`statsmodels` and that $(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{X}$ returns the identity.
+22. (C) Build the hat matrix $\mathbf{H}$, verify numerically that $\mathbf{H}\mathbf{H} = \mathbf{H}$ and that $\operatorname{tr}(\mathbf{H}) = 3$, and report the three largest diagonal entries $h_{ii}$ (the leverage values).
+23. (C) Compute the residual vector $\mathbf{e} = (\mathbf{I} - \mathbf{H})\mathbf{Y}$ and verify numerically that $\mathbf{X}'\mathbf{e} = \mathbf{0}$ (all three entries near zero) and that $\sum e_i = 0$.
+24. (C) Compute $\mathrm{SSE} = \mathbf{e}'\mathbf{e}$, then $\mathrm{MSE}$ and $s = \sqrt{\mathrm{MSE}}$, and confirm they match the residual standard error reported by `summary(fit)` / `fit.summary()`.
+25. (C) Form the estimated covariance matrix $\mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$ and report the three standard errors from its diagonal. Confirm they match the software summary, and report the estimated covariance between the two slope estimates.
+26. (C) Predict sales for a new city with $\text{targtpop} = 65.4$ and $\text{dispoinc} = 17.6$ by forming the row vector $\mathbf{x}_h = (1, 65.4, 17.6)$ and computing $\mathbf{x}_h \mathbf{b}$. Confirm the result against `predict`.
+27. (C) Add a redundant column to $\mathbf{X}$ equal to $\text{targtpop} + \text{dispoinc}$, and try to compute $(\mathbf{X}'\mathbf{X})^{-1}$. Report what R or Python does (an error, a warning, or a wildly unstable inverse), and connect it to rank deficiency.
+28. (C) Center the predictors: replace `targtpop` and `dispoinc` by their deviations from their means, refit, and confirm that the two slopes are unchanged while the intercept becomes $\bar{Y}$. Explain, using the normal equations, why centering leaves the slopes alone.
+29. (C) Demonstrate the sampling law $\mathbf{b} \sim N(\boldsymbol{\beta}, \sigma^2(\mathbf{X}'\mathbf{X})^{-1})$ (Theorem 6.23, @ch06-mvn) by simulation. Treat the fitted $\mathbf{b} = (-68.86,\ 1.4546,\ 9.3655)'$ as the true $\boldsymbol{\beta}$ and $\mathrm{MSE} = 121.16$ as the true $\sigma^2$. Holding the real Dwaine $\mathbf{X}$ fixed, use `set.seed(4210)` (R) or `default_rng(4210)` (Python) to generate $5000$ response vectors $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$ with $\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \sigma^2\mathbf{I})$, refit each by $(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$, and collect the estimates. (a) Confirm the column means are close to $\boldsymbol{\beta}$ and the sample covariance is close to $\sigma^2(\mathbf{X}'\mathbf{X})^{-1}$. (b) In two sentences, explain why this law lets Chapter 7 attach a $t$ distribution to each coefficient and turn a standard error into a confidence interval.
+
+## 6.12 Exam practice
+
+These five questions match the style of the course exams: each asks you to
+explain, evaluate, or interpret in full sentences, not to produce a bare number.
+Write in complete sentences and say which numbers you used. The software output
+shown was generated from the real `dwaine.csv` fit. Each model answer shows the
+depth that earns full marks, followed by one line on what a weak answer misses.
+
+**EP 6.1.** In the Dwaine fit both estimated slopes are positive:
+$b_{\text{targtpop}} = 1.4546$ and $b_{\text{dispoinc}} = 9.3655$. A student argues,
+"since both predictors push sales up, the two slope estimates must be positively
+correlated across repeated samples." The estimated covariance matrix of
+$\mathbf{b}$ is printed below. Evaluate the student's claim, and explain what the
+relevant number actually tells you.
+
+```text
+          intercept targtpop  dispoinc
+intercept 3602.0347   8.7459 -241.4230
+targtpop     8.7459    0.0449   -0.6724
+dispoinc  -241.4230   -0.6724   16.5158
+```
+
+:::{admonition} Model answer
+:class: dropdown
+The claim confuses the sign of the coefficients with the sign of the covariance
+between their estimators, and the two are unrelated. The number that settles the
+question is the off-diagonal entry between the two slopes,
+$s\{b_{\text{targtpop}}, b_{\text{dispoinc}}\} = -0.6724$, which is negative. So
+across repeated samples an overestimate of one slope tends to arrive with an
+underestimate of the other, exactly the opposite of what the student predicts.
+That negative sign comes from the geometry of the design matrix: the two predictor
+columns are themselves positively correlated across the 21 cities, so the fit
+cannot raise both slopes at once without double-counting the shared signal, and it
+trades one off against the other. The signs of the fitted slopes, which describe
+how sales respond to each predictor, carry no information about how the two
+estimates co-vary. A weak answer just declares the claim true or false, or repeats
+that both slopes are positive, without reading the $-0.6724$ entry and explaining
+that it is negative for reasons tied to the predictors, not the coefficients.
+:::
+
+**EP 6.2.** Suppose `targtpop` is re-entered in raw persons instead of thousands,
+so every value is multiplied by $1000$, and the model is refit. Using the output
+below, state precisely which quantities change and which stay identical, and
+explain why.
+
+```text
+          b            se           t
+intercept -68.8570732  60.0169532  -1.1473
+targtpop    0.0014546   0.0002118   6.8682
+dispoinc    9.3655004   4.0639581   2.3045
+SSE = 2180.9274      fitted[1:3] = 187.184, 154.229, 234.396
+```
+
+:::{admonition} Model answer
+:class: dropdown
+Multiplying one predictor column by $1000$ divides that predictor's slope and the
+slope's standard error by the same factor of $1000$: the `targtpop` slope falls
+from $1.4546$ to $0.0014546$ and its standard error from $0.2118$ to $0.0002118$,
+so their ratio, the $t$ statistic $6.868$, is unchanged. Everything else is
+identical to the original fit: the intercept $-68.857$, the `dispoinc` slope
+$9.3655$, all fitted values ($187.184$, $154.229$, $234.396$, ...), the residuals,
+$\mathrm{SSE} = 2180.93$, $\mathrm{MSE}$, and $R^2$. The reason is that scaling a
+column of $\mathbf{X}$ by a nonzero constant does not change the column space that
+$\mathbf{X}$ spans, and the fit depends on $\mathbf{X}$ only through that space:
+the hat matrix $\mathbf{H}$, the projection $\widehat{\mathbf{Y}} = \mathbf{H}\mathbf{Y}$,
+and every sum of squares are untouched. A change of units therefore rescales the
+affected coefficient and its standard error in lockstep and leaves every fitted
+value and every inference alone. A weak answer says only that "the slope changes"
+without noting that its standard error changes by the identical factor, that the
+$t$ statistic, fitted values, and SSE are invariant, and why.
+:::
+
+**EP 6.3.** The diagonal of the hat matrix holds the leverage values $h_{ii}$. The
+output below reports their sum, the $2p/n$ rule-of-thumb cutoff, and the five
+largest values with the two predictor values of each city. Interpret these numbers
+in context: what do they say about which cities matter most, why do they sum to
+$3$, and would you flag any city as a high-leverage point?
+
+```text
+sum of h_ii = 3.0        2p/n cutoff = 0.2857
+ city 20:  targtpop 82.7  dispoinc 19.1   h = 0.2788
+ city 13:  targtpop 88.4  dispoinc 17.4   h = 0.2390
+ city 15:  targtpop 52.5  dispoinc 17.8   h = 0.2095
+ city  3:  targtpop 91.3  dispoinc 18.2   h = 0.1737
+ city  5:  targtpop 46.9  dispoinc 17.3   h = 0.1620
+```
+
+:::{admonition} Model answer
+:class: dropdown
+Each leverage value $h_{ii}$ measures how far city $i$'s predictor values sit from
+the center of the predictor cloud, and it equals the weight that the city's own
+sales carry in producing its fitted value. City 20 has the largest leverage value
+($h = 0.2788$) because it pairs a large young population ($82.7$ thousand) with the
+highest disposable income in the data ($19.1$), so it sits at the outer edge of the
+predictor cloud and its response has the biggest say in the local fit. The
+leverages sum to $3$ because $\operatorname{tr}(\mathbf{H}) = p = 3$, the number of
+estimated parameters, so on average a city carries $3/21 \approx 0.143$ of its own
+fitted value; this is the same trace fact that produces the $n - p = 18$ divisor
+for $\mathrm{MSE}$. Comparing against the $2p/n = 0.2857$ cutoff, no city exceeds
+it, since even city 20 at $0.2788$ falls just under, so none is flagged as an
+unusually high-leverage point, though city 20 is the one to watch. A weak answer
+reads off the largest number without saying what a leverage value measures, misses
+that the sum
+equals $p$ because $\operatorname{tr}(\mathbf{H}) = p$, or calls a city
+high-leverage from its raw size without comparing to the $0.2857$ cutoff.
+:::
+
+**EP 6.4.** A student augments the Dwaine design matrix with a fourth column equal
+to `targtpop + dispoinc`, refits, and reports: "Python still returned an inverse
+and some coefficients, so the augmented model is fine." The diagnostics below come
+from the augmented matrix. Explain why the augmented model is not fine, what has
+gone wrong mathematically, and why R and Python behave differently.
+
+```text
+rank of augmented X = 3   (it has 4 columns)
+det(X'X)        = -3.7e-05      # against ~1.07e06 for the genuine 3x3 X'X
+R  solve(X'X):  Error: system is computationally singular
+Python inv(X'X): returns a matrix of enormous (~1e13) entries, no error
+```
+
+:::{admonition} Model answer
+:class: dropdown
+The new column is an exact linear combination of two existing columns, namely
+$\text{targtpop} + \text{dispoinc}$, so the four columns are linearly dependent and
+the design matrix has rank $3$, not $4$. By Theorem 6.9, $\mathbf{X}'\mathbf{X}$ is
+then singular and has no genuine inverse: its true determinant is zero, and the
+printed $-3.7\times 10^{-5}$ is floating-point dust around zero, astronomically
+small next to the roughly $1.07\times 10^{6}$ determinant of the real $3\times 3$
+$\mathbf{X}'\mathbf{X}$. There is no unique least-squares solution, because the data
+cannot decide how to split an effect between a predictor and a copy built from it;
+infinitely many coefficient vectors fit equally well. R computes the reciprocal
+condition number, sees it is essentially zero, and refuses with "system is
+computationally singular," which is the honest response. Python's `np.linalg.inv`
+inverts without checking conditioning, so it returns a matrix of enormous,
+meaningless entries that are numerical noise rather than a fit. The student has
+mistaken a silent numerical failure for a valid model: the fact that code "ran" is
+no evidence the answer means anything. A weak answer notes only that the columns
+are collinear without connecting rank deficiency to the zero determinant and the
+absence of a unique solution, or trusts Python's numbers because no error appeared.
+:::
+
+**EP 6.5.** A regional manager wants the model's predicted mean sales for a new
+city with `targtpop` $= 65.4$ and `dispoinc` $= 17.6$, together with a standard
+error, so form $\mathbf{x}_h = (1,\ 65.4,\ 17.6)$ and note that the predicted mean
+is $\widehat{Y}_h = \mathbf{x}_h'\mathbf{b}$. The estimated covariance matrix
+$s^2\{\mathbf{b}\} = \mathrm{MSE}\,(\mathbf{X}'\mathbf{X})^{-1}$ is reprinted below,
+and the fit gives $\widehat{Y}_h = 191.10$. A student computes the standard error
+of $\widehat{Y}_h$ as $\sqrt{65.4^2 \cdot s^2\{b_{\text{targtpop}}\} + 17.6^2 \cdot s^2\{b_{\text{dispoinc}}\} + s^2\{b_0\}} = 94.4$,
+using only the diagonal variances. Explain why this is wrong, give the correct
+standard error, and say which way the diagonal-only shortcut errs.
+
+```text
+          intercept targtpop  dispoinc
+intercept 3602.0347   8.7459 -241.4230
+targtpop     8.7459    0.0449   -0.6724
+dispoinc  -241.4230   -0.6724   16.5158
+
+x_h'(X'X)^{-1} x_h = 0.063181       MSE = 121.16
+```
+
+:::{admonition} Model answer
+:class: dropdown
+The predicted mean $\widehat{Y}_h = \mathbf{x}_h'\mathbf{b}$ is a linear
+combination of all three coefficients, so by the covariance rule of Theorem 6.20
+its variance is the full quadratic form
+$\operatorname{Var}\{\widehat{Y}_h\} = \mathbf{x}_h'\,s^2\{\mathbf{b}\}\,\mathbf{x}_h$,
+which includes every off-diagonal covariance, not only the three diagonal
+variances. The student's shortcut drops the cross terms
+$2 x_{h1} x_{h2}\,s\{b_j, b_k\}$, and here those terms are large and negative,
+above all the $-241.42$ covariance between the intercept and the `dispoinc` slope,
+so ignoring them wildly overstates the variance. Computing it correctly,
+$\operatorname{Var}\{\widehat{Y}_h\} = \mathrm{MSE}\cdot \mathbf{x}_h'(\mathbf{X}'\mathbf{X})^{-1}\mathbf{x}_h = 121.16 \times 0.063181 = 7.655$,
+so the standard error is $\sqrt{7.655} = 2.77$ thousand dollars, not $94.4$. The
+diagonal-only shortcut errs by a huge margin on the high side, because the negative
+covariances that the coefficients genuinely have would cancel much of the diagonal
+contribution. The lesson is that the standard error of any linear combination of
+$\mathbf{b}$ needs the whole covariance matrix, since the coefficients are
+correlated. A weak answer computes $\mathbf{x}_h'\,s^2\{\mathbf{b}\}\,\mathbf{x}_h$
+as a formula without explaining that the missing off-diagonal terms are what make
+the shortcut wrong, or fails to note that the shortcut overstates rather than
+understates the standard error.
+:::
+
+## 6.13 Chapter game
+
+:::{admonition} Play the Chapter 6 game
+:class: tip
+Play the Chapter 6 game on your phone or laptop: 10 quick rounds, no setup.
+[Open the Chapter 6 game](../games/ch06.html). It drills the matrix pipeline of
+this chapter on the real Dwaine numbers: reading the dimensions of $\mathbf{X}$,
+saying what an entry of $\mathbf{X}'\mathbf{X}$ counts, ordering the fit pipeline,
+matching the hat matrix and its relatives, spotting the high-leverage city, and
+catching the rank-deficiency and covariance-sign traps, with the reason shown after
+every answer.
+:::
+
+:::{admonition} Resumen del capítulo (en español)
+:class: dropdown
+Este capítulo enseña el **álgebra de matrices (matrix algebra)** que necesita la
+regresión múltiple, sin suponer conocimientos previos de álgebra lineal. Usa los
+datos de **Dwaine Studios**: las ventas de 21 estudios de retratos frente a dos
+predictores, la población menor de 16 años y el ingreso disponible per cápita.
+Los datos se organizan en un **vector respuesta (response vector)** $\mathbf{Y}$
+y una **matriz de diseño (design matrix)** $\mathbf{X}$ de tamaño $21 \times 3$,
+cuya primera columna es de unos para el intercepto, y el modelo se escribe de
+forma compacta como $\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\varepsilon}$.
+
+Definimos la **transpuesta (transpose)** y la **multiplicación de matrices
+(matrix multiplication)**, cuya regla es "fila por columna", y con ellas
+construimos las dos piezas centrales: $\mathbf{X}'\mathbf{X}$, que reúne todas las
+sumas de cuadrados y productos cruzados, y $\mathbf{X}'\mathbf{Y}$. Una matriz
+tiene **inversa (inverse)** solo si tiene rango completo, equivalentemente si su
+**determinante (determinant)** no es cero. Al resolver las ecuaciones normales
+$\mathbf{X}'\mathbf{X}\,\mathbf{b} = \mathbf{X}'\mathbf{Y}$ se obtiene el estimador
+$\mathbf{b} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{Y}$; para Dwaine,
+$\mathbf{b} = (-68.86,\ 1.4546,\ 9.3655)$, idéntico al de `lm` y `statsmodels`.
+
+La **matriz sombrero (hat matrix)** $\mathbf{H} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'$
+es simétrica e **idempotente (idempotent)**: proyecta $\mathbf{Y}$ sobre los
+valores ajustados. Las sumas de cuadrados SSE, SSR y SSTO son **formas
+cuadráticas (quadratic forms)**, y para Dwaine $\mathrm{SSE} = 2180.9$ con
+$\mathrm{MSE} = 121.2$ sobre $18$ grados de libertad. Para un **vector aleatorio
+(random vector)**, la esperanza y la matriz de covarianzas se transforman según
+$E\{\mathbf{A}\mathbf{W}\} = \mathbf{A}E\{\mathbf{W}\}$ y
+$\operatorname{Cov}\{\mathbf{A}\mathbf{W}\} = \mathbf{A}\operatorname{Cov}\{\mathbf{W}\}\mathbf{A}'$,
+de donde $\mathbf{b}$ es insesgado y $\operatorname{Cov}\{\mathbf{b}\} = \sigma^2(\mathbf{X}'\mathbf{X})^{-1}$.
+Bajo errores normales, $\mathbf{b}$ sigue una distribución **normal multivariante
+(multivariate normal)**, base de toda la inferencia del Capítulo 7.
+:::

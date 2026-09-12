@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shaping the logistic curve</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Binary outcomes at ten doses: 0 = no response, 1 = response. */
+var DATA = [
+  { x: 0.5, y: 0 }, { x: 1.0, y: 0 }, { x: 1.5, y: 0 }, { x: 2.0, y: 0 },
+  { x: 2.5, y: 1 }, { x: 3.0, y: 0 }, { x: 3.5, y: 1 }, { x: 4.0, y: 1 },
+  { x: 4.5, y: 1 }, { x: 5.0, y: 1 }
+];
+
+function logistic(p, x) {
+  return 1 / (1 + Math.exp(-(p.b0 + p.b1 * x)));
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Move b0 and b1 until the S curve explains the zeros and ones',
+    es: 'Mueve b0 y b1 hasta que la curva S explique los ceros y unos'
+  },
+  points: DATA,
+  xRange: [0, 5.5],
+  yRange: [-0.08, 1.08],
+  xLabel: { en: 'dose x', es: 'dosis x' },
+  yLabel: { en: 'P(y = 1)', es: 'P(y = 1)' },
+  params: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      min: -12, max: 6, step: 0.1, value: -4, digits: 1 },
+    { id: 'b1', label: { en: 'Slope b1 (log-odds per unit of x)',
+                         es: 'Pendiente b1 (log-momios por unidad de x)' },
+      min: -1, max: 6, step: 0.05, value: 1.5, digits: 2 }
+  ],
+  curves: [
+    { fn: logistic, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'or', label: { en: 'Odds ratio per unit', es: 'Razon de momios' },
+      accent: 2, digits: 2,
+      compute: function (p) { return Math.exp(p.b1); } },
+    { id: 'half', label: { en: 'x at P = 0.5', es: 'x en P = 0.5' },
+      digits: 2,
+      compute: function (p) { return p.b1 === 0 ? NaN : -p.b0 / p.b1; } },
+    { id: 'll', label: { en: 'Log-likelihood', es: 'Log-verosimilitud' },
+      accent: 1, digits: 2,
+      compute: function (p, data) {
+        var s = 0;
+        for (var i = 0; i < data.length; i++) {
+          var pi = logistic(p, data[i].x);
+          pi = Math.min(1 - 1e-12, Math.max(1e-12, pi));
+          s += data[i].y ? Math.log(pi) : Math.log(1 - pi);
+        }
+        return s;
+      } }
+  ],
+  caption: {
+    en: 'The curve can never leave the strip between 0 and 1, which is the whole reason ' +
+        'we do not fit a straight line to a yes/no outcome. **b1** controls how steeply ' +
+        'the curve rises, and **b0** slides it left or right.\n\n' +
+        '**Try this.** Maximize the log-likelihood by hand: nudge the sliders until that ' +
+        'readout is as close to zero as you can get it (it is always negative). That is ' +
+        'exactly what maximum likelihood does when it fits a logistic regression. Then set ' +
+        'b1 to 0 and notice the curve flattens into a horizontal line: no slope means the ' +
+        'dose tells you nothing, and the odds ratio drops to 1.',
+    es: 'La curva nunca puede salir de la franja entre 0 y 1, que es justamente la razon ' +
+        'por la que no ajustamos una recta a un resultado de si o no. **b1** controla que ' +
+        'tan empinada sube la curva, y **b0** la desliza a izquierda o derecha.\n\n' +
+        '**Prueba esto.** Maximiza la log-verosimilitud a mano: mueve los deslizadores ' +
+        'hasta que ese valor este lo mas cerca de cero posible (siempre es negativo). Eso ' +
+        'es exactamente lo que hace la maxima verosimilitud al ajustar una regresion ' +
+        'logistica. Luego pon b1 en 0 y nota que la curva se aplana en una recta ' +
+        'horizontal: sin pendiente, la dosis no dice nada, y la razon de momios baja a 1.'
+  }
+});
+</script>
+</body>
+</html>

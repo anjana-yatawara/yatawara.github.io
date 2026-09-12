@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Percentile and basic bootstrap intervals</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* punting.csv, all thirteen punters. One slider moves the distance of the
+   strongest punter (RStr = 180, the highest-leverage point), which is what
+   makes the case-bootstrap distribution of b1 skew. Everything on screen is
+   recomputed from a real case bootstrap, not from a drawn shape. */
+var S = Sim.Stats;
+var RSTR = [170, 140, 180, 160, 170, 150, 170, 110, 120, 130, 120, 140, 160];
+var DIST = [162.5, 144, 147.5, 163.5, 192, 171.75, 162, 104.93, 105.67,
+            117.59, 140.25, 150.17, 165.17];
+var STRONGEST = RSTR.indexOf(180);          /* the punter the slider moves */
+var NBOOT = 1200;                            /* resamples per slider position */
+var BOOT_SEED = 777;
+var XLO = -1.0, XHI = 2.8;                   /* plotted range of b1* */
+var GRID = 121;
+
+/* Two memo slots. Without them every curve and band sample would rerun the
+   whole bootstrap, and a drag would crawl. */
+var bootCache = { key: null };
+var stateCache = { key: null };
+
+/* One full case bootstrap of the slope, plus a density curve to draw it. */
+function build(dstar) {
+  var y = DIST.slice();
+  y[STRONGEST] = dstar;
+  var b1 = S.lsFit(RSTR, y).slope;
+
+  var rng = S.rng(BOOT_SEED);                /* fixed seed: dragging is stable */
+  var n = RSTR.length, draws = [], i, k;
+  for (i = 0; i < NBOOT; i++) {
+    var idx = rng.bootIndices(n), bx = [], by = [];
+    for (k = 0; k < n; k++) { bx.push(RSTR[idx[k]]); by.push(y[idx[k]]); }
+    draws.push(S.lsFit(bx, by).slope);
+  }
+
+  /* Gaussian kernel density, Silverman bandwidth, normalized to peak 1.
+     This only draws the bootstrap slopes; every number reported comes
+     from the draws themselves. */
+  var sd = S.sd(draws);
+  var iqr = S.quantile(draws, 0.75) - S.quantile(draws, 0.25);
+  var spread = Math.min(sd, iqr / 1.349);
+  if (!isFinite(spread) || spread <= 0) { spread = sd; }
+  var h = 0.9 * spread * Math.pow(NBOOT, -0.2);
+  var dens = [], peak = 0;
+  for (i = 0; i < GRID; i++) {
+    var gx = XLO + (i / (GRID - 1)) * (XHI - XLO), s = 0;
+    for (k = 0; k < NBOOT; k++) { s += S.dnorm((gx - draws[k]) / h); }
+    s = s / (NBOOT * h);
+    dens.push(s);
+    if (s > peak) { peak = s; }
+  }
+  for (i = 0; i < GRID; i++) { dens[i] = peak > 0 ? dens[i] / peak : 0; }
+
+  return { b1: b1, draws: draws, dens: dens, se: sd };
+}
+
+function boot(dstar) {
+  var key = String(dstar);
+  if (bootCache.key !== key) { bootCache = { key: key, v: build(dstar) }; }
+  return bootCache.v;
+}
+
+function state(p) {
+  var key = p.dstar + '|' + p.level;
+  if (stateCache.key === key) { return stateCache.v; }
+  var v = boot(p.dstar);
+  var alpha = 1 - p.level / 100;
+  var qlo = S.quantile(v.draws, alpha / 2);
+  var qhi = S.quantile(v.draws, 1 - alpha / 2);
+  stateCache = { key: key, v: { b1: v.b1, dens: v.dens, se: v.se,
+                                qlo: qlo, qhi: qhi,
+                                blo: 2 * v.b1 - qhi, bhi: 2 * v.b1 - qlo } };
+  return stateCache.v;
+}
+
+/* Linear interpolation into the density grid. */
+function density(p, x) {
+  if (x < XLO || x > XHI) { return 0; }
+  var d = state(p).dens;
+  var f = (x - XLO) / (XHI - XLO) * (GRID - 1);
+  var i = Math.floor(f);
+  if (i >= GRID - 1) { return d[GRID - 1]; }
+  return d[i] + (f - i) * (d[i + 1] - d[i]);
+}
+
+function bar(loY, hiY, pick) {
+  return {
+    lo: function () { return loY; },
+    hi: function (p, x) {
+      var s = state(p), e = pick(s);
+      return (x >= e[0] && x <= e[1]) ? hiY : loY;
+    }
+  };
+}
+
+var PCT = bar(1.02, 1.10, function (s) { return [s.qlo, s.qhi]; });
+var BAS = bar(1.16, 1.24, function (s) { return [s.blo, s.bhi]; });
+var HALF = (XHI - XLO) / 70;
+
+function pair(lo, hi) {
+  return '(' + lo.toFixed(2) + ', ' + hi.toFixed(2) + ')';
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Reflect the percentile interval through b1 to get the basic interval',
+    es: 'Refleja el intervalo de percentiles a traves de b1 para obtener el intervalo basico'
+  },
+  xRange: [XLO, XHI],
+  yRange: [0, 1.32],
+  xLabel: { en: 'bootstrap slope b1*', es: 'pendiente bootstrap b1*' },
+  yLabel: { en: 'relative frequency', es: 'frecuencia relativa' },
+  ariaLabel: {
+    en: 'Density of 1200 case-bootstrap slopes, with the observed slope as a vertical mirror, the percentile interval as a lower bar and the basic interval as an upper bar.',
+    es: 'Densidad de 1200 pendientes bootstrap de casos, con la pendiente observada como espejo vertical, el intervalo de percentiles como barra inferior y el intervalo basico como barra superior.'
+  },
+  params: [
+    { id: 'dstar',
+      label: { en: 'Strongest punter, distance (ft)',
+               es: 'Pateador mas fuerte, distancia (pies)' },
+      min: 100, max: 260, step: 2.5, value: 147.5, digits: 1 },
+    { id: 'level',
+      label: { en: 'Confidence level (%)', es: 'Nivel de confianza (%)' },
+      min: 80, max: 99, step: 1, value: 95, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 2.5, fn: function (p, x) { return density(p, x); } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.55,
+      lo: function () { return 0; },
+      hi: function (p, x) { return Math.abs(x - state(p).b1) < HALF ? 1.30 : 0; } },
+    { accent: 1, alpha: 0.9, lo: PCT.lo, hi: PCT.hi },
+    { accent: 2, alpha: 0.9, lo: BAS.lo, hi: BAS.hi }
+  ],
+  readouts: [
+    { id: 'b1', label: { en: 'Observed b1', es: 'b1 observada' }, accent: 2,
+      compute: function (p) { return state(p).b1.toFixed(3); } },
+    { id: 'se', label: { en: 'Bootstrap SE', es: 'EE bootstrap' }, digits: 3,
+      compute: function (p) { return state(p).se; } },
+    { id: 'pct', label: { en: 'Percentile', es: 'Percentiles' }, accent: 1,
+      compute: function (p) { var s = state(p); return pair(s.qlo, s.qhi); } },
+    { id: 'bas', label: { en: 'Basic', es: 'Basico' }, accent: 2,
+      compute: function (p) { var s = state(p); return pair(s.blo, s.bhi); } }
+  ],
+  caption: {
+    en: 'The blue curve is 1200 case-bootstrap slopes for the punting data. The amber vertical ' +
+        'stripe is the observed b1, the mirror. The lower blue bar is the percentile interval; ' +
+        'the upper amber bar is that interval reflected through b1, which is the basic interval.\n\n' +
+        '**Try this.** At the real data the two bars sit almost on top of each other, because ' +
+        'the bootstrap pile is nearly symmetric about the mirror. Now drag the strongest punter ' +
+        'down to 100 feet. That one point is where the strengths are widest apart, so it drags ' +
+        'the pile into a long left tail. The bars pull apart and slide the opposite way from ' +
+        'each other: reflection turns the long reach on the left into a long reach on the ' +
+        'right, so the basic bar ends up sitting to the right of the percentile bar.',
+    es: 'La curva azul son 1200 pendientes bootstrap de casos para los datos de punting. La ' +
+        'franja vertical ambar es la b1 observada, el espejo. La barra azul inferior es el ' +
+        'intervalo de percentiles; la barra ambar superior es ese intervalo reflejado a traves ' +
+        'de b1, es decir el intervalo basico.\n\n' +
+        '**Prueba esto.** Con los datos reales las dos barras quedan casi una encima de la otra, ' +
+        'porque el monton bootstrap es casi simetrico respecto al espejo. Ahora arrastra al ' +
+        'pateador mas fuerte hasta 100 pies. Ese punto esta donde las fuerzas se separan mas, ' +
+        'asi que arrastra al monton hacia una larga cola izquierda. Las barras se separan y se ' +
+        'desplazan en sentidos opuestos: la reflexion convierte el alcance largo de la izquierda ' +
+        'en un alcance largo de la derecha, de modo que la barra basica queda a la derecha de la ' +
+        'barra de percentiles.'
+  }
+});
+</script>
+</body>
+</html>

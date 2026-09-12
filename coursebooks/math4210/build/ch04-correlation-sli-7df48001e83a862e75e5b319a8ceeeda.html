@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Set the correlation and look at the cloud</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* 120 fixed standard normal pairs. Z1 is the horizontal coordinate and never
+   moves; the vertical coordinate is rebuilt from rho as
+   Y = rho * Z1 + sqrt(1 - rho^2) * Z2, which has population correlation
+   exactly rho with unit variance. Fixed literals, so the sample r at any rho
+   is a reproducible number that can be checked outside the browser. */
+var Z1 = [0.6046, 0.732, 0.4856, -0.5994, -0.4855, -1.3885, -1.1705, -0.0803, -1.0913, -1.4075, 0.5515, -0.0618, 0.2473, -0.6314, -0.012, 0.5548, 1.2202, -0.1997, 0.4434, 0.0894, -0.0063, 1.3173, -0.8516, -0.0112, -1.6715, 0.9924, -0.9074, -0.6921, -0.0034, -2.2255, 1.7319, -0.3137, -0.3869, -0.7418, 1.5038, 0.4118, 1.3158, 0.6351, 0.0868, 2.1216, -0.3387, 0.0268, 1.5086, 0.7071, 0.0452, 0.3165, -2.0108, 1.4474, 0.6254, 0.926, 0.7767, -0.207, -0.6775, -0.6033, -0.1021, -1.5732, 0.9207, -0.5431, -1.4968, 0.17, 0.141, -0.0706, 1.339, 0.0954, -0.9399, 0.9397, 0.6859, 1.7197, -0.3949, -0.8899, 1.3782, -0.75, 0.2644, 0.6989, -0.7248, -0.0134, -2.6948, 0.7611, -1.5867, 1.5812, -0.4397, 1.1998, 1.0308, -1.0522, -0.4266, 1.1185, -0.607, 0.9517, -0.3842, 0.4977, 0.4328, -0.399, -0.5178, -1.1954, -1.1379, -1.4017, 1.5849, -1.9638, 0.7103, 0.8942, 0.5939, 0.0958, 1.1834, -0.9876, -1.3681, -2.7986, -0.1769, 1.1543, -0.3021, 1.151, 0.1334, -0.6009, 1.3154, -0.2917, 0.8241, -1.1319, 0.1091, 0.2815, 1.2152, -0.4584];
+var Z2 = [0.3454, -1.8507, -0.0101, 0.5022, -0.0754, 1.0112, -1.0616, -3.1894, -1.7544, -0.3285, 0.1206, 0.1364, 0.4596, 0.8267, 0.2492, -1.3119, -0.772, -0.0949, 0.5199, 0.3514, 0.1534, 0.0683, -1.5281, -1.2509, 0.1309, -0.0446, 1.0537, -0.909, -1.1454, -0.0174, -0.292, -0.1993, 0.0557, 0.0576, -1.7582, 1.7057, -1.5292, 1.0583, -0.8219, -0.284, 0.9831, 0.8736, -0.777, 1.5747, 1.158, 0.6169, -1.1545, 1.3221, -0.6387, -1.3105, 1.4321, 1.3412, 0.0258, -0.4263, -0.6575, 0.1359, -0.1218, 0.2811, -0.2246, -0.1933, -0.1178, 0.9024, -0.562, -2.91, -0.2944, -0.1217, -0.0959, 1.331, -0.2621, -1.783, -1.0104, 0.4021, -0.2976, 1.0835, 0.4305, 1.7034, 0.1791, 0.8138, -1.8009, 0.9592, 0.5922, -0.6897, -1.1917, 1.5407, 0.9743, -0.2116, -0.1842, 2.1725, -0.2434, 1.1329, -0.1108, -2.4395, -1.009, -0.3143, 0.2341, -0.8062, 0.2964, -0.2755, 0.2327, 1.5245, 0.9724, 1.1582, 0.4787, 0.0596, -0.2747, 0.9727, -2.7053, -0.184, 0.0724, -0.4849, 0.3261, -2.1467, -0.0172, 0.0307, 0.6312, -0.2645, 0.1168, -0.4298, 0.6304, -0.5521];
+
+var DEFAULT_RHO = 0.60;
+
+/* The engine reads cfg.points once and calls .map() on it at every redraw, so
+   a small duck-typed stand-in lets the cloud follow the slider. PARAMS is the
+   live slider state, captured on the first draw from the curve callback;
+   until then the sliders are still at their defaults, so the first frame is
+   already correct. */
+var PARAMS = { rho: DEFAULT_RHO };
+var CACHE = { rho: null, pts: null, fit: null };
+
+function cloud() {
+  if (CACHE.rho !== PARAMS.rho) {
+    var rho = PARAMS.rho, k = Math.sqrt(Math.max(0, 1 - rho * rho));
+    var pts = [], xs = [], ys = [], i;
+    for (i = 0; i < Z1.length; i++) {
+      var yv = rho * Z1[i] + k * Z2[i];
+      pts.push({ x: Z1[i], y: yv });
+      xs.push(Z1[i]); ys.push(yv);
+    }
+    CACHE.rho = PARAMS.rho;
+    CACHE.pts = pts;
+    CACHE.fit = Sim.Stats.lsFit(xs, ys);
+  }
+  return CACHE;
+}
+
+var LIVE = { map: function (fn) { return cloud().pts.map(fn); } };
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Set the correlation, then look at what it looks like',
+    es: 'Fija la correlacion, luego mira como se ve'
+  },
+  points: LIVE,
+  xRange: [-3.2, 3.2],
+  yRange: [-3.2, 3.2],
+  xLabel: { en: 'X in standard units', es: 'X en unidades estandar' },
+  yLabel: { en: 'Y in standard units', es: 'Y en unidades estandar' },
+  ariaLabel: {
+    en: 'A cloud of 120 points whose vertical spread tightens around a rising line as the correlation slider increases.',
+    es: 'Una nube de 120 puntos cuya dispersion vertical se estrecha alrededor de una recta creciente al aumentar el deslizador de correlacion.'
+  },
+  params: [
+    { id: 'rho', min: -1, max: 1, step: 0.05, value: DEFAULT_RHO, digits: 2,
+      label: { en: 'Population correlation rho',
+               es: 'Correlacion poblacional rho' } }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { PARAMS = p; return cloud().fit.predict(x); } }
+  ],
+  readouts: [
+    { id: 'r', accent: 1, digits: 3,
+      label: { en: 'Sample r', es: 'r muestral' },
+      compute: function (p) { PARAMS = p; return cloud().fit.r; } },
+    { id: 'r2', digits: 3,
+      label: { en: 'r squared', es: 'r al cuadrado' },
+      compute: function (p) { PARAMS = p; return cloud().fit.r2; } },
+    { id: 'gap', accent: 2, digits: 3,
+      label: { en: 'Sampling gap r minus rho', es: 'Brecha muestral r menos rho' },
+      compute: function (p) { PARAMS = p; return cloud().fit.r - p.rho; } },
+    { id: 'n', digits: 0,
+      label: { en: 'n', es: 'n' },
+      compute: function () { return Z1.length; } }
+  ],
+  caption: {
+    en: 'Every point keeps its X value forever. Only the heights move as you turn ' +
+        'rho, and the blue line is the least-squares fit to whatever cloud is on ' +
+        'screen at that moment.\n\n' +
+        '**Try this.** Park the slider at 0.30 and try to see the tilt. Most people ' +
+        'cannot; the cloud still looks round. Now step up to 0.70 and the band snaps ' +
+        'into view all at once. Then set rho to 0 and read the sampling gap: the ' +
+        'sample **r** is 0.086, not zero, because 120 points are never the whole ' +
+        'population.',
+    es: 'Cada punto conserva su valor de X para siempre. Solo se mueven las alturas ' +
+        'cuando giras rho, y la recta azul es el ajuste de minimos cuadrados a la ' +
+        'nube que este en pantalla en ese momento.\n\n' +
+        '**Prueba esto.** Deja el deslizador en 0.30 e intenta ver la inclinacion. ' +
+        'Casi nadie puede; la nube sigue pareciendo redonda. Ahora sube a 0.70 y la ' +
+        'banda aparece de golpe. Luego pon rho en 0 y lee la brecha muestral: la ' +
+        '**r** de la muestra es 0.086, no cero, porque 120 puntos nunca son toda la ' +
+        'poblacion.'
+  }
+});
+</script>
+</body>
+</html>

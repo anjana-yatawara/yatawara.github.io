@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Curve and band overlays</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Curved, fanning data: the classic case for a transformation. */
+var PTS = [
+  { x: 0.5, y: 1.6 }, { x: 1.0, y: 2.2 }, { x: 1.5, y: 2.6 }, { x: 2.0, y: 3.5 },
+  { x: 2.5, y: 3.9 }, { x: 3.0, y: 5.2 }, { x: 3.5, y: 6.4 }, { x: 4.0, y: 8.1 },
+  { x: 4.5, y: 9.4 }, { x: 5.0, y: 12.6 }, { x: 5.5, y: 15.1 }, { x: 6.0, y: 19.8 }
+];
+
+var straight = Sim.Stats.lsFit(
+  PTS.map(function (p) { return p.x; }),
+  PTS.map(function (p) { return p.y; })
+);
+var logFit = Sim.Stats.lsFit(
+  PTS.map(function (p) { return p.x; }),
+  PTS.map(function (p) { return Math.log(p.y); })
+);
+var seLog = logFit.se;
+
+Sim.mount({
+  type: 'curve',
+  title: {
+    en: 'A straight line, and the same model fitted on a log scale',
+    es: 'Una recta, y el mismo modelo ajustado en escala logaritmica'
+  },
+  points: PTS,
+  xRange: [0, 6.5],
+  yRange: [0, 24],
+  xLabel: { en: 'x', es: 'x' },
+  yLabel: { en: 'y', es: 'y' },
+  bands: [
+    { accent: 2, alpha: 0.13,
+      lo: function (x) { return Math.exp(logFit.predict(x) - 2 * seLog); },
+      hi: function (x) { return Math.exp(logFit.predict(x) + 2 * seLog); } }
+  ],
+  curves: [
+    { label: { en: 'straight line', es: 'recta' },
+      accent: 1, dash: [6, 4], toggle: true,
+      fn: function (x) { return straight.predict(x); } },
+    { label: { en: 'log model, back-transformed', es: 'modelo log, retransformado' },
+      accent: 2, width: 3, toggle: true,
+      fn: function (x) { return Math.exp(logFit.predict(x)); } }
+  ],
+  caption: {
+    en: 'Both curves were fitted to the same twelve points. The dashed blue line is an ' +
+        'ordinary least-squares fit of y on x. The solid amber curve regresses **log y** ' +
+        'on x and is then transformed back to the original scale, carrying its interval ' +
+        'band with it.\n\n' +
+        '**Try this.** Toggle the straight line off and on. It runs below the data at both ' +
+        'ends and above it in the middle, the signature of fitting a line to a curve, and ' +
+        'it eventually predicts negative values of y. The log model bends with the points ' +
+        'and its band widens as y grows, which matches how the spread of these data ' +
+        'actually behaves.',
+    es: 'Ambas curvas se ajustaron a los mismos doce puntos. La linea azul discontinua es ' +
+        'un ajuste de minimos cuadrados de y sobre x. La curva ambar continua hace la ' +
+        'regresion de **log y** sobre x y luego se transforma de regreso a la escala ' +
+        'original, llevando consigo su banda de intervalo.\n\n' +
+        '**Prueba esto.** Activa y desactiva la recta. Pasa por debajo de los datos en ' +
+        'ambos extremos y por encima en el centro, la firma de ajustar una recta a una ' +
+        'curva, y termina prediciendo valores negativos de y. El modelo log se dobla con ' +
+        'los puntos y su banda se ensancha al crecer y, lo cual coincide con el ' +
+        'comportamiento real de la dispersion de estos datos.'
+  }
+});
+</script>
+</body>
+</html>

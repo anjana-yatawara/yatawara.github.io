@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confidence band against prediction band</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The Toluca fit from Chapter 2, carried into Chapter 3 inference.
+   b0, b1 and MSE are held at their fitted values; the n slider asks what the
+   two bands would look like if the same design (the same 25 lot sizes,
+   replicated) had been run n times instead of 25. Replicating the design
+   scales Sxx in proportion to n, so Sxx(n) = 19800 * n / 25. */
+var B0 = 62.365859, B1 = 3.570202, MSE = 2383.7156;
+var XBAR = 70, SXX25 = 19800, N0 = 25;
+var YLO = 0, YHI = 720;
+
+var TOLUCA = [
+  { x: 80, y: 399 }, { x: 30, y: 121 }, { x: 50, y: 221 }, { x: 90, y: 376 },
+  { x: 70, y: 361 }, { x: 60, y: 224 }, { x: 120, y: 546 }, { x: 80, y: 352 },
+  { x: 100, y: 353 }, { x: 50, y: 157 }, { x: 40, y: 160 }, { x: 70, y: 252 },
+  { x: 90, y: 389 }, { x: 20, y: 113 }, { x: 110, y: 435 }, { x: 100, y: 420 },
+  { x: 30, y: 212 }, { x: 50, y: 268 }, { x: 90, y: 377 }, { x: 110, y: 421 },
+  { x: 30, y: 273 }, { x: 90, y: 468 }, { x: 40, y: 244 }, { x: 80, y: 342 },
+  { x: 70, y: 323 }
+];
+
+function sxx(n) { return SXX25 * n / N0; }
+function tcrit(n) { return Sim.Stats.qt(0.975, n - 2); }
+function yhat(x) { return B0 + B1 * x; }
+
+/* s{Yhat_h}: uncertainty about where the line is. */
+function sMean(n, x) {
+  var d = x - XBAR;
+  return Math.sqrt(MSE * (1 / n + d * d / sxx(n)));
+}
+/* s{pred}: the same, plus the new run's own scatter (the leading 1). */
+function sPred(n, x) {
+  var d = x - XBAR;
+  return Math.sqrt(MSE * (1 + 1 / n + d * d / sxx(n)));
+}
+function clampY(v) { return Math.min(YHI, Math.max(YLO, v)); }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'One band shrinks with more data. The other refuses to.',
+    es: 'Una banda se encoge con más datos. La otra se niega a hacerlo.'
+  },
+  points: TOLUCA,
+  xRange: [10, 130],
+  yRange: [YLO, YHI],
+  xLabel: { en: 'lot size X', es: 'tamaño de lote X' },
+  yLabel: { en: 'work hours Y', es: 'horas de trabajo Y' },
+  ariaLabel: {
+    en: 'Toluca work hours against lot size, with a narrow confidence band and a wide prediction band around the fitted line.',
+    es: 'Horas de trabajo Toluca contra tamaño de lote, con una banda de confianza angosta y una banda de predicción ancha alrededor de la recta ajustada.'
+  },
+  params: [
+    { id: 'n', label: { en: 'Sample size n', es: 'Tamaño de muestra n' },
+      min: 10, max: 200, step: 1, value: 25, digits: 0 },
+    { id: 'xh', label: { en: 'Read the bands at Xh', es: 'Leer las bandas en Xh' },
+      min: 20, max: 120, step: 1, value: 100, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 2.5, fn: function (p, x) { return yhat(x); } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.16,
+      lo: function (p, x) { return clampY(yhat(x) - tcrit(p.n) * sPred(p.n, x)); },
+      hi: function (p, x) { return clampY(yhat(x) + tcrit(p.n) * sPred(p.n, x)); } },
+    { accent: 1, alpha: 0.28,
+      lo: function (p, x) { return clampY(yhat(x) - tcrit(p.n) * sMean(p.n, x)); },
+      hi: function (p, x) { return clampY(yhat(x) + tcrit(p.n) * sMean(p.n, x)); } }
+  ],
+  readouts: [
+    { id: 'yh', label: { en: 'Yhat at Xh', es: 'Yhat en Xh' }, digits: 1,
+      compute: function (p) { return yhat(p.xh); } },
+    { id: 'ci', label: { en: 'CI half-width', es: 'Semiamplitud IC' },
+      accent: 1, digits: 1,
+      compute: function (p) { return tcrit(p.n) * sMean(p.n, p.xh); } },
+    { id: 'pi', label: { en: 'PI half-width', es: 'Semiamplitud IP' },
+      accent: 2, digits: 1,
+      compute: function (p) { return tcrit(p.n) * sPred(p.n, p.xh); } },
+    { id: 'ratio', label: { en: 'PI / CI', es: 'IP / IC' }, digits: 2,
+      compute: function (p) { return sPred(p.n, p.xh) / sMean(p.n, p.xh); } }
+  ],
+  caption: {
+    en: 'The inner blue band is the 95% confidence interval for the mean hours at each lot ' +
+        'size; the outer amber band is the 95% prediction interval for one new run. The line, ' +
+        'b1 and MSE are held at the Toluca values, so the sliders change only how much data ' +
+        'stands behind the fit and where you read it.\n\n' +
+        '**Try this.** Leave Xh at 100 and push n from 25 up to 200. The blue band collapses ' +
+        'onto the line, but the amber band barely moves, because the leading 1 in ' +
+        's{pred} is the new run\'s own scatter and no amount of data removes it. Now pull n back ' +
+        'to 25 and slide Xh from 70 out to 120: the CI half-width more than doubles while ' +
+        'PI / CI falls, since far from Xbar the uncertainty about the line finally starts to ' +
+        'rival the scatter of a single run.',
+    es: 'La banda azul interior es el intervalo de confianza del 95% para las horas medias en ' +
+        'cada tamaño de lote; la banda ámbar exterior es el intervalo de predicción del 95% ' +
+        'para una corrida nueva. La recta, b1 y MSE se mantienen en los valores de Toluca, así ' +
+        'que los deslizadores solo cambian cuántos datos respaldan el ajuste y dónde lo lees.\n\n' +
+        '**Prueba esto.** Deja Xh en 100 y lleva n de 25 hasta 200. La banda azul se colapsa ' +
+        'sobre la recta, pero la ámbar apenas se mueve, porque el 1 inicial de s{pred} es la ' +
+        'dispersión propia de la corrida nueva y ninguna cantidad de datos la elimina. Ahora ' +
+        'regresa n a 25 y desliza Xh de 70 hasta 120: la semiamplitud del IC más que se duplica ' +
+        'mientras IP / IC baja, porque lejos de Xbar la incertidumbre sobre la recta por fin ' +
+        'empieza a competir con la dispersión de una sola corrida.'
+  }
+});
+</script>
+</body>
+</html>

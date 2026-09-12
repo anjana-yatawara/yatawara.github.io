@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Direct, indirect, and total effects</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Duncan's 45 occupations, education and prestige in standardized units
+   (each centered and divided by its own sample standard deviation). */
+var Z = [
+  {x:1.1238,y:1.0889}, {x:0.7878,y:1.1206}, {x:1.3254,y:1.3428}, {x:1.2582,y:0.8985},
+  {x:1.1238,y:1.3428}, {x:1.0566,y:1.2476}, {x:1.359,y:1.438},  {x:1.5942,y:1.3428},
+  {x:1.1574,y:0.1368}, {x:1.1238,y:1.2793}, {x:0.7206,y:0.2955}, {x:1.527,y:1.311},
+  {x:1.4934,y:1.5649}, {x:1.0566,y:0.359},  {x:1.2918,y:0.8033}, {x:-0.6235,y:-0.3075},
+  {x:-0.2539,y:0.8985}, {x:0.1157,y:1.0571}, {x:-0.2875,y:-0.0853}, {x:0.9894,y:1.4062},
+  {x:0.6534,y:-0.2757}, {x:0.0821,y:-0.4344}, {x:0.6198,y:-0.2123}, {x:-0.0859,y:-1.0057},
+  {x:-0.9931,y:-0.4662}, {x:-0.4555,y:0.1686}, {x:-0.8251,y:0.6129}, {x:-0.6907,y:0.2955},
+  {x:-1.0267,y:-0.6883}, {x:-0.9259,y:-0.5931}, {x:-0.7915,y:-1.1961}, {x:-1.5307,y:-1.0374},
+  {x:-0.8923,y:-0.9105}, {x:-1.1275,y:-1.1961}, {x:-1.2619,y:-1.1009}, {x:-1.0939,y:-0.7518},
+  {x:-0.8923,y:-0.8787}, {x:-0.8251,y:-1.2913}, {x:-1.1947,y:-1.4182}, {x:-1.0267,y:-1.0057},
+  {x:-0.7579,y:-1.323}, {x:-0.9259,y:-1.1643}, {x:-1.0939,y:-1.2596}, {x:-0.1867,y:-0.2123},
+  {x:-0.6907,y:-1.1961}
+];
+
+/* The education-prestige correlation these 45 points actually have. */
+var R_EP = 0.8519;
+
+function total(p) { return p.pPE + p.pIE * p.pPI; }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Multiply along a route, add across routes',
+    es: 'Multiplica a lo largo de una ruta, suma entre rutas'
+  },
+  points: Z,
+  xRange: [-2, 2],
+  yRange: [-2, 2],
+  xLabel: { en: 'education*, standard deviations',
+            es: 'education*, desviaciones estandar' },
+  yLabel: { en: 'prestige*, standard deviations',
+            es: 'prestige*, desviaciones estandar' },
+  ariaLabel: {
+    en: 'Standardized prestige against standardized education for 45 occupations, with a dashed direct-effect line and a solid total-effect line.',
+    es: 'Prestigio estandarizado contra educacion estandarizada para 45 ocupaciones, con una recta discontinua de efecto directo y una recta continua de efecto total.'
+  },
+  params: [
+    { id: 'pIE', label: { en: 'p_IE, education to income',
+                          es: 'p_IE, educacion a ingreso' },
+      min: 0, max: 1, step: 0.01, value: 0.72, digits: 2 },
+    { id: 'pPI', label: { en: 'p_PI, income to prestige',
+                          es: 'p_PI, ingreso a prestigio' },
+      min: 0, max: 1, step: 0.01, value: 0.46, digits: 2 },
+    { id: 'pPE', label: { en: 'p_PE, education straight to prestige',
+                          es: 'p_PE, educacion directo a prestigio' },
+      min: 0, max: 1, step: 0.01, value: 0.52, digits: 2 }
+  ],
+  curves: [
+    { accent: 2, dash: [6, 4], width: 2,
+      fn: function (p, x) { return p.pPE * x; } },
+    { accent: 1, width: 3,
+      fn: function (p, x) { return total(p) * x; } }
+  ],
+  readouts: [
+    { id: 'direct', label: { en: 'Direct p_PE', es: 'Directo p_PE' },
+      accent: 2, digits: 3,
+      compute: function (p) { return p.pPE; } },
+    { id: 'indirect', label: { en: 'Indirect p_IE x p_PI',
+                               es: 'Indirecto p_IE x p_PI' },
+      digits: 3,
+      compute: function (p) { return p.pIE * p.pPI; } },
+    { id: 'total', label: { en: 'Total effect', es: 'Efecto total' },
+      accent: 1, digits: 3,
+      compute: function (p) { return total(p); } },
+    { id: 'miss', label: { en: 'Total minus r (0.852)',
+                           es: 'Total menos r (0.852)' },
+      digits: 3,
+      compute: function (p) { return total(p) - R_EP; } }
+  ],
+  caption: {
+    en: 'The 45 dots are Duncan\'s occupations in standard deviations. Amber dashed is the ' +
+        '**direct** path alone; solid blue is the **total** effect, direct plus the indirect ' +
+        'route through income. The gap between them at education* = 1 is that route.\n\n' +
+        '**Try this.** Slide p_PE to 0, the claim that education reaches prestige only ' +
+        'through the paycheck. Blue flattens to about 0.33 and runs well below the dots, and ' +
+        'the last readout shows a shortfall past half a standard deviation. Slide p_PE back ' +
+        'until that readout reads 0.000 and you have rebuilt the fitted model by hand.',
+    es: 'Los 45 puntos son las ocupaciones de Duncan en desviaciones estandar. La ambar ' +
+        'discontinua es solo la ruta **directa**; la azul continua es el efecto **total**, ' +
+        'el directo mas la ruta indirecta por el ingreso. La distancia entre ambas en ' +
+        'education* = 1 es esa ruta.\n\n' +
+        '**Prueba esto.** Baja p_PE a 0, la afirmacion de que la educacion llega al ' +
+        'prestigio solo por el sueldo. La azul se aplana a unos 0.33 y queda muy por debajo ' +
+        'de los puntos, y el ultimo valor muestra un faltante de mas de media desviacion ' +
+        'estandar. Sube p_PE hasta que ese valor marque 0.000 y habras reconstruido a mano ' +
+        'el modelo ajustado.'
+  }
+});
+</script>
+</body>
+</html>

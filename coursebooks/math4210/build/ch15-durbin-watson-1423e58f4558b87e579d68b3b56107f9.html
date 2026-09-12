@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What Durbin-Watson looks like when nothing is wrong</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ---------------------------------------------------------------------------
+   Section 15.3. The null distribution of D. Each draw builds 144 months of
+   genuinely uncorrelated errors, fits a trend by least squares, and computes
+   the Durbin-Watson statistic from the residuals. The airline model's
+   D = 0.4252 is marked so the student can see it is nowhere near the pile.
+   --------------------------------------------------------------------------- */
+
+var N = 144;
+var AIRLINE_D = 0.4252;
+var TS = [];
+for (var i = 1; i <= N; i++) { TS.push(i); }
+
+function durbinWatson(e) {
+  var num = 0, den = 0, k;
+  for (k = 0; k < e.length; k++) { den += e[k] * e[k]; }
+  for (k = 1; k < e.length; k++) {
+    num += (e[k] - e[k - 1]) * (e[k] - e[k - 1]);
+  }
+  return num / den;
+}
+
+Sim.mount({
+  type: 'sampling',
+  seed: 4210,
+  manyCount: 1000,
+  title: {
+    en: 'If the errors really were uncorrelated, where would D land?',
+    es: 'Si los errores realmente no estuvieran correlacionados, donde caeria D?'
+  },
+  draw: function (rng) {
+    var ys = [];
+    for (var k = 0; k < N; k++) { ys.push(2 + 0.01 * TS[k] + rng.normal(0, 1)); }
+    return durbinWatson(Sim.Stats.lsFit(TS, ys).residuals);
+  },
+  xRange: [0.3, 2.9],
+  bins: 40,
+  showNormal: true,
+  trueValue: AIRLINE_D,
+  trueValueLabel: { en: 'airline D = 0.43', es: 'D aerea = 0.43' },
+  xLabel: {
+    en: 'Durbin-Watson D from uncorrelated errors',
+    es: 'D de Durbin-Watson con errores no correlacionados'
+  },
+  ariaLabel: {
+    en: 'Histogram of Durbin-Watson statistics simulated under uncorrelated errors.',
+    es: 'Histograma de estadisticos de Durbin-Watson simulados con errores no correlacionados.'
+  },
+  drawOneLabel: { en: 'Simulate one series', es: 'Simular una serie' },
+  drawManyLabel: { en: 'Simulate 1000', es: 'Simular 1000' },
+  readouts: [
+    { id: 'n', label: { en: 'Series simulated', es: 'Series simuladas' } },
+    { id: 'mean', label: { en: 'Mean D', es: 'D media' }, accent: 1, digits: 3 },
+    { id: 'sd', label: { en: 'SD of D', es: 'DE de D' }, digits: 3 },
+    { id: 'min', label: { en: 'Smallest D seen', es: 'D mas pequena vista' },
+      accent: 2, digits: 3,
+      compute: function (draws) {
+        return draws.length ? Math.min.apply(null, draws) : NaN;
+      } },
+    { id: 'below', label: { en: 'How many at 0.43 or below', es: 'Cuantas en 0.43 o menos' },
+      digits: 0,
+      compute: function (draws) {
+        var c = 0;
+        for (var k = 0; k < draws.length; k++) { if (draws[k] <= AIRLINE_D) { c++; } }
+        return c;
+      } }
+  ],
+  tail: function (v) { return v <= AIRLINE_D; },
+  caption: {
+    en: 'Every simulated series has 144 months, a real trend, and errors that are honestly ' +
+        'independent. The histogram collects the D that came out of each fit. The amber marker ' +
+        'is the airline model D of 0.43.\n\n' +
+        '**Try this.** Simulate one series a few times, then press Simulate 1000. The pile ' +
+        'centers on 2, exactly as the theory says it should when nothing is wrong, and it is ' +
+        'narrow. Now read **Smallest D seen**: after a thousand tries the smallest value is ' +
+        'still nowhere near 0.43, and the count at 0.43 or below stays at 0. That gap, not a ' +
+        'table of bounds, is what the p-value below 2e-16 is telling you.',
+    es: 'Cada serie simulada tiene 144 meses, una tendencia real y errores honestamente ' +
+        'independientes. El histograma reune la D que salio de cada ajuste. La marca ambar es ' +
+        'la D de 0.43 del modelo aereo.\n\n' +
+        '**Prueba esto.** Simula una serie varias veces y luego presiona Simular 1000. El ' +
+        'monton se centra en 2, tal como dice la teoria cuando nada anda mal, y es estrecho. ' +
+        'Ahora lee **D mas pequena vista**: tras mil intentos el valor minimo sigue lejisimos ' +
+        'de 0.43, y el conteo en 0.43 o menos se queda en 0. Ese abismo, y no una tabla de ' +
+        'cotas, es lo que te dice el valor p menor que 2e-16.'
+  }
+});
+</script>
+</body>
+</html>

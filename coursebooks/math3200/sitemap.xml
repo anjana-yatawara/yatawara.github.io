@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://localhost:3000/sitemap_style.xsl" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://localhost:3000</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-1</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-2</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-3</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-4</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-5</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-6</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/index-7</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/glossary</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/formulas</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/r-reference</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3000/tables</loc>
+  </url>
+</urlset>

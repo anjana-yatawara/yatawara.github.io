@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Extra sums of squares and the general linear test</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-back { max-width: 860px; margin: 10px auto 0; font-size: 0.8125rem; }
+.sim-back a { color: var(--sim-accent); }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<p class="sim-back"><a id="back" href="../ch08/#ch08-general-linear-test" target="_top">Back to 8.4</a></p>
+<script src="_engine.js"></script>
+<script>
+/* ALRM body-fat data, 20 men: triceps, thigh, midarm, bodyfat.
+   Same file as data/bodyfat3.csv, used in Example 8.3 and Example 8.5. */
+var BF = [
+  [19.5, 43.1, 29.1, 11.9], [24.7, 49.8, 28.2, 22.8], [30.7, 51.9, 37.0, 18.7],
+  [29.8, 54.3, 31.1, 20.1], [19.1, 42.2, 30.9, 12.9], [25.6, 53.9, 23.7, 21.7],
+  [31.4, 58.5, 27.6, 27.1], [27.9, 52.1, 30.6, 25.4], [22.1, 49.9, 23.2, 21.3],
+  [25.5, 53.5, 24.8, 19.3], [31.1, 56.6, 30.0, 25.4], [30.4, 56.7, 28.3, 27.2],
+  [18.7, 46.5, 23.0, 11.7], [19.7, 44.2, 28.6, 17.8], [14.6, 42.7, 21.3, 12.8],
+  [29.5, 54.4, 30.1, 23.9], [27.7, 55.3, 25.7, 22.6], [30.2, 58.6, 24.6, 25.4],
+  [22.7, 48.2, 27.1, 14.8], [25.2, 51.0, 27.5, 21.1]
+];
+
+var TAG = ['tri', 'thi', 'mid'];
+var ORDERS = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
+
+var N = BF.length;
+var Y = BF.map(function (r) { return r[3]; });
+var COL = [
+  BF.map(function (r) { return r[0]; }),
+  BF.map(function (r) { return r[1]; }),
+  BF.map(function (r) { return r[2]; })
+];
+
+/* Least squares by the normal equations X'Xb = X'Y, solved with Gaussian
+   elimination and partial pivoting. Returns the error sum of squares. */
+function sseOf(idx) {
+  var m = idx.length, p = m + 1, i, j, k, t, s;
+  var A = [], b = [];
+  for (i = 0; i < p; i++) {
+    A.push([]);
+    for (j = 0; j < p; j++) { A[i].push(0); }
+    b.push(0);
+  }
+  function xv(row, j) { return j === 0 ? 1 : COL[idx[j - 1]][row]; }
+  for (t = 0; t < N; t++) {
+    for (i = 0; i < p; i++) {
+      for (j = 0; j < p; j++) { A[i][j] += xv(t, i) * xv(t, j); }
+      b[i] += xv(t, i) * Y[t];
+    }
+  }
+  for (k = 0; k < p; k++) {
+    var piv = k;
+    for (i = k + 1; i < p; i++) {
+      if (Math.abs(A[i][k]) > Math.abs(A[piv][k])) { piv = i; }
+    }
+    var tmp = A[k]; A[k] = A[piv]; A[piv] = tmp;
+    var tb = b[k]; b[k] = b[piv]; b[piv] = tb;
+    for (i = k + 1; i < p; i++) {
+      var f = A[i][k] / A[k][k];
+      for (j = k; j < p; j++) { A[i][j] -= f * A[k][j]; }
+      b[i] -= f * b[k];
+    }
+  }
+  var coef = [];
+  for (i = 0; i < p; i++) { coef.push(0); }
+  for (i = p - 1; i >= 0; i--) {
+    s = b[i];
+    for (j = i + 1; j < p; j++) { s -= A[i][j] * coef[j]; }
+    coef[i] = s / A[i][i];
+  }
+  var sse = 0;
+  for (t = 0; t < N; t++) {
+    var yh = 0;
+    for (j = 0; j < p; j++) { yh += coef[j] * xv(t, j); }
+    sse += (Y[t] - yh) * (Y[t] - yh);
+  }
+  return sse;
+}
+
+var my = Sim.Stats.mean(Y), SSTO = 0;
+for (var i0 = 0; i0 < N; i0++) { SSTO += (Y[i0] - my) * (Y[i0] - my); }
+
+/* One row per entry order: cumulative SSR, extra SS, SSE, F* and its p-value
+   at each step. Each F* compares the model you have now against the same
+   model without the predictor that just entered, so q = 1 always. */
+var TABLE = ORDERS.map(function (ord) {
+  var cum = [0], extra = [0], sse = [SSTO], F = [NaN], pv = [NaN];
+  for (var k = 1; k <= 3; k++) {
+    var s = sseOf(ord.slice(0, k));
+    var df = N - (k + 1);
+    var ex = sse[k - 1] - s;
+    var mse = s / df;
+    var f = ex / mse;
+    sse.push(s); cum.push(SSTO - s); extra.push(ex); F.push(f);
+    pv.push(Sim.Stats.pt2(Math.sqrt(f), df));
+  }
+  return { ord: ord, cum: cum, extra: extra, sse: sse, F: F, p: pv,
+           tags: ord.map(function (j) { return TAG[j]; }) };
+});
+
+function row(p) { return TABLE[Math.round(p.order)]; }
+function step(p) { return Math.round(p.k); }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Let predictors in one at a time, and change who goes first',
+    es: 'Deja entrar los predictores uno a uno, y cambia quien va primero'
+  },
+  xRange: [0, 3.2],
+  yRange: [0, 520],
+  xLabel: { en: 'predictors in the model, in entry order',
+            es: 'predictores en el modelo, en orden de entrada' },
+  yLabel: { en: 'sum of squares', es: 'suma de cuadrados' },
+  ariaLabel: {
+    en: 'Staircase of cumulative regression sum of squares against the number of predictors entered, under a dashed ceiling at the total sum of squares.',
+    es: 'Escalera de la suma de cuadrados de la regresion acumulada frente al numero de predictores que han entrado, bajo un techo discontinuo en la suma de cuadrados total.'
+  },
+  params: [
+    { id: 'order', label: { en: 'Entry order, 0 to 5', es: 'Orden de entrada, 0 a 5' },
+      min: 0, max: 5, step: 1, value: 0, digits: 0 },
+    { id: 'k', label: { en: 'How many predictors are in', es: 'Cuantos predictores estan dentro' },
+      min: 1, max: 3, step: 1, value: 3, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) {
+        var k = step(p);
+        if (x < 0 || x > k) { return NaN; }
+        return row(p).cum[Math.min(Math.floor(x) + 1, k)];
+      } },
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function () { return SSTO; } }
+  ],
+  readouts: [
+    { id: 'seq', label: { en: 'Order', es: 'Orden' },
+      compute: function (p) { return row(p).tags.slice(0, step(p)).join(' > '); } },
+    { id: 'extra', label: { en: 'Extra SS', es: 'SC adicional' }, accent: 2, digits: 2,
+      compute: function (p) { return row(p).extra[step(p)]; } },
+    { id: 'sse', label: { en: 'SSE now', es: 'SCE ahora' }, digits: 2,
+      compute: function (p) { return row(p).sse[step(p)]; } },
+    { id: 'f', label: { en: 'F*', es: 'F*' }, accent: 1, digits: 3,
+      compute: function (p) { return row(p).F[step(p)]; } },
+    { id: 'p', label: { en: 'p-value', es: 'valor p' }, digits: 4,
+      compute: function (p) { return row(p).p[step(p)]; } }
+  ],
+  caption: {
+    en: '**What to notice.** The blue staircase is the regression sum of squares as each predictor ' +
+        'enters (tri = triceps, thi = thigh, mid = midarm), and each step is that predictor\'s extra ' +
+        'sum of squares, scored by F* against the noise level of the model you now have.\n\n' +
+        '**Try this.** Set the entry order to 2 so thigh goes first, then stop at k = 2: triceps, worth ' +
+        '352.27 when it led, is worth only 3.47 here, with p = 0.47. Slide the order through all six ' +
+        'and watch the top of the staircase never move.',
+    es: '**Qué observar.** La escalera azul es la suma de cuadrados de la regresión conforme entra cada ' +
+        'predictor (tri = triceps, thi = thigh, mid = midarm), y cada escalón es la suma de cuadrados ' +
+        'adicional de ese predictor, calificada por F* frente al nivel de ruido del modelo que ya tienes.\n\n' +
+        '**Prueba esto.** Pon el orden de entrada en 2, de modo que thigh vaya primero, y detente en ' +
+        'k = 2: triceps, que valía 352.27 cuando encabezaba, aquí vale solo 3.47, con p = 0.47. Recorre ' +
+        'los seis órdenes y observa que la cima de la escalera nunca se mueve.'
+  }
+});
+
+(function () {
+  var es = false;
+  try { es = new URLSearchParams(location.search).get('lang') === 'es'; } catch (e) { es = false; }
+  var a = document.getElementById('back');
+  a.textContent = es ? 'Volver a 8.4 La prueba lineal general'
+                     : 'Back to 8.4 The general linear test';
+  a.setAttribute('href', es ? '../ch08/es/#ch08-general-linear-test-es'
+                            : '../ch08/#ch08-general-linear-test');
+}());
+</script>
+</body>
+</html>

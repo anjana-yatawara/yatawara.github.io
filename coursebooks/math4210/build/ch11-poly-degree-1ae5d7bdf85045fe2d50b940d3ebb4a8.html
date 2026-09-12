@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Raising the polynomial degree</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-backlink { margin: 10px 0 0; font-size: 0.8125rem; }
+.sim-backlink a { color: var(--sim-accent); text-decoration: none; }
+.sim-backlink a:hover { text-decoration: underline; }
+.sim-backlink a:focus-visible {
+  outline: 3px solid var(--sim-accent); outline-offset: 2px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Section 11.4. Polynomials of degree 1 to 6 fitted live to cars.csv.
+   The design is built on the centered and scaled predictor
+   u = (speed - 15.4) / 11, which changes no fitted value but keeps the
+   high powers in a range double precision handles cleanly. */
+
+var LANG = (window.location.search.indexOf('lang=es') >= 0) ? 'es' : 'en';
+
+var SPEED = [
+  4, 4, 7, 7, 8, 9, 10, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13,
+  14, 14, 14, 14, 15, 15, 15, 16, 16, 17, 17, 17, 18, 18, 18, 18, 19, 19,
+  19, 20, 20, 20, 20, 20, 22, 23, 24, 24, 24, 24, 25
+];
+var DIST = [
+  2, 10, 4, 22, 16, 10, 18, 26, 34, 17, 28, 14, 20, 24, 28, 26, 34, 34,
+  46, 26, 36, 60, 80, 20, 26, 54, 32, 40, 32, 40, 50, 42, 56, 76, 84, 36,
+  46, 68, 32, 48, 52, 56, 64, 66, 54, 70, 92, 93, 120, 85
+];
+
+var PTS = [];
+for (var i = 0; i < SPEED.length; i++) { PTS.push({ x: SPEED[i], y: DIST[i] }); }
+
+var XBAR = 15.4, XSCALE = 11;   /* u = (speed - 15.4) / 11 */
+
+/* Least squares by modified Gram-Schmidt: X = QR, then R b = Q'y. */
+function mgsFit(A, y) {
+  var n = A.length, p = A[0].length, i, j, k;
+  var V = [], Q = [], R = [];
+  for (j = 0; j < p; j++) {
+    var col = [], rr = [];
+    for (i = 0; i < n; i++) { col.push(A[i][j]); }
+    for (k = 0; k < p; k++) { rr.push(0); }
+    V.push(col); R.push(rr);
+  }
+  for (j = 0; j < p; j++) {
+    var nrm = 0;
+    for (i = 0; i < n; i++) { nrm += V[j][i] * V[j][i]; }
+    nrm = Math.sqrt(nrm);
+    R[j][j] = nrm;
+    var q = [];
+    for (i = 0; i < n; i++) { q.push(nrm > 0 ? V[j][i] / nrm : 0); }
+    Q.push(q);
+    for (k = j + 1; k < p; k++) {
+      var d = 0;
+      for (i = 0; i < n; i++) { d += q[i] * V[k][i]; }
+      R[j][k] = d;
+      for (i = 0; i < n; i++) { V[k][i] -= d * q[i]; }
+    }
+  }
+  var b = [], qty = [];
+  for (j = 0; j < p; j++) {
+    var s = 0;
+    for (i = 0; i < n; i++) { s += Q[j][i] * y[i]; }
+    qty.push(s); b.push(0);
+  }
+  for (j = p - 1; j >= 0; j--) {
+    var t = qty[j];
+    for (k = j + 1; k < p; k++) { t -= R[j][k] * b[k]; }
+    b[j] = t / R[j][j];
+  }
+  return b;
+}
+
+var SST = (function () {
+  var m = Sim.Stats.mean(DIST), s = 0;
+  for (var k = 0; k < DIST.length; k++) { s += (DIST[k] - m) * (DIST[k] - m); }
+  return s;
+}());
+
+var FITS = {};   /* one fit per degree, computed once */
+
+function polyFit(deg) {
+  deg = Math.round(deg);
+  if (FITS[deg]) { return FITS[deg]; }
+  var n = SPEED.length, i, j, A = [];
+  for (i = 0; i < n; i++) {
+    var u = (SPEED[i] - XBAR) / XSCALE, row = [1], pw = 1;
+    for (j = 1; j <= deg; j++) { pw *= u; row.push(pw); }
+    A.push(row);
+  }
+  var b = mgsFit(A, DIST);
+  var predict = function (X) {
+    var u = (X - XBAR) / XSCALE, s = b[0], pw = 1;
+    for (var j = 1; j <= deg; j++) { pw *= u; s += b[j] * pw; }
+    return s;
+  };
+  var sse = 0;
+  for (i = 0; i < n; i++) {
+    var e = DIST[i] - predict(SPEED[i]);
+    sse += e * e;
+  }
+  FITS[deg] = { deg: deg, b: b, sse: sse, r2: 1 - sse / SST, predict: predict, n: n };
+  return FITS[deg];
+}
+
+/* General linear test of degree d against the straight line. */
+function fVsLine(deg) {
+  deg = Math.round(deg);
+  if (deg < 2) { return NaN; }
+  var f1 = polyFit(1), fd = polyFit(deg), n = fd.n;
+  return ((f1.sse - fd.sse) / (deg - 1)) / (fd.sse / (n - deg - 1));
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Add one degree at a time and watch the ends let go',
+    es: 'Añade un grado a la vez y observa cómo se sueltan los extremos'
+  },
+  points: PTS,
+  xRange: [0, 30],
+  yRange: [-20, 140],
+  xLabel: { en: 'speed (mph)', es: 'velocidad (mph)' },
+  yLabel: { en: 'stopping distance (ft)', es: 'distancia de frenado (pies)' },
+  ariaLabel: {
+    en: 'Stopping distance against speed for fifty cars with a fitted polynomial whose degree the slider controls',
+    es: 'Distancia de frenado contra velocidad para cincuenta autos con un polinomio ajustado cuyo grado controla el deslizador'
+  },
+  params: [
+    { id: 'deg', label: { en: 'Degree of the polynomial', es: 'Grado del polinomio' },
+      min: 1, max: 6, step: 1, value: 1, digits: 0 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { return polyFit(p.deg).predict(x); } }
+  ],
+  readouts: [
+    { id: 'sse', label: { en: 'SSE', es: 'SCE' }, accent: 2, digits: 1,
+      compute: function (p) { return polyFit(p.deg).sse; } },
+    { id: 'r2', label: { en: 'R-squared', es: 'R-cuadrado' }, digits: 4,
+      compute: function (p) { return polyFit(p.deg).r2; } },
+    { id: 'f', label: { en: 'F against the line', es: 'F contra la recta' },
+      accent: 1, digits: 3,
+      compute: function (p) { return fVsLine(p.deg); } },
+    { id: 'p30', label: { en: 'Yhat at 30 mph', es: 'Yhat en 30 mph' }, accent: 2, digits: 1,
+      compute: function (p) { return polyFit(p.deg).predict(30); } }
+  ],
+  caption: {
+    en: '**What to notice.** Every extra degree lowers SSE and lifts R-squared, because a more ' +
+        'flexible curve can always chase the sample it was fitted to, yet the F against the ' +
+        'straight line never gets close to significance.\n\n' +
+        '**Try this.** Step the degree from 1 to 6 while watching the prediction at 30 mph, ' +
+        'five miles an hour past the fastest car: it climbs from 100 feet to 335, then flips ' +
+        'to a stopping distance of -77 feet, which no car has ever driven.',
+    es: '**Qué observar.** Cada grado extra baja la SCE y sube la R-cuadrado, porque una curva ' +
+        'más flexible siempre puede perseguir la muestra con la que se ajustó, y aun así la F ' +
+        'contra la recta nunca se acerca a la significancia.\n\n' +
+        '**Prueba esto.** Sube el grado de 1 a 6 mirando la predicción a 30 mph, cinco millas ' +
+        'por hora más allá del auto más rápido: pasa de 100 pies a 335, y luego ' +
+        'salta a una distancia de frenado de -77 pies, que ningún auto ha recorrido jamás.'
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var root = document.querySelector('.sim-root');
+  if (!root) { return; }
+  var p = document.createElement('p');
+  p.className = 'sim-backlink';
+  var a = document.createElement('a');
+  a.href = (LANG === 'es') ? '../ch11/es/#ch11-polynomial-es'
+                           : '../ch11/#ch11-polynomial';
+  a.target = '_top';
+  a.textContent = (LANG === 'es') ? 'Volver a la sección 11.4'
+                                  : 'Back to section 11.4';
+  p.appendChild(a);
+  root.appendChild(p);
+});
+</script>
+</body>
+</html>

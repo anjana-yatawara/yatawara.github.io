@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>One number sets the whole count distribution</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Lanczos log-gamma, g = 7, n = 9. Relative error below 1e-13 over the range
+   we need, so the Poisson probabilities below match dpois to every digit shown. */
+var LANCZOS = [
+  0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+  771.32342877765313, -176.61502916214059, 12.507343278686905,
+  -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+];
+function lgamma(z) {
+  if (z < 0.5) {
+    return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+  }
+  z -= 1;
+  var a = LANCZOS[0], t = z + 7.5, i;
+  for (i = 1; i < 9; i++) { a += LANCZOS[i] / (z + i); }
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a);
+}
+
+/* Poisson probability, continued smoothly between the whole numbers so the
+   outline draws cleanly. At every integer y this is exactly e^-mu mu^y / y!. */
+function poissonP(y, mu) {
+  if (y < 0 || mu <= 0) { return 0; }
+  return Math.exp(-mu + y * Math.log(mu) - lgamma(y + 1));
+}
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'One number sets the center and the spread at the same time',
+    es: 'Un solo numero fija el centro y la dispersion a la vez'
+  },
+  xRange: [0, 26],
+  yRange: [0, 0.40],
+  xLabel: { en: 'count y', es: 'conteo y' },
+  yLabel: { en: 'P(Y = y)', es: 'P(Y = y)' },
+  ariaLabel: {
+    en: 'The Poisson probability distribution, redrawn as the mean count mu changes.',
+    es: 'La distribucion de probabilidad de Poisson, redibujada al cambiar el conteo medio mu.'
+  },
+  params: [
+    { id: 'mu',
+      label: { en: 'Mean count mu', es: 'Conteo medio mu' },
+      min: 1, max: 12, step: 0.1, value: 4, digits: 1 }
+  ],
+  curves: [
+    { fn: function (p, y) { return poissonP(y, p.mu); }, accent: 1, width: 3 }
+  ],
+  bands: [
+    { accent: 1, alpha: 0.16,
+      lo: function () { return 0; },
+      hi: function (p, y) { return poissonP(y, p.mu); } },
+    { accent: 2, alpha: 0.12,
+      lo: function () { return 0; },
+      hi: function (p, y) {
+        var sd = Math.sqrt(p.mu);
+        return Math.abs(y - p.mu) <= sd ? 0.40 : 0;
+      } }
+  ],
+  readouts: [
+    { id: 'mean', label: { en: 'Mean E{Y}', es: 'Media E{Y}' }, accent: 1, digits: 2,
+      compute: function (p) { return p.mu; } },
+    { id: 'var', label: { en: 'Variance Var{Y}', es: 'Varianza Var{Y}' }, accent: 1, digits: 2,
+      compute: function (p) { return p.mu; } },
+    { id: 'sd', label: { en: 'SD', es: 'DE' }, accent: 2, digits: 2,
+      compute: function (p) { return Math.sqrt(p.mu); } },
+    { id: 'p0', label: { en: 'P(Y = 0)', es: 'P(Y = 0)' }, digits: 4,
+      compute: function (p) { return poissonP(0, p.mu); } }
+  ],
+  caption: {
+    en: 'The blue outline is the Poisson probability of each count; the amber strip covers the ' +
+        'counts within one standard deviation of the mean.\n\n' +
+        '**What to notice.** The mean and the variance readouts are always the same number, ' +
+        'because a Poisson has only the one parameter mu. Push mu up and the distribution slides ' +
+        'right, flattens, and widens together: you cannot move the center without moving the ' +
+        'spread.\n\n' +
+        '**Try this.** Set mu near 1 and read P(Y = 0): more than a third of the counts are zero ' +
+        'and the shape piles against the wall at zero. Now drag mu to 12 and watch that ' +
+        'probability vanish while the amber strip nearly quadruples in width, which is exactly ' +
+        'what a constant-variance line cannot do.',
+    es: 'El contorno azul es la probabilidad de Poisson de cada conteo; la franja ambar cubre ' +
+        'los conteos que estan a una desviacion estandar de la media.\n\n' +
+        '**Que observar.** La media y la varianza siempre marcan el mismo numero, porque una ' +
+        'Poisson tiene un solo parametro mu. Sube mu y la distribucion se desliza a la derecha, ' +
+        'se aplana y se ensancha a la vez: no puedes mover el centro sin mover la dispersion.\n\n' +
+        '**Prueba esto.** Pon mu cerca de 1 y lee P(Y = 0): mas de un tercio de los conteos son ' +
+        'cero y la forma se amontona contra la pared del cero. Ahora lleva mu a 12 y observa como ' +
+        'esa probabilidad se desvanece mientras la franja ambar casi cuadruplica su ancho, que es ' +
+        'justo lo que una recta de varianza constante no puede hacer.'
+  }
+});
+</script>
+</body>
+</html>

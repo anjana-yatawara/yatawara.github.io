@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Four criteria climbing the same ladder</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* ------------------------------------------------------------------
+   Chapter 12.2, model selection criteria.
+
+   SSE_k is the error sum of squares of the BEST subset of size k on the
+   252-man body-fat data, from an exhaustive search of all 2^13 = 8192
+   subsets (R, leaps::regsubsets, nvmax = 13). These are the same fits
+   Example 12.3 reports. Everything else the widget shows is computed
+   from SSE_k here, with the chapter's formulas:
+
+     R2      = 1 - SSE_p / SSTO
+     adj R2  = 1 - (SSE_p / (n - p)) / (SSTO / (n - 1))
+     Cp      = SSE_p / sigma2hat - (n - 2p)
+     AIC     = n ln(SSE_p / n) + 2p
+     BIC     = n ln(SSE_p / n) + p ln n
+   ------------------------------------------------------------------ */
+
+var SSE = [
+  5094.931083, 4241.328492, 4108.182874, 3994.310889, 3950.627975,
+  3905.564013, 3853.214431, 3819.985371, 3805.075120, 3793.872597,
+  3786.200115, 3785.178910, 3785.135748
+];
+var NOBS = 252;
+var SSTO = 15079.01663;          /* sum of squared deviations of brozek */
+var SIGMA2 = 15.90393171;        /* full-model MSE, s^2 = 3.9879734^2   */
+var LOGN = Math.log(NOBS);
+
+var Y_LO = 0.64, Y_HI = 0.77;
+
+function sseAt(k) { return SSE[Math.round(k) - 1]; }
+
+function r2(k) { return 1 - sseAt(k) / SSTO; }
+
+function adjR2(k) {
+  var p = Math.round(k) + 1;
+  return 1 - (sseAt(k) / (NOBS - p)) / (SSTO / (NOBS - 1));
+}
+
+function cp(k) {
+  var p = Math.round(k) + 1;
+  return sseAt(k) / SIGMA2 - (NOBS - 2 * p);
+}
+
+function aic(k) {
+  var p = Math.round(k) + 1;
+  return NOBS * Math.log(sseAt(k) / NOBS) + 2 * p;
+}
+
+function bic(k) {
+  var p = Math.round(k) + 1;
+  return NOBS * Math.log(sseAt(k) / NOBS) + p * LOGN;
+}
+
+/* The criteria live at whole numbers of predictors; join them with straight
+   segments so the canvas curve sampler draws a readable polyline. */
+function interp(f, x) {
+  if (x <= 1) { return f(1); }
+  if (x >= 13) { return f(13); }
+  var lo = Math.floor(x), w = x - lo;
+  return (1 - w) * f(lo) + w * f(lo + 1);
+}
+
+Sim.mount({
+  type: 'sliders',
+  seed: 4210,
+  title: {
+    en: 'R-squared never turns around. The honest criteria do.',
+    es: 'El R-cuadrado nunca da la vuelta. Los criterios honestos sí.'
+  },
+  xRange: [0.5, 13.5],
+  yRange: [Y_LO, Y_HI],
+  xLabel: { en: 'predictors in the model', es: 'predictores en el modelo' },
+  yLabel: { en: 'R-squared', es: 'R-cuadrado' },
+  ariaLabel: {
+    en: 'R-squared and adjusted R-squared for the best body-fat model of each size, from one predictor to thirteen. R-squared rises throughout; adjusted R-squared peaks at eight predictors and then falls.',
+    es: 'R-cuadrado y R-cuadrado ajustado para el mejor modelo de grasa corporal de cada tamaño, de uno a trece predictores. El R-cuadrado sube en todo el recorrido; el R-cuadrado ajustado alcanza su máximo en ocho predictores y luego baja.'
+  },
+  params: [
+    { id: 'k',
+      label: { en: 'Predictors kept', es: 'Predictores conservados' },
+      min: 1, max: 13, step: 1, value: 1, digits: 0 }
+  ],
+  curves: [
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function (p, x) { return interp(r2, x); } },
+    { accent: 1, width: 3,
+      fn: function (p, x) { return interp(adjR2, x); } }
+  ],
+  bands: [
+    { accent: 1, alpha: 0.18,
+      lo: function () { return Y_LO; },
+      hi: function (p, x) { return Math.abs(x - p.k) < 0.18 ? Y_HI : Y_LO; } }
+  ],
+  readouts: [
+    { id: 'r2', label: { en: 'R-squared', es: 'R-cuadrado' }, accent: 2, digits: 4,
+      compute: function (p) { return r2(p.k); } },
+    { id: 'adj', label: { en: 'Adjusted R-squared', es: 'R-cuadrado ajustado' },
+      accent: 1, digits: 4,
+      compute: function (p) { return adjR2(p.k); } },
+    { id: 'cp', label: { en: 'Mallows Cp', es: 'Cp de Mallows' }, digits: 2,
+      compute: function (p) { return cp(p.k); } },
+    { id: 'aic', label: { en: 'AIC', es: 'AIC' }, digits: 1,
+      compute: function (p) { return aic(p.k); } },
+    { id: 'bic', label: { en: 'BIC', es: 'BIC' }, digits: 1,
+      compute: function (p) { return bic(p.k); } }
+  ],
+  caption: {
+    en: 'Every rung of this ladder is the **best subset of that size** on the 252 men, found by ' +
+        'searching all 8192 subsets. The amber dashed curve is R-squared, the blue curve is ' +
+        'adjusted R-squared, and the shaded bar marks the size you have selected.\n\n' +
+        '**Try this.** Walk from 1 up to 13 one predictor at a time. R-squared never once goes ' +
+        'down, so it would hand you the full model every time; adjusted R-squared peaks at 8 ' +
+        'and Cp bottoms out there too, while BIC, which charges about 5.5 per parameter instead ' +
+        "of AIC's 2, has already turned around at 4. Four scores, two answers, and no " +
+        'single winner.',
+    es: 'Cada peldaño de esta escalera es el **mejor subconjunto de ese tamaño** para los 252 ' +
+        'hombres, hallado buscando entre los 8192 subconjuntos. La curva discontinua ámbar es el ' +
+        'R-cuadrado, la curva azul es el R-cuadrado ajustado, y la barra sombreada marca el ' +
+        'tamaño que has seleccionado.\n\n' +
+        '**Prueba esto.** Recorre de 1 a 13 predictor por predictor. El R-cuadrado no baja ni ' +
+        'una sola vez, así que te entregaría el modelo completo siempre; el R-cuadrado ajustado ' +
+        'alcanza su máximo en 8 y el Cp toca fondo ahí también, mientras que el BIC, que cobra ' +
+        'unos 5.5 por parámetro en vez de los 2 del AIC, ya dio la vuelta en 4. Cuatro ' +
+        'puntuaciones, dos respuestas, y ningún ganador único.'
+  }
+});
+</script>
+</body>
+</html>

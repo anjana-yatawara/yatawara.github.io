@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weighted least squares</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* strongx.csv, all 10 measurements: [inverse beam energy, cross-section, known sd]. */
+var RAW = [
+  [0.345, 367, 17], [0.287, 311, 9], [0.251, 295, 9], [0.225, 268, 7], [0.207, 253, 7],
+  [0.186, 239, 6], [0.161, 220, 6], [0.132, 213, 6], [0.084, 193, 5], [0.060, 192, 5]
+];
+var PTS = RAW.map(function (d) { return { x: d[0], y: d[1] }; });
+var N = RAW.length;
+
+/* Weighted least squares from Definition 10.7, solved in closed form for one
+   predictor. Weight w_i = 1 / sd_i^(2p); p = 0 gives every point the same vote
+   (ordinary least squares) and p = 1 gives the textbook w_i = 1 / sd_i^2. */
+var CACHE = { p: null, out: null };
+function wlsFit(power) {
+  if (CACHE.p === power) { return CACHE.out; }
+  var Sw = 0, Swx = 0, Swxx = 0, Swy = 0, Swxy = 0, i, d, w;
+  for (i = 0; i < N; i++) {
+    d = RAW[i];
+    w = Math.pow(d[2], -2 * power);
+    Sw += w; Swx += w * d[0]; Swxx += w * d[0] * d[0];
+    Swy += w * d[1]; Swxy += w * d[0] * d[1];
+  }
+  var det = Sw * Swxx - Swx * Swx;
+  var b1 = (Sw * Swxy - Swx * Swy) / det;
+  var b0 = (Swy - b1 * Swx) / Sw;
+  var rss = 0, e;
+  for (i = 0; i < N; i++) {
+    d = RAW[i];
+    w = Math.pow(d[2], -2 * power);
+    e = d[1] - b0 - b1 * d[0];
+    rss += w * e * e;
+  }
+  /* Var{b_W} = sigma^2 (X'WX)^{-1}, with sigma^2 estimated by RSS_w / (n - 2). */
+  var s2 = rss / (N - 2);
+  CACHE.p = power;
+  CACHE.out = {
+    b0: b0, b1: b1,
+    se0: Math.sqrt(s2 * Swxx / det),
+    se1: Math.sqrt(s2 * Sw / det)
+  };
+  return CACHE.out;
+}
+
+var OLS = wlsFit(0);
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Turn the weights up and watch the line lean toward the precise points',
+    es: 'Sube los pesos y observa como la recta se inclina hacia los puntos precisos'
+  },
+  points: PTS,
+  xRange: [0, 0.38],
+  yRange: [120, 400],
+  xLabel: { en: 'inverse beam energy', es: 'energia inversa del haz' },
+  yLabel: { en: 'scattering cross-section', es: 'seccion eficaz de dispersion' },
+  ariaLabel: {
+    en: 'Ten physics measurements with a fixed ordinary least squares line and a weighted least squares line you control.',
+    es: 'Diez mediciones de fisica con una recta fija de minimos cuadrados ordinarios y una recta de minimos cuadrados ponderados que tu controlas.'
+  },
+  params: [
+    { id: 'p', label: { en: 'Weight power p, with weight w_i = 1 / sd_i^(2p)',
+                        es: 'Potencia del peso p, con peso w_i = 1 / sd_i^(2p)' },
+      min: 0, max: 2, step: 0.05, value: 0, digits: 2 }
+  ],
+  curves: [
+    { fn: function (par, x) { return OLS.b0 + OLS.b1 * x; },
+      accent: 1, dash: [6, 4], width: 2 },
+    { fn: function (par, x) { var f = wlsFit(par.p); return f.b0 + f.b1 * x; },
+      accent: 2, width: 3 }
+  ],
+  readouts: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      accent: 2, digits: 3,
+      compute: function (par) { return wlsFit(par.p).b0; } },
+    { id: 'b1', label: { en: 'Slope b1', es: 'Pendiente b1' },
+      accent: 2, digits: 3,
+      compute: function (par) { return wlsFit(par.p).b1; } },
+    { id: 'se0', label: { en: 'SE(b0)', es: 'EE(b0)' }, digits: 4,
+      compute: function (par) { return wlsFit(par.p).se0; } },
+    { id: 'se1', label: { en: 'SE(b1)', es: 'EE(b1)' }, digits: 4,
+      compute: function (par) { return wlsFit(par.p).se1; } }
+  ],
+  caption: {
+    en: 'Ten scattering measurements, each carrying its own known standard deviation from ' +
+        'the laboratory. The dashed blue line is ordinary least squares and never moves. ' +
+        'The solid amber line is the weighted fit, and the slider sets how hard the weights ' +
+        'push: at p = 0 every point votes equally, at p = 1 the weight is the textbook ' +
+        '1 / sd_i^2.\n\n' +
+        '**Try this.** Start at p = 0, where the two lines sit exactly on top of each other, ' +
+        'then raise p and watch the amber line pivot down toward the tightly measured ' +
+        'low-energy points on the left. At p = 1 the slope has fallen from 619.7 to 530.8 ' +
+        'and SE(b0) from 10.08 to 8.08. That drop is precision bought for free, out of ' +
+        'information the experiment handed us and ordinary least squares threw away.',
+    es: 'Diez mediciones de dispersion, cada una con su propia desviacion estandar conocida ' +
+        'del laboratorio. La linea azul discontinua es minimos cuadrados ordinarios y nunca ' +
+        'se mueve. La linea ambar continua es el ajuste ponderado, y el deslizador fija con ' +
+        'cuanta fuerza empujan los pesos: en p = 0 todos los puntos votan igual, y en p = 1 ' +
+        'el peso es el clasico 1 / sd_i^2.\n\n' +
+        '**Prueba esto.** Empieza en p = 0, donde las dos rectas quedan exactamente una ' +
+        'sobre la otra, y luego sube p para ver como la recta ambar gira hacia los puntos de ' +
+        'baja energia de la izquierda, medidos con mas precision. En p = 1 la pendiente baja ' +
+        'de 619.7 a 530.8 y el error estandar de b0 de 10.08 a 8.08. Esa caida es precision ganada gratis, ' +
+        'con informacion que el experimento nos dio y que los minimos cuadrados ordinarios ' +
+        'desperdiciaron.'
+  }
+});
+</script>
+</body>
+</html>

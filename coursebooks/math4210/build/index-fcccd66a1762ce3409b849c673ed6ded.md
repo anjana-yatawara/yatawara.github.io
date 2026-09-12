@@ -1,0 +1,1362 @@
+---
+title: "14. Poisson regression and the GLM idea"
+subtitle: "MATH 4210, Chapter 14"
+---
+
+(ch14)=
+# 14. Poisson regression and the GLM idea
+
+:::{div}
+:class: lang-toggle
+[Español](./es.md)
+:::
+
+In 1973 two biologists, Michael Johnson and Peter Raven, published a count. For each of 30
+islands in the Galapagos archipelago they recorded how many plant species grew there. Alongside
+each count they noted a handful of geographic facts: the island's area, its highest elevation,
+its distance to the nearest neighbor, its distance to the big island of Santa Cruz, and the area
+of the closest adjacent island. The question was old and simple. Why do some islands hold
+hundreds of species and others only a dozen?
+
+You have met this dataset twice already. In Chapter 9 it was a diagnostics cautionary tale. Fit
+an ordinary least-squares line, and one island, Isabela, the largest in the chain, sits so far
+out in predictor space that it bends the whole fit toward itself. In Chapter 10 you tried the
+standard remedy, transforming the response, and it helped the residual plots but never quite
+felt right. Something about the data resisted the linear model, and we promised you an honest
+answer later. Later is now.
+
+The trouble is visible in one picture. @fig-ch14-gala-hook plots species against island area
+with the least-squares line drawn through it. The fit does something impossible. Its prediction
+band has a single fixed width, so pushed toward small islands the band dips below zero and
+promises negative species counts. And one fixed width cannot fit both ends: small islands cluster
+tightly near zero while large islands scatter across hundreds. A species count cannot be negative,
+cannot be fractional, and its spread grows with its size. The linear model assumes none of that.
+This chapter builds the model that does.
+
+```{figure} figures/fig_ch14_gala_hook.png
+:name: fig-ch14-gala-hook
+:alt: Two side-by-side scatterplots of the 30 Galapagos islands. The left panel plots species count against island area with an ordinary least-squares line; most islands are crammed into the lower-left corner near zero area and low species, one point (Isabela) sits far to the right, and the fitted line is dragged up by it while passing above most of the crowded points. The right panel plots the same species counts against area on a logarithmic horizontal axis, spreading the crowded islands out and showing a rising, curved cloud whose vertical scatter widens as species counts grow.
+The Galapagos species counts against island area. Left: an ordinary least-squares line is distorted by the single huge island and assumes a constant scatter the data do not have. Right: on a log-area axis the islands spread out and the scatter clearly widens as counts grow, the signature of count data that a linear model cannot capture.
+```
+
+By the end of this chapter the species counts will have a model that respects what they are, the
+same model will handle ship-damage rates with wildly different exposures, and all of it, together
+with the straight lines of Chapter 2 and the logistic curves of Chapter 13, will collapse into a
+single family with one estimating idea. That family is the generalized linear model, and it is
+the payoff of this whole part of the course.
+
+:::{admonition} This lesson at a glance
+:class: important
+- **What we are doing:** Building Poisson regression for count responses, then assembling the generalized linear model family (family plus link) that holds linear, logistic, and Poisson regression as one idea, and resolving the Galapagos species question.
+- **Why we are doing it:** Species counts cannot be negative or fractional and their spread grows with their mean, so the linear model, and even the transformations of Chapter 10, cannot honestly fit them.
+- **Main objective:** State the Poisson log-linear model, interpret its coefficients as rate ratios, diagnose overdispersion and apply the quasi-Poisson fix, and assemble the one-table GLM framework.
+- **What changed from the last chapters:** Chapter 13 first broke free of the normal response for yes-or-no data; this chapter does the same for how-many data, using the same maximum-likelihood and deviance machinery (@ch13-mle), and closes the gala thread left open in Chapters 9 and 10.
+:::
+
+:::{admonition} Learning objectives
+:class: tip
+By the end of this chapter you will be able to:
+- **Explain** why ordinary least squares is the wrong tool for count responses, naming the two model assumptions it violates.
+- **State** the Poisson log-linear regression model and **interpret** its coefficients as rate ratios, in the units of the problem.
+- **Derive** the Poisson log-likelihood and its score equations, and connect them to the maximum-likelihood machinery of Chapter 13.
+- **Use** an offset to model a rate instead of a raw count, deriving why the log of exposure enters the linear predictor with a fixed coefficient of one.
+- **Diagnose** overdispersion from the Pearson statistic and **apply** the quasi-Poisson correction, and say when a negative binomial model is the better fix.
+- **Resolve** the Galapagos species question with a count model, and explain why it succeeds where the transformations of Chapter 10 fell short.
+- **Assemble** the one-table generalized linear model framework (family plus link) that contains linear, logistic, and Poisson regression as three instances of a single idea.
+:::
+
+(ch14-poisson-model)=
+## 14.1 Why counts break the linear model
+
+### Intuition
+
+A count is a whole number of things that happened: species on an island, damage incidents on a
+ship, customers in an hour, seizures in a week. Counts have three stubborn features. They are
+never negative. They are whole numbers, not fractions. And their variability grows with their
+average: an island that averages 5 species varies by a species or two, while an island that
+averages 200 varies by dozens. The linear model of Chapters 2 through 8 assumes a response that
+can wander anywhere on the number line, comes in any real value, and scatters by the same
+$\sigma^2$ at every level of the predictors. Every one of those assumptions is false for a count.
+
+The natural probability model for a count is the **Poisson distribution** (Definition 14.1). It describes the
+number of events that occur when each event is rare, events happen independently, and they arrive
+at a steady average rate. A Poisson distribution has a single parameter, its mean $\mu$, and a
+notable property: its variance equals its mean. @fig-ch14-poisson-pmf shows three Poisson
+distributions. As the mean climbs from 1 to 10, the distribution slides right, spreads out, and
+grows more symmetric, and at every step its spread is locked to its center.
+
+```{figure} figures/fig_ch14_poisson_pmf.png
+:name: fig-ch14-poisson-pmf
+:alt: Three bar charts of Poisson probability distributions with means 1, 4, and 10, drawn in three colors. At mean 1 the bars pile up at 0 and 1 and are strongly right-skewed. At mean 4 the peak moves to 3 and 4 and the shape is less skewed. At mean 10 the bars form a wide, nearly symmetric mound centered near 10. A note on each panel reports that the variance equals the mean.
+Three Poisson distributions. The whole distribution is set by one number, the mean, and its spread always equals that mean. Small-mean counts pile up near zero and are strongly right-skewed; large-mean counts spread wide and look nearly normal.
+```
+
+That mean-equals-variance link is exactly the pattern @fig-ch14-gala-hook showed and exactly what
+constant-variance least squares cannot represent. @fig-ch14-mean-variance makes the contrast
+explicit: the linear model draws a flat variance line, while count data ride the diagonal where
+variance tracks the mean.
+
+```{figure} figures/fig_ch14_mean_variance.png
+:name: fig-ch14-mean-variance
+:alt: A plot with mean response on the horizontal axis and variance on the vertical axis. A flat horizontal line labeled constant variance sigma squared represents the ordinary least-squares assumption. A rising 45-degree line labeled variance equals mean represents the Poisson assumption. Scattered points representing binned Galapagos islands rise from the lower left toward the upper right, tracking the diagonal rather than the flat line.
+The assumption that fails. Ordinary least squares assumes constant variance (flat line); the Poisson model assumes variance grows with the mean (diagonal). Binned Galapagos counts climb along the diagonal, so the flat-variance model is simply the wrong shape.
+```
+
+### Formula
+
+:::{admonition} Definition 14.1: Poisson distribution
+:class: note definition
+A random count $Y$ follows a **Poisson distribution** with mean $\mu > 0$ if
+$P(Y = y) = e^{-\mu}\mu^{y}/y!$ for $y = 0, 1, 2, \dots$. Its variance equals its mean:
+$E\{Y\} = \operatorname{Var}\{Y\} = \mu$.
+:::
+
+A random count $Y$ follows a Poisson distribution with mean $\mu > 0$ when
+
+$$
+P(Y = y) = \frac{e^{-\mu}\,\mu^{y}}{y!}, \qquad y = 0, 1, 2, \dots
+$$
+
+- $Y$ is the count, a nonnegative whole number.
+- $\mu$ is the mean of the distribution, the average count.
+- $y!$ is the factorial of $y$, which normalizes the probabilities to sum to one.
+
+In words: the probability of seeing exactly $y$ events is set entirely by the average rate $\mu$.
+The distribution carries two facts we will use constantly,
+
+$$
+E\{Y\} = \mu, \qquad \operatorname{Var}\{Y\} = \mu .
+$$
+
+In words: for a Poisson count the mean and the variance are the same number. This single equation
+is what separates count regression from everything before it, and it is the thread we follow to
+the end of the chapter.
+
+:::{admonition} Key idea
+:class: tip keyidea
+For a Poisson count the variance is not a free parameter; it is locked to the mean,
+$\operatorname{Var}\{Y\} = E\{Y\}$. That single link is exactly what a constant-variance linear
+model can never reproduce, and it is the thread running through the whole chapter.
+:::
+
+:::{admonition} A note on symbols
+:class: note
+We keep the book's conventions. Greek letters ($\beta_j$, $\mu$) are unknown parameters and
+Roman letters or hats ($b_j$, $\hat\mu$) are estimates. The response is $Y_i$ for case $i$ and the
+predictors are $X_{i1}, \dots, X_{i,p-1}$, with $p$ the number of regression parameters including
+the intercept and $n$ the number of cases. New this chapter: $\mu_i = E\{Y_i\}$ is the mean count
+for case $i$, $\eta_i$ is the linear predictor, and $g$ is the link function tying them together.
+:::
+
+::::{admonition} Try it 14.1
+:class: important
+A student fits ordinary least squares to the Galapagos species counts and reports a 95%
+prediction interval for a tiny new island that runs from $-18$ to $46$ species. Name the two
+things wrong with this interval, and tie each to a feature of count data.
+
+:::{admonition} Solution
+:class: dropdown
+First, the interval includes negative species counts, which are impossible; a count is bounded
+below by zero, but the least-squares model puts positive probability on any real value. Second,
+the interval has a fixed width set by the single estimate $s$, ignoring that a small island (low
+mean) should have a narrow interval and a large island (high mean) a wide one. Both faults trace
+to the same source: least squares assumes an unbounded response with constant variance, while a
+count is nonnegative with variance equal to its mean.
+:::
+::::
+
+Before we build a model for counts, spend a minute with the distribution itself, because the
+slider below is the only parameter a Poisson has.
+
+```{iframe} ../sims/ch14-poisson-counts.html
+:class: sim sim-m
+:width: 100%
+Slide the mean count mu and watch the distribution slide right, spread out, and flatten all at once: with a Poisson you cannot move the center without moving the spread, because the variance is the mean. Back to [Section 14.1](#ch14-poisson-model).
+```
+
+(ch14-loglinear)=
+## 14.2 The Poisson log-linear model and rate ratios
+
+### Intuition
+
+We want the mean count $\mu_i$ to depend on predictors, the same ambition as ordinary regression,
+but with two repairs. The mean must stay positive no matter what the predictors do, and the model
+should describe how predictors multiply the count rather than add to it, because count processes
+are usually multiplicative: doubling an island's area does not add a fixed number of species, it
+scales the expected number.
+
+Both repairs come from one move: model the **logarithm** of the mean as a linear function of the
+predictors. Because the logarithm can be any real number while its inverse, the exponential, is
+always positive, a linear model on the log scale can range freely while the mean it produces stays
+positive. And because a sum on the log scale is a product on the original scale, coefficients
+become multipliers. @fig-ch14-log-link shows the link at work: a straight line in the linear
+predictor $\eta$ becomes a curve in the mean $\mu$ that hugs zero for negative $\eta$ and climbs
+steeply for positive $\eta$, never once dipping below zero.
+
+```{figure} figures/fig_ch14_log_link.png
+:name: fig-ch14-log-link
+:alt: Two stacked panels sharing a horizontal axis labeled linear predictor eta. The top panel shows a straight rising line, the linear predictor itself. The bottom panel shows the mean mu equals exp of eta as a curve that stays just above zero for negative eta and rises steeply for positive eta, never crossing below zero. A dashed guide line marks that eta equals zero maps to mu equals one.
+The log link. A straight line in the linear predictor eta (top) becomes an exponential curve in the mean mu (bottom). Because mu equals exp of eta, the mean is always positive, and equal steps in eta multiply the mean by a constant factor.
+```
+
+### Formula
+
+:::{admonition} Definition 14.2: Poisson log-linear regression model
+:class: note definition
+The **Poisson log-linear regression model** assumes $Y_i \sim \text{Poisson}(\mu_i)$ with the log
+of the mean linear in the predictors,
+$\log \mu_i = \eta_i = \beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1} X_{i,p-1}$,
+so that $\mu_i = e^{\eta_i}$. Here $\eta_i$ is the **linear predictor** and $\log$ is the **link
+function** joining the positive mean to it.
+:::
+
+The Poisson log-linear regression model says that for each case $i$,
+
+$$
+Y_i \sim \text{Poisson}(\mu_i), \qquad
+\log \mu_i = \eta_i = \beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1} X_{i,p-1} .
+$$
+
+- $Y_i$ is the observed count for case $i$, assumed Poisson given the predictors.
+- $\mu_i = E\{Y_i\}$ is its mean.
+- $\eta_i$ is the **linear predictor**, the familiar straight-line combination of predictors.
+- $\log$ is the **link function** here: it maps the positive mean onto the whole real line where the linear predictor lives.
+- $\beta_0, \dots, \beta_{p-1}$ are the regression coefficients, estimated by $b_0, \dots, b_{p-1}$.
+
+Solving the link for the mean gives the multiplicative form
+
+$$
+\mu_i = e^{\eta_i} = e^{\beta_0}\, e^{\beta_1 X_{i1}} \cdots e^{\beta_{p-1} X_{i,p-1}} .
+$$
+
+In words: the mean count is a product of factors, one per predictor. This is why coefficients read
+as **rate ratios**. Increase $X_{ij}$ by one unit, holding the others fixed, and $\eta_i$ rises by
+$\beta_j$, so $\mu_i$ is multiplied by $e^{\beta_j}$:
+
+$$
+\frac{\mu(X_j + 1)}{\mu(X_j)} = e^{\beta_j} .
+$$
+
+In words: $e^{\beta_j}$ is the factor by which the expected count changes for a one-unit rise in
+$X_j$. A coefficient of zero means a ratio of one, no effect; a positive coefficient means a ratio
+above one, the count grows; a negative coefficient means a ratio below one, the count shrinks. This
+is the count-data cousin of the odds ratio $e^{\beta_j}$ you met for logistic regression in
+@ch13-odds-ratio, and of the percent-change reading of a log-scale coefficient from
+@ch10-log-interpretation.
+
+Here is the picture to keep in your head. On the log scale the model is an ordinary straight line,
+so equal steps in a predictor add the same amount $\beta_j$ each time. Exponentiate, and that even
+adding turns into even multiplying: each step multiplies the count by the same factor $e^{\beta_j}$.
+@fig-ch14-rate-ratio shows both sides at once, using the elevation effect from the fit below, where
+one extra hundred meters multiplies the expected species count by about $1.42$.
+
+```{figure} figures/fig_ch14_rate_ratio.png
+:name: fig-ch14-rate-ratio
+:alt: Two side-by-side line plots sharing a horizontal axis of elevation in hundreds of metres, from 0 to 4. The left panel plots the log of the mean count and is a straight rising line; equally spaced orange labels reading plus beta mark that each step up adds the same amount. The right panel plots the mean count itself and is a curve that rises ever more steeply; orange labels reading times 1.42 mark that each step up multiplies the count by the same factor, so the gaps between points grow.
+A coefficient is a rate ratio. On the log scale (left) each step of elevation adds the same amount to the linear predictor, a straight line. On the count scale (right) that same step multiplies the expected count by a fixed factor of about 1.42, so the count climbs faster and faster. Adding on the log scale is multiplying on the count scale.
+```
+
+### Derivation (the Poisson log-likelihood and its score equations)
+
+Least squares will not estimate this model: the response is not normal and the mean is not linear.
+As in logistic regression, we estimate by **maximum likelihood**, the principle from
+@ch13-mle that picks the coefficients making the observed counts most probable.
+
+:::{admonition} Theorem 14.3: Poisson score equations
+:class: important theorem
+Under the Poisson log-linear model with $\log \mu_i = \mathbf{x}_i'\boldsymbol\beta$, the
+maximum-likelihood estimate $\mathbf{b}$ satisfies
+
+$$
+\sum_{i=1}^n (y_i - \hat\mu_i)\,\mathbf{x}_i = \mathbf{0}, \qquad \hat\mu_i = e^{\mathbf{x}_i'\mathbf{b}} .
+$$
+
+Equivalently, the fitted means reproduce the total count, $\sum_i \hat\mu_i = \sum_i y_i$, and each
+residual $y_i - \hat\mu_i$ is orthogonal to every predictor.
+:::
+
+**Proof.** The counts $Y_1, \dots, Y_n$ are independent given the
+predictors, so the likelihood is the product of their Poisson probabilities, and the
+log-likelihood is the sum of the logs:
+
+$$
+\ell(\boldsymbol\beta) = \sum_{i=1}^n \Big[ y_i \log \mu_i - \mu_i - \log(y_i!) \Big] .
+$$
+
+Substitute the model $\log \mu_i = \mathbf{x}_i'\boldsymbol\beta$, so that
+$\mu_i = e^{\mathbf{x}_i'\boldsymbol\beta}$, where
+$\mathbf{x}_i = (1, X_{i1}, \dots, X_{i,p-1})'$ is the predictor vector for case $i$:
+
+$$
+\ell(\boldsymbol\beta) = \sum_{i=1}^n \Big[ y_i\, \mathbf{x}_i'\boldsymbol\beta - e^{\mathbf{x}_i'\boldsymbol\beta} - \log(y_i!) \Big] .
+$$
+
+To maximize, differentiate with respect to the coefficient vector and set the result to zero. The
+last term does not involve $\boldsymbol\beta$. For the first two, using
+$\partial (\mathbf{x}_i'\boldsymbol\beta)/\partial \boldsymbol\beta = \mathbf{x}_i$ and
+$\partial e^{\mathbf{x}_i'\boldsymbol\beta}/\partial \boldsymbol\beta = e^{\mathbf{x}_i'\boldsymbol\beta}\mathbf{x}_i = \mu_i \mathbf{x}_i$,
+
+$$
+\frac{\partial \ell}{\partial \boldsymbol\beta} = \sum_{i=1}^n \Big( y_i \mathbf{x}_i - \mu_i \mathbf{x}_i \Big) = \sum_{i=1}^n (y_i - \mu_i)\,\mathbf{x}_i = \mathbf{0} .
+$$
+
+These are the **score equations** for Poisson regression. Read the first component (the one for the
+intercept, where $\mathbf{x}_i$ has a 1): it says $\sum_i (y_i - \hat\mu_i) = 0$, the fitted means
+reproduce the total count. Each other component says $\sum_i (y_i - \hat\mu_i) X_{ij} = 0$, the
+residuals $y_i - \hat\mu_i$ are orthogonal to every predictor. These are the analogues of the
+normal equations of @ch02-least-squares, with the fitted mean $\hat\mu_i$ playing the role of the
+fitted value. The difference is that $\hat\mu_i = e^{\mathbf{x}_i'\mathbf{b}}$ is nonlinear in the
+coefficients, so unlike least squares there is no closed-form solution. The equations are solved by
+the same iteratively reweighted least squares that fits logistic regression, sketched in
+@ch13-mle; software runs it in a handful of steps. $\blacksquare$
+
+Notice how little changed from logistic regression. There the score equations were
+$\sum_i (y_i - \hat\pi_i)\mathbf{x}_i = \mathbf{0}$ with $\hat\pi_i$ a probability; here they are
+$\sum_i (y_i - \hat\mu_i)\mathbf{x}_i = \mathbf{0}$ with $\hat\mu_i$ a mean count. Same shape,
+different mean model. Section 14.6 shows this is no accident.
+
+### R
+
+The fitting function is `glm`, the same one used for logistic regression, with
+`family = poisson`. The default link for the Poisson family is the log, so you rarely name it.
+
+```r
+gala <- read.csv("data/gala.csv")
+pois_fit <- glm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent,
+                family = poisson, data = gala)
+summary(pois_fit)
+```
+```text
+Call:
+glm(formula = Species ~ Area + Elevation + Nearest + Scruz +
+    Adjacent, family = poisson, data = gala)
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)
+(Intercept)  3.155e+00  5.175e-02  60.963  < 2e-16 ***
+Area        -5.799e-04  2.627e-05 -22.074  < 2e-16 ***
+Elevation    3.541e-03  8.741e-05  40.507  < 2e-16 ***
+Nearest      8.826e-03  1.821e-03   4.846 1.26e-06 ***
+Scruz       -5.709e-03  6.256e-04  -9.126  < 2e-16 ***
+Adjacent    -6.630e-04  2.933e-05 -22.608  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 3510.73  on 29  degrees of freedom
+Residual deviance:  716.85  on 24  degrees of freedom
+AIC: 889.68
+
+Number of Fisher Scoring iterations: 5
+```
+
+:::{admonition} Example 14.1: Reading Galapagos coefficients as rate ratios
+:class: note
+**Question.** In the Poisson fit, what does the elevation coefficient say about species counts, in
+plain units a biologist would use?
+
+**Intuition.** On the log scale the coefficient is an additive slope; exponentiate it to turn it
+into a multiplier of the expected count per unit of elevation.
+
+**Formula.** The rate ratio for a one-unit rise in a predictor is $e^{b_j}$; for a $c$-unit rise it
+is $e^{c\,b_j}$.
+
+**Computation.**
+
+```r
+b <- coef(pois_fit)
+c(per_meter = exp(b["Elevation"]),
+  per_100m  = exp(100 * b["Elevation"]))
+```
+```text
+per_meter.Elevation  per_100m.Elevation
+           1.003547            1.424840
+```
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+
+gala = pd.read_csv("data/gala.csv")
+pois_fit = smf.glm("Species ~ Area + Elevation + Nearest + Scruz + Adjacent",
+                   data=gala, family=sm.families.Poisson()).fit()
+b = pois_fit.params
+print(np.exp(b["Elevation"]), np.exp(100 * b["Elevation"]))
+```
+```text
+1.0035468693157312 1.4248398207117439
+```
+
+**Interpretation.** Each additional meter of elevation multiplies the expected species count by
+about $1.0035$, a rise of roughly one third of a percent per meter. That is easier to feel over a
+larger step: every extra 100 meters of elevation multiplies the expected count by about $1.42$, a
+42% increase, holding the other predictors fixed. The coefficient is a rate ratio, not an additive
+number of species, which is exactly the multiplicative behavior count data demand.
+:::
+
+::::{admonition} Try it 14.2
+:class: important
+The `Adjacent` coefficient is $b = -6.630 \times 10^{-4}$ per square kilometer. Compute the rate
+ratio for an increase of 100 km$^2$ in the adjacent island's area, and state in words what it means
+for the expected species count.
+
+:::{admonition} Solution
+:class: dropdown
+The rate ratio for a 100-unit rise is $e^{100 b} = e^{100 \times (-0.0006630)} = e^{-0.06630} =
+0.9358$. Each extra 100 km$^2$ of adjacent-island area multiplies the expected species count by
+about $0.936$, a drop of roughly 6.4%, holding the other predictors fixed. A large neighbor is
+associated with fewer species, consistent with a big adjacent island drawing off colonists or
+competing for them.
+:::
+::::
+
+Steering the log link by hand is the fastest way to feel what maximum likelihood is doing, so take
+the two coefficients yourself and let the log-likelihood tell you when you are close.
+
+```{iframe} ../sims/ch14-log-link.html
+:class: sim sim-m
+:width: 100%
+Move b0 and b1 to fit the Galapagos species counts against elevation by hand. The curve exp(b0 + b1 x) can never dip below zero, the rate ratio readout is exp(b1), the multiplier per 100 metres, and the amber band is the Poisson spread the counts are supposed to stay inside. Back to [Section 14.2](#ch14-loglinear).
+```
+
+(ch14-offset)=
+## 14.3 Offsets: modeling a rate instead of a count
+
+### Intuition
+
+Raw counts are only comparable when they come from equal opportunity. A cargo ship at sea for
+40,000 months has far more chance to suffer wave damage than one at sea for 100 months, so
+comparing their raw incident counts is meaningless. What we want is the **rate**: incidents per
+month of service. The exposure, months of service, differs from ship to ship and must be built
+into the model, not ignored.
+
+The fix is elegant. Model the rate as log-linear, then rewrite it as a model for the count with one
+fixed piece added to the linear predictor. That fixed piece, the log of the exposure, is called an
+**offset** (Definition 14.4): a predictor whose coefficient is not estimated but pinned to one, because we know
+exactly how the count should scale with exposure. Double the months at sea and, all else equal, you
+expect double the incidents. @fig-ch14-ships-rates shows why raw counts mislead: ship type B has by
+far the most incidents, but also by far the most service; per month of service its damage rate is
+ordinary.
+
+```{figure} figures/fig_ch14_ships_rates.png
+:name: fig-ch14-ships-rates
+:alt: Two bar charts of the five ship types A through E. The left chart shows total damage incidents; type B towers over the others with well over a hundred incidents while the rest are far smaller. The right chart shows incidents per thousand months of service; now type B is unremarkable and middling, while types A and E show the highest damage rates, reversing the ranking from the left chart.
+Why exposure matters. Left: raw damage incidents make ship type B look by far the worst. Right: once we divide by months of service to get a rate, type B is average and types A and E are the concerning ones. The offset is what lets the model compare rates instead of raw counts.
+```
+
+### Formula
+
+:::{admonition} Definition 14.4: Offset
+:class: note definition
+An **offset** is a term entered into the linear predictor with a known coefficient fixed at one,
+rather than estimated. To model a rate, the offset is $\log t_i$, the log of the exposure $t_i$ for
+case $i$, so that $\log \mu_i = \mathbf{x}_i'\boldsymbol\beta + \log t_i$ and the estimated
+coefficients describe the rate per unit exposure.
+:::
+
+Let $t_i$ be the exposure for case $i$ (months of service, person-years, area surveyed) and let
+$\lambda_i$ be the event rate per unit exposure. The count's mean is rate times exposure,
+$\mu_i = \lambda_i t_i$. Model the log rate as linear:
+
+$$
+\log \lambda_i = \beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1} X_{i,p-1} .
+$$
+
+**Derivation (the offset).** Since $\mu_i = \lambda_i t_i$, take logs:
+
+$$
+\log \mu_i = \log \lambda_i + \log t_i = \underbrace{\beta_0 + \beta_1 X_{i1} + \dots + \beta_{p-1} X_{i,p-1}}_{\text{estimated}} + \underbrace{\log t_i}_{\text{fixed offset}} .
+$$
+
+In words: modeling the log rate is the same as modeling the log count with $\log t_i$ added to the
+linear predictor as a term with known coefficient exactly one. That extra term is the offset. It
+shifts each case's linear predictor by its log-exposure without costing a parameter, so the
+estimated coefficients describe the rate $\lambda_i$, and $e^{\beta_j}$ is now a **rate-ratio per
+unit exposure**. If you wrongly dropped the offset, the model would explain incidents partly
+through whatever predictor happens to correlate with service time, confounding rate with exposure.
+$\blacksquare$
+
+### R
+
+Ships with zero recorded service contribute no exposure and no opportunity for incidents, so
+$\log t_i$ is undefined for them; we drop those rows first. The offset goes in through the
+`offset` argument.
+
+```r
+ships <- read.csv("data/ships.csv")
+ships <- ships[ships$service > 0, ]
+ships$year   <- factor(ships$year)
+ships$period <- factor(ships$period)
+ship_fit <- glm(incidents ~ type + year + period,
+                family = poisson, offset = log(service), data = ships)
+round(summary(ship_fit)$coefficients, 4)
+```
+```text
+            Estimate Std. Error  z value Pr(>|z|)
+(Intercept)  -6.4059     0.2174 -29.4600   0.0000
+typeB        -0.5433     0.1776  -3.0595   0.0022
+typeC        -0.6874     0.3290  -2.0891   0.0367
+typeD        -0.0760     0.2906  -0.2614   0.7938
+typeE         0.3256     0.2359   1.3803   0.1675
+year65        0.6971     0.1496   4.6587   0.0000
+year70        0.8184     0.1698   4.8207   0.0000
+year75        0.4534     0.2332   1.9446   0.0518
+period75      0.3845     0.1183   3.2507   0.0012
+```
+
+:::{admonition} Example 14.2: Ship damage rate ratios
+:class: note
+**Question.** Holding construction year and operating period fixed, how does the wave-damage rate
+of ship type B compare with the baseline type A? And how much does operating in the later period
+(1975 to 1979) change the rate?
+
+**Intuition.** The coefficients are on the log-rate scale, so exponentiate them for rate ratios.
+Type A is the reference level, so its rate ratio is one by construction.
+
+**Formula.** Rate ratio for a factor level $= e^{b}$ relative to the reference level.
+
+**Computation.**
+
+```r
+round(exp(coef(ship_fit)), 3)
+```
+```text
+(Intercept)       typeB       typeC       typeD       typeE      year65
+      0.002       0.581       0.503       0.927       1.385       2.008
+     year70      year75    period75
+      2.267       1.574       1.469
+```
+
+```python
+ships = pd.read_csv("data/ships.csv")
+ships = ships[ships["service"] > 0].copy()
+ship_fit = smf.glm("incidents ~ C(type) + C(year) + C(period)", data=ships,
+                   family=sm.families.Poisson(),
+                   offset=np.log(ships["service"])).fit()
+print(np.exp(ship_fit.params).round(3))
+```
+```text
+Intercept          0.002
+C(type)[T.B]       0.581
+C(type)[T.C]       0.503
+C(type)[T.D]       0.927
+C(type)[T.E]       1.385
+C(year)[T.65]      2.008
+C(year)[T.70]      2.267
+C(year)[T.75]      1.574
+C(period)[T.75]    1.469
+dtype: float64
+```
+
+**Interpretation.** Type B's rate ratio is $0.581$: after adjusting for exposure, construction era,
+and operating period, type B ships suffer damage at about 58% of the type A rate, not the highest as
+the raw counts in @fig-ch14-ships-rates suggested. The `period75` rate ratio is $1.469$: ships
+operated in the later period had about 47% more damage incidents per month of service than in the
+earlier period, holding type and construction year fixed. The intercept exponentiates to $0.0017$
+incidents per month for a baseline ship, which is why the practical scale is incidents per thousand
+months.
+:::
+
+:::{admonition} Durable skill: Put the denominator in the model
+:class: tip
+Almost every rate you will ever report, crime per capita, defects per thousand units, infections
+per patient-day, clicks per impression, hides a denominator. The amateur move is to divide first
+and model the ratio as if it were an ordinary number, which throws away the fact that a rate built
+on 10 events is far shakier than one built on 10,000. The professional move is to keep the count as
+the response and put the log of the denominator in as an offset, so the model knows how much
+evidence stands behind each rate. When you meet a "per something" quantity, ask what the something
+is and whether it belongs in the model as exposure.
+:::
+
+::::{admonition} Try it 14.3
+:class: important
+An analyst has city crime data: `crimes` (number of reported crimes) and `population` for each city,
+and wants crime rates per person. Write the R formula and the extra argument for a Poisson model of
+the crime rate on a predictor `unemployment`. Why not just model `crimes / population` directly with
+least squares?
+
+:::{admonition} Solution
+:class: dropdown
+The model is `glm(crimes ~ unemployment, family = poisson, offset = log(population), data = ...)`.
+The offset `log(population)` makes the coefficients describe the per-person rate. Modeling
+`crimes / population` with least squares is worse for two reasons: the ratio is not normal or
+constant-variance (a rate from a small town is far noisier than one from a big city, but least
+squares would weight them equally), and the fitted values could go negative. The offset approach
+keeps the count as a Poisson response, so the variance scales correctly with the amount of exposure
+behind each city.
+:::
+::::
+
+An offset is easier to believe once you have tried the alternatives, so put the exposure exponent
+under your finger and see what each setting is claiming about the ships.
+
+```{iframe} ../sims/ch14-offset-exposure.html
+:class: sim sim-m
+:width: 100%
+Set the exposure exponent to 0 and the model ignores months at sea entirely, predicting the same handful of incidents for a ship at sea 45 months and one at sea 44,882. Set it to 1 and doubling the service doubles the expected count, which is exactly what the offset log t pins down. Back to [Section 14.3](#ch14-offset).
+```
+
+(ch14-overdispersion)=
+## 14.4 Overdispersion and the quasi-Poisson fix
+
+### Intuition
+
+The Poisson model makes a strong promise: the variance equals the mean. Real count data often break
+that promise by scattering more than a Poisson allows, a condition called **overdispersion** (Definition 14.5). Its
+causes are ordinary: predictors you did not measure, clustering of events, individual-to-individual
+differences in the underlying rate. Whatever the cause, the symptom is the same, the counts spread
+wider than their fitted means.
+
+Overdispersion rarely changes the coefficient estimates much, but it wrecks their standard errors.
+A Poisson fit that assumes variance equals mean, when the true variance is several times larger,
+reports standard errors several times too small, turning noise into false significance. So
+overdispersion is not a nuisance to shrug off; it is the difference between an honest analysis and a
+misleading one. @fig-ch14-overdispersion shows the diagnosis for the Galapagos fit: the squared
+residuals, which should hover around the fitted mean under a true Poisson, sit far above the
+variance-equals-mean line.
+
+```{figure} figures/fig_ch14_overdispersion.png
+:name: fig-ch14-overdispersion
+:alt: A scatterplot for the Galapagos Poisson fit with fitted mean on the horizontal axis and squared deviation on the vertical axis, both on logarithmic scales. A diagonal reference line marks where squared deviation equals the fitted mean, the Poisson promise. Nearly every island sits well above the line, many by one to two orders of magnitude, showing the counts vary far more than a Poisson allows.
+Diagnosing overdispersion in the Galapagos fit. Under a true Poisson the squared deviations would scatter around the diagonal (variance equals mean). Instead almost every island sits far above it, so the data vary much more than the Poisson model claims, and the model's standard errors cannot be trusted as they stand.
+```
+
+:::{admonition} Key idea
+:class: tip keyidea
+Overdispersion barely moves the coefficient estimates, but it wrecks their standard errors. A
+Poisson fit that assumes variance equals mean when the truth is several times larger reports
+standard errors several times too small, manufacturing significance out of noise. Always check
+dispersion before trusting a p-value.
+:::
+
+### Formula
+
+:::{admonition} Definition 14.5: Overdispersion
+:class: note definition
+**Overdispersion** is the condition in which count data vary more than the Poisson model allows,
+$\operatorname{Var}\{Y_i\} > \mu_i$. It leaves the coefficient estimates roughly unchanged but
+makes the Poisson standard errors too small.
+:::
+
+Measure dispersion with the **Pearson statistic** (Definition 14.6) divided by its degrees of
+freedom. Define the Pearson residual for case $i$ and the estimated dispersion $\hat\phi$:
+
+$$
+r_i^{P} = \frac{Y_i - \hat\mu_i}{\sqrt{\hat\mu_i}}, \qquad
+\hat\phi = \frac{1}{n-p}\sum_{i=1}^n \big(r_i^{P}\big)^2 = \frac{X^2}{n-p} .
+$$
+
+- $r_i^{P}$ standardizes each residual by the Poisson standard deviation $\sqrt{\hat\mu_i}$.
+- $X^2 = \sum_i (r_i^{P})^2$ is the Pearson chi-square statistic.
+- $n - p$ is the residual degrees of freedom, cases minus estimated parameters.
+
+In words: $\hat\phi$ is the average squared standardized residual. Under a correct Poisson model it
+should be near 1. A value well above 1 signals overdispersion; a value of $\hat\phi$ around 2 means
+the true variance is roughly twice the mean, and so on.
+
+:::{admonition} Definition 14.6: Pearson dispersion statistic
+:class: note definition
+The **Pearson dispersion** estimate is
+$\hat\phi = \frac{1}{n-p}\sum_{i=1}^n (r_i^{P})^2 = X^2/(n-p)$, the average squared Pearson residual
+$r_i^{P} = (Y_i - \hat\mu_i)/\sqrt{\hat\mu_i}$. Under a correct Poisson model $\hat\phi \approx 1$; a
+value well above 1 signals overdispersion.
+:::
+
+:::{admonition} Definition 14.7: Quasi-Poisson model
+:class: note definition
+The **quasi-Poisson** model keeps the Poisson log-linear mean and its coefficient estimates but
+relaxes the variance to $\operatorname{Var}\{Y_i\} = \phi\,\mu_i$ for an unknown $\phi > 0$,
+estimated by $\hat\phi$. Each standard error is scaled to
+$s_{\text{quasi}}\{b_j\} = \sqrt{\hat\phi}\,s_{\text{Poisson}}\{b_j\}$.
+:::
+
+The quasi-Poisson fix keeps the Poisson mean model and its coefficient estimates untouched,
+because the score equations $\sum_i (y_i - \mu_i)\mathbf{x}_i = \mathbf{0}$ do not involve the
+variance. It only rescales the variance, assuming
+
+$$
+\operatorname{Var}\{Y_i\} = \phi\, \mu_i
+$$
+
+for an unknown constant $\phi > 1$, estimated by $\hat\phi$. Every standard error is then multiplied
+by $\sqrt{\hat\phi}$:
+
+$$
+s_{\text{quasi}}\{b_j\} = \sqrt{\hat\phi}\; s_{\text{Poisson}}\{b_j\} .
+$$
+
+In words: inflate each Poisson standard error by the square root of the estimated dispersion. This
+is the same idea you saw in @ch10-wls, where modeling nonconstant variance changed the weights and
+the standard errors while leaving the story of the mean intact. Here the variance is allowed to be a
+constant multiple of the mean rather than exactly the mean.
+
+### R
+
+`glm` reports the raw dispersion assumption, so compute $\hat\phi$ directly from the Pearson
+residuals, then refit with `family = quasipoisson`, which does the rescaling for you.
+
+```r
+phi_hat <- sum(residuals(pois_fit, type = "pearson")^2) / df.residual(pois_fit)
+phi_hat
+```
+```text
+[1] 31.74914
+```
+
+:::{admonition} Example 14.3: Diagnosing and fixing overdispersion in Galapagos
+:class: note
+**Question.** Is the Galapagos Poisson fit overdispersed, and what happens to the elevation
+coefficient's standard error once we account for it?
+
+**Intuition.** Compute $\hat\phi$; if it is far above 1, the Poisson standard errors are too small
+by a factor of $\sqrt{\hat\phi}$. Refit as quasi-Poisson and compare.
+
+**Formula.** $\hat\phi = X^2/(n-p)$, and $s_{\text{quasi}} = \sqrt{\hat\phi}\, s_{\text{Poisson}}$.
+
+**Computation.**
+
+```r
+quasi_fit <- glm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent,
+                 family = quasipoisson, data = gala)
+round(summary(quasi_fit)$coefficients, 5)
+```
+```text
+             Estimate Std. Error  t value Pr(>|t|)
+(Intercept)  3.15481    0.29159 10.81933  0.00000
+Area        -0.00058    0.00015 -3.91750  0.00065
+Elevation    0.00354    0.00049  7.18891  0.00000
+Nearest      0.00883    0.01026  0.86001  0.39829
+Scruz       -0.00571    0.00353 -1.61963  0.11838
+Adjacent    -0.00066    0.00017 -4.01229  0.00051
+```
+
+```python
+quasi_fit = smf.glm("Species ~ Area + Elevation + Nearest + Scruz + Adjacent",
+                    data=gala, family=sm.families.Poisson()).fit(scale="X2")
+print(quasi_fit.scale)
+print(quasi_fit.bse["Elevation"])
+```
+```text
+31.749135323558495
+0.0004925072249019893
+```
+
+**Interpretation.** The dispersion is $\hat\phi = 31.7$, not the 1 a true Poisson demands: the
+species counts vary about 32 times more than a Poisson allows. The elevation standard error grows
+from $8.74 \times 10^{-5}$ under Poisson to $4.93 \times 10^{-4}$ under quasi-Poisson, a factor of
+$\sqrt{31.7} \approx 5.6$. The coefficient itself is unchanged at $0.00354$, but it is now known
+about 5.6 times less precisely, and the weak predictors `Nearest` and `Scruz`, significant under the
+naive Poisson, are no longer significant. The quasi-Poisson analysis is the honest one.
+:::
+
+@fig-ch14-quasi-se drives the point home across all five predictors: dividing each test statistic
+by $\sqrt{\hat\phi}$ pulls two of them below the rough significance threshold that the naive Poisson
+had them clearing with room to spare.
+
+```{figure} figures/fig_ch14_quasi_se.png
+:name: fig-ch14-quasi-se
+:alt: A grouped bar chart with the five Galapagos predictors Area, Elevation, Nearest, Scruz, and Adjacent on the horizontal axis. For each predictor two bars show the absolute value of the test statistic, a taller Poisson bar and a much shorter quasi-Poisson bar, roughly 5.6 times smaller. A dashed horizontal line at 2 marks the rough significance threshold. Under Poisson all five bars tower far above the line; under quasi-Poisson, Nearest and Scruz fall below the line while Area, Elevation, and Adjacent stay above it.
+The cost of ignoring overdispersion. Naive Poisson test statistics (tall bars) are all far above the rough significance cutoff of 2 (dashed line). Dividing by the square root of the dispersion gives the honest quasi-Poisson statistics (short bars), and two predictors, Nearest and Scruz, drop below the cutoff.
+```
+
+### A nod to the negative binomial
+
+Quasi-Poisson is a quick, assumption-light patch: it does not name a probability distribution, it
+just rescales variances. When you want a genuine likelihood, and therefore AIC, likelihood-ratio
+tests, and honest prediction intervals, the standard choice is the **negative binomial** model. It
+adds one parameter $\theta$ and lets the variance grow quadratically,
+$\operatorname{Var}\{Y\} = \mu + \mu^2/\theta$, which fits heavy overdispersion better than the
+strictly linear quasi-Poisson variance. In R it is `MASS::glm.nb`; the Galapagos data give
+$\hat\theta = 1.67$, small enough to confirm severe overdispersion. For this course, diagnose with
+$\hat\phi$, reach for quasi-Poisson as the everyday fix, and know the negative binomial is the next
+step when you need a full likelihood.
+
+::::{admonition} Try it 14.4
+:class: important
+A Poisson fit reports a slope standard error of $0.04$ and a Pearson dispersion of $\hat\phi = 9$.
+What is the honest quasi-Poisson standard error, and by what factor does the $z$-based test
+statistic shrink?
+
+:::{admonition} Solution
+:class: dropdown
+The quasi-Poisson standard error is $\sqrt{9}\times 0.04 = 3 \times 0.04 = 0.12$. Since the test
+statistic is the coefficient divided by its standard error, tripling the standard error divides the
+statistic by 3. A predictor that looked strongly significant with a $z$ of, say, 6 under Poisson
+drops to a $t$ of 2 under quasi-Poisson, a completely different conclusion. This is exactly why
+overdispersion must be checked before any significance claim.
+:::
+::::
+
+Dispersion is just a number until you watch it move a p-value, so drag it yourself and see which
+Galapagos predictors survive the correction.
+
+```{iframe} ../sims/ch14-overdispersion.html
+:class: sim sim-m
+:width: 100%
+Raise the dispersion until the amber quasi-Poisson line finally clears the cloud of islands, somewhere near 32, and watch the test statistics for Nearest and Scruz slide under 2 as every standard error inflates by the square root of phi. Back to [Section 14.4](#ch14-overdispersion).
+```
+
+(ch14-gala-resolution)=
+## 14.5 The Galapagos thread, resolved
+
+We can now close the story that has run since Chapter 9. Recall the two earlier visits. Chapter 9
+made the Galapagos data its lesson in influence: Isabela, the largest island, is the high-leverage
+point that @ch09-leverage points to, one an ordinary least-squares fit cannot help but chase,
+because it sits alone at the far edge of the predictor space. In @ch10-log-interpretation and
+@ch10-box-cox you tried the classic
+remedy, transforming the response, taking logs or a Box-Cox power to tame the skew and the widening
+scatter. It improved the residual plots, but it never removed the discomfort, because the real
+problem was never the scale of a continuous response. The response was a **count**, and no
+transformation of a count turns it into a normal, constant-variance measurement.
+
+The Poisson model fixes the actual defect. It builds in the nonnegativity, the multiplicative
+structure, and the mean-variance link that species counts genuinely have, and once we account for
+overdispersion its standard errors are honest. @fig-ch14-gala-resolution puts the two philosophies
+side by side: the log-transform-then-least-squares curve of Chapter 10, and the quasi-Poisson mean
+curve of this chapter, both against the raw counts on a log-area axis. They agree in the middle and
+part company at the extremes, where the count model keeps predictions positive and lets the scatter
+widen as it should.
+
+```{figure} figures/fig_ch14_gala_resolution.png
+:name: fig-ch14-gala-resolution
+:alt: A scatterplot of Galapagos species counts against island area on a logarithmic horizontal axis, with two fitted curves overlaid. A dashed curve labeled Chapter 10 log-transform least squares and a solid curve labeled Chapter 14 Poisson both rise with area and track the data closely through the middle. At the smallest islands the least-squares-on-logs curve bends differently while the Poisson curve stays positive and hugs the low counts; the data scatter is visibly tighter at small counts and wider at large counts.
+The resolution. The Chapter 10 transform-and-fit curve and the Chapter 14 count model agree where the data are dense and diverge at the extremes. The Poisson model is built for what the response is, a count, so it keeps predictions positive and matches the way the scatter grows with the mean.
+```
+
+The lesson is bigger than one archipelago. Chapter 10's transformations are the right tool when a
+continuous response is on an awkward scale. When the response is a fundamentally different kind of
+thing, a count, a yes or no, a rate, you do not bend the response to fit the linear model; you
+change the model. That change is the subject of the last section, and it is the reason logistic and
+Poisson regression belong in the same course as least squares.
+
+So the first decision in any analysis is not which predictors to use; it is what kind of thing the
+response is. @fig-ch14-choose-model turns that decision into a short flowchart: name the response
+type, follow the arrow, and you land on the matching model. The next section shows why all four
+destinations are really one machine.
+
+```{figure} figures/fig_ch14_choose_model.png
+:name: fig-ch14-choose-model
+:alt: A decision flowchart. A box at the top asks what kind of thing the response is. Four arrows fan down to four response-type boxes: continuous and roughly symmetric; continuous, positive and skewed; a count 0, 1, 2, 3 and so on; and yes or no or a proportion. Each response box points down to its model: linear regression with a Normal distribution and identity link; a transformation from Chapter 10 or a gamma GLM; Poisson regression with a log link; and logistic regression with a Binomial distribution and logit link. Below the Poisson box two more boxes hang: one saying if the response is a rate, add an offset of log t for exposure, and one saying if the counts are too spread out, check phi-hat and use quasi-Poisson.
+Diagnose the response, then pick the model. Start at the top, decide what kind of quantity the response is, and the flowchart routes you to the matching model. Counts lead to Poisson regression, with an offset when the response is really a rate and a quasi-Poisson correction when the counts are overdispersed.
+```
+
+:::{admonition} Durable skill: Diagnose the response before you choose the model
+:class: tip
+Before fitting anything, ask what kind of quantity the response is. Continuous and roughly
+symmetric? A linear model may be fine. Continuous but skewed and positive? Consider a
+transformation. A count, a proportion out of a known total, a yes or no, a waiting time? Those are
+not linear-model responses at all, and no amount of transforming fully repairs them; they call for
+the matching member of the generalized linear model family. Getting this first question right saves
+you from a chapter of diagnostics chasing a problem that a different model would not have had.
+:::
+
+(ch14-glm)=
+## 14.6 One family: the generalized linear model
+
+### Intuition
+
+Step back and look at what the last three chapters share. Ordinary regression models a continuous
+mean as a straight line. Logistic regression models a probability by passing a straight line through
+the logit link. Poisson regression models a count by passing a straight line through the log link.
+In every case there is a linear predictor $\eta = \mathbf{x}'\boldsymbol\beta$ doing the same work;
+what changes is only two choices: which probability distribution the response follows, and which
+link function connects its mean to the linear predictor. Fix those two choices and everything else,
+the estimation by maximum likelihood, the deviance, the workflow, is shared machinery. That is the
+**generalized linear model**, or GLM (Definition 14.8).
+
+### Formula
+
+:::{admonition} Definition 14.8: Generalized linear model
+:class: note definition
+A **generalized linear model (GLM)** has three parts: a *random component* naming the response
+distribution $Y_i$ from the exponential family, a *linear predictor*
+$\eta_i = \mathbf{x}_i'\boldsymbol\beta$, and a *link function* $g$ joining them, $g(\mu_i) = \eta_i$
+with $\mu_i = g^{-1}(\eta_i)$. Choosing the distribution and the link specifies the model; one
+estimation engine fits them all.
+:::
+
+A generalized linear model has three parts:
+
+$$
+\underbrace{Y_i \sim \text{a distribution from the exponential family}}_{\text{random component}}, \qquad
+\underbrace{\eta_i = \mathbf{x}_i'\boldsymbol\beta}_{\text{linear predictor}}, \qquad
+\underbrace{g(\mu_i) = \eta_i}_{\text{link}} .
+$$
+
+- The **random component** names the response distribution (normal, binomial, Poisson, and others), which fixes how the variance depends on the mean.
+- The **linear predictor** $\eta_i$ is the same linear combination of predictors used all book long.
+- The **link function** $g$ maps the mean $\mu_i$ onto the scale of the linear predictor; its inverse maps back, $\mu_i = g^{-1}(\eta_i)$.
+
+In words: choose a distribution and a link, and you have specified a model; the same estimation
+engine fits them all. The three models of this part are three rows of one table.
+
+| Model | Response | Distribution | Link $g(\mu)$ | Mean model | $\operatorname{Var}\{Y\}$ | Chapter |
+|---|---|---|---|---|---|---|
+| Linear | continuous | Normal | identity $\mu$ | $\mu = \mathbf{x}'\boldsymbol\beta$ | $\sigma^2$ (constant) | 2 to 8 |
+| Logistic | binary / proportion | Binomial | logit $\log\frac{\mu}{1-\mu}$ | $\mu = \dfrac{e^{\mathbf{x}'\boldsymbol\beta}}{1+e^{\mathbf{x}'\boldsymbol\beta}}$ | $\mu(1-\mu)$ | 13 |
+| Poisson | count | Poisson | log $\log\mu$ | $\mu = e^{\mathbf{x}'\boldsymbol\beta}$ | $\mu$ | 14 |
+
+:::{admonition} Key idea
+:class: tip keyidea
+Linear, logistic, and Poisson regression are not three separate techniques but one model with two
+dials: the response distribution and the link function. Turn the dials and you move between the rows
+of the table without changing the estimation engine underneath.
+:::
+
+@fig-ch14-glm-map draws the same idea as a diagram: one linear predictor feeding three links into
+three response types.
+
+```{figure} figures/fig_ch14_glm_map.png
+:name: fig-ch14-glm-map
+:alt: A schematic diagram. On the left, a single box labeled linear predictor eta equals x-transpose beta. An arrow fans out to three link boxes stacked vertically: identity, logit, and log. Each link box points to a response box on the right: identity points to a continuous response with a normal distribution and constant variance, logit points to a binary response with a binomial distribution and variance mu times one minus mu, log points to a count response with a Poisson distribution and variance equal to mu. A caption strip underneath reads one linear predictor, one estimation engine, three families.
+The generalized linear model in one picture. A single linear predictor feeds three different links to three different response types. Change the link and the family and you move between linear, logistic, and Poisson regression without changing the underlying estimation machinery.
+```
+
+### R
+
+The unification is not just conceptual; it is literally how the software is built. The function
+`glm` fits every row of the table, and choosing `family = gaussian(link = "identity")` reproduces
+ordinary least squares exactly.
+
+:::{admonition} Example 14.4: Least squares is a GLM
+:class: note
+**Question.** Does fitting the Toluca data with `glm` and the Gaussian family with identity link
+give the same coefficients as the `lm` fit from Chapter 2?
+
+**Intuition.** Ordinary regression is the GLM row with a normal response and an identity link, so
+the two fits should agree to every digit.
+
+**Formula.** Linear model as a GLM: Normal response, $g(\mu) = \mu$, $\mu = \mathbf{x}'\boldsymbol\beta$.
+
+**Computation.**
+
+```r
+toluca <- read.csv("data/toluca.csv")
+lm_fit  <- lm(hours ~ lotsize, data = toluca)
+glm_fit <- glm(hours ~ lotsize, family = gaussian(link = "identity"), data = toluca)
+rbind(lm = coef(lm_fit), glm = coef(glm_fit))
+```
+```text
+    (Intercept)  lotsize
+lm     62.36586 3.570202
+glm    62.36586 3.570202
+```
+
+```python
+toluca = pd.read_csv("data/toluca.csv")
+lm_fit  = smf.ols("hours ~ lotsize", data=toluca).fit()
+glm_fit = smf.glm("hours ~ lotsize", data=toluca,
+                  family=sm.families.Gaussian()).fit()
+print(lm_fit.params.values)
+print(glm_fit.params.values)
+```
+```text
+[62.36585859  3.57020202]
+[62.36585859  3.57020202]
+```
+
+**Interpretation.** The two fits agree exactly, $b_0 = 62.37$ and $b_1 = 3.5702$, the same Toluca
+numbers from @ch02-least-squares. Ordinary least squares is not a separate technique sitting outside
+the GLM world; it is the GLM you get by choosing a normal response and an identity link. Logistic
+regression is the binomial-and-logit choice, Poisson regression is the count-and-log choice, and one
+estimation engine fits all three.
+:::
+
+:::{admonition} Durable skill: Learn the general structure, not a list of tricks
+:class: tip
+It is tempting to file linear, logistic, and Poisson regression as three separate recipes. The GLM
+table shows they are one recipe with two dials. Learning the structure, pick a distribution for the
+response, pick a link for the mean, then let maximum likelihood do the rest, means the next model
+you meet (gamma regression for positive skewed data, multinomial for several categories, and beyond)
+is not a new subject but a new row. Whenever you learn a family of methods, look for the two or three
+dials that generate the whole family; you will remember less and understand more.
+:::
+
+::::{admonition} Try it 14.5
+:class: important
+For each response below, name the GLM family and link you would choose, and say what the variance
+does as the mean grows: (a) the number of typos per page in a manuscript; (b) whether a loan
+defaults or not; (c) a house's sale price in dollars.
+
+:::{admonition} Solution
+:class: dropdown
+(a) Typos per page is a count: Poisson family, log link, variance equal to the mean (grows linearly
+with it). (b) Default or not is binary: binomial family, logit link, variance $\mu(1-\mu)$, largest
+near $\mu = 0.5$ and shrinking toward the extremes. (c) Sale price is continuous (though often
+skewed, so a log transform or a gamma GLM may help): the baseline choice is the Gaussian family with
+identity link and constant variance $\sigma^2$. The first question is always what kind of thing the
+response is.
+:::
+::::
+
+## 14.7 Chapter summary
+
+You can now model counts. This chapter began with why ordinary least squares is the wrong tool for a
+count, whose nonnegative, whole-number, mean-equals-variance behavior violates the unbounded
+constant-variance response the linear model assumes. The repair was the Poisson log-linear model,
+which models the log of the mean as a linear predictor so the fitted mean stays positive and every
+coefficient reads as a rate ratio $e^{\beta_j}$. Maximizing the Poisson log-likelihood gave score
+equations of exactly the same form as the normal equations of Chapter 2. An offset, the log of the
+exposure entered with fixed coefficient one, turned the count model into a rate model for the ship
+data. The Pearson dispersion $\hat\phi$ diagnosed the severe overdispersion in the Galapagos counts,
+and the quasi-Poisson correction inflated the standard errors to honest sizes while leaving the
+estimates alone. That finally closed the Galapagos thread from Chapters 9 and 10: the trouble was
+never the scale of the response, it was that the response is a count. And all of it, together with
+the linear and logistic models, is three rows of one generalized linear model table.
+
+**Key results at a glance**
+
+| Result | Statement or formula | Valid when |
+|---|---|---|
+| Poisson distribution (Def 14.1) | $P(Y=y) = e^{-\mu}\mu^y / y!$, $\ E\{Y\}=\operatorname{Var}\{Y\}=\mu$ | count response, rare independent events at a steady rate |
+| Poisson log-linear model (Def 14.2) | $\log \mu_i = \mathbf{x}_i'\boldsymbol\beta$, so $\mu_i = e^{\mathbf{x}_i'\boldsymbol\beta}$ | mean must be positive and multiplicative in predictors |
+| Rate ratio | $\mu(X_j+1)/\mu(X_j) = e^{\beta_j}$ | interpreting a log-linear coefficient |
+| Poisson score equations (Thm 14.3) | $\sum_i (y_i - \hat\mu_i)\mathbf{x}_i = \mathbf{0}$ | maximum-likelihood fit of the log-linear model |
+| Offset (Def 14.4) | $\log\mu_i = \mathbf{x}_i'\boldsymbol\beta + \log t_i$ | modeling a rate with exposure $t_i$ |
+| Pearson dispersion (Def 14.6) | $\hat\phi = X^2/(n-p)$ | checking the variance-equals-mean assumption |
+| Quasi-Poisson SE (Def 14.7) | $s_{\text{quasi}} = \sqrt{\hat\phi}\, s_{\text{Poisson}}$ | overdispersion, $\hat\phi > 1$ |
+| Generalized linear model (Def 14.8) | family $+$ link $g(\mu)=\eta$ | any exponential-family response |
+
+**Key terms.** **Poisson distribution**, **Poisson log-linear regression model**, **linear
+predictor**, **link function**, **rate ratio**, **score equations**, **offset**, **exposure**,
+**overdispersion**, **Pearson dispersion**, **quasi-Poisson**, **negative binomial**, **generalized
+linear model**.
+
+**You should now be able to**
+
+- [ ] Explain why ordinary least squares is the wrong tool for count responses, naming the two model assumptions it violates.
+- [ ] State the Poisson log-linear model and interpret its coefficients as rate ratios, in the units of the problem.
+- [ ] Derive the Poisson log-likelihood and its score equations, and connect them to the maximum-likelihood machinery of Chapter 13.
+- [ ] Use an offset to model a rate, and explain why the log of exposure enters the linear predictor with a fixed coefficient of one.
+- [ ] Diagnose overdispersion from the Pearson dispersion and apply the quasi-Poisson correction, and say when a negative binomial model is the better fix.
+- [ ] Resolve the Galapagos species question with a count model, and explain why it succeeds where the transformations of Chapter 10 fell short.
+- [ ] Assemble the one-table GLM framework (family plus link) that contains linear, logistic, and Poisson regression as instances of a single idea.
+
+**Where this fits.** In the workflow spine of @ch02-workflow this chapter lives mostly in FIT and
+CHECK, with a strong USE payoff. The Poisson log-linear model is a FIT step for a response that the
+earlier chapters' FIT tools could not handle; the overdispersion diagnosis is a CHECK step, the
+count-data analogue of the residual-variance checks of Chapter 9 and the variance modeling of
+@ch10-wls; and reading coefficients as rate ratios is the USE step, the count cousin of the odds
+ratios of @ch13-odds-ratio. Looking back, this chapter completes the arc that began when Chapter 13
+first broke free of the normal response: logistic regression handled yes-or-no, Poisson regression
+handles how-many, and the GLM table shows both as extensions of the least squares you have known
+since Chapter 2. Looking forward, the same "choose a family and a link" habit carries into gamma
+models for skewed positive data, multinomial models for several categories, and the mixed and
+hierarchical models that a second course in regression takes up.
+
+## 14.8 Frequently asked questions
+
+**Q1. Can't I just log-transform the counts and run ordinary least squares?** You can, and people
+did for decades, but it has real costs. Counts of zero make $\log 0$ undefined, forcing awkward
+"add 0.5" patches. The back-transformed predictions describe a median, not a mean, so they do not
+add up correctly. And the constant-variance assumption is still wrong even after logging. Poisson
+regression sidesteps all three by modeling the count directly on its own terms.
+
+**Q2. Why the log link specifically? Could I use a different one?** The log link is the natural
+choice because it makes coefficients multiplicative (rate ratios), keeps the mean positive, and is
+the "canonical" link that makes the Poisson math cleanest. You can use others (the identity link
+gives an additive count model, occasionally useful), but the log link is the default for good
+reasons and is what "Poisson regression" means unless stated otherwise.
+
+**Q3. My dispersion is $\hat\phi = 0.8$, below 1. Is that underdispersion, and do I fix it?**
+Values modestly below 1 are common and usually harmless; they make Poisson standard errors slightly
+conservative (too large), so your tests are if anything too cautious. Genuine underdispersion (from,
+say, counts that are more regular than random, like eggs in a full carton) exists but is rare. Worry
+about $\hat\phi$ well above 1, not modestly below it.
+
+**Q4. Does quasi-Poisson change my coefficient estimates?** No. The coefficients solve the score
+equations $\sum_i (y_i - \mu_i)\mathbf{x}_i = \mathbf{0}$, which never mention the variance, so
+quasi-Poisson leaves them identical to the Poisson fit. Only the standard errors, and therefore the
+p-values and confidence intervals, change. That is the whole point: the estimates were fine, the
+uncertainty was understated.
+
+**Q5. When should I use the negative binomial instead of quasi-Poisson?** Use quasi-Poisson for a
+fast, distribution-free correction to standard errors. Reach for the negative binomial when you need
+a genuine likelihood: to compare models by AIC, to run likelihood-ratio tests, or to form
+prediction intervals for new counts. The negative binomial also fits very heavy overdispersion
+better because its variance grows quadratically in the mean.
+
+**Q6. Why did dropping the zero-service ships not bias the analysis?** A ship with zero months of
+service had no opportunity to suffer damage, so it carries no information about the damage rate, and
+$\log 0$ is undefined anyway. Removing rows with zero exposure is standard and correct; you are not
+discarding informative data, you are discarding rows that had no exposure to model.
+
+**Q7. The Poisson and quasi-Poisson gave the same residual deviance. Shouldn't the fix change the
+fit?** The deviance measures how far the fitted means sit from the data, and quasi-Poisson does not
+move the fitted means, so the deviance is unchanged. What changes is how we judge the deviance and
+the coefficients against chance: quasi-Poisson divides by the dispersion, so the same deviance now
+tells a more cautious story.
+
+## 14.9 Practice problems
+
+:::{note}
+Unless a problem says otherwise, use `gala.csv` for species counts and `ships.csv` (rows with
+positive service only) for damage rates. Problems are marked (A) concepts, (B) theory, or (C) data
+analysis. Odd-numbered answers appear in Appendix H; full solutions are in the instructor materials.
+:::
+
+1. (A) List the three features of count data that the ordinary linear model fails to respect, and say which model assumption each one violates.
+2. (A) State the mean and variance of a Poisson random variable. Why does this single fact make constant-variance least squares the wrong model for counts?
+3. (A) In a Poisson log-linear model a predictor has coefficient $b = 0.5$. State its rate ratio and interpret it in words.
+4. (A) Explain in one or two sentences what an offset is and why its coefficient is fixed at one rather than estimated.
+5. (A) A Poisson fit and its quasi-Poisson refit report identical coefficients but different standard errors. Explain why.
+6. (A) Define overdispersion and name two ordinary causes of it in real count data.
+7. (A) Give the family and link function for each GLM row: linear regression, logistic regression, Poisson regression.
+8. (A) A colleague computes crime rates as `crimes / population` and fits ordinary least squares. Give two reasons an offset-based Poisson model is better.
+9. (A) Why can a Poisson model never predict a negative count, whatever the predictor values? Point to the piece of the model that guarantees it.
+10. (B) Starting from the Poisson pmf $P(Y=y) = e^{-\mu}\mu^y/y!$, write the log-likelihood for independent counts $y_1, \dots, y_n$ with $\log\mu_i = \mathbf{x}_i'\boldsymbol\beta$, and derive the score equations $\sum_i (y_i - \mu_i)\mathbf{x}_i = \mathbf{0}$ (Theorem 14.3).
+11. (B) From the score equations in problem 10, show that the intercept component forces $\sum_i \hat\mu_i = \sum_i y_i$: the fitted means reproduce the total observed count.
+12. (B) Show that the Poisson score equations have the same form $\sum_i (y_i - \hat m_i)\mathbf{x}_i = \mathbf{0}$ as the logistic score equations of Chapter 13 and the normal equations of Chapter 2, identifying what $\hat m_i$ is in each case.
+13. (B) Derive the offset result: starting from $\mu_i = \lambda_i t_i$ and $\log\lambda_i = \mathbf{x}_i'\boldsymbol\beta$, show that $\log\mu_i = \mathbf{x}_i'\boldsymbol\beta + \log t_i$, and explain why $\log t_i$ enters with coefficient one.
+14. (B) Show that in a Poisson log-linear model with a single binary predictor $X \in \{0, 1\}$, the coefficient $\beta_1$ equals $\log(\mu_1/\mu_0)$, the log of the ratio of mean counts between the two groups. Hence $e^{\beta_1}$ is that ratio.
+15. (B) The quasi-Poisson model assumes $\operatorname{Var}\{Y_i\} = \phi\mu_i$. Explain why this rescaling multiplies every coefficient standard error by $\sqrt\phi$ but leaves the coefficient estimates unchanged, referring to the score equations.
+16. (B) Write the Pearson statistic $X^2 = \sum_i (y_i - \hat\mu_i)^2/\hat\mu_i$ and explain why $E\{X^2\} \approx n - p$ under a correct Poisson model, so that $\hat\phi = X^2/(n-p)$ should be near 1.
+17. (B) For two Poisson means $\mu_A$ and $\mu_B$ with exposures $t_A, t_B$ entered as offsets, show that the fitted rate ratio $\lambda_B/\lambda_A = e^{\beta}$ does not depend on the exposures, so the comparison is a fair per-exposure comparison.
+18. (B) Explain why maximum likelihood, not least squares, is used to fit the Poisson model, and describe in words how iteratively reweighted least squares reaches the estimates (you may cite the Chapter 13 sketch).
+19. (C) Fit the Poisson model `Species ~ Area + Elevation + Nearest + Scruz + Adjacent` to `gala.csv` in R or Python. Report the coefficient on `Area` and its rate ratio for a 100 km$^2$ increase.
+20. (C) For the Galapagos Poisson fit, compute the Pearson dispersion $\hat\phi$ from the Pearson residuals and confirm it matches the value $31.7$ in the chapter. State what it says about the model.
+21. (C) Refit the Galapagos model with `family = quasipoisson` (R) or the `scale="X2"` option (Python). Report which predictors are significant at the 5% level under quasi-Poisson but were significant under naive Poisson, and explain the change.
+22. (C) Fit the ships damage model `incidents ~ type + year + period` with `offset = log(service)` on the positive-service rows. Report the rate ratio for `period75` and interpret it.
+23. (C) Refit the ships model without the offset (drop the `offset` argument). Compare the `type` coefficients to the offset model and explain why they change, connecting the change to the confounding of rate and exposure.
+24. (C) Compute the ships Pearson dispersion $\hat\phi$, refit as quasi-Poisson, and report how the standard error of the `typeB` coefficient changes. Is the ship data as overdispersed as the Galapagos data?
+25. (C) Fit the Toluca model `hours ~ lotsize` two ways: `lm` and `glm` with `family = gaussian(link = "identity")`. Show the coefficients agree, and explain what this says about the relationship between least squares and the GLM.
+26. (C) Using the Galapagos Poisson fit, predict the expected species count for an island with `Area = 40`, `Elevation = 200`, `Nearest = 1`, `Scruz = 30`, `Adjacent = 5`. Do the prediction on the linear-predictor scale and then exponentiate, and confirm software gives the same number with `type = "response"`.
+27. (C) Fit a negative binomial model to the Galapagos data with `MASS::glm.nb` (R) or `statsmodels` `NegativeBinomial` (Python) and report the estimated $\theta$. Compare its `Elevation` coefficient to the Poisson and quasi-Poisson fits.
+28. (C) Make a diagnostic plot of squared Pearson residuals against fitted means for the Galapagos Poisson fit, with the variance-equals-mean reference line, and describe what it shows about overdispersion.
+29. (A) Chapter 10 tried log and Box-Cox transformations on the Galapagos species counts, and they helped the residual plots but never fully satisfied. Explain why the Poisson model succeeds where those transformations fell short. Name at least two specific defects of transforming a count that the count model avoids.
+
+## 14.10 Exam practice
+
+:::{note}
+These five questions are written in the style of the course exams: each one asks you to
+**explain, evaluate, or interpret in full sentences**, not just to produce a number. Where a
+question shows software output, it was produced on the course machine from the same `data/` files
+you have used all term. Work each answer before opening the model answer, and grade yourself on the
+reasoning, not just the final claim.
+:::
+
+**EP 14.1.** Poisson regression makes two departures from ordinary least squares: it models the
+**log** of the mean rather than the mean itself, and it estimates the coefficients by **maximum
+likelihood** rather than by minimizing a sum of squares. Explain why each departure is forced on us
+by the nature of count data. Tie the log link to one specific property of counts, and tie the choice
+of maximum likelihood to another.
+
+:::{admonition} Model answer
+:class: dropdown
+The two departures answer two different failures of least squares. The log link is forced by the
+fact that a count mean must be positive: species, incidents, and arrivals can never average a
+negative number. If we modeled the mean directly as $\mathbf{x}'\boldsymbol\beta$, some predictor
+values would push the fitted mean below zero, an impossible count. Modeling $\log\mu_i =
+\mathbf{x}'\boldsymbol\beta$ instead lets the linear predictor range over the whole real line while
+the mean $\mu_i = e^{\mathbf{x}'\boldsymbol\beta}$ stays strictly positive, and as a bonus it makes
+the coefficients multiplicative, which matches the way count processes actually scale.
+
+Maximum likelihood is forced by a different property: the variance of a count is not constant but
+equals its mean, so the response is neither normal nor constant-variance. Least squares is the right
+estimator when errors are normal with constant variance, because under those conditions minimizing
+the sum of squares is the maximum-likelihood solution and is efficient by Gauss-Markov. A count
+breaks both conditions, so least squares loses its justification. Maximum likelihood instead uses the
+actual Poisson probability of the observed counts, weighting each case by how much information it
+carries, and it delivers the score equations $\sum_i (y_i - \hat\mu_i)\mathbf{x}_i = \mathbf{0}$ that
+define the fit.
+
+A weak answer names only the "counts cannot be negative" point and stops, without connecting the
+choice of maximum likelihood to the failure of the normal, constant-variance assumptions that make
+least squares optimal in the first place.
+:::
+
+**EP 14.2.** A biologist fits a two-predictor Poisson model to the Galapagos data and hands you this
+output. Interpret the `Elevation` coefficient as a rate ratio for a rise of 100 meters, say what the
+exponentiated intercept means and whether it describes any real island, and state whether you would
+trust the tiny standard errors as they stand.
+
+```r
+gala <- read.csv("data/gala.csv")
+f <- glm(Species ~ Elevation + Nearest, family = poisson, data = gala)
+summary(f)
+```
+```text
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)
+(Intercept) 3.574e+00  3.819e-02  93.603  < 2e-16 ***
+Elevation   1.475e-03  3.341e-05  44.151  < 2e-16 ***
+Nearest     6.559e-03  1.444e-03   4.541 5.59e-06 ***
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 3510.7  on 29  degrees of freedom
+Residual deviance: 1806.4  on 27  degrees of freedom
+```
+
+:::{admonition} Model answer
+:class: dropdown
+The elevation coefficient is $0.001475$ on the log scale, so its rate ratio for a 100-meter rise is
+$e^{100 \times 0.001475} = e^{0.1475} = 1.159$. In context: holding the distance to the nearest
+island fixed, each additional 100 meters of elevation multiplies the expected number of plant species
+by about $1.16$, a 16% increase. This is a multiplier, not an additive count; it would be wrong to
+say "16 more species."
+
+The intercept is $3.574$ on the log scale, so $e^{3.574} = 35.7$. Literally it is the expected
+species count for an island with elevation zero and nearest-island distance zero. No real island has
+zero elevation, so this is an extrapolation outside the data and should not be read as a prediction
+for any actual island; it is a mathematical baseline the fit passes through.
+
+I would not trust the standard errors as printed. The $z$ values of 44 and 94 are implausibly large,
+and the residual deviance of $1806$ on $27$ degrees of freedom is far above its degrees of freedom, a
+clear signal of severe overdispersion (the full Galapagos fit had $\hat\phi \approx 32$). The printed
+standard errors assume variance equals mean; under overdispersion they are several times too small,
+so the significance stars cannot be believed until the dispersion is estimated and a quasi-Poisson
+correction is applied.
+
+A weak answer reads the elevation effect additively or simply repeats the significance stars without
+noticing that the enormous $z$ values and the inflated residual deviance point to overdispersion that
+makes those standard errors untrustworthy.
+:::
+
+**EP 14.3.** In the ships damage model, fit with an offset of $\log(\text{service})$, a student sees
+the coefficient `period75` $= 0.385$ and writes: "Ships operated in the later period suffer $0.385$
+more damage incidents than those in the earlier period." Two separate things are wrong with that
+sentence. Identify and correct both, then write the statement the student should have made.
+
+:::{admonition} Model answer
+:class: dropdown
+The first error is scale. The coefficient $0.385$ lives on the log-of-the-mean scale, where effects
+are additive, but on the count scale effects are multiplicative. To interpret it you exponentiate:
+$e^{0.385} = 1.469$. So the later period does not add $0.385$ incidents; it multiplies the expected
+count by about $1.47$, a rate ratio, which is a 47% increase, not a fixed number of extra incidents.
+
+The second error is the offset. Because the model carries $\log(\text{service})$ as an offset, its
+coefficients describe a **rate** of damage per month of service, not a raw count of incidents. So the
+comparison is between damage rates per unit of exposure, not between totals; a busy ship and an idle
+ship at the same period have the same rate but very different raw counts. Ignoring the offset turns a
+statement about rates into a false statement about counts.
+
+The correct sentence: "Holding ship type and construction year fixed, ships operating in the later
+period had about 47% more damage incidents per month of service than ships in the earlier period."
+
+A weak answer fixes only the exponentiation and reports "47% more incidents," forgetting that the
+offset makes the quantity a rate per month of service rather than a raw incident count.
+:::
+
+**EP 14.4.** The two fits below are the same ships model, once with the exposure offset and once
+without it. The `type` coefficients change sharply. Explain what happens to the type B coefficient
+when the offset is dropped and why, using the exposure figures, and state which of the two fits
+answers the question "which ship type is the most dangerous to operate."
+
+```r
+ships <- read.csv("data/ships.csv"); ships <- ships[ships$service > 0, ]
+with_offset <- glm(incidents ~ type + year + period, family = poisson,
+                   offset = log(service), data = ships)
+no_offset   <- glm(incidents ~ type + year + period, family = poisson, data = ships)
+```
+```text
+type coefficients WITH offset:    typeB -0.5433  typeC -0.6874  typeD -0.0760  typeE  0.3256
+type coefficients NO offset:      typeB  1.7957  typeC -1.2528  typeD -0.9045  typeE -0.1463
+
+mean months of service by type:   A 1356   B 19760   C 885   D 635   E 855
+total incidents by type:          A   42   B   253   C  12   D  17   E  32
+```
+
+:::{admonition} Model answer
+:class: dropdown
+With the offset, `typeB` $= -0.5433$, so its rate ratio is $e^{-0.5433} = 0.581$: per month of
+service, type B ships suffer damage at about 58% of the baseline type A rate, making them safer than
+type A, not more dangerous. Drop the offset and the coefficient flips to $+1.7957$, a ratio of
+$e^{1.7957} = 6.0$, which makes type B look six times worse than type A.
+
+The exposure figures explain the flip. Type B ships accumulate a mean of $19{,}760$ months of service,
+roughly fifteen times the type A mean of $1{,}356$, and they rack up $253$ total incidents, far more
+than any other type. Without the offset the model is explaining **raw counts**, so it credits type B
+with a huge coefficient simply because those ships are at sea enormously longer and therefore have
+more chances to be damaged. The offset $\log(\text{service})$ divides that exposure out, converting
+the response into a rate per month; once exposure is accounted for, type B's damage rate is actually
+below the type A baseline. Volume of incidents and rate of incidents are different questions, and the
+offset is what separates them.
+
+The offset fit is the one that answers "which type is most dangerous to operate," because danger is a
+rate per unit of exposure, not a raw total. By that fit type E, with the only positive coefficient,
+has the highest damage rate; the no-offset fit only tells you which type happened to log the most
+incidents, which is mostly a statement about fleet size and time at sea.
+
+A weak answer notes the sign flip but does not connect it to type B's very large service time,
+missing that the no-offset model is conflating exposure with rate.
+:::
+
+**EP 14.5.** For the full five-predictor Galapagos Poisson fit the Pearson dispersion is
+$\hat\phi = 31.7$. (a) Explain in context what this single number says about the species counts and
+about the Poisson standard errors. (b) A colleague refits the same data with a negative binomial
+model and reports $\hat\theta = 1.675$ and an `Elevation` coefficient of $0.003855$, against the
+Poisson value $0.003541$. Interpret $\hat\theta$, and explain why the two elevation coefficients are
+nearly identical even though their standard errors are not.
+
+:::{admonition} Model answer
+:class: dropdown
+(a) A Poisson model promises that the variance of a count equals its mean, which would make
+$\hat\phi \approx 1$. The value $\hat\phi = 31.7$ says the Galapagos species counts scatter about 32
+times more widely than a Poisson allows, severe overdispersion, most likely from island features the
+five predictors do not capture, spatial clustering of species, and genuine island-to-island
+differences in the underlying colonization rate. The consequence is specific: overdispersion barely
+moves the coefficient estimates, but it makes the Poisson standard errors too small by a factor of
+about $\sqrt{31.7} \approx 5.6$. So the naive Poisson p-values are far too optimistic, and predictors
+that look strongly significant may not survive an honest correction; the point estimates, though,
+remain trustworthy.
+
+(b) The parameter $\hat\theta = 1.675$ is the negative binomial's extra dispersion parameter, which
+sets the variance to $\mu + \mu^2/\theta$. A small $\theta$ makes that quadratic term large, so
+$\hat\theta = 1.675$ signals heavy overdispersion and confirms the story $\hat\phi$ told. The two
+elevation coefficients, $0.003855$ and $0.003541$, agree to two digits because overdispersion
+corrections change how the **variance** is modeled, not how the **mean** is modeled. Both fits
+describe essentially the same log-linear mean relationship and solve nearly the same mean-fitting
+equations; what the negative binomial changes is the width of the standard errors, widening them
+relative to the naive Poisson to reflect the true spread. The mean is stable; only the stated
+uncertainty moves.
+
+A weak answer treats $\hat\phi = 31.7$ as evidence that the whole model is wrong and must be
+discarded, or reads a large $\hat\theta$ as more dispersion, missing that overdispersion inflates
+standard errors while leaving the coefficient estimates essentially unchanged.
+:::
+
+## Chapter game
+
+:::{admonition} Play the Chapter 14 game
+:class: tip
+Play the Chapter 14 game on your phone or laptop: 10 quick rounds, no setup.
+[Open the game](../games/ch14.html)
+
+It trains the count-modeling reflexes of this chapter: reading a Poisson coefficient as a rate ratio, fitting the log-linear line, spotting when an offset turns raw counts into honest rates, and diagnosing overdispersion before you trust a p-value.
+:::
+
+:::{admonition} Resumen del capítulo (en español)
+:class: dropdown
+Este capítulo trata la **regresión de Poisson (Poisson regression)** para respuestas de **conteo
+(count)**, usando dos conjuntos de datos: especies de plantas en 30 islas Galápagos e incidentes
+de daño en barcos de carga. Un conteo nunca es negativo, es entero, y su variabilidad crece con su
+promedio; el modelo lineal ordinario supone lo contrario, así que falla. La **distribución de
+Poisson** describe conteos con una sola cantidad, su media $\mu$, y una propiedad clave: la
+varianza es igual a la media.
+
+El **modelo log-lineal de Poisson** propone $\log\mu_i = \mathbf{x}_i'\boldsymbol\beta$: el
+logaritmo de la media es lineal en los predictores, así que la media nunca es negativa y los
+coeficientes se interpretan de forma multiplicativa: $e^{\beta_j}$ es una **razón de tasas (rate
+ratio)**, análogo a la razón de momios de la regresión logística. Estimamos por **máxima
+verosimilitud**; derivar la log-verosimilitud da las ecuaciones de puntaje $\sum_i (y_i -
+\mu_i)\mathbf{x}_i = \mathbf{0}$, con la misma forma que las ecuaciones normales del Capítulo 2.
+
+Para modelar una tasa en vez de un conteo crudo, agregamos el logaritmo de la exposición como
+**desplazamiento (offset)**, con coeficiente fijo igual a uno. En los barcos, la exposición son
+los meses de servicio; el tipo B, que parecía el peor por conteo bruto, resulta promedio al
+ajustar por exposición.
+
+La **sobredispersión (overdispersion)** ocurre cuando los conteos varían más de lo que Poisson
+permite. Se diagnostica con la dispersión de Pearson $\hat\phi = X^2/(n-p)$, que debe estar cerca
+de 1; en las Galápagos vale $31.7$. La corrección **cuasi-Poisson** multiplica cada error estándar
+por $\sqrt{\hat\phi}$ sin cambiar los coeficientes; el **binomial negativo** es la alternativa con
+verosimilitud completa. Así resolvemos el hilo de las Galápagos de los Capítulos 9 y 10: el
+problema nunca fue la escala, sino que la respuesta es un conteo. Finalmente, el **modelo lineal
+generalizado** unifica todo: una distribución más una función de enlace $g(\mu)=\eta$ producen la
+regresión lineal, la logística y la de Poisson como tres filas de una misma tabla, con un solo
+motor de estimación.
+:::

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What overdispersion costs a p-value</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 30 Galapagos islands under the full Poisson fit of section 14.2:
+   fitted mean Yhat and squared deviation (Y - Yhat)^2, both on a log10 axis
+   because they span four orders of magnitude. */
+var FITTED = [78.7243, 20.4029, 25.7225, 21.4053, 17.0145, 36.5854, 32.0806,
+  10.9186, 29.8301, 26.7763, 27.8614, 87.7442, 15.9187, 38.2217, 25.0256,
+  370.8211, 55.7585, 20.2937, 212.6036, 121.4270, 32.1960, 53.0598, 218.8213,
+  370.9783, 297.2780, 60.8814, 158.1653, 36.8943, 35.5216, 18.0680];
+var SQDEV = [429.4982, 112.2979, 516.3109, 12.9217, 225.4345, 345.4189,
+  65.2962, 0.8438, 476.5529, 613.8651, 4780.1529, 27.6239, 1770.8385,
+  1103.6795, 224.2333, 567.4427, 22.6431, 334.6610, 11794.7406, 180.2831,
+  407.8781, 286.9696, 3742.8310, 17950.1962, 21527.3466, 1.2512, 16087.0360,
+  50.4907, 381.0945, 8.5966];
+
+var PTS = FITTED.map(function (m, i) {
+  return { x: Math.log(m) / Math.LN10, y: Math.log(SQDEV[i]) / Math.LN10 };
+});
+
+/* Poisson standard error and test statistics from the fit in section 14.2.
+   Quasi-Poisson rescales every one of them by the square root of phi. */
+var SE_ELEV = 8.740703734e-5;
+var Z_NEAREST = 4.845860453;
+var Z_SCRUZ = -9.126022546;
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'How far above the Poisson promise do the counts really sit?',
+    es: 'Cuanto se alejan los conteos de la promesa de Poisson?'
+  },
+  points: PTS,
+  xRange: [0.9, 2.7],
+  yRange: [-0.6, 4.7],
+  xLabel: { en: 'log10 of the fitted mean mu-hat', es: 'log10 de la media ajustada mu-sombrero' },
+  yLabel: { en: 'log10 of (Y - mu-hat) squared', es: 'log10 de (Y - mu-sombrero) al cuadrado' },
+  ariaLabel: {
+    en: 'Squared deviations against fitted means for 30 Galapagos islands on log scales, with ' +
+        'the variance-equals-mean line and an adjustable quasi-Poisson line.',
+    es: 'Desviaciones al cuadrado contra medias ajustadas de 30 islas Galapagos en escalas ' +
+        'logaritmicas, con la linea de varianza igual a la media y una linea cuasi-Poisson ajustable.'
+  },
+  params: [
+    { id: 'phi', label: { en: 'Dispersion phi', es: 'Dispersion phi' },
+      min: 1, max: 40, step: 0.25, value: 1, digits: 2 }
+  ],
+  curves: [
+    /* The Poisson promise, variance = mean, which is the 45 degree line here. */
+    { fn: function (p, x) { return x; }, accent: 1, dash: [6, 4], width: 2 },
+    /* The quasi-Poisson variance, phi times the mean. */
+    { fn: function (p, x) { return x + Math.log(p.phi) / Math.LN10; }, accent: 2, width: 3 }
+  ],
+  readouts: [
+    { id: 'infl', label: { en: 'SE inflation, root phi', es: 'Inflacion del EE, raiz de phi' },
+      accent: 2, digits: 2,
+      compute: function (p) { return Math.sqrt(p.phi); } },
+    { id: 'se', label: { en: 's{b1} elevation, x 10^-4', es: 's{b1} elevacion, x 10^-4' },
+      accent: 1, digits: 2,
+      compute: function (p) { return SE_ELEV * Math.sqrt(p.phi) * 1e4; } },
+    { id: 'tn', label: { en: 'Test statistic, Nearest', es: 'Estadistico, Nearest' }, digits: 2,
+      compute: function (p) { return Z_NEAREST / Math.sqrt(p.phi); } },
+    { id: 'ts', label: { en: 'Test statistic, Scruz', es: 'Estadistico, Scruz' }, digits: 2,
+      compute: function (p) { return Z_SCRUZ / Math.sqrt(p.phi); } }
+  ],
+  caption: {
+    en: 'Each dot is one island: its fitted mean across the bottom, how far its count missed that ' +
+        'mean up the side, both on log scales. The dashed blue line is the Poisson promise, ' +
+        'variance equals mean; the amber line is phi times the mean.\n\n' +
+        '**What to notice.** With phi at 1 the two lines sit on top of each other and most ' +
+        'islands are stranded far above both, some by four orders of magnitude. The counts break ' +
+        'the mean-variance link the Poisson model is built on.\n\n' +
+        '**Try this.** Drag phi up until the amber line clears the bulk of the cloud, near 32, ' +
+        'the value the Pearson statistic reports. Watch Nearest and Scruz start out looking ' +
+        'overwhelming and both slide under 2, while the elevation standard error grows from 0.87 ' +
+        'to 4.93 in these units. Same coefficients, honest uncertainty.',
+    es: 'Cada punto es una isla: su media ajustada en la base, cuanto se alejo su conteo de esa ' +
+        'media en el costado, ambos en escalas logaritmicas. La linea azul discontinua es la ' +
+        'promesa de Poisson, varianza igual a la media; la linea ambar es phi por la media.\n\n' +
+        '**Que observar.** Con phi en 1 las dos lineas se enciman y la mayoria de las islas ' +
+        'quedan muy por encima de ambas, algunas por cuatro ordenes de magnitud. Los conteos ' +
+        'rompen el vinculo media-varianza sobre el que se construye el modelo de Poisson.\n\n' +
+        '**Prueba esto.** Sube phi hasta que la linea ambar supere el grueso de la nube, cerca de ' +
+        '32, el valor que reporta el estadistico de Pearson. Observa como Nearest y Scruz ' +
+        'empiezan pareciendo abrumadores y ambos bajan de 2, mientras el error estandar de la ' +
+        'elevacion crece de 0.87 a 4.93 en estas unidades. Los mismos coeficientes, con una ' +
+        'incertidumbre honesta.'
+  }
+});
+</script>
+</body>
+</html>

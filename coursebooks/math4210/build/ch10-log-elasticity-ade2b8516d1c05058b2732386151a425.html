@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A log-log slope is a percentage</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* mammals.csv, all 62 species: [body weight in kg, brain weight in g]. */
+var RAW = [
+  [3.385,44.5], [0.48,15.5], [1.35,8.1], [465,423], [36.33,119.5], [27.66,115],
+  [14.83,98.2], [1.04,5.5], [4.19,58], [0.425,6.4], [0.101,4], [0.92,5.7], [1,6.6],
+  [0.005,0.14], [0.06,1], [3.5,10.8], [2,12.3], [1.7,6.3], [2547,4603], [0.023,0.3],
+  [187.1,419], [521,655], [0.785,3.5], [10,115], [3.3,25.6], [0.2,5], [1.41,17.5],
+  [529,680], [207,406], [85,325], [0.75,12.3], [62,1320], [6654,5712], [3.5,3.9], [6.8,179],
+  [35,56], [4.05,17], [0.12,1], [0.023,0.4], [0.01,0.25], [1.4,12.5], [250,490], [2.5,12.1],
+  [55.5,175], [100,157], [52.16,440], [10.55,179.5], [0.55,2.4], [60,81], [3.6,21],
+  [4.288,39.2], [0.28,1.9], [0.075,1.2], [0.122,3], [0.048,0.33], [192,180], [3,25],
+  [160,169], [0.9,2.6], [1.62,11.4], [0.104,2.5], [4.235,50.4]
+];
+
+/* The log-log scale is where the straight line lives. */
+var PTS = RAW.map(function (d) {
+  return { x: Math.log(d[0]), y: Math.log(d[1]) };
+});
+
+function line(p, x) { return p.b0 + p.b1 * x; }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Move the log-log line, and read its slope as a percentage',
+    es: 'Mueve la recta log-log y lee su pendiente como un porcentaje'
+  },
+  points: PTS,
+  xRange: [-6, 9.5],
+  yRange: [-3, 10],
+  xLabel: { en: 'log body weight (kg)', es: 'log del peso del cuerpo (kg)' },
+  yLabel: { en: 'log brain weight (g)', es: 'log del peso del cerebro (g)' },
+  ariaLabel: {
+    en: 'Scatterplot of log brain weight against log body weight for 62 mammals, with a straight line you control.',
+    es: 'Diagrama de dispersion del log del peso del cerebro contra el log del peso del cuerpo para 62 mamiferos, con una recta que tu controlas.'
+  },
+  params: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      min: 0, max: 4, step: 0.01, value: 2.10, digits: 2 },
+    { id: 'b1', label: { en: 'Elasticity b1 (slope on the log-log scale)',
+                         es: 'Elasticidad b1 (pendiente en la escala log-log)' },
+      min: 0, max: 1.5, step: 0.01, value: 1.00, digits: 2 }
+  ],
+  residualsFrom: line,
+  curves: [
+    { fn: line, accent: 1, width: 3 }
+  ],
+  readouts: [
+    { id: 'b1', label: { en: 'Elasticity b1', es: 'Elasticidad b1' },
+      accent: 1, digits: 3,
+      compute: function (p) { return p.b1; } },
+    { id: 'exact', label: { en: 'Exact % per +10% body', es: '% exacto por +10% de cuerpo' },
+      accent: 2, digits: 2,
+      compute: function (p) { return (Math.pow(1.10, p.b1) - 1) * 100; } },
+    { id: 'approx', label: { en: 'Approximate % (10 b1)', es: '% aproximado (10 b1)' },
+      digits: 2,
+      compute: function (p) { return 10 * p.b1; } },
+    { id: 'dbl', label: { en: 'Factor per doubling, 2^b1', es: 'Factor al duplicar, 2^b1' },
+      digits: 3,
+      compute: function (p) { return Math.pow(2, p.b1); } },
+    { id: 'sse', label: { en: 'SSE', es: 'SCE' },
+      accent: 1, digits: 2,
+      compute: function (p, data) {
+        var s = 0, i, e;
+        for (i = 0; i < data.length; i++) {
+          e = data[i].y - line(p, data[i].x);
+          s += e * e;
+        }
+        return s;
+      } }
+  ],
+  caption: {
+    en: 'Each dot is one of 62 mammal species, plotted on the log-log scale where the ' +
+        'relationship is straight. The line is Yhat = b0 + b1 log X, and the amber sticks ' +
+        'are its residuals. The three middle readouts translate the slope you set into the ' +
+        'language a biologist actually uses.\n\n' +
+        '**Try this.** Start with b1 = 1, which says a body ten times heavier carries a ' +
+        'brain ten times heavier, and watch the line miss the giants badly. Now slide b1 ' +
+        'down until SSE stops falling: you land near 0.75, where a 10% heavier body buys ' +
+        'only about 7.4% more brain. Notice that the exact and approximate percent readings ' +
+        'stay within a tenth of a point of each other the whole way.',
+    es: 'Cada punto es una de 62 especies de mamiferos, en la escala log-log donde la ' +
+        'relacion es recta. La recta es Yhat = b0 + b1 log X, y los palos ambar son sus ' +
+        'residuos. Los tres valores centrales traducen la pendiente que elijas al lenguaje ' +
+        'que un biologo usa de verdad.\n\n' +
+        '**Prueba esto.** Empieza con b1 = 1, que dice que un cuerpo diez veces mas pesado ' +
+        'lleva un cerebro diez veces mas pesado, y observa como la recta falla con los ' +
+        'gigantes. Ahora baja b1 hasta que SCE deje de bajar: llegas cerca de 0.75, donde un ' +
+        'cuerpo 10% mas pesado compra solo un 7.4% mas de cerebro. Nota que la lectura ' +
+        'exacta y la aproximada del porcentaje se mantienen a una decima de punto entre si ' +
+        'en todo el recorrido.'
+  }
+});
+</script>
+</body>
+</html>

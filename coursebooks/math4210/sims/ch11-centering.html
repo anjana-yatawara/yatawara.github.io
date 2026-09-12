@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Centering moves the coefficients, not the curve</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-backlink { margin: 10px 0 0; font-size: 0.8125rem; }
+.sim-backlink a { color: var(--sim-accent); text-decoration: none; }
+.sim-backlink a:hover { text-decoration: underline; }
+.sim-backlink a:focus-visible {
+  outline: 3px solid var(--sim-accent); outline-offset: 2px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Section 11.4. The quadratic dist ~ u + u^2 on cars.csv, refitted live with
+   u = speed - c. Every value below is computed from the data by least
+   squares in this file; nothing is hard coded. */
+
+var LANG = (window.location.search.indexOf('lang=es') >= 0) ? 'es' : 'en';
+
+var SPEED = [
+  4, 4, 7, 7, 8, 9, 10, 10, 10, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13,
+  14, 14, 14, 14, 15, 15, 15, 16, 16, 17, 17, 17, 18, 18, 18, 18, 19, 19,
+  19, 20, 20, 20, 20, 20, 22, 23, 24, 24, 24, 24, 25
+];
+var DIST = [
+  2, 10, 4, 22, 16, 10, 18, 26, 34, 17, 28, 14, 20, 24, 28, 26, 34, 34,
+  46, 26, 36, 60, 80, 20, 26, 54, 32, 40, 32, 40, 50, 42, 56, 76, 84, 36,
+  46, 68, 32, 48, 52, 56, 64, 66, 54, 70, 92, 93, 120, 85
+];
+
+var PTS = [];
+for (var i = 0; i < SPEED.length; i++) { PTS.push({ x: SPEED[i], y: DIST[i] }); }
+
+/* Least squares by modified Gram-Schmidt: X = QR, then R b = Q'y.
+   Stable enough for a polynomial design, and R gives the standard errors
+   through (X'X)^{-1} = R^{-1} R^{-T}. */
+function mgsFit(A, y) {
+  var n = A.length, p = A[0].length, i, j, k;
+  var V = [], Q = [], R = [];
+  for (j = 0; j < p; j++) {
+    var col = [], rr = [];
+    for (i = 0; i < n; i++) { col.push(A[i][j]); }
+    for (k = 0; k < p; k++) { rr.push(0); }
+    V.push(col); R.push(rr);
+  }
+  for (j = 0; j < p; j++) {
+    var nrm = 0;
+    for (i = 0; i < n; i++) { nrm += V[j][i] * V[j][i]; }
+    nrm = Math.sqrt(nrm);
+    R[j][j] = nrm;
+    var q = [];
+    for (i = 0; i < n; i++) { q.push(nrm > 0 ? V[j][i] / nrm : 0); }
+    Q.push(q);
+    for (k = j + 1; k < p; k++) {
+      var d = 0;
+      for (i = 0; i < n; i++) { d += q[i] * V[k][i]; }
+      R[j][k] = d;
+      for (i = 0; i < n; i++) { V[k][i] -= d * q[i]; }
+    }
+  }
+  var b = [], qty = [];
+  for (j = 0; j < p; j++) {
+    var s = 0;
+    for (i = 0; i < n; i++) { s += Q[j][i] * y[i]; }
+    qty.push(s); b.push(0);
+  }
+  for (j = p - 1; j >= 0; j--) {
+    var t = qty[j];
+    for (k = j + 1; k < p; k++) { t -= R[j][k] * b[k]; }
+    b[j] = t / R[j][j];
+  }
+  return { b: b, R: R };
+}
+
+/* Inverse of an upper-triangular matrix, by back substitution. */
+function invUpper(R, p) {
+  var Ri = [], i, j, k;
+  for (i = 0; i < p; i++) {
+    var row = [];
+    for (j = 0; j < p; j++) { row.push(0); }
+    Ri.push(row);
+  }
+  for (i = p - 1; i >= 0; i--) {
+    Ri[i][i] = 1 / R[i][i];
+    for (j = i + 1; j < p; j++) {
+      var s = 0;
+      for (k = i + 1; k <= j; k++) { s += R[i][k] * Ri[k][j]; }
+      Ri[i][j] = -s * Ri[i][i];
+    }
+  }
+  return Ri;
+}
+
+/* The quadratic in u = speed - c. One fit per slider value: the curve is
+   sampled a few hundred times per frame, so the last fit is cached. */
+var CACHE = { c: null, fit: null };
+
+function quadFit(c) {
+  if (CACHE.c === c) { return CACHE.fit; }
+  var n = SPEED.length, i, A = [], u = [], u2 = [];
+  for (i = 0; i < n; i++) {
+    var ui = SPEED[i] - c;
+    u.push(ui); u2.push(ui * ui);
+    A.push([1, ui, ui * ui]);
+  }
+  var f = mgsFit(A, DIST);
+  var b = f.b, sse = 0;
+  for (i = 0; i < n; i++) {
+    var e = DIST[i] - (b[0] + b[1] * u[i] + b[2] * u2[i]);
+    sse += e * e;
+  }
+  var mse = sse / (n - 3);
+  var Ri = invUpper(f.R, 3);
+  var v11 = Ri[1][1] * Ri[1][1] + Ri[1][2] * Ri[1][2];
+  var out = {
+    b0: b[0], b1: b[1], b2: b[2], sse: sse,
+    se1: Math.sqrt(mse * v11),
+    r: Sim.Stats.corr(u, u2),
+    predict: function (X) {
+      var ui = X - c;
+      return b[0] + b[1] * ui + b[2] * ui * ui;
+    }
+  };
+  CACHE = { c: c, fit: out };
+  return out;
+}
+
+var YLO = -10, YHI = 130;
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Slide the centering point and watch the fitted curve refuse to move',
+    es: 'Desliza el punto de centrado y observa que la curva ajustada no se mueve'
+  },
+  points: PTS,
+  xRange: [0, 27],
+  yRange: [YLO, YHI],
+  xLabel: { en: 'speed (mph)', es: 'velocidad (mph)' },
+  yLabel: { en: 'stopping distance (ft)', es: 'distancia de frenado (pies)' },
+  ariaLabel: {
+    en: 'Stopping distance against speed for fifty cars with a fitted quadratic curve and a vertical band at the centering point',
+    es: 'Distancia de frenado contra velocidad para cincuenta autos con una curva cuadrática ajustada y una banda vertical en el punto de centrado'
+  },
+  params: [
+    { id: 'c', label: { en: 'Centering point c (mean speed is 15.4)',
+                        es: 'Punto de centrado c (la velocidad media es 15.4)' },
+      min: 0, max: 25, step: 0.1, value: 0, digits: 1 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { return quadFit(p.c).predict(x); } }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.35,
+      lo: function () { return YLO; },
+      hi: function (p, x) { return Math.abs(x - p.c) < 0.3 ? YHI : YLO; } }
+  ],
+  readouts: [
+    { id: 'b1', label: { en: 'b1 (slope at c)', es: 'b1 (pendiente en c)' },
+      accent: 1, digits: 3,
+      compute: function (p) { return quadFit(p.c).b1; } },
+    { id: 'se1', label: { en: 'SE(b1)', es: 'EE(b1)' }, accent: 2, digits: 3,
+      compute: function (p) { return quadFit(p.c).se1; } },
+    { id: 'r', label: { en: 'r between u and u squared', es: 'r entre u y u al cuadrado' },
+      digits: 3,
+      compute: function (p) { return quadFit(p.c).r; } },
+    { id: 'p20', label: { en: 'Yhat at 20 mph', es: 'Yhat en 20 mph' }, digits: 3,
+      compute: function (p) { return quadFit(p.c).predict(20); } }
+  ],
+  caption: {
+    en: '**What to notice.** The amber band marks where the predictor now reads zero, and only ' +
+        'the coefficients answer to it: the curve and the fitted 60.720 feet at 20 mph never ' +
+        'change, while SE(b1) swings by a factor of five.\n\n' +
+        '**Try this.** Start at c = 0, where u and u squared correlate 0.979 and b1 is a ' +
+        'wobbly 0.913, then slide c to 15.4 and watch that correlation collapse to -0.096 as ' +
+        'b1 settles at 3.992, the honest slope of the curve at the average speed.',
+    es: '**Qué observar.** La banda ámbar marca dónde el predictor vale ahora cero, y solo los ' +
+        'coeficientes le responden: la curva y los 60.720 pies ajustados a 20 mph nunca ' +
+        'cambian, mientras que EE(b1) varía por un factor de cinco.\n\n' +
+        '**Prueba esto.** Empieza en c = 0, donde u y u al cuadrado correlacionan 0.979 y b1 ' +
+        'es un inestable 0.913, y luego desliza c hasta 15.4 para ver esa correlación caer a ' +
+        '-0.096 mientras b1 se asienta en 3.992, la pendiente honesta de la curva a la ' +
+        'velocidad media.'
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  var root = document.querySelector('.sim-root');
+  if (!root) { return; }
+  var p = document.createElement('p');
+  p.className = 'sim-backlink';
+  var a = document.createElement('a');
+  a.href = (LANG === 'es') ? '../ch11/es/#ch11-polynomial-es'
+                           : '../ch11/#ch11-polynomial';
+  a.target = '_top';
+  a.textContent = (LANG === 'es') ? 'Volver a la sección 11.4'
+                                  : 'Back to section 11.4';
+  p.appendChild(a);
+  root.appendChild(p);
+});
+</script>
+</body>
+</html>

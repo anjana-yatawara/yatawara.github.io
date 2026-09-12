@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holding target population fixed</title>
+<link rel="stylesheet" href="_engine.css">
+<style>
+.sim-back { max-width: 860px; margin: 10px auto 0; font-size: 0.8125rem; }
+.sim-back a { color: var(--sim-accent); }
+</style>
+</head>
+<body>
+<div id="sim"></div>
+<p class="sim-back"><a id="back" href="../ch08/#ch08-holding-fixed" target="_top">Back to 8.2</a></p>
+<script src="_engine.js"></script>
+<script>
+/* Dwaine Studios, 21 cities: targtpop, dispoinc, sales (data/dwaine.csv). */
+var DW = [
+  [68.5, 16.7, 174.4], [45.2, 16.8, 164.4], [91.3, 18.2, 244.2], [47.8, 16.3, 154.6],
+  [46.9, 17.3, 181.6], [66.1, 18.2, 207.5], [49.5, 15.9, 152.8], [52.0, 17.2, 163.2],
+  [48.9, 16.6, 145.4], [38.4, 16.0, 137.2], [87.9, 18.3, 241.9], [72.8, 17.1, 191.1],
+  [88.4, 17.4, 232.0], [42.9, 15.8, 145.3], [52.5, 17.8, 161.1], [85.7, 18.4, 209.7],
+  [41.3, 16.5, 146.4], [51.7, 16.3, 144.0], [89.6, 18.1, 232.6], [82.7, 19.1, 224.1],
+  [52.3, 16.0, 166.5]
+];
+
+/* Fitted plane from Chapter 7: b = (X'X)^{-1} X'Y = (-68.8571, 1.4546, 9.3655). */
+var B0 = -68.85707, B1 = 1.454560, B2 = 9.365500;
+
+/* Marginal fit of sales on dispoinc alone, slope 31.1732. */
+var MARG = Sim.Stats.lsFit(DW.map(function (r) { return r[1]; }),
+                           DW.map(function (r) { return r[2]; }));
+
+var PTS = DW.map(function (r) { return { x: r[1], y: r[2] }; });
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Pin target population, then walk in the income direction',
+    es: 'Fija la población objetivo y luego camina en la dirección del ingreso'
+  },
+  points: PTS,
+  xRange: [15.4, 19.5],
+  yRange: [120, 258],
+  xLabel: { en: 'disposable income (thousands of dollars)',
+            es: 'ingreso disponible (miles de dólares)' },
+  yLabel: { en: 'sales (thousands of dollars)', es: 'ventas (miles de dólares)' },
+  ariaLabel: {
+    en: 'Sales against disposable income for 21 cities, with a gentle solid line for the fitted plane at one fixed target population and a steep dashed line for the regression that ignores population.',
+    es: 'Ventas frente al ingreso disponible de 21 ciudades, con una línea continua de pendiente suave para el plano ajustado a una población objetivo fija y una línea discontinua empinada para la regresión que ignora la población.'
+  },
+  params: [
+    { id: 'pop', label: { en: 'Target population held fixed at',
+                          es: 'Población objetivo fijada en' },
+      min: 38, max: 92, step: 0.5, value: 52, digits: 1 }
+  ],
+  curves: [
+    { accent: 1, width: 3,
+      fn: function (p, x) { return B0 + B1 * p.pop + B2 * x; } },
+    { accent: 2, width: 2, dash: [6, 4],
+      fn: function (p, x) { return MARG.predict(x); } }
+  ],
+  readouts: [
+    { id: 'yhat', label: { en: 'Yhat at 17.5', es: 'Yhat en 17.5' }, digits: 1,
+      compute: function (p) { return B0 + B1 * p.pop + B2 * 17.5; } },
+    { id: 'b2', label: { en: 'Partial slope b2', es: 'Pendiente parcial b2' },
+      accent: 1, digits: 3, compute: function () { return B2; } },
+    { id: 'marg', label: { en: 'Marginal slope', es: 'Pendiente marginal' },
+      accent: 2, digits: 3, compute: function () { return MARG.slope; } },
+    { id: 'near', label: { en: 'Cities within 3', es: 'Ciudades a 3' }, digits: 0,
+      compute: function (p) {
+        var c = 0;
+        for (var i = 0; i < DW.length; i++) {
+          if (Math.abs(DW[i][0] - p.pop) <= 3) { c++; }
+        }
+        return c;
+      } }
+  ],
+  caption: {
+    en: '**What to notice.** The solid blue line is the fitted plane sliced at one target population, so ' +
+        'its slope is the partial slope b2 = 9.366, while the dashed amber line, slope 31.173, is only ' +
+        'the trail that gentle line leaves as population rises alongside income.\n\n' +
+        '**Try this.** Slide the population to 60 and read the last tile: no Dwaine city sits within 3 ' +
+        'of that population, so "same population, more income" is a comparison these data never make. ' +
+        'The coefficient is exact arithmetic on the plane and still a claim about cities that may not exist.',
+    es: '**Qué observar.** La línea azul continua es el plano ajustado cortado en una población objetivo, ' +
+        'así que su pendiente es la pendiente parcial b2 = 9.366, mientras que la línea ámbar discontinua, ' +
+        'de pendiente 31.173, es apenas el rastro que deja esa línea suave cuando la población sube junto ' +
+        'con el ingreso.\n\n' +
+        '**Prueba esto.** Lleva la población a 60 y lee el último recuadro: ninguna ciudad de Dwaine está ' +
+        'a menos de 3 de esa población, así que "misma población, más ingreso" es una comparación que ' +
+        'estos datos nunca hacen. El coeficiente es aritmética exacta sobre el plano y aun así una ' +
+        'afirmación sobre ciudades que quizá no existen.'
+  }
+});
+
+(function () {
+  var es = false;
+  try { es = new URLSearchParams(location.search).get('lang') === 'es'; } catch (e) { es = false; }
+  var a = document.getElementById('back');
+  a.textContent = es ? 'Volver a 8.2 Los límites de "mantener fijos los demás"'
+                     : 'Back to 8.2 The limits of holding the others fixed';
+  a.setAttribute('href', es ? '../ch08/es/#ch08-holding-fixed-es'
+                            : '../ch08/#ch08-holding-fixed');
+}());
+</script>
+</body>
+</html>

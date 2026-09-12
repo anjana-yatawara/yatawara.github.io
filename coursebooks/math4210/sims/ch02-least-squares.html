@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Least squares: drag a point</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Drag a point and watch the least-squares line answer',
+    es: 'Arrastra un punto y observa como responde la recta de minimos cuadrados'
+  },
+  points: [
+    { x: 1.0, y: 2.1 }, { x: 2.0, y: 3.4 }, { x: 3.0, y: 4.4 },
+    { x: 4.0, y: 4.9 }, { x: 5.0, y: 6.6 }, { x: 6.0, y: 7.0 },
+    { x: 7.0, y: 8.5 }, { x: 8.0, y: 8.9 }
+  ],
+  xRange: [0, 9],
+  yRange: [0, 12],
+  xLabel: { en: 'x', es: 'x' },
+  yLabel: { en: 'y', es: 'y' },
+  showLine: true,
+  showResiduals: true,
+  readouts: [
+    { id: 'slope',     label: { en: 'Slope b1',     es: 'Pendiente b1' },  accent: 1, digits: 3 },
+    { id: 'intercept', label: { en: 'Intercept b0', es: 'Intercepto b0' }, digits: 3 },
+    { id: 'r',         label: { en: 'r',            es: 'r' },             digits: 3 },
+    { id: 'r2',        label: { en: 'R-squared',    es: 'R-cuadrado' },    digits: 3 },
+    { id: 'sse',       label: { en: 'SSE',          es: 'SCE' },           accent: 2, digits: 2 }
+  ],
+  caption: {
+    en: 'The dashed amber sticks are the residuals. The line always sits where the ' +
+        'sum of their squared lengths, **SSE**, is as small as it can be.\n\n' +
+        '**Try this.** Drag the rightmost point straight up. Watch SSE grow, and watch ' +
+        'the slope swing much more than it did when you dragged a middle point the same ' +
+        'distance. A point far from the mean of x has leverage: it pulls harder on the fit.',
+    es: 'Los trazos ambar discontinuos son los residuos. La recta siempre se ubica donde ' +
+        'la suma de sus longitudes al cuadrado, **SCE**, es lo mas pequena posible.\n\n' +
+        '**Prueba esto.** Arrastra hacia arriba el punto mas a la derecha. Observa como ' +
+        'crece SCE, y como la pendiente cambia mucho mas que cuando arrastras un punto ' +
+        'central la misma distancia. Un punto lejos de la media de x tiene influencia: ' +
+        'jala mas fuerte sobre el ajuste.'
+  }
+});
+</script>
+</body>
+</html>

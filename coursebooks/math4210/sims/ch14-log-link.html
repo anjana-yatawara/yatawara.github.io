@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fitting the log link by hand</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The 30 Galapagos islands: elevation in hundreds of metres, and species count. */
+var EL = [3.46, 1.09, 1.14, 0.46, 0.77, 1.19, 0.93, 1.68, 0.71, 1.12,
+          1.98, 14.94, 0.49, 2.27, 0.76, 17.07, 3.43, 0.25, 7.77, 4.58,
+          0.94, 3.67, 7.16, 9.06, 8.64, 2.59, 6.40, 1.47, 1.86, 2.53];
+var SP = [58, 31, 3, 25, 2, 18, 24, 10, 8, 2,
+          97, 93, 58, 5, 40, 347, 51, 2, 104, 108,
+          12, 70, 280, 237, 444, 62, 285, 44, 16, 21];
+
+var PTS = EL.map(function (x, i) { return { x: x, y: SP[i] }; });
+
+/* Lanczos log-gamma, g = 7, n = 9, used only for the log(y!) constant in the
+   log-likelihood so the readout matches what R's logLik reports. */
+var LANCZOS = [
+  0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+  771.32342877765313, -176.61502916214059, 12.507343278686905,
+  -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+];
+function lgamma(z) {
+  if (z < 0.5) { return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z); }
+  z -= 1;
+  var a = LANCZOS[0], t = z + 7.5, i;
+  for (i = 1; i < 9; i++) { a += LANCZOS[i] / (z + i); }
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a);
+}
+var LOGFACT = 0;
+for (var k = 0; k < SP.length; k++) { LOGFACT += lgamma(SP[k] + 1); }
+
+function muHat(p, x) { return Math.exp(p.b0 + p.b1 * x); }
+
+Sim.mount({
+  type: 'sliders',
+  title: {
+    en: 'Move b0 and b1 until the log link explains the species counts',
+    es: 'Mueve b0 y b1 hasta que el enlace log explique los conteos de especies'
+  },
+  points: PTS,
+  xRange: [0, 18],
+  yRange: [0, 500],
+  xLabel: { en: 'elevation, hundreds of metres', es: 'elevacion, en cientos de metros' },
+  yLabel: { en: 'species count Y', es: 'conteo de especies Y' },
+  ariaLabel: {
+    en: 'Species counts for 30 Galapagos islands against elevation, with a fitted log-link ' +
+        'mean curve and its Poisson spread band.',
+    es: 'Conteos de especies de 30 islas Galapagos contra la elevacion, con una curva media ' +
+        'de enlace log ajustada y su banda de dispersion Poisson.'
+  },
+  params: [
+    { id: 'b0', label: { en: 'Intercept b0', es: 'Intercepto b0' },
+      min: 2, max: 5, step: 0.01, value: 3.00, digits: 2 },
+    { id: 'b1', label: { en: 'Slope b1 (log count per 100 m)',
+                         es: 'Pendiente b1 (log del conteo por 100 m)' },
+      min: 0, max: 0.30, step: 0.002, value: 0.100, digits: 3 }
+  ],
+  curves: [
+    { fn: muHat, accent: 1, width: 3 }
+  ],
+  bands: [
+    { accent: 2, alpha: 0.14,
+      lo: function (p, x) { var m = muHat(p, x); return Math.max(0, m - 2 * Math.sqrt(m)); },
+      hi: function (p, x) {
+        var m = muHat(p, x);
+        /* Clamp to the top of the plot: the engine does not clip its bands. */
+        return Math.min(500, m + 2 * Math.sqrt(m));
+      } }
+  ],
+  readouts: [
+    { id: 'rr', label: { en: 'Rate ratio per 100 m', es: 'Razon de tasas por 100 m' },
+      accent: 2, digits: 3,
+      compute: function (p) { return Math.exp(p.b1); } },
+    { id: 'll', label: { en: 'Log-likelihood', es: 'Log-verosimilitud' },
+      accent: 1, digits: 1,
+      compute: function (p) {
+        var s = 0;
+        for (var i = 0; i < EL.length; i++) {
+          var eta = p.b0 + p.b1 * EL[i];
+          s += SP[i] * eta - Math.exp(eta);
+        }
+        return s - LOGFACT;
+      } },
+    { id: 'dev', label: { en: 'Deviance', es: 'Devianza' }, digits: 0,
+      compute: function (p) {
+        var d = 0;
+        for (var i = 0; i < EL.length; i++) {
+          var m = muHat(p, EL[i]);
+          d += (SP[i] > 0 ? SP[i] * Math.log(SP[i] / m) : 0) - (SP[i] - m);
+        }
+        return 2 * d;
+      } },
+    { id: 'yhat', label: { en: 'mu-hat at 500 m', es: 'mu-sombrero a 500 m' }, digits: 0,
+      compute: function (p) { return muHat(p, 5); } }
+  ],
+  caption: {
+    en: 'The blue curve is the fitted mean mu-hat = exp(b0 + b1 x). It bends because b1 acts on the ' +
+        'log of the mean, and it can never dip below zero. The amber band is the Poisson spread, ' +
+        'mu-hat plus or minus two square roots of mu-hat.\n\n' +
+        '**What to notice.** The rate ratio is exp(b1), so b1 is a multiplier, not a number of ' +
+        'species. Set b1 to 0 and the curve flattens to one height for every island while the ' +
+        'rate ratio falls to 1.\n\n' +
+        '**Try this.** Find the maximum-likelihood fit by hand: push the log-likelihood as close ' +
+        'to zero as you can, which is what glm does for you. You should land near b0 = 3.66 and ' +
+        'b1 = 0.144, a rate ratio of about 1.155 per 100 metres. Then look at the tall islands: ' +
+        'the counts spill far outside the amber band, which is the overdispersion section 14.4 ' +
+        'has to repair.',
+    es: 'La curva azul es la media ajustada mu-sombrero = exp(b0 + b1 x). Se dobla porque b1 actua sobre ' +
+        'el logaritmo de la media, y nunca puede bajar de cero. La banda ambar es la dispersion ' +
+        'de Poisson, mu-sombrero mas o menos dos raices cuadradas de mu-sombrero.\n\n' +
+        '**Que observar.** La razon de tasas es exp(b1), asi que b1 es un multiplicador, no un ' +
+        'numero de especies. Pon b1 en 0 y la curva se aplana a una sola altura para todas las ' +
+        'islas mientras la razon de tasas cae a 1.\n\n' +
+        '**Prueba esto.** Busca a mano el ajuste de maxima verosimilitud: lleva la ' +
+        'log-verosimilitud lo mas cerca de cero que puedas, que es lo que glm hace por ti. ' +
+        'Deberias llegar cerca de b0 = 3.66 y b1 = 0.144, una razon de tasas de alrededor de ' +
+        '1.155 por cada 100 metros. Luego mira las islas altas: los conteos se salen muy lejos de ' +
+        'la banda ambar, y esa es la sobredispersion que la seccion 14.4 debe reparar.'
+  }
+});
+</script>
+</body>
+</html>

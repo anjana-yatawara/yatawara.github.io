@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The residual identities never break</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The six-run hand-computation slice, toluca_mini.csv. */
+var MINI = [
+  { x: 60, y: 224 }, { x: 70, y: 252 }, { x: 110, y: 435 },
+  { x: 100, y: 420 }, { x: 80, y: 342 }, { x: 70, y: 323 }
+];
+
+function sums(fit, pts) {
+  var sumE = 0, sumXE = 0, sumYhat = 0, sumY = 0;
+  for (var i = 0; i < pts.length; i++) {
+    var yhat = fit.predict(pts[i].x);
+    var e = pts[i].y - yhat;
+    sumE += e;
+    sumXE += pts[i].x * e;
+    sumYhat += yhat;
+    sumY += pts[i].y;
+  }
+  return { e: sumE, xe: sumXE, yhat: sumYhat / pts.length, y: sumY / pts.length };
+}
+
+Sim.mount({
+  type: 'scatter-drag',
+  title: {
+    en: 'Wreck the fit, and the residual identities still hold',
+    es: 'Arruina el ajuste, y las identidades de los residuos siguen cumpliendose'
+  },
+  points: MINI,
+  xRange: [30, 140],
+  yRange: [60, 620],
+  xLabel: { en: 'lot size X', es: 'tamano de lote X' },
+  yLabel: { en: 'work hours Y', es: 'horas de trabajo Y' },
+  ariaLabel: {
+    en: 'Six draggable production runs, the least-squares line refitted live, and a dashed horizontal line at the mean of Y.',
+    es: 'Seis corridas de produccion arrastrables, la recta de minimos cuadrados reajustada en vivo, y una linea horizontal discontinua en la media de Y.'
+  },
+  showLine: true,
+  showResiduals: true,
+  showMeanLines: true,
+  readouts: [
+    { id: 'sume', label: { en: 'Sum of residuals', es: 'Suma de residuos' },
+      accent: 2, digits: 4,
+      compute: function (f, p) { return sums(f, p).e; } },
+    { id: 'sumxe', label: { en: 'Sum of X times e', es: 'Suma de X por e' },
+      accent: 2, digits: 4,
+      compute: function (f, p) { return sums(f, p).xe; } },
+    { id: 'ybar', label: { en: 'Mean of Y', es: 'Media de Y' },
+      digits: 3,
+      compute: function (f, p) { return sums(f, p).y; } },
+    { id: 'yhatbar', label: { en: 'Mean of Yhat', es: 'Media de Yhat' },
+      accent: 1, digits: 3,
+      compute: function (f, p) { return sums(f, p).yhat; } }
+  ],
+  caption: {
+    en: 'Drag any of the six runs anywhere you like. The line refits instantly, the amber ' +
+        'sticks are the residuals, and the dashed horizontal line marks the mean of Y.\n\n' +
+        '**Try this.** Haul one point to the very top of the plot and make the fit as ugly ' +
+        'as you can. The residuals grow enormous, but the sum of residuals and the sum of ' +
+        'X times e stay pinned at zero, and the mean of Yhat keeps matching the mean of Y ' +
+        'digit for digit. These identities are forced by the normal equations, so they hold ' +
+        'for a wonderful fit and a terrible one alike: they check your arithmetic, never ' +
+        'your model.',
+    es: 'Arrastra cualquiera de las seis corridas a donde quieras. La recta se reajusta al ' +
+        'instante, los trazos ambar son los residuos, y la linea horizontal discontinua marca ' +
+        'la media de Y.\n\n' +
+        '**Prueba esto.** Lleva un punto hasta lo mas alto del grafico y deja el ajuste tan ' +
+        'feo como puedas. Los residuos crecen enormemente, pero la suma de residuos y la suma ' +
+        'de X por e siguen clavadas en cero, y la media de Yhat sigue coincidiendo con la ' +
+        'media de Y digito por digito. Las ecuaciones normales obligan a estas identidades, ' +
+        'asi que valen igual para un ajuste excelente y para uno pesimo: verifican tu ' +
+        'aritmetica, nunca tu modelo.'
+  }
+});
+</script>
+</body>
+</html>
