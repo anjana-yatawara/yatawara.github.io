@@ -108,15 +108,23 @@
                                       Never for text a reader must read, and
                                       never for a glyph that carries meaning. */
 
-  /* ---- semantic accent ---- */
-  --accent:var(--blue);
-  --accent-hover:var(--blue-hover);
-  --accent-deep:var(--blue-dark);
+  /* ---- semantic accent ----
+     Google ships #1a73e8, but white on it is only 4.51:1 — barely over the
+     4.5 minimum. On Windows, at button weight, that reads as faint grey text
+     rather than white, and Anjana reported button labels as unreadable.
+     The filled button and link text therefore use a darker step (#1558b0,
+     6.87:1) while #1a73e8 stays as the brand colour for tints, focus rings
+     and the header. Do not "restore" #1a73e8 here for fidelity: the reference
+     site's own blue is the thing that failed. */
+  --accent:#1558b0;                /* filled-control ground · white on it = 6.87:1 */
+  --accent-hover:var(--blue-dark);  /* #174ea6 · 7.85:1 */
+  --accent-deep:#103f7d;
+  --accent-brand:var(--blue);       /* #1a73e8 — tints, rings, brand marks only */
   --accent-surface:var(--blue-tint);
   --accent-surface-2:var(--blue-tint-2);
   --on-accent:var(--white);
-  --link:var(--blue);
-  --link-hover:var(--blue-hover);
+  --link:#1558b0;                  /* 6.87:1 on white, 5.9:1 on --grey-50 */
+  --link-hover:var(--blue-dark);
   --focus-ring:var(--blue);
   --selection:var(--blue-tint-2);
   --selection-ink:var(--grey-900);
@@ -264,8 +272,10 @@ body {
   line-height: var(--lh-body);
   font-weight: var(--w-regular);
   letter-spacing: var(--tr-body);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* NO -webkit-font-smoothing: antialiased here. It thins every glyph, and on
+     Windows it makes light-text-on-colour (white on a filled blue button)
+     render as faint grey — which is exactly how the buttons were reported as
+     unreadable. Subpixel rendering is the OS default; let it do its job. */
   text-rendering: optimizeLegibility;
   min-height: 100vh;
   /* clip, not hidden — keeps position:sticky working. This exists ONLY to
@@ -560,21 +570,18 @@ main { display: block; }
 .brand,
 .header-actions { position: relative; z-index: 2; }
 
+/* The "AY" glyph was removed at Anjana's request — the wordmark carries the
+   header on its own, so it steps up a size to hold the same weight. */
 .brand {
   display: inline-flex; align-items: center; gap: 0.6rem;
   font-family: var(--font-display);
-  font-size: var(--fs-md); font-weight: var(--w-medium);
-  letter-spacing: -0.006em;
+  font-size: clamp(1.12rem, 1.6vw, 1.3rem);
+  font-weight: var(--w-medium);
+  letter-spacing: -0.014em;
   color: var(--ink);
   min-width: 0;          /* the brand yields before the header can overflow */
 }
 .brand:hover { color: var(--ink); text-decoration: none; }
-.brand .glyph {
-  width: 30px; height: 30px; border-radius: var(--r-circle);
-  display: grid; place-items: center;
-  font-size: var(--fs-2xs); font-weight: var(--w-medium); letter-spacing: 0.02em;
-  color: var(--on-accent); background: var(--accent); flex-shrink: 0;
-}
 .brand .name {
   min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -798,7 +805,10 @@ html.reveal-ready [data-reveal][data-delay="5"]{transition-delay:.30s}
   .btn-row .btn { flex: 1 1 auto; }
 }
 @media (max-width: 400px) {
-  .brand .name span { display: none; }
+  /* The surname stays. This used to be hidden to make room for the "AY" glyph;
+     the glyph is gone, so the full name fits — and a header that reads only
+     "Anjana" on a phone is not a wordmark. Step the size down instead. */
+  .brand { font-size: 1.05rem; letter-spacing: -0.018em; }
 }
 
 
