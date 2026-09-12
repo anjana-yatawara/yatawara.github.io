@@ -142,7 +142,8 @@ kbd{font-family:var(--disp);font-size:11px;background:rgba(255,255,255,.15);bord
 .delta{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;
   color:#fdd663;margin-top:8px;}
 .delta[hidden]{display:none;}
-.statrow{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:15px 0 4px;}
+.statrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0 4px;}
+@media (max-width:540px){ .statrow{grid-template-columns:repeat(2,1fr);} }
 .stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;
   padding:8px 14px;min-width:84px;position:relative;}
 .stat u{display:block;text-decoration:none;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#aeb2be;}
@@ -175,9 +176,100 @@ kbd{font-family:var(--disp);font-size:11px;background:rgba(255,255,255,.15);bord
 
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;}
+
+/* ---------- short viewports (landscape phones) ----------
+   The cards stay fully scrollable at any size, but on a 360px-tall screen
+   they should not NEED scrolling to reach the button. */
+@media (max-height:500px){
+  .logo{font-size:clamp(32px,9.5vh,54px);margin-bottom:2px;}
+  .tag{margin-bottom:9px;letter-spacing:.18em;}
+  .rules{gap:5px;margin-bottom:9px;}
+  .rule{padding:7px 10px;font-size:12.5px;line-height:1.36;}
+  .legend{gap:5px;margin-bottom:10px;}
+  .lg{padding:5px 8px;}
+  .lg canvas{width:20px;height:20px;}
+  .btn{padding:11px 24px;font-size:15px;}
+  .hint{margin-top:8px;}
+  .bigscore{font-size:clamp(40px,13vh,74px);}
+  .statrow{margin:10px 0 2px;gap:6px;}
+  .stat{padding:6px 11px;min-width:74px;}
+  .stat b{font-size:18px;}
+  .ptitle{font-size:clamp(24px,7vh,36px);margin-bottom:9px;}
+  .opts{gap:5px;margin-bottom:10px;}
+  .opt{padding:8px 12px;font-size:12.5px;}
+  .tip{margin-bottom:8px;}
+}
+/* wide AND short: use the width instead of the height */
+@media (max-height:500px) and (min-width:560px){
+  .rules{display:grid;grid-template-columns:1fr 1fr;max-width:600px;}
+  .legend{grid-template-columns:repeat(4,1fr);max-width:600px;}
+  .lg i{display:none;}
+  .opts{max-width:560px;}
+}
 </style>
 </head>
 <body>
+<!-- ===========================================================================
+     ERROR BOUNDARY. Anjana reported this game crashing on his phone, and a
+     190-second soak across 1,200 inputs on desktop and emulated touch could
+     not reproduce it — so the fault is device-specific and invisible from
+     here. Rather than guess, this surfaces the real error instead of letting
+     the page white-screen, and gives him something to screenshot.
+     Pure DOM, no dependency on the game's own code having loaded.
+     =========================================================================== -->
+<script>
+(function () {
+  var shown = false;
+  function show(kind, msg, where) {
+    if (shown) return; shown = true;
+    try {
+      var d = document.createElement('div');
+      d.setAttribute('role', 'alert');
+      d.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;' +
+        'justify-content:center;padding:24px;background:#202124;color:#fff;' +
+        'font:400 15px/1.6 "Google Sans Text",Arial,Helvetica,sans-serif;text-align:left';
+      var inner = document.createElement('div');
+      inner.style.cssText = 'max-width:34rem;width:100%';
+      var h = document.createElement('div');
+      h.style.cssText = 'font:500 22px/1.3 "Google Sans",Arial,sans-serif;margin-bottom:10px';
+      h.textContent = 'Orbital hit a problem.';
+      var p = document.createElement('p');
+      p.style.cssText = 'color:#dadce0;margin:0 0 16px';
+      p.textContent = 'This is a bug, not something you did. Screenshotting this message is genuinely useful.';
+      var pre = document.createElement('pre');
+      pre.style.cssText = 'white-space:pre-wrap;word-break:break-word;background:#000;color:#fdd663;' +
+        'padding:12px 14px;border-radius:8px;font:400 12px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:0 0 18px';
+      pre.textContent = kind + ': ' + msg + (where ? '\n  at ' + where : '') +
+        '\n  ' + navigator.userAgent +
+        '\n  viewport ' + window.innerWidth + 'x' + window.innerHeight +
+        ' dpr ' + (window.devicePixelRatio || 1);
+      var row = document.createElement('div');
+      var again = document.createElement('button');
+      again.textContent = 'Reload and try again';
+      again.style.cssText = 'font:500 15px "Google Sans",Arial,sans-serif;background:#1a73e8;color:#fff;' +
+        'border:0;border-radius:32px;padding:12px 26px;cursor:pointer;margin-right:10px';
+      again.onclick = function () { location.reload(); };
+      var back = document.createElement('a');
+      back.href = '/games/index.html';
+      back.textContent = 'Back to games';
+      back.style.cssText = 'font:500 15px "Google Sans",Arial,sans-serif;color:#8ab4f8;' +
+        'text-decoration:none;padding:12px 18px;display:inline-block';
+      row.appendChild(again); row.appendChild(back);
+      inner.appendChild(h); inner.appendChild(p); inner.appendChild(pre); inner.appendChild(row);
+      d.appendChild(inner);
+      (document.body || document.documentElement).appendChild(d);
+    } catch (e) { /* last resort: do nothing rather than loop */ }
+  }
+  window.addEventListener('error', function (e) {
+    show('Error', (e && e.message) || 'unknown',
+      e && e.filename ? (e.filename + ':' + e.lineno + ':' + e.colno) : '');
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e && e.reason;
+    show('Unhandled promise rejection', (r && (r.message || String(r))) || 'unknown', '');
+  });
+})();
+</script>
 
 <header id="bar">
   <a class="home" href="../index.html" aria-label="Anjana Yatawara &mdash; home">
@@ -493,7 +585,7 @@ function makeNeb(col){
   var S=256, c=document.createElement('canvas'); c.width=S;c.height=S;
   var x=c.getContext('2d');
   var g=x.createRadialGradient(S/2,S/2,0,S/2,S/2,S/2);
-  g.addColorStop(0, rgba(col,0.42)); g.addColorStop(0.42, rgba(col,0.14)); g.addColorStop(1, rgba(col,0));
+  g.addColorStop(0, rgba(col,0.52)); g.addColorStop(0.42, rgba(col,0.19)); g.addColorStop(1, rgba(col,0));
   x.fillStyle=g; x.fillRect(0,0,S,S);
   return c;
 }
@@ -532,7 +624,7 @@ function resize(){
 var bgGrad = null, vigGrad = null, sideGrad = null;
 function buildGrads(){
   bgGrad = ctx.createLinearGradient(0,0,0,cssH);
-  bgGrad.addColorStop(0,'#131420'); bgGrad.addColorStop(0.55,'#0d0e15'); bgGrad.addColorStop(1,'#07080c');
+  bgGrad.addColorStop(0,'#161a2e'); bgGrad.addColorStop(0.55,'#0e0f1a'); bgGrad.addColorStop(1,'#07080c');
   vigGrad = ctx.createRadialGradient(cssW/2, cssH/2, Math.min(cssW,cssH)*0.34,
                                      cssW/2, cssH/2, Math.max(cssW,cssH)*0.78);
   vigGrad.addColorStop(0,'rgba(0,0,0,0)'); vigGrad.addColorStop(1,'rgba(0,0,0,0.55)');
@@ -597,7 +689,7 @@ function buildDebris(){
 }
 
 /* ---------------- world state ---------------- */
-var planets = [], dust = [], parts = [], texts = [], rings = [], confetti = [], embers = [];
+var planets = [], dust = [], parts = [], texts = [], rings = [], confetti = [];
 var ship = null, spawnIdx = 0, lastNova = -99;
 var cam = { cx:0, cy:0, zoom:1, ox:0, oy:0, vox:0, voy:0, rot:0 };
 var score=0, best=store.best, bestChain=store.bestChain, chain=0, combo=1, topCombo=1;
@@ -605,7 +697,7 @@ var runTime=0, prog=0;
 var bestAtStart = store.best, chainAtStart = store.bestChain;
 var state = 'title';              /* title | playing | paused | dead */
 var deathReason = '', deathTip = '';
-var trauma = 0, kickX = 0, kickY = 0, flash = 0, flashCol = '#ffffff', bloom = 0;
+var trauma = 0, flash = 0, flashCol = '#ffffff', bloom = 0;
 var zoomPunch = 0;
 var slowT = 0, slowAmt = 1, timeScale = 1;
 var startGrace = 0, beatBest = false, beatChain = false;
@@ -629,7 +721,10 @@ var KILL_INSET = 58;     /* the kill line is ON screen, this far above the botto
    quicker, then `over` keeps every parameter rising forever after. */
 function diffNow(){ return clamp(Math.max(prog/40, runTime/75), 0, 1); }
 function overNow(){ return Math.max(0, prog - 40); }
-function omegaBase(){ return 1.15 + 1.15*diffNow() + 0.009*overNow(); }
+/* Early orbits turn slowly and pull wide, so the first runs have room to read
+   the release wedge. Both land on the same numbers once diff hits 1, so the
+   late curve is untouched: this only softens the opening. */
+function omegaBase(){ return 1.02 + 1.28*diffNow() + 0.009*overNow(); }
 function perfArc(){ return 0.34 - 0.06*diffNow(); }
 function goodArc(){ return 1.55; }
 function gapDist(){ var g = Math.min(440, 210 + 95*diffNow() + 0.55*overNow());
@@ -641,7 +736,7 @@ function hyperMul(){
   return hyperT > 1.0 ? 0.12 : lerp(1, 0.12, hyperT/1.0);
 }
 function scrollSpd(){ return (52 + 170*diffNow() + 1.0*overNow()) * surgeMul() * hyperMul(); }
-function capMul(){ return Math.max(0.84, 1.28 - 0.30*diffNow() - 0.0011*overNow()); }
+function capMul(){ return Math.max(0.84, 1.40 - 0.42*diffNow() - 0.0011*overNow()); }
 function launchSpd(){ return 400 * (1 + 0.14*diffNow()); }
 function scoreMul(){ return hyperT > 0 ? 3 : 1; }
 /* the walls close in as the run goes on: one more thing that keeps giving */
@@ -665,12 +760,16 @@ function mkPlanet(t, x, y){
   p.capR = p.r * t.cap * capMul();
   return p;
 }
+/* Keyed to spawnIdx, NOT prog: the field is generated about eight planets
+   ahead of the player, so keying the mix to captures-so-far would show the
+   player a palette eight hops out of date -- which read as an all-blue
+   opening. All four colours are now on screen within the first few hops. */
 function pickType(){
-  var d = prog;
-  if(d < 4)  return TYPES.blue;
-  if(d < 10) return Math.random()<0.66 ? TYPES.blue : TYPES.green;
-  if(d < 18){ var q=Math.random(); return q<0.46?TYPES.blue : q<0.74?TYPES.green : TYPES.yellow; }
-  var q2 = Math.random(), hard = clamp((d-18)/40, 0, 1);
+  var d = spawnIdx;
+  if(d < 2)  return TYPES.blue;
+  if(d < 6)  return Math.random()<0.55 ? TYPES.blue : TYPES.green;
+  if(d < 13){ var q=Math.random(); return q<0.40?TYPES.blue : q<0.70?TYPES.green : TYPES.yellow; }
+  var q2 = Math.random(), hard = clamp((d-13)/48, 0, 1);
   if(q2 < 0.40 - 0.14*hard) return TYPES.blue;
   if(q2 < 0.64 - 0.10*hard) return TYPES.green;
   if(q2 < 0.84 - 0.04*hard) return TYPES.yellow;
@@ -682,7 +781,7 @@ function spawnNext(){
   if(!prev){
     t = TYPES.blue; x = 0; y = 0;
   } else {
-    var useNova = (prog > 7) && (prev.idx - lastNova >= 9) && Math.random() < 0.55;
+    var useNova = (spawnIdx > 10) && (prev.idx - lastNova >= 9) && Math.random() < 0.55;
     t = useNova ? TYPES.nova : pickType();
     var d = gapDist() * rnd(0.92, 1.10);
     var ang = rnd(0.50, 1.06);                       /* 28 to 61 degrees off vertical */
@@ -887,7 +986,7 @@ function spark(x,y,col,n,spd){
 }
 function ring(x,y,r0,r1,col,life,w){ rings.push({x:x,y:y,r0:r0,r1:r1,c:col,l:life,m:life,w:w||3.4}); }
 function pushText(x,y,s,col,sz){ texts.push({x:x,y:y,s:s,c:col,l:0.95,m:0.95,z:sz||1,vy:-52}); }
-function addScorePop(v,x,y,col){ texts.push({x:x,y:y,s:'+'+commas(v),c:col,l:0.8,m:0.8,z:0.9,vy:-64}); }
+function addScorePop(v,x,y,col){ texts.push({x:x,y:y,s:'+'+commas(v),c:col,l:0.8,m:0.8,z:0.82,vy:-64}); }
 function banner(s,col,sub){
   bannerText=s; bannerCol=col; bannerSub=sub||''; bannerT=1.7;
   flashCol=col; flash=Math.max(flash, reduce?0.14:0.3); say(s);
@@ -926,8 +1025,8 @@ function doRelease(auto){
       combo = Math.min(COMBO_MAX, combo + 1);
       var g = 26 * combo * scoreMul();
       score += g; if(hyperT>0) hyperScore += g;
-      pushText(ship.x, ship.y-26, 'PERFECT', C.greenL, 1.3);
-      addScorePop(g, ship.x, ship.y-6, C.greenL);
+      pushText(ship.x, ship.y-48, 'PERFECT', C.greenL, 1.3);
+      addScorePop(g, ship.x, ship.y-2, C.greenL);
       popSlow(0.55, 0.09);
       addTrauma(0.10);
       SFX.perfect(combo);
@@ -1088,19 +1187,19 @@ function stepSurge(dt){
 /* ---------------- run control ---------------- */
 function resetRun(){
   planets.length = 0; dust.length = 0; parts.length = 0; texts.length = 0;
-  rings.length = 0; confetti.length = 0; embers.length = 0;
+  rings.length = 0; confetti.length = 0;
   spawnIdx = 0; lastNova = -99;
   score = 0; chain = 0; combo = 1; topCombo = 1; runTime = 0; prog = 0;
   bestAtStart = best; chainAtStart = bestChain;
   scoreShown = 0; comboPop = 0; hudPulse = 0; bestPulse = 0;
-  trauma = 0; kickX = 0; kickY = 0; flash = 0; bloom = 0;
+  trauma = 0; flash = 0; bloom = 0;
   slowT = 0; timeScale = 1; slowAmt = 1; zoomPunch = 0;
   cam.zoom = 1; cam.ox = 0; cam.oy = 0; cam.vox = 0; cam.voy = 0; cam.rot = 0;
   bannerText = ''; bannerSub = ''; bannerT = 0;
   beatBest = false; beatChain = false;
   deathReason = ''; deathTip = ''; lastSaid = '';
   slowCount = 0; blindCount = 0; burnoutDeath = false; lastQuality = '';
-  bufferT = -9; burnT = -9; deadT = 0; dangerF = 0;
+  bufferT = -9; burnT = -9; deadT = 0; dangerF = 0; deadIdle = false;
   hyperT = 0; hyperScore = 0; hyperCount = 0; hyperLast = -99; hyperTrail = 0;
   surgeState = 'idle'; surgeT = 0; surgeNext = 24;
   teachHops = store.plays < 3 ? 4 : 0;
@@ -1168,6 +1267,7 @@ function die(reason, burnout){
   zoomPunch += reduce ? 0 : 0.10;
   popSlow(0.22, 0.6);
   SFX.die();
+  deadIdle = false;
   var newBest = score > best, newChain = chain > bestChain;
   if(newBest){ best = score; store.best = best; }
   if(newChain){ bestChain = chain; store.bestChain = bestChain; }
@@ -1538,7 +1638,7 @@ function render(dtReal){
       while(n.y > cssH + n.r) n.y -= H;
       while(n.y < -n.r) n.y += H;
     }
-    ctx.globalAlpha = n.a * (0.34 + bloom*0.5 + hyperVis*0.35);
+    ctx.globalAlpha = n.a * (0.62 + bloom*0.5 + hyperVis*0.4);
     ctx.drawImage(nebSprite[n.c], n.x - n.r, n.y - n.r, n.r*2, n.r*2);
   }
   ctx.globalAlpha = 1;
@@ -1877,7 +1977,9 @@ function drawAim(){
   var p = ship.planet, i;
   var lv = launchVec(p, ship.ang, ship.dir, ship.boost);
   var lock = traceLock(ship.x, ship.y, lv.ux, lv.uy, 1150, 1, p);
-  var assist = !!store.assist;
+  /* the wedge is the assist, but the first hops of your first runs always get
+     it: the game teaches its one verb before any text has to */
+  var assist = !!store.assist || teachHops > 0;
 
   ctx.save();
   ctx.translate(p.x, p.y);
@@ -1930,23 +2032,27 @@ function drawAim(){
   }
   ctx.restore();
 
-  /* 4. the ray itself, bounces included */
+  /* 4. the ray itself, wall bounces included -- the ship flies dead straight
+        and bounces, so this line is exactly the path it will take */
   ctx.globalCompositeOperation = 'lighter';
-  var pts = lock.pts;
-  if(lock.p || !assist){
-    ctx.strokeStyle = lock.p ? rgba(lock.p.t.col, 0.78) : rgba('#ffffff', 0.26);
-    ctx.lineWidth = lock.p ? 3 : 2.2;
-    ctx.setLineDash(lock.p ? [11,8] : [8,10]);
-    ctx.lineDashOffset = -realTime*90;
+  ctx.lineDashOffset = -realTime*90;
+  if(lock.p){
+    var pts = lock.pts;
+    ctx.strokeStyle = rgba(lock.p.t.col, 0.78);
+    ctx.lineWidth = 3;
+    ctx.setLineDash([11,8]);
     ctx.beginPath();
-    if(lock.p || pts.length > 1){
-      ctx.moveTo(pts[0].x, pts[0].y);
-      for(i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    }
-    if(!lock.p && !assist){
-      ctx.moveTo(ship.x, ship.y);
-      ctx.lineTo(ship.x + lv.ux*215, ship.y + lv.uy*215);
-    }
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.stroke(); ctx.setLineDash([]);
+  } else {
+    /* nothing on the line: say so with a short dim stub rather than nothing */
+    ctx.strokeStyle = rgba('#ffffff', 0.28);
+    ctx.lineWidth = 2.2;
+    ctx.setLineDash([8,10]);
+    ctx.beginPath();
+    ctx.moveTo(ship.x, ship.y);
+    ctx.lineTo(ship.x + lv.ux*215, ship.y + lv.uy*215);
     ctx.stroke(); ctx.setLineDash([]);
   }
 
@@ -1981,6 +2087,7 @@ function drawAim(){
     ctx.lineTo(hxp + htx*2, hyp + hty*2);
     ctx.lineTo(hxp - htx*9 + hnx*6, hyp - hty*9 + hny*6);
     ctx.stroke();
+    ctx.restore();
   }
   ctx.globalCompositeOperation = 'source-over';
 }
@@ -2176,7 +2283,7 @@ function drawHUD(){
   var bp = bestPulse > 0;
   ctx.fillStyle = (bp || ahead) ? C.greenL : 'rgba(203,208,219,0.9)';
   ctx.font = ((bp||ahead)?'700 ':'500 ') + (11.5*S).toFixed(1) + 'px ' + FONT;
-  ctx.fillText((ahead ? 'BEST * ' : 'BEST ') + commas(bestNow), pad, pad + 53*S);
+  ctx.fillText((ahead ? 'NEW BEST ' : 'BEST ') + commas(bestNow), pad, pad + 53*S);
 
   /* multiplier + chain */
   ctx.textAlign = 'right';
@@ -2310,8 +2417,16 @@ function frame(ts){
     overCount = Math.min(score, overCount + Math.max(1, Math.ceil(score*dtReal*1.6)));
     document.getElementById('oScore').textContent = commas(overCount);
   }
+  /* Once the death card has finished animating there is nothing left moving
+     that anyone can see through the blur, so stop compositing it. */
+  if(state === 'dead' && deadT > 3.5 && overCount >= score &&
+     parts.length === 0 && confetti.length === 0 && texts.length === 0){
+    if(deadIdle) return;
+    deadIdle = true;
+  }
   render(dtReal);
 }
+var deadIdle = false;
 
 /* ---------------- input ---------------- */
 function primaryAction(){
