@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#ffffff">
 
-  <title>Teaching — Anjana Yatawara</title>
-  <meta name="description" content="Dr. Anjana Yatawara teaches statistics and applied mathematics at CSU Bakersfield — from elementary statistics to mathematical statistics and applied data science — with computational thinking, real-world data, and AI integrated thoughtfully after fundamentals.">
+  <title>Teaching &amp; Mentoring — Anjana Yatawara</title>
+  <meta name="description" content="Courses, curriculum development and undergraduate research mentoring in statistics and data science at California State University, Bakersfield.">
   <meta name="author" content="Anjana Yatawara">
 
   <link rel="canonical" href="https://www.yatawara.com/teaching.html">
@@ -16,13 +15,13 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Anjana Yatawara">
   <meta property="og:url" content="https://www.yatawara.com/teaching.html">
-  <meta property="og:title" content="Teaching — Anjana Yatawara">
-  <meta property="og:description" content="Statistics &amp; applied math taught with computational thinking, real-world data, and student-centered active learning — AI integrated after the fundamentals.">
+  <meta property="og:title" content="Teaching &amp; Mentoring — Anjana Yatawara">
+  <meta property="og:description" content="Courses, curriculum development and undergraduate research mentoring in statistics and data science at CSU Bakersfield.">
   <meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
   <meta property="og:image:alt" content="Anjana Yatawara — yatawara.com">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Teaching — Anjana Yatawara">
-  <meta name="twitter:description" content="Statistics &amp; applied math taught with computational thinking, real data, and AI used thoughtfully — after the fundamentals.">
+  <meta name="twitter:title" content="Teaching &amp; Mentoring — Anjana Yatawara">
+  <meta name="twitter:description" content="Courses, curriculum development and undergraduate research mentoring in statistics and data science at CSU Bakersfield.">
   <meta name="twitter:image" content="https://www.yatawara.com/assets/img/og.png">
   <meta name="twitter:image:alt" content="Anjana Yatawara — yatawara.com">
 
@@ -30,521 +29,796 @@
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/img/favicon.svg">
 
-  <!-- theme flash guard: run BEFORE paint -->
-  <script>
-    (function(){try{var t=localStorage.getItem('ay-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
-  </script>
-
-  <!-- fonts -->
+  <!-- fonts — the exact families and the exact endpoints grow.google serves.
+       These are TWO requests on purpose and must not be merged: "Google Sans"
+       and "Google Sans Text" are served by the legacy css? endpoint, and
+       "Google Sans Code" by css2. Folding them into one css2 call is the
+       obvious tidy-up and it silently drops the two display/body families. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans+Text:400,500,700|Google+Sans:400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- styles -->
   <link rel="stylesheet" href="/assets/css/core.css">
   <link rel="stylesheet" href="/assets/css/components.css">
-
-  <style>
-    /* teaching.html — page-unique layout only; reuse all component tokens */
-    .courses-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .course .course-meta { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .course .course-meta .m { padding: 0.18rem 0.5rem; border-radius: var(--r-pill);
-      background: var(--surface-2); border: 1px solid var(--border); }
-    .course .course-meta .m.live { color: var(--green); border-color: rgba(34,255,136,0.3); background: var(--green-dim); }
-
-    /* coursebook link on a course card */
-    .course.has-book { border-color: var(--cyan); }
-    .course .coursebook { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border); }
-    .course .coursebook-desc { font-size: var(--fs-xs); color: var(--dim); line-height: 1.5; margin: 0 0 0.5rem; }
-    .course a.coursebook-link { display: inline-flex; align-items: center; gap: 0.4rem;
-      font-family: var(--font-display); font-size: var(--fs-sm); font-weight: 600; color: var(--cyan);
-      text-decoration: none; transition: color var(--t-fast) var(--ease); }
-    .course a.coursebook-link:hover { color: var(--violet); }
-    .course a.coursebook-link .ar { font-family: var(--font-mono); transition: transform var(--t-fast) var(--ease); }
-    .course a.coursebook-link:hover .ar { transform: translateX(3px); }
-
-    /* AI tools as small cards */
-    .ai-tools { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-    .ai-tool { display: flex; gap: var(--space-3); align-items: flex-start; }
-    .ai-tool .ai-ico { flex-shrink: 0; width: 34px; height: 34px; border-radius: var(--r-sm);
-      display: grid; place-items: center; background: var(--violet-dim); color: var(--violet);
-      border: 1px solid rgba(191,90,242,0.25); }
-    .ai-tool .ai-ico svg { width: 17px; height: 17px; }
-    .ai-tool h4 { font-family: var(--font-display); font-size: 0.96rem; color: var(--text); margin-bottom: 0.15rem; }
-    .ai-tool p { font-size: var(--fs-xs); color: var(--dim); line-height: 1.5; margin: 0; }
-
-    /* teaching innovations list */
-    .innov-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-    .innov-list li { position: relative; padding: var(--space-4) var(--space-5) var(--space-4) calc(var(--space-6) + 0.4rem);
-      background: var(--surface); border: 1px solid var(--border); border-left: 2px solid var(--cyan);
-      border-radius: 0 var(--r-md) var(--r-md) 0; transition: background var(--t-med) var(--ease), border-color var(--t-med) var(--ease); }
-    .innov-list li:hover { background: var(--surface-2); border-left-color: var(--violet); }
-    .innov-list li::before { content: "▸"; position: absolute; left: var(--space-5); top: var(--space-4);
-      font-family: var(--font-mono); color: var(--cyan); }
-    .innov-list li strong { color: var(--text); font-family: var(--font-display); font-weight: 600; }
-    .innov-list li span.meta { display: block; font-family: var(--font-mono); font-size: var(--fs-xs);
-      color: var(--dimmer); margin-top: 0.25rem; }
-
-    /* "for students" callout body */
-    .student-callout .co-body p + p { margin-top: var(--space-3); }
-    .student-callout .co-body h4 { font-family: var(--font-display); }
-    .student-callout ul { margin: var(--space-2) 0 0; padding-left: 1.1em; }
-    .student-callout li { font-size: var(--fs-sm); color: var(--text-soft); margin-top: 0.3rem; }
-  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===================== HEADER (identical on every page) ===================== -->
+  <!-- ======================= HEADER (identical on every page) ================ -->
   <header class="site-header">
     <div class="wrap-wide">
       <a class="brand" href="/index.html" aria-label="Anjana Yatawara — home">
-        <span class="glyph">AY</span>
-        <span class="name"><b>anjana</b> <span>yatawara</span></span>
+        <span class="glyph" aria-hidden="true">AY</span>
+        <span class="name"><b>Anjana</b> <span>Yatawara</span></span>
       </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="/research.html">research</a>
-        <a class="nav-link" href="/publications.html">publications</a>
-        <a class="nav-link" href="/teaching.html">teaching</a>
-        <a class="nav-link" href="/consulting.html">consulting</a>
-        <a class="nav-link" href="/kernelstats.html">kernelstats</a>
-        <a class="nav-link" href="/games/index.html">games</a>
-        <a class="nav-link" href="/cv.html">cv</a>
-        <a class="nav-link" href="/blog.html">blog</a>
+      <nav class="nav" id="mobileMenu" aria-label="Primary">
+        <a class="nav-link" href="/research.html">Research</a>
+        <a class="nav-link" href="/publications.html">Publications</a>
+        <a class="nav-link is-active" href="/teaching.html" aria-current="page">Teaching</a>
+        <a class="nav-link" href="/leadership.html">Leadership &amp; Service</a>
+        <a class="nav-link" href="/cv.html">CV</a>
       </nav>
 
       <div class="header-actions">
-        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><span data-theme-icon></span></button>
-        <button class="cmdk-trigger" data-cmdk-open aria-label="Open command palette">
-          <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="label">search</span>
-          <span class="kbd">⌘K</span>
-        </button>
+        <a class="btn btn-secondary btn-sm" href="/cv.html">Curriculum vitae</a>
         <button class="icon-btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ===================== MAIN (4) PER-PAGE ===================== -->
+  <!-- ======================= MAIN =========================================== -->
   <main id="main">
-    <section class="page-head">
-      <div class="wrap">
-        <p class="kicker"><span class="dot">◆</span> yatawara.com / teaching</p>
-        <h1>Teaching</h1>
-        <p class="lead">Statistics and applied mathematics taught with computational thinking, real-world data, and student-centered active learning — where AI is integrated thoughtfully, only after the fundamentals are solid.</p>
-      </div>
-    </section>
 
-    <!-- ===================== COURSES ===================== -->
-    <section class="section" id="courses">
+    <!-- ── PAGE HERO ────────────────────────────────────────────────────── -->
+    <div class="wrap">
+      <section class="page-hero">
+        <p class="eyebrow">Teaching · CSU Bakersfield</p>
+        <h1>Statistics taught as work students do.</h1>
+        <p class="lead">Courses built on real data, reproducible workflows, and the judgment
+          that only appears once the analysis is the student’s own — and the undergraduate
+          research that grew out of them.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#courses">Courses</a>
+          <a class="btn btn-secondary" href="#mentoring">Student mentoring</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── COURSES AT CSUB — the record, as a table ─────────────────────── -->
+    <section class="section section-flush-top" id="courses">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <span class="s-num">01</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Courses</h2>
+          <span class="s-eyebrow">Courses</span>
+          <h2 class="s-title">California State University, Bakersfield</h2>
+          <span class="s-tag">Instructor of record, 2023 – present</span>
           <span class="s-rule"></span>
-          <span class="s-tag">// csu bakersfield</span>
         </div>
 
-        <div class="grid courses-grid">
-          <article class="course has-book" data-reveal>
+        <p class="measure mb-6">Teaching at CSUB spans general-education statistics, probability
+          and mathematical statistics, statistical computing, regression, and upper-division
+          data science. Every course is taught computationally, in R and Python, with
+          browser-based access through CSUB JupyterHub so no student is held back by an install
+          or a license.</p>
+
+        <div class="table-wrap" tabindex="0" role="region" aria-labelledby="courses-cap">
+          <table class="data">
+            <caption id="courses-cap">Department of Mathematics, California State University, Bakersfield.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Course</th>
+                <th scope="col">Title</th>
+                <th scope="col">Level</th>
+                <th scope="col">Terms taught</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" class="mono">MATH 2200</th>
+                <td>Introduction to Statistical Concepts and Methods</td>
+                <td>Lower-division, general-education service</td>
+                <td>Fall 2023 – Fall 2026, every term</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 3200</th>
+                <td>Probability Theory</td>
+                <td>Upper-division core</td>
+                <td>Spring 2024, Fall 2025, Spring 2026, Fall 2026</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 3210</th>
+                <td>Applied Statistical Computing</td>
+                <td>Upper-division; graduate cross-list (MATH 5210)</td>
+                <td>Fall 2023, Fall 2024</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4200</th>
+                <td>Mathematical Statistics</td>
+                <td>Upper-division core</td>
+                <td>Spring 2025</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4210</th>
+                <td>Regression Modeling and Analysis</td>
+                <td>Upper-division elective</td>
+                <td>Fall 2026</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4230</th>
+                <td>Applied Statistical Methods for Data Science</td>
+                <td>Upper-division elective; co-developed by the instructor</td>
+                <td>Spring 2026</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ── INTERACTIVE COURSEBOOKS ──────────────────────────────────────
+             These are live at /coursebooks/ and were built between July and
+             August 2026. They are real teaching assets with students using
+             them — if a rebuild of this site ever drops these links, the
+             coursebooks are still deployed but become unreachable. -->
+        <div class="section-head mt-8" data-reveal>
+          <span class="s-eyebrow">Open materials</span>
+          <h3 class="s-title">Interactive coursebooks</h3>
+          <span class="s-rule"></span>
+        </div>
+
+        <p class="measure mb-6">Each of these is a complete, browser-based coursebook with live R
+          running on the CSUB JupyterHub — nothing for a student to install. They are open to
+          anyone, and colleagues are welcome to reuse them.</p>
+
+        <div class="course-list">
+          <article class="course" data-reveal>
             <div class="course-code">MATH 1209</div>
-            <h3>Statistics in the Modern World</h3>
-            <p>A GE introduction to statistical literacy — reasoning about data, chance, sampling, and inference from everyday and professional life — concept-first and calculator-friendly, taught with open educational resources so cost is never a barrier to learning.</p>
-            <div class="course-meta">
-              <span class="m">GE Area B4</span>
-              <span class="m">OER</span>
-              <span class="m">Calculator + R</span>
-            </div>
-            <div class="coursebook">
-              <p class="coursebook-desc">Full interactive coursebook: 15 weekly units, embedded R Help (mosaic + BSDA on the CSUB JupyterHub), worked examples, practice, and simulations.</p>
-              <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/math1209/">Open the MATH 1209 coursebook <span class="ar" aria-hidden="true">-&gt;</span></a>
-            </div>
-          </article>
-
-          <article class="course has-book" data-reveal data-delay="1">
-            <div class="course-code">MATH 2200</div>
-            <h3>Elementary Statistics</h3>
-            <p>A first course in statistical reasoning — descriptive statistics, probability, sampling, estimation, and hypothesis testing — taught with real datasets and open educational resources so cost is never a barrier to learning.</p>
-            <div class="course-meta">
-              <span class="m">Undergrad</span>
-              <span class="m">OER</span>
-              <span class="m">AI-assisted tools</span>
-            </div>
-            <div class="coursebook">
-              <p class="coursebook-desc">Full interactive coursebook: 13 chapters, embedded R Help (mosaic + BSDA on the CSUB JupyterHub), worked examples, practice, and live simulations.</p>
-              <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/math2200/">Open the MATH 2200 coursebook <span class="ar" aria-hidden="true">-&gt;</span></a>
-            </div>
-          </article>
-
-          <article class="course" data-reveal data-delay="1">
-            <div class="course-code">MATH 3200</div>
-            <h3>Probability Theory</h3>
-            <p>The mathematical foundations of probability — random variables, distributions, expectation, moment-generating functions, and multivariate analysis — building the rigor behind every statistical method.</p>
-            <div class="course-meta">
-              <span class="m">Upper-division</span>
-              <span class="m">Wackerly, Mendenhall &amp; Scheaffer</span>
-              <span class="m live">Fall 2026</span>
-            </div>
-            <div class="coursebook">
-              <p class="coursebook-desc">Full interactive coursebook — <em>Probability from the Ground Up</em> (Wackerly Ch 1–7): foundations, random variables, multivariate distributions, and functions of random variables, with worked examples and R.</p>
-              <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/math3200/">Open the MATH 3200 coursebook <span class="ar" aria-hidden="true">-&gt;</span></a>
-            </div>
-          </article>
-
-          <article class="course" data-reveal data-delay="2">
-            <div class="course-code">MATH 3209</div>
-            <h3>Statistical Measures of Inequality in Society</h3>
-            <p>A general-education course using statistical tools — Lorenz curves, Gini coefficients, and disparity measures — to quantify and interrogate inequality in income, health, and the environment.</p>
-            <div class="course-meta">
-              <span class="m">Undergrad</span>
-              <span class="m">GE</span>
-              <span class="m">Spring 2025</span>
-            </div>
-          </article>
-
-          <article class="course" data-reveal data-delay="3">
-            <div class="course-code">MATH 3210</div>
-            <h3>Applied Statistical Computing &amp; Multivariate Methods</h3>
-            <p>A graduate course in hands-on data analysis — programming statistical workflows and applying multivariate techniques to real problems using R and SAS.</p>
-            <div class="course-meta">
-              <span class="m">Graduate</span>
-              <span class="m">R &amp; SAS</span>
-              <span class="m">Fall 2024</span>
+            <div class="course-body">
+              <h4>Statistics in the Modern World</h4>
+              <p>Fifteen weekly units with embedded R Help (<code>mosaic</code> + <code>BSDA</code>
+                on the CSUB JupyterHub), worked examples, practice, and simulations.</p>
+              <a class="link-arrow" href="/coursebooks/math1209/">Open the MATH 1209 coursebook
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
           </article>
 
           <article class="course" data-reveal>
-            <div class="course-code">MATH 4200</div>
-            <h3>Mathematical Statistics</h3>
-            <p>The theory of statistical inference — point and interval estimation, properties of estimators, and the construction of hypothesis tests — derived and proven from first principles.</p>
-            <div class="course-meta">
-              <span class="m">Upper-division</span>
-              <span class="m">Proof-based</span>
-              <span class="m">Spring 2025</span>
+            <div class="course-code">MATH 2200</div>
+            <div class="course-body">
+              <h4>Introduction to Statistical Concepts and Methods</h4>
+              <p>Thirteen chapters with embedded R Help, worked examples, practice, and live
+                simulations.</p>
+              <a class="link-arrow" href="/coursebooks/math2200/">Open the MATH 2200 coursebook
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
           </article>
 
-          <article class="course has-book" data-reveal data-delay="1">
+          <article class="course" data-reveal>
+            <div class="course-code">MATH 3200</div>
+            <div class="course-body">
+              <h4>Probability from the Ground Up</h4>
+              <p>Foundations, random variables, multivariate distributions and functions of random
+                variables, with worked examples in R.</p>
+              <a class="link-arrow" href="/coursebooks/math3200/">Open the MATH 3200 coursebook
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+          </article>
+
+          <article class="course" data-reveal>
             <div class="course-code">MATH 4210</div>
-            <h3>Regression Modeling &amp; Analysis</h3>
-            <p>Building, diagnosing, and interpreting regression models — from simple linear regression through multiple, model selection, and diagnostics — with an emphasis on applied, real-world modeling.</p>
-            <div class="course-meta">
-              <span class="m">Upper-division</span>
-              <span class="m">Applied</span>
-              <span class="m">4 units</span>
-              <span class="m live">Fall 2026</span>
-            </div>
-            <div class="coursebook">
-              <p class="coursebook-desc">Full interactive coursebook: lessons in English and Spanish, R and Python, chapter games.</p>
-              <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/math4210/">Open the MATH 4210 coursebook <span class="ar" aria-hidden="true">-&gt;</span></a>
+            <div class="course-body">
+              <h4>Regression Modeling and Analysis</h4>
+              <p>Lessons in English and Spanish, in both R and Python, with a game at the end of
+                each chapter.</p>
+              <a class="link-arrow" href="/coursebooks/math4210/">Open the MATH 4210 coursebook
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
           </article>
 
-          <article class="course" data-reveal data-delay="2">
-            <div class="course-code">MATH 4230</div>
-            <h3>Applied Statistical Methods for Data Science</h3>
-            <p>A capstone for the Statistical Data Science concentration — statistical learning, classification, resampling, and model evaluation — taught from <em>An Introduction to Statistical Learning</em> with R and Python.</p>
-            <div class="course-meta">
-              <span class="m">Upper-division</span>
-              <span class="m">Statistical Data Science concentration</span>
-              <span class="m">ISLR · R &amp; Python</span>
+          <article class="course" data-reveal>
+            <div class="course-code">R</div>
+            <div class="course-body">
+              <h4>R Help for Beginners</h4>
+              <p>Start R from scratch — install it, or just sign in to the CSUB JupyterHub with a
+                campus account and install nothing. Covers exploratory data analysis, probability,
+                confidence intervals and hypothesis tests, ANOVA with post-hoc comparisons, and
+                simple and multiple regression. A companion to MATH 1209 and MATH 2200, and to
+                anyone learning R.</p>
+              <a class="link-arrow" href="/coursebooks/rhelp/">Open R Help for Beginners
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
             </div>
           </article>
         </div>
+      </div>
+    </section>
 
-        <div class="callout note" data-reveal style="margin-top: var(--space-5);">
-          <span class="co-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M9 7h7M9 11h5"/></svg>
-          </span>
+    <!-- ── EARLIER TEACHING ─────────────────────────────────────────────── -->
+    <section class="section section-alt">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-eyebrow">Earlier appointments</span>
+          <h2 class="s-title">Before CSU Bakersfield</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <div class="grid cols-2 gap-lg align-start">
           <div>
-            <h4>R Help for Beginners — a free R guide shared across every course</h4>
-            <p class="coursebook-desc">Start R from scratch: install it, or just log in to the CSUB JupyterHub with your campus account (nothing to install), then work through exploratory data analysis, probability, confidence intervals and hypothesis tests, ANOVA with post-hoc comparisons, and simple &amp; multiple regression — all with the <code>mosaic</code> + <code>BSDA</code> toolkit. A common companion for MATH 1209, MATH 2200, and anyone learning R.</p>
-            <a class="coursebook-link" href="https://www.yatawara.com/coursebooks/rhelp/">Open the R Help book <span class="ar" aria-hidden="true">-&gt;</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== TEACHING PHILOSOPHY ===================== -->
-    <section class="section" id="philosophy">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <span class="s-num">02</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Teaching Philosophy</h2>
-          <span class="s-rule"></span>
-          <span class="s-tag">// why it matters</span>
-        </div>
-      </div>
-      <div class="wrap-prose">
-        <div class="prose" data-reveal>
-          <p>My teaching is rooted in a simple belief: education transforms lives. I learned this from my mother, who spent thirty-five years teaching in rural Sri Lankan schools. I watched her change the trajectory of students who had been told they had no future — and I carry that conviction into every classroom I walk into.</p>
-
-          <p>I think about teaching as four kinds of interaction, and I work to make each one strong:</p>
-
-          <h3>Student &amp; teacher</h3>
-          <p>I learn my students' names and stay approachable. Office hours are not a formality — they are where real learning often happens. In my classroom every question is equal; the one a student is afraid to ask is usually the one worth answering.</p>
-
-          <h3>Student &amp; subject</h3>
-          <p>Statistics earns attention when it answers questions people actually care about. I motivate <em>why</em> it matters with real examples — how markets remember and forget, what crypto volatility reveals, how environmental exposure is distributed across communities — so the mathematics arrives with a reason to exist.</p>
-
-          <h3>Peer to peer</h3>
-          <p>Students learn statistics by doing statistics together. Group projects and collaborative analyses turn a roomful of individuals into a working community of analysts who teach and challenge one another.</p>
-
-          <h3>Student &amp; the real world</h3>
-          <p>I push the work outward — into presentations, written reports, and conversations about careers — so that what students build in class becomes something they can carry into a job, a graduate program, or a research lab.</p>
-
-          <p>I use AI deliberately and ethically. My Custom GPT tutors come <em>after</em> the fundamentals, never as a substitute for them. The tools are there to deepen understanding, not to outsource it.</p>
-
-          <blockquote>Anyone can google the steps to a hypothesis test, but you need to understand the basics to interpret the result and make inferences.</blockquote>
-
-          <p>The job market has changed. My duty to my students is to prepare them for the one that exists now — equipping them with computational skills, AI literacy, data-science workflows, and the critical thinking to work alongside AI rather than be replaced by it.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== AI TOOLS FOR STUDENTS ===================== -->
-    <section class="section" id="ai-tools">
-      <div class="wrap">
-        <div class="section-head" data-reveal>
-          <span class="s-num">03</span>
-          <h2 class="s-title"><span class="arrow">▸</span>AI Tools for Students</h2>
-          <span class="s-rule"></span>
-          <span class="s-tag">// after the fundamentals</span>
-        </div>
-        <p class="term-ln" data-reveal><span class="prompt">$</span> tutors --load custom-gpt <span class="flag">--gate</span> fundamentals-first</p>
-
-        <div class="grid ai-tools">
-          <div class="card ai-tool" data-reveal>
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"/><path d="M8 12h8M12 8v8"/></svg>
-            </div>
-            <div>
-              <h4>R Tutor for MATH 2200</h4>
-              <p>A guided companion that helps elementary-statistics students learn R step by step, reinforcing concepts already covered in class.</p>
+            <h3>Missouri University of Science and Technology</h3>
+            <p class="text-dim mt-2">Graduate teaching assistant and instructor · 2017 – 2023</p>
+            <div class="course-list mt-5">
+              <article class="course">
+                <div class="course-code">STAT 3113</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Applied Engineering Statistics</h4>
+                  <p>Lecture sections, typically two per term, with full responsibility for
+                    lectures, assessment, and grading.</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">MATH 1215</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Calculus for Engineers II</h4>
+                  <p>Lecture sections, with full responsibility for lectures, assessment, and
+                    grading.</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">MATH 1214</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Calculus for Engineers I</h4>
+                  <p>Shared instructional responsibility.</p>
+                </div>
+              </article>
             </div>
           </div>
 
-          <div class="card ai-tool" data-reveal data-delay="1">
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-            </div>
-            <div>
-              <h4>MATH 4200 AI Assistant</h4>
-              <p>A mathematical-statistics tutor that walks through derivations and inference carefully — supporting proof-based reasoning, not shortcutting it.</p>
-            </div>
-          </div>
-
-          <div class="card ai-tool" data-reveal data-delay="2">
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-            </div>
-            <div>
-              <h4>LaTeX Converter</h4>
-              <p>Turns handwritten or plain-text mathematics into clean LaTeX, lowering the friction of producing professional technical writing.</p>
-            </div>
-          </div>
-
-          <div class="card ai-tool" data-reveal data-delay="3">
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            </div>
-            <div>
-              <h4>MATLAB / R / Python Learning Assistants</h4>
-              <p>Language-specific coaches that help students build fluency across the computing environments used throughout the curriculum.</p>
-            </div>
-          </div>
-
-          <div class="card ai-tool" data-reveal>
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-            </div>
-            <div>
-              <h4>MathBuddy Jr.</h4>
-              <p>An approachable tutor for foundational mathematics, meeting earlier learners where they are and building confidence.</p>
-            </div>
-          </div>
-
-          <div class="card ai-tool" data-reveal data-delay="1">
-            <div class="ai-ico" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-            </div>
-            <div>
-              <h4>Study Coach GPT</h4>
-              <p>A study-strategy partner that helps students plan, practice, and prepare — building habits, not just answering questions.</p>
+          <div>
+            <h3>University of Peradeniya, Sri Lanka</h3>
+            <p class="text-dim mt-2">Instructor and tutor</p>
+            <div class="course-list mt-5">
+              <article class="course">
+                <div class="course-code">CS 100</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Computer Applications</h4>
+                  <p class="course-meta">Instructor</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">ST 103</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Statistics Applications I</h4>
+                  <p class="course-meta">Instructor</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">ST 301</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Regression Analysis</h4>
+                  <p class="course-meta">Tutor</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">ST 305</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Multivariate Methods I</h4>
+                  <p class="course-meta">Tutor</p>
+                </div>
+              </article>
+              <article class="course">
+                <div class="course-code">ST 403</div>
+                <div class="course-body">
+                  <h4 class="mb-2">Statistics for Bioinformatics</h4>
+                  <p class="course-meta">Tutor</p>
+                </div>
+              </article>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== TEACHING INNOVATIONS ===================== -->
-    <section class="section" id="innovations">
+    <!-- ── TEACHING PHILOSOPHY — first person ───────────────────────────── -->
+    <section class="section">
+      <div class="wrap">
+        <div class="grid cols-2 gap-lg align-start" data-reveal>
+          <div>
+            <div class="section-head">
+              <span class="s-eyebrow">Teaching philosophy</span>
+              <h2 class="s-title">How I run a course</h2>
+              <span class="s-rule"></span>
+            </div>
+            <p class="pull-quote" aria-hidden="true">An analysis that cannot be rerun is an anecdote.</p>
+          </div>
+
+          <div class="prose">
+            <p>I teach statistics as work students do, not a subject they watch me perform.
+              Every course I run puts a computer in front of the student early: R and Python,
+              run through CSUB JupyterHub so no one is held back by an install or a license.
+              The data is real and usually messy, because the judgment calls that matter in
+              statistics only appear once the cleaning is your own problem.</p>
+            <p>I ask for reproducible work. An analysis that cannot be rerun is an anecdote; I
+              would rather read a notebook that runs than a number that happens to be right.</p>
+            <p>I treat generative AI the way I treat any other instrument: useful, and only
+              after a student can tell when it is wrong. Its use in my courses is structured and
+              stated outright — what it is for, how it gets disclosed, and which parts of the
+              reasoning have to be the student’s own. My own <a href="/research.html">research on
+              scaffolded AI tutors</a> points the same way: the useful tutor makes the student do
+              the thinking.</p>
+            <p>I end courses open where I can. MATH 4230 closes with a capstone I do not
+              specify: students choose the question, defend the method, and write the result for
+              someone who was not in the room. That is the part of the course that transfers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CURRICULUM AND PROGRAM DEVELOPMENT ───────────────────────────── -->
+    <section class="section section-alt">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <span class="s-num">04</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Teaching Innovations</h2>
+          <span class="s-eyebrow">Curriculum</span>
+          <h2 class="s-title">Course and program development</h2>
           <span class="s-rule"></span>
-          <span class="s-tag">// curriculum &amp; access</span>
         </div>
 
-        <ul class="innov-list" data-reveal>
-          <li>
-            <strong>OER Development</strong> — Built and adopted open educational resources to eliminate textbook costs for students.
-            <span class="meta">CSUB Affordable Learning Solutions · 2024–25</span>
+        <ul class="rule-list">
+          <li class="rule-row">
+            <span class="rr-key">2026 – present</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">Statistics Coordinator, Department of Mathematics</h3>
+              <p class="measure">Coordinates MATH 1209: Statistics in the Modern World and
+                MATH 2200: Introduction to Statistical Concepts and Methods across multiple
+                sections, including course expectations, content coverage, shared resources,
+                instructor support, and communication. Built a shared instructional system for
+                both courses: course materials, R resources, assignments, assessments,
+                classroom activities, projects, and browser-based statistical computing through
+                CSUB JupyterHub.</p>
+            </div>
           </li>
-          <li>
-            <strong>ELEVATE</strong> — Co-Principal Investigator on a project enhancing learning experiences via AI techniques.
-            <span class="meta">California Learning Lab · Co-PI</span>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">MATH 4230: Applied Statistical Methods for Data Science</h3>
+              <p class="measure">Co-developed with Statistics faculty as an upper-division
+                applied statistics and data science course, and taught in Spring 2026. Built the
+                Spring 2026 implementation end to end — syllabus, instructional materials,
+                computational labs, assessments, and an open-ended capstone centered on real
+                data, reproducible workflows, and statistical communication — using R, Python,
+                JupyterHub, and structured approaches to responsible AI use. Attended the 2026
+                National Workshop on Data Science Education at UC Berkeley to benchmark the
+                course and the broader curriculum against programs elsewhere.</p>
+            </div>
           </li>
-          <li>
-            <strong>CSUB JupyterLab Cloud</strong> — Helped bring browser-based R, Python, and VS Code to students with no local setup required.
-            <span class="meta">Delivered via CAL-ICOR</span>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – present</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">Statistical Data Science concentration and proposed B.S.</h3>
+              <p class="measure">Works with Statistics and Mathematics faculty on CSUB’s
+                Statistical Data Science curriculum, both the existing concentration and the
+                current effort to develop a standalone B.S. Contributions include degree
+                requirements, prerequisite structure, elective pathways, comparisons with
+                programs at other universities, student-demand survey analysis, and proposal
+                development.</p>
+            </div>
           </li>
-          <li>
-            <strong>AI Instructional Module</strong> — Co-developed an AI teaching module for a business analytics course.
-            <span class="meta">BA 1028 · with Kim Mishkind</span>
+
+          <li class="rule-row">
+            <span class="rr-key">2025</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">MATH 3218: The Science of Data, Statistics, and Artificial Intelligence</h3>
+              <p class="measure">Took part in faculty review and refinement of this new
+                upper-division GE course, led by Dr. Eduardo Montoya, and served as the named
+                proposer responsible for entering and advancing the proposal through
+                CourseLeaf.</p>
+            </div>
           </li>
-          <li>
-            <strong>Statistical Data Science Concentration</strong> — Co-designed a new concentration and authored its capstone course, MATH 4230.
-            <span class="meta">with Drs. Montoya &amp; Zeng</span>
+
+          <li class="rule-row">
+            <span class="rr-key">Proposal</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">Inside AI: The Mathematics of Large Language Models</h3>
+              <p class="measure">A proposed lower-division GE course in Area 2: Mathematical
+                Concepts and Quantitative Reasoning, teaching mathematics and statistics through
+                the inner workings of modern language models: tokens, embeddings, vectors and
+                matrices, attention, probability, sampling, uncertainty, numerical precision,
+                quantization, model size, and statistical evaluation. The concept adapts
+                hands-on small-model teaching ideas encountered through Eric Van Dusen’s UC
+                Berkeley and NWDSE materials to a mathematics-and-statistics GE setting.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – present</span>
+            <div class="rr-body">
+              <h3 class="rr-title mb-2">Workshops and training for faculty</h3>
+              <p class="measure">A sustained program of workshops, seminars, and training on
+                responsible and useful applications of generative AI in teaching and research,
+                including <em>Teaching With AI: Helping Students Learn Statistics With Custom
+                GPTs and Prompts</em>, <em>AI as a Thinking Partner in Statistics</em>, and
+                <em>Effective Ways to Introduce AI in Your Classroom at CSUB</em>, alongside
+                course-specific AI tutoring approaches for mathematical and statistical
+                reasoning.</p>
+            </div>
           </li>
         </ul>
       </div>
     </section>
 
-    <!-- ===================== STUDENT MENTORSHIP ===================== -->
-    <section class="section" id="mentorship">
+    <!-- ── STUDENT MENTORING ────────────────────────────────────────────── -->
+    <section class="section" id="mentoring">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <span class="s-num">05</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Student Mentorship</h2>
+          <span class="s-eyebrow">Mentoring</span>
+          <h2 class="s-title">Undergraduate research</h2>
           <span class="s-rule"></span>
-          <span class="s-tag">// funded research</span>
         </div>
 
-        <div class="table-wrap" data-reveal>
-          <table class="data">
-            <thead>
-              <tr>
-                <th scope="col">Program</th>
-                <th scope="col">Year</th>
-                <th scope="col">Students</th>
-                <th scope="col">Project</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>SURE (Chevron)</td>
-                <td>Summer 2025</td>
-                <td>J. Rosas, J. Rodriguez, C. Rodriguez, R. Gamez</td>
-                <td>Local LLM applications for education</td>
-              </tr>
-              <tr>
-                <td>CV Pathway</td>
-                <td>Summer 2025</td>
-                <td>E. DeJesus, N. Gallego</td>
-                <td>Air pollution &amp; fertility patterns</td>
-              </tr>
-              <tr>
-                <td>Student Research Scholars</td>
-                <td>2024–25</td>
-                <td>1 student</td>
-                <td>“How Present is ChatGPT at CSUB?”</td>
-              </tr>
-              <tr>
-                <td>CV Pathway</td>
-                <td>Summer 2024</td>
-                <td>T. Regpala, J. Rodriguez Aguilar</td>
-                <td>Air pollution research</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <p class="lead mb-8">Nine undergraduates have worked with me in sustained individual
+          research supervision since 2024. Four of them are authors on peer-reviewed journal
+          articles, three as first or co-first author. The work runs from environmental
+          statistics and exposure inequality to machine learning, forecasting, local language
+          models, and cryptography — and it comes with the rest of it: research writing, poster
+          and talk preparation, doctoral applications, and the long conversations about what
+          comes next.</p>
+
+        <h3 class="mb-5">Research scholar programs</h3>
+        <ul class="rule-list mb-8">
+          <li class="rule-row">
+            <span class="rr-key">2024, 2025</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">CV Pathway — Summer Research Apprenticeship for Doctoral Programs</h4>
+              <p class="measure">Faculty research mentor. Mentored Tom Regpala in 2024 and Emily
+                DeJesus and Noah Gallego in 2025 through intensive summer research and
+                doctoral-preparation experiences, supervising research design, literature
+                review, data acquisition, statistical and computational analysis, research
+                writing, and poster and presentation development. Several of these
+                collaborations continued past the summer into sustained undergraduate research
+                and publication.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">Summer 2025</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Chevron Summer Undergraduate Research Experience (SURE)</h4>
+              <p class="measure">Faculty research mentor. <em>A Customizable AI Pipeline for
+                Academic Excellence: Locally Hosted Language Models in Higher Education.</em>
+                Mentored undergraduate researchers in developing and evaluating locally hosted
+                large language models for higher education, covering retrieval-augmented
+                generation, model fine-tuning, quantization, GPU-based deployment, and
+                comparison with commercial cloud-based AI systems.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">CES Mini-Grant</h4>
+              <p class="measure">Principal investigator and undergraduate research mentor.
+                <em>Air Pollution Disparities in California, 2000–2025: Examining Environmental
+                Inequities Across Income, Poverty, and Minority Populations.</em> Supervised
+                undergraduate research in environmental statistics, air-pollution exposure
+                inequality, statistical computing, and large-scale demographic and environmental
+                data integration. Student research from this project contributed to multiple
+                peer-reviewed publications in environmental statistics and environmental
+                health.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mb-5">Undergraduate researchers</h3>
+        <ul class="rule-list">
+          <li class="rule-row">
+            <span class="rr-key">2024 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Tom Regpala</h4>
+              <p class="measure">Environmental statistics, air-pollution exposure inequality,
+                statistical computing, and environmental data integration. Began through CV
+                Pathway in 2024 and continued as a sustained research collaboration. Student
+                co-first author on peer-reviewed work published in <em>Atmospheric Environment:
+                X</em>. Continued mentoring covered research writing and doctoral-study
+                preparation, including his 2026–27 CSU Chancellor’s Doctoral Incentive Program
+                application.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Eric Palafox</h4>
+              <p class="measure">Environmental statistics and computational data analysis.
+                Supervised large-scale monitor–satellite air-quality analysis, R programming,
+                statistical methodology, and reproducible workflows. Student co-first author on
+                peer-reviewed work published in <em>Atmospheric Environment: X</em>.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Kayla Ko</h4>
+              <p class="measure">Environmental inequality and statistical data science.
+                Supervised research on income-based pollution-exposure disparities across
+                California counties. Student first author on peer-reviewed work published in
+                <em>Environmental Research: Health</em>.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Christian Rodriguez</h4>
+              <p class="measure">Environmental data science and applied AI, supported through
+                Chevron SURE and ELEVATE. Student coauthor on peer-reviewed work published in
+                <em>Environmental Research: Health</em>, and co-presenter of undergraduate
+                research on open-source and local large language models.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Noah Gallego</h4>
+              <p class="measure">Machine learning, time-series forecasting, and computational
+                data science; CV Pathway 2025 Research Scholar. Supervised hybrid GRU-CNN
+                influenza forecasting, computational implementation, statistical evaluation, and
+                manuscript development. His work contributed to research presented at the 2025
+                Joint Statistical Meetings and to a manuscript in progress.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2025 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Emily DeJesus</h4>
+              <p class="measure">Environmental data science; CV Pathway 2025 Research Scholar.
+                Supervised literature review, environmental and demographic data analysis,
+                interpretation, research writing, and poster preparation, with continued
+                graduate-school and research-pathway mentoring, including support for her
+                Cal-Bridge application.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">2024 – 2026</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Juan Rodriguez Aguilar</h4>
+              <p class="measure">Applied AI, forecasting, and open-source and local large
+                language models. Supervised research development, computational
+                experimentation, poster preparation, and communication of findings.
+                Co-presented <em>CSUB-GPT: Open-Source Local LLMs for Campus Use</em> at the
+                CSUB Mathematics Seminar.</p>
+            </div>
+          </li>
+
+          <li class="rule-row">
+            <span class="rr-key">Fall 2026 – present</span>
+            <div class="rr-body">
+              <h4 class="rr-title mb-2">Chase Davis and Brian Martinez</h4>
+              <p class="measure">Undergraduate mathematics research in cryptography and LLM text
+                watermarking; the project is in its initial research-development stage.</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <!-- ===================== FOR STUDENTS ===================== -->
-    <section class="section" id="for-students">
+    <!-- ── STUDENT RESULTS AND PATHWAYS ─────────────────────────────────── -->
+    <section class="section section-alt">
       <div class="wrap">
         <div class="section-head" data-reveal>
-          <span class="s-num">06</span>
-          <h2 class="s-title"><span class="arrow">▸</span>For Students</h2>
+          <span class="s-eyebrow">Where the work goes</span>
+          <h2 class="s-title">Presentations, results and pathways</h2>
           <span class="s-rule"></span>
-          <span class="s-tag">// office hours &amp; letters</span>
         </div>
 
-        <div class="callout note student-callout" data-reveal>
-          <div class="co-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          </div>
-          <div class="co-body">
-            <h4>Office hours</h4>
-            <p>Find my current office hours on your course Canvas page, or email me to set up a time. If you are stuck, come early — I would much rather help before an exam than after.</p>
-
-            <h4 class="mt-4">Recommendation letters</h4>
-            <p>I am glad to write letters for students I know well. To write you a strong one, I need:</p>
-            <ul>
-              <li>At least <strong>three weeks' notice</strong> before the deadline.</li>
-              <li>Your <strong>CV or résumé</strong>.</li>
-              <li>A <strong>description of the program</strong> or position you are applying to.</li>
-              <li>A note on the <strong>emphasis</strong> you would like the letter to take.</li>
+        <div class="grid cols-2 gap-lg align-start">
+          <div>
+            <h3 class="mb-5">Student presentations and results</h3>
+            <ul class="rule-list">
+              <li class="rule-row">
+                <span class="rr-key">Feb 2026</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">CSU Channel Islands Plot-A-Thon</h4>
+                  <p>Mentored and helped organize the participation of eight CSUB students,
+                    including recruitment, team formation, funding, travel, and lodging. CSUB
+                    Team 1 — Juancarlos Sandoval, Krrithik Ezhilarasan, Christine Leanna Bonoan,
+                    and Sean Toledo — won Best Overall, Best in Data Analysis, and Best in Data
+                    Communication.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">Nov 2025</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">CSUB Mathematics Seminar</h4>
+                  <p>Mentored Tom Regpala, Juan Rodriguez Aguilar, and Christian Rodriguez in
+                    presenting undergraduate AI and data science research. Aguilar and Rodriguez
+                    presented <em>CSUB-GPT: Open-Source Local LLMs for Campus Use</em>.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">2025</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">Joint Statistical Meetings</h4>
+                  <p>Undergraduate research with Noah Gallego contributed to presented work on
+                    hybrid deep-learning methods for forecasting influenza-like illnesses.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">2024 – 2025</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">CV Pathway research symposia</h4>
+                  <p>Supervised preparation of undergraduate research reports, posters, and
+                    presentations.</p>
+                </div>
+              </li>
             </ul>
+          </div>
 
-            <p class="mt-4">Email me anytime at <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>.</p>
+          <div>
+            <h3 class="mb-5">Graduate and professional pathways</h3>
+            <ul class="rule-list">
+              <li class="rule-row">
+                <span class="rr-key">2025 – 2026</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">CSU Chancellor’s Doctoral Incentive Program (CDIP)</h4>
+                  <p>Faculty mentor and recommender for Tom Regpala’s 2026–27 doctoral-pathway
+                    application.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">2025</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">Cal-Bridge</h4>
+                  <p>Supported Emily DeJesus in pursuing Cal-Bridge and corresponded with program
+                    faculty about her research preparation and graduate-school pathway.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">Ongoing</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">Graduate school and career mentoring</h4>
+                  <p>Graduate and Ph.D. applications, research CVs, statements of purpose,
+                    fellowships, internships, employment applications, and letters of
+                    recommendation.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">2026 – 2027</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">ASA Section on Statistics and Data Science Education
+                    Mentoring Program</h4>
+                  <p>Mentor, American Statistical Association.</p>
+                </div>
+              </li>
+              <li class="rule-row">
+                <span class="rr-key">2026 – present</span>
+                <div class="rr-body">
+                  <h4 class="rr-title mb-2">Founding faculty advisor, CSUB Data Science &amp;
+                    Applied AI Society</h4>
+                  <p>Recruited the founding student officers and guided the development and
+                    registration of the new student organization.</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- ── FOR STUDENTS ─────────────────────────────────────────────────── -->
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <span class="s-eyebrow">For students</span>
+          <h2 class="s-title">Office hours and letters</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <div class="grid cols-2 gap-lg align-start">
+          <div class="callout note">
+            <span class="co-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <div class="co-body">
+              <h3>Office hours</h3>
+              <p>Find my current office hours on your course Canvas page, or email me to set up
+                a time. If you are stuck, come early — I would much rather help before an exam
+                than after.</p>
+            </div>
+          </div>
+
+          <div class="callout">
+            <span class="co-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+            </span>
+            <div class="co-body">
+              <h3>Recommendation letters</h3>
+              <p>I am glad to write for students I know well. To write you a strong letter I
+                need at least three weeks’ notice before the deadline, your CV or résumé, a
+                description of the program or position, and a note on the emphasis you would
+                like the letter to take.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CLOSING BAND ─────────────────────────────────────────────────── -->
+    <section class="cta-band">
+      <div class="wrap">
+        <h2>Questions about a course?</h2>
+        <p>Current and former students are welcome to write — about coursework, undergraduate
+          research, or what comes after graduation.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+          <a class="btn btn-secondary" href="/publications.html">Student-coauthored publications</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- ===================== FOOTER (identical on every page) ===================== -->
+  <!-- ======================= FOOTER (identical on every page) ================ -->
   <footer class="site-footer">
     <div class="wrap-wide">
       <div class="foot-grid">
         <div class="foot-brand">
           <div class="name">Anjana Yatawara</div>
-          <p>Statistician &amp; applied mathematician studying how complex systems encode and forget information. Assistant Professor, CSU Bakersfield.</p>
+          <p>Assistant Professor of Statistics, California State University, Bakersfield.
+            Founder &amp; Faculty Lead, CSUB Hub for Statistics, Applied AI &amp; Data Science
+            Innovation.</p>
           <div class="foot-socials">
-            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
-            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&hl=en&oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
-            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
-            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
-            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
+            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
           </div>
         </div>
+
         <div>
-          <h4>Explore</h4>
+          <h3>Explore</h3>
           <div class="foot-links">
             <a href="/research.html">Research</a>
             <a href="/publications.html">Publications</a>
             <a href="/teaching.html">Teaching</a>
+            <a href="/leadership.html">Leadership &amp; Service</a>
+            <a href="/cv.html">Curriculum vitae</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Connect</h3>
+          <div class="foot-links">
+            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener">ORCID</a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.linkedin.com/company/csub-analytics" target="_blank" rel="noopener">CSUB Hub on LinkedIn</a>
+            <a href="/blog.html">Writing</a>
             <a href="/consulting.html">Consulting</a>
             <a href="/games/index.html">Games</a>
           </div>
         </div>
-        <div>
-          <h4>Connect</h4>
-          <div class="foot-links">
-            <a href="https://kernelstats.com" target="_blank" rel="noopener">KernelStats ↗</a>
-            <a href="/cv.html">Curriculum Vitae</a>
-            <a href="/blog.html">Blog</a>
-            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
-            <button class="foot-link-btn" data-cmdk-open style="background:none;border:0;padding:0;color:var(--dim);font:inherit;text-align:left;cursor:pointer">Command palette ⌘K</button>
-          </div>
-        </div>
       </div>
+
       <div class="foot-bottom">
-        <span>© 2026 Anjana Yatawara · built as a living interface<span class="caret"></span></span>
-        <span>designed &amp; engineered from the future · <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener">source</a></span>
+        <span>© 2026 Anjana Yatawara</span>
+        <span>California State University, Bakersfield</span>
       </div>
     </div>
   </footer>
 
-  <!-- ===================== SCRIPTS ===================== -->
-  <script src="/assets/js/cosmos.js" defer></script>
   <script src="/assets/js/shell.js" defer></script>
 </body>
 </html>

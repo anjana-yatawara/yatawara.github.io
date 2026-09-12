@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#07070b" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#ffffff">
 
-  <title>CV — Anjana Yatawara</title>
-  <meta name="description" content="Curriculum vitae of Dr. Anjana Yatawara — Assistant Professor of Mathematics &amp; Statistics at CSU Bakersfield. Education, academic positions, grants, technical skills, and service.">
+  <title>CV &mdash; Anjana Yatawara</title>
+  <meta name="description" content="Curriculum vitae of Dr. Anjana Yatawara, Assistant Professor of Statistics at CSU Bakersfield: appointment and education, academic leadership, teaching, student mentoring, grants, publications, presentations, and service.">
   <meta name="author" content="Anjana Yatawara">
 
   <link rel="canonical" href="https://www.yatawara.com/cv.html">
@@ -16,391 +15,1630 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Anjana Yatawara">
   <meta property="og:url" content="https://www.yatawara.com/cv.html">
-  <meta property="og:title" content="CV — Anjana Yatawara">
-  <meta property="og:description" content="Curriculum vitae: education, academic positions, grants &amp; funding, technical skills, memberships, and service.">
+  <meta property="og:title" content="CV &mdash; Anjana Yatawara">
+  <meta property="og:description" content="Appointment and education, academic leadership, teaching, mentoring, grants, publications, presentations, and service. Updated September 2026.">
   <meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
-  <meta property="og:image:alt" content="Anjana Yatawara — yatawara.com">
+  <meta property="og:image:alt" content="Anjana Yatawara &mdash; yatawara.com">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CV — Anjana Yatawara">
-  <meta name="twitter:description" content="Curriculum vitae of a statistician &amp; applied mathematician.">
+  <meta name="twitter:title" content="CV &mdash; Anjana Yatawara">
+  <meta name="twitter:description" content="Appointment and education, academic leadership, teaching, mentoring, grants, publications, presentations, and service. Updated September 2026.">
   <meta name="twitter:image" content="https://www.yatawara.com/assets/img/og.png">
-  <meta name="twitter:image:alt" content="Anjana Yatawara — yatawara.com">
+  <meta name="twitter:image:alt" content="Anjana Yatawara &mdash; yatawara.com">
 
   <!-- favicon -->
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/img/favicon.svg">
 
-  <!-- theme flash guard: run BEFORE paint -->
-  <script>
-    (function(){try{var t=localStorage.getItem('ay-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
-  </script>
-
-  <!-- fonts -->
+  <!-- fonts — the exact families and the exact endpoints grow.google serves.
+       These are TWO requests on purpose and must not be merged: "Google Sans"
+       and "Google Sans Text" are served by the legacy css? endpoint, and
+       "Google Sans Code" by css2. Folding them into one css2 call is the
+       obvious tidy-up and it silently drops the two display/body families. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans+Text:400,500,700|Google+Sans:400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- styles -->
   <link rel="stylesheet" href="/assets/css/core.css">
   <link rel="stylesheet" href="/assets/css/components.css">
-
-  <style>
-    /* cv.html — page-unique layout only; reuse component tokens elsewhere */
-    .cv-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
-
-    /* two-up layout for paired CV sections on wide screens */
-    .cv-grid { display: grid; gap: var(--space-7); }
-    @media (min-width: 880px) { .cv-grid.cols-2 { grid-template-columns: 1fr 1fr; align-items: start; } }
-
-    /* skill groups */
-    .skill-group { margin-bottom: var(--space-5); }
-    .skill-group:last-child { margin-bottom: 0; }
-    .skill-group .sg-label {
-      font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.04em;
-      color: var(--cyan); margin-bottom: var(--space-3);
-    }
-    .skill-group .sg-label .gp { color: var(--green); margin-right: 0.4rem; }
-
-    /* simple bullet lists for memberships / service */
-    .cv-list { list-style: none; padding-left: 0; display: flex; flex-direction: column; gap: 0.7rem; }
-    .cv-list li {
-      position: relative; padding-left: 1.4rem; color: var(--text-soft);
-      font-size: var(--fs-sm); line-height: 1.6;
-    }
-    .cv-list li::before {
-      content: "▸"; position: absolute; left: 0; top: 0;
-      color: var(--violet); font-family: var(--font-mono); font-size: 0.8rem;
-    }
-    .cv-list.inline-meta { gap: 0.55rem; }
-    .cv-list .ml-org { color: var(--text); font-weight: 600; }
-    .cv-list .ml-sub { color: var(--dimmer); }
-
-    /* footer note line */
-    .cv-foot-note {
-      font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--dimmer);
-      border-top: 1px solid var(--border); margin-top: var(--space-7); padding-top: var(--space-5);
-    }
-    .cv-foot-note a { color: var(--cyan); }
-  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ===================== HEADER (identical on every page) ===================== -->
+  <!-- ======================= HEADER (identical on every page) ================ -->
   <header class="site-header">
     <div class="wrap-wide">
       <a class="brand" href="/index.html" aria-label="Anjana Yatawara — home">
-        <span class="glyph">AY</span>
-        <span class="name"><b>anjana</b> <span>yatawara</span></span>
+        <span class="glyph" aria-hidden="true">AY</span>
+        <span class="name"><b>Anjana</b> <span>Yatawara</span></span>
       </a>
 
-      <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="/research.html">research</a>
-        <a class="nav-link" href="/publications.html">publications</a>
-        <a class="nav-link" href="/teaching.html">teaching</a>
-        <a class="nav-link" href="/consulting.html">consulting</a>
-        <a class="nav-link" href="/kernelstats.html">kernelstats</a>
-        <a class="nav-link" href="/games/index.html">games</a>
-        <a class="nav-link" href="/cv.html">cv</a>
-        <a class="nav-link" href="/blog.html">blog</a>
+      <nav class="nav" id="mobileMenu" aria-label="Primary">
+        <a class="nav-link" href="/research.html">Research</a>
+        <a class="nav-link" href="/publications.html">Publications</a>
+        <a class="nav-link" href="/teaching.html">Teaching</a>
+        <a class="nav-link" href="/leadership.html">Leadership &amp; Service</a>
+        <a class="nav-link is-active" href="/cv.html" aria-current="page">CV</a>
       </nav>
 
       <div class="header-actions">
-        <button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><span data-theme-icon></span></button>
-        <button class="cmdk-trigger" data-cmdk-open aria-label="Open command palette">
-          <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="label">search</span>
-          <span class="kbd">⌘K</span>
-        </button>
+        <a class="btn btn-secondary btn-sm" href="/cv.html">Curriculum vitae</a>
         <button class="icon-btn nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- ===================== MAIN (4) PER-PAGE ===================== -->
   <main id="main">
-    <section class="page-head">
-      <div class="wrap">
-        <p class="kicker" data-reveal><span class="dot">◆</span> yatawara.com / cv</p>
-        <h1 data-reveal data-delay="1">Curriculum Vitae</h1>
-        <p class="lead" data-reveal data-delay="2">
-          Statistician and applied mathematician — financial volatility econometrics, machine
-          learning for public health, environmental justice, and AI in education. A condensed
-          record of training, appointments, funding, and skills; the full document is one click away.
-        </p>
-        <div class="cv-actions" data-reveal data-delay="3">
-          <a class="btn btn-primary" href="/assets/Yatawara_CV.pdf" target="_blank" rel="noopener" aria-label="Download full CV as PDF (opens in a new tab)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-            Download PDF
-          </a>
-          <a class="btn btn-ghost" href="mailto:ayatawara@csub.edu?subject=Full%20CV%20request" aria-label="Request the full CV by email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-            Request full CV
-          </a>
-        </div>
-      </div>
-    </section>
 
-    <!-- ===================== EDUCATION + POSITIONS ===================== -->
-    <section class="section-sm">
-      <div class="wrap">
-        <div class="cv-grid cols-2">
+    <!-- ══ HERO — title, actions, identifiers, portrait ══════════════════ -->
+    <div class="wrap">
+      <section class="page-hero">
+        <div class="grid cols-2 gap-lg align-start">
 
-          <!-- Education -->
-          <div data-reveal>
-            <div class="section-head">
-              <span class="s-num">01</span>
-              <h2 class="s-title"><span class="arrow">▸</span>Education</h2>
-              <span class="s-rule"></span>
-              <span class="s-tag">// training</span>
+          <div>
+            <p class="eyebrow">Anjana Yatawara &middot; CSU Bakersfield</p>
+            <h1>Curriculum Vitae</h1>
+            <p class="lead">Assistant Professor of Statistics at California State University,
+              Bakersfield, and founding faculty lead of the CSUB Hub for Statistics, Applied AI,
+              and Data Science Innovation. The record below covers appointment and education,
+              academic leadership, teaching, student mentoring, funded projects, publications,
+              presentations, and service. Last updated September 2026.</p>
+
+            <div class="cv-actions">
+              <a class="btn btn-primary" href="/assets/Yatawara_CV.pdf" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+                Download the PDF<span class="sr-only"> (opens in a new tab)</span>
+              </a>
+              <a class="btn btn-secondary" href="mailto:ayatawara@csub.edu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                Email
+              </a>
             </div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-when">2017 — 2023</div>
-                <div class="tl-what">Ph.D. in Mathematics — Statistics Emphasis</div>
-                <div class="tl-where">Missouri University of Science &amp; Technology, Rolla, MO</div>
-                <div class="tl-note">Advisor: Dr. V.A. Samaranayake. Focus: time series with conditional heteroscedastic structure.</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-when">2012 — 2016</div>
-                <div class="tl-what">B.Sc. Special Degree in Statistics</div>
-                <div class="tl-where">University of Peradeniya, Sri Lanka</div>
-              </div>
+
+            <div class="meta mt-5">
+              <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+              <span class="sep" aria-hidden="true">&middot;</span>
+              <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener">ORCID 0009-0007-8506-7763</a>
+              <span class="sep" aria-hidden="true">&middot;</span>
+              <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+              <span class="sep" aria-hidden="true">&middot;</span>
+              <a href="https://www.linkedin.com/in/anjana-yatawara/" target="_blank" rel="noopener">LinkedIn</a>
+              <span class="sep" aria-hidden="true">&middot;</span>
+              <a href="https://www.linkedin.com/company/csub-analytics" target="_blank" rel="noopener">Hub on LinkedIn</a>
             </div>
           </div>
 
-          <!-- Academic Positions -->
-          <div data-reveal data-delay="1">
-            <div class="section-head">
-              <span class="s-num">02</span>
-              <h2 class="s-title"><span class="arrow">▸</span>Academic Positions</h2>
-              <span class="s-rule"></span>
-              <span class="s-tag">// appointments</span>
-            </div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-when">Aug 2023 — present</div>
-                <div class="tl-what">Assistant Professor of Mathematics &amp; Statistics</div>
-                <div class="tl-where">California State University, Bakersfield</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-when">Aug 2017 — Jul 2023</div>
-                <div class="tl-what">Graduate Teaching Assistant</div>
-                <div class="tl-where">Missouri University of Science &amp; Technology</div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-when">2016 — 2017</div>
-                <div class="tl-what">Teaching Assistant</div>
-                <div class="tl-where">University of Peradeniya, Sri Lanka</div>
-              </div>
-            </div>
+          <div class="portrait-frame intro-portrait mx-auto">
+            <img src="/assets/img/portrait.jpg"
+                 srcset="/assets/img/portrait-sm.jpg 440w, /assets/img/portrait.jpg 880w"
+                 sizes="(max-width: 640px) min(22rem, 88vw), 22rem"
+                 width="880" height="880"
+                 alt="Anjana Yatawara, smiling, in a light blue-grey blazer over an open-collar white shirt, photographed outdoors against blurred green trees."
+                 loading="eager" fetchpriority="high" decoding="async">
           </div>
 
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
-    <!-- ===================== GRANTS & FUNDING ===================== -->
-    <section class="section-sm">
-      <div class="wrap" data-reveal>
+    <!-- ══ PROFILE — short bio, research areas, page index ═══════════════ -->
+    <section class="section section-alt">
+      <div class="wrap">
         <div class="section-head">
-          <span class="s-num">03</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Grants &amp; Funding</h2>
+          <span class="s-eyebrow">Profile</span>
+          <h2 class="s-title">Biography and research areas</h2>
           <span class="s-rule"></span>
-          <span class="s-tag">// funded research</span>
         </div>
-        <div class="table-wrap">
+
+        <p class="lede">Anjana Yatawara is Assistant Professor of Statistics at California State
+          University, Bakersfield. He completed his Ph.D. in mathematics, statistics emphasis, at
+          Missouri University of Science and Technology in 2023, on time series with conditional
+          heteroscedastic structure. His research spans time series and financial econometrics,
+          statistics for artificial intelligence, AI in mathematics and statistics education, and
+          environmental statistics. At CSUB he founded and leads the Hub for Statistics, Applied
+          AI, and Data Science Innovation, coordinates the department&rsquo;s introductory
+          statistics courses, and mentors undergraduate researchers who have been first and
+          co-first authors on peer-reviewed papers in environmental statistics and environmental
+          health.</p>
+
+        <p class="eyebrow mt-8 mb-5">Research areas</p>
+
+        <ul class="rule-list">
+          <li>
+            <h3>Time series, stochastic modeling and financial econometrics</h3>
+            <p class="measure mt-3">Statistical methodology for dependent and dynamic
+              data: volatility modeling, count-valued time series, and high-frequency and
+              multi-frequency processes, with applications in finance, economics, and the
+              sciences.</p>
+          </li>
+          <li>
+            <h3>Statistics for artificial intelligence</h3>
+            <p class="measure mt-3">Methods for evaluating the reliability and
+              uncertainty of AI systems, with emphasis on large language models, prediction,
+              inference, and decision-making.</p>
+          </li>
+          <li>
+            <h3>Artificial intelligence in mathematics and statistics education</h3>
+            <p class="measure mt-3">Empirical and methodological research on the
+              responsible integration of generative AI into education, with emphasis on
+              mathematical and statistical reasoning, learning outcomes, assessment, and
+              AI-supported tutoring.</p>
+          </li>
+          <li>
+            <h3>Environmental statistics and data science</h3>
+            <p class="measure mt-3">Statistical modeling of air quality, pollutant
+              exposure, environmental inequality, spatiotemporal processes, sensor and monitoring
+              networks, and heterogeneous environmental data.</p>
+          </li>
+        </ul>
+
+        <p class="measure mt-6">Across these areas he works with students through the full research
+          process, from data analysis and statistical computing to scientific writing and
+          publication, and collaborates with researchers in other disciplines on methodological and
+          applied problems. Full treatment of the research lives on the
+          <a href="/research.html">research page</a>.</p>
+
+        <div class="mt-8">
+          <p class="eyebrow mb-4">On this page</p>
+          <div class="chips">
+            <a class="chip" href="#appointment">Appointment &amp; education</a>
+            <a class="chip" href="#leadership">Academic leadership</a>
+            <a class="chip" href="#teaching">Teaching</a>
+            <a class="chip" href="#mentoring">Student mentoring</a>
+            <a class="chip" href="#grants">Grants &amp; fellowships</a>
+            <a class="chip" href="#publications">Publications</a>
+            <a class="chip" href="#presentations">Presentations</a>
+            <a class="chip" href="#service">Service</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 01 — APPOINTMENT AND EDUCATION ════════════════════════════════ -->
+    <section class="section" id="appointment">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">01 &middot; Position and training</span>
+          <h2 class="s-title">Appointment and education</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-item">
+            <p class="tl-when">2023&ndash;present</p>
+            <p class="tl-what">Assistant Professor of Statistics</p>
+            <p class="tl-where">California State University, Bakersfield &middot; Bakersfield, CA</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-when">2023</p>
+            <p class="tl-what">Ph.D., Mathematics (Statistics Emphasis)</p>
+            <p class="tl-where">Missouri University of Science and Technology &middot; Rolla, Missouri</p>
+            <p class="tl-note">Research emphasis: modeling time series with conditional
+              heteroscedastic structure. Advisor: Dr. V. A. Samaranayake.</p>
+          </div>
+          <div class="tl-item">
+            <p class="tl-when">2017</p>
+            <p class="tl-what">B.Sc. Special Degree, Statistics</p>
+            <p class="tl-where">University of Peradeniya, Sri Lanka</p>
+            <p class="tl-note">Second Class Honors (Upper Division).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 02 — ACADEMIC LEADERSHIP AND PROGRAM DEVELOPMENT ══════════════ -->
+    <section class="section section-alt" id="leadership">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">02 &middot; Building programs</span>
+          <h2 class="s-title">Academic leadership and program development</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <p class="lede mb-8">Program-building at CSUB: an interdisciplinary Hub and its colloquium
+          series, coordination of the department&rsquo;s introductory statistics courses, new and
+          proposed curriculum in statistical data science, and the research computing behind
+          them.</p>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;present</p>
+            <div class="measure">
+              <p class="role">Founder &amp; Faculty Lead, CSUB Hub for Statistics, Applied AI &amp; Data Science Innovation</p>
+              <ul class="stack-sm mt-2">
+                <li>Founded and leads an interdisciplinary Hub supporting statistics, applied AI,
+                  data science, student research, research computing, and cross-disciplinary
+                  collaboration.</li>
+                <li>Established a physical home for the Hub and developed computing infrastructure
+                  supporting undergraduate and faculty research.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;present</p>
+            <div class="measure">
+              <p class="role">Founder &amp; Organizer, Statistics, Applied AI &amp; Data Science Colloquium Series</p>
+              <ul class="stack-sm mt-2">
+                <li>Founded and organizes an interdisciplinary colloquium series bringing external
+                  researchers and professionals to CSUB to engage students and faculty in
+                  statistics, data science, AI, scientific computing, and applied research.</li>
+                <li>Organized the first three colloquia: Thomas A. DeFanti on CENIC AIR and the
+                  National Research Platform (November 2025); Bhash Abeysinghe of the American
+                  Institutes for Research on AI, NLP, and agentic systems (April 2026); and two NASA
+                  <em>Ozone Where We Live</em> research scientists on environmental data science
+                  (September 2026).</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Statistics Coordinator, Department of Mathematics</p>
+              <ul class="stack-sm mt-2">
+                <li>Coordinates MATH 1209: Statistics in the Modern World and MATH 2200:
+                  Introduction to Statistical Concepts and Methods across multiple sections,
+                  including course expectations, content coverage, shared resources, instructor
+                  support, and communication.</li>
+                <li>Developed a shared instructional system for MATH 2200 and MATH 1209 with course
+                  materials, R resources, assignments, assessments, classroom activities, projects,
+                  and browser-based statistical computing through CSUB JupyterHub.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Co-Developer &amp; Instructor, MATH 4230: Applied Statistical Methods for Data Science</p>
+              <ul class="stack-sm mt-2">
+                <li>Co-developed MATH 4230 with Statistics faculty as an upper-division applied
+                  statistics and data science course and taught it in Spring 2026.</li>
+                <li>Developed the Spring 2026 implementation: syllabus, instructional materials,
+                  computational labs, assessments, and an open-ended capstone centered on real data,
+                  reproducible workflows, and statistical communication. Used R, Python, JupyterHub,
+                  and structured approaches to responsible AI use.</li>
+                <li>Participated in the 2026 National Workshop on Data Science Education at UC
+                  Berkeley to benchmark the course and the broader curriculum.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">MATH 3218: The Science of Data, Statistics, and Artificial Intelligence</p>
+              <p class="mt-2">Participated in faculty review and refinement of the new
+                upper-division GE course led by Dr. Eduardo Montoya, and served as the named
+                proposer responsible for entering and advancing the proposal through CourseLeaf.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;present</p>
+            <div class="measure">
+              <p class="role">Statistical Data Science concentration and proposed B.S. in Statistical Data Science</p>
+              <ul class="stack-sm mt-2">
+                <li>Works with Statistics and Mathematics faculty on CSUB&rsquo;s Statistical Data
+                  Science curriculum, including the existing concentration and the current effort to
+                  develop a standalone B.S.</li>
+                <li>Contributed degree requirements, prerequisite structure, elective pathways,
+                  comparisons with programs at other universities, student-demand survey analysis,
+                  and proposal development.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">Initial proposal</p>
+            <div class="measure">
+              <p class="role">Proposed general education course &mdash; Inside AI: The Mathematics of Large Language Models</p>
+              <ul class="stack-sm mt-2">
+                <li>Developed an initial proposal and course material for a lower-division Area 2:
+                  Mathematical Concepts &amp; Quantitative Reasoning course that teaches mathematics
+                  and statistics through the inner workings of modern language models.</li>
+                <li>Covers tokens, embeddings, vectors and matrices, attention, probability,
+                  sampling, uncertainty, numerical precision, quantization, model size, and
+                  statistical evaluation. The concept adapts hands-on small-model teaching ideas
+                  encountered through Eric Van Dusen&rsquo;s UC Berkeley / NWDSE materials to a
+                  mathematics-and-statistics GE setting.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Founder &amp; Organizer, CSUB AI &amp; Data Science Research Group</p>
+              <p class="mt-2">Established a cross-departmental faculty research group connecting
+                statistics, computer science, artificial intelligence, institutional research, and
+                related areas; organizes research meetings and supports collaborative projects,
+                student involvement, and grant opportunities.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;present</p>
+            <div class="measure">
+              <p class="role">Research computing and AI infrastructure development</p>
+              <ul class="stack-sm mt-2">
+                <li>Contributed to research-computing infrastructure supporting statistics, data
+                  science, and AI research at CSUB, including connection to the National Research
+                  Platform / Nautilus ecosystem for GPU and high-performance computing.</li>
+                <li>Participated in CSUB&rsquo;s AWS Cloud &amp; AI initiative, contributing
+                  statistical evaluation and benchmarking, curriculum-integration ideas, and
+                  student-training plans to a project supported by substantial AWS cloud-computing
+                  credits.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;present</p>
+            <div class="measure">
+              <p class="role">AI and data science workshops and training</p>
+              <ul class="stack-sm mt-2">
+                <li>Developed and delivered a sustained program of workshops, seminars, and training
+                  activities on responsible and useful applications of generative AI in teaching and
+                  research.</li>
+                <li>Selected activities: <em>Teaching With AI: Helping Students Learn Statistics
+                  With Custom GPTs and Prompts</em>; <em>AI as a Thinking Partner in
+                  Statistics</em>; <em>Effective Ways to Introduce AI in Your Classroom at
+                  CSUB</em>.</li>
+                <li>Developed course-specific AI tutoring approaches to support mathematical and
+                  statistical reasoning, and contributed to broader campus AI activities including
+                  OpenAI University Day at CSUB.</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ 03 — TEACHING ════════════════════════════════════════════════ -->
+    <section class="section" id="teaching">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">03 &middot; Instructor of record</span>
+          <h2 class="s-title">Teaching</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <p class="measure mb-8">Instructor of record for six distinct courses at California State
+          University, Bakersfield over seven consecutive semesters (Fall 2023&ndash;Fall 2026),
+          spanning general-education statistics, probability and mathematical statistics,
+          statistical computing, regression, and upper-division data science. Previously taught
+          engineering statistics and engineering calculus at Missouri University of Science and
+          Technology (2017&ndash;2023).</p>
+
+        <h3>California State University, Bakersfield</h3>
+        <p class="text-dim mt-2 mb-5">Instructor of record &middot; 2023&ndash;present</p>
+
+        <div class="table-wrap plain">
           <table class="data">
+            <caption>Courses taught as instructor of record, with the terms in which each was offered.</caption>
             <thead>
               <tr>
-                <th scope="col">Year</th>
-                <th scope="col">Project</th>
-                <th scope="col">Role</th>
-                <th scope="col">Source</th>
+                <th scope="col">Course</th>
+                <th scope="col">Title</th>
+                <th scope="col">Level</th>
+                <th scope="col">Terms</th>
+                <th scope="col" class="num">Sections</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="mono">2025</td>
-                <td>Air Pollution Disparities in California, 2000–2025</td>
-                <td>PI</td>
-                <td>CES Mini-Grant, CSUB</td>
+                <th scope="row" class="mono">MATH 2200</th>
+                <td>Introduction to Statistical Concepts and Methods</td>
+                <td>Lower-division, GE service</td>
+                <td>F23&ndash;F26, every term</td>
+                <td class="num">7</td>
               </tr>
               <tr>
-                <td class="mono">2025–26</td>
-                <td>ELEVATE: Enhancing Learning Experiences Via AI Techniques</td>
-                <td>Co-PI</td>
-                <td>California Learning Lab AI FAST Challenge</td>
+                <th scope="row" class="mono">MATH 3200</th>
+                <td>Probability Theory</td>
+                <td>Upper-division core</td>
+                <td>S24, F25, S26, F26</td>
+                <td class="num">5</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 3210</th>
+                <td>Applied Statistical Computing</td>
+                <td>Upper-division; graduate cross-list (MATH 5210)</td>
+                <td>F23, F24</td>
+                <td class="num">2</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4200</th>
+                <td>Mathematical Statistics</td>
+                <td>Upper-division core</td>
+                <td>S25</td>
+                <td class="num">1</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4210</th>
+                <td>Regression Modeling and Analysis</td>
+                <td>Upper-division elective</td>
+                <td>F26</td>
+                <td class="num">1</td>
+              </tr>
+              <tr>
+                <th scope="row" class="mono">MATH 4230</th>
+                <td>Applied Statistical Methods for Data Science</td>
+                <td>Upper-division elective; co-developed by instructor</td>
+                <td>S26</td>
+                <td class="num">1</td>
               </tr>
             </tbody>
           </table>
         </div>
+
+        <h3 class="mt-8">Missouri University of Science and Technology</h3>
+        <p class="text-dim mt-2 mb-5">Graduate teaching assistant and instructor &middot; 2017&ndash;2023</p>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">STAT 3113</p>
+            <div class="measure">
+              <p class="role">Applied Engineering Statistics</p>
+              <p class="mt-2">Lecture sections, typically two per term; full responsibility for
+                lectures, assessment, and grading.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">MATH 1215</p>
+            <div class="measure">
+              <p class="role">Calculus for Engineers II</p>
+              <p class="mt-2">Lecture sections; full responsibility for lectures, assessment, and
+                grading.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">MATH 1214</p>
+            <div class="measure">
+              <p class="role">Calculus for Engineers I</p>
+              <p class="mt-2">Shared instructional responsibility.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8">University of Peradeniya, Sri Lanka</h3>
+        <p class="text-dim mt-2 mb-5">Instructor and tutor</p>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">Instructor</p>
+            <div class="measure">
+              <p class="role">CS 100 Computer Applications &middot; ST 103 Statistics Applications I</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">Tutor</p>
+            <div class="measure">
+              <p class="role">ST 301 Regression Analysis &middot; ST 305 Multivariate Methods I &middot; ST 403 Statistics for Bioinformatics</p>
+            </div>
+          </li>
+        </ul>
+
+        <p class="cv-foot-note">More on the <a href="/teaching.html">teaching page</a>.</p>
       </div>
     </section>
 
-    <!-- ===================== TECHNICAL SKILLS ===================== -->
-    <section class="section-sm">
-      <div class="wrap" data-reveal>
-        <div class="section-head">
-          <span class="s-num">04</span>
-          <h2 class="s-title"><span class="arrow">▸</span>Technical Skills</h2>
-          <span class="s-rule"></span>
-          <span class="s-tag">// stack</span>
-        </div>
-
-        <div class="skill-group">
-          <div class="sg-label"><span class="gp">$</span>languages / software</div>
-          <div class="chips">
-            <span class="chip">R</span>
-            <span class="chip">Python</span>
-            <span class="chip">MATLAB</span>
-            <span class="chip">SAS</span>
-            <span class="chip">SQL</span>
-            <span class="chip">LaTeX</span>
-            <span class="chip">Git / GitHub</span>
-            <span class="chip">HTML / CSS</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="sg-label"><span class="gp">$</span>statistical methods</div>
-          <div class="chips">
-            <span class="chip">GARCH-family</span>
-            <span class="chip">time series</span>
-            <span class="chip">Bayesian inference</span>
-            <span class="chip">MLE</span>
-            <span class="chip">Monte Carlo</span>
-            <span class="chip">multivariate</span>
-            <span class="chip">causal inference</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="sg-label"><span class="gp">$</span>machine learning</div>
-          <div class="chips">
-            <span class="chip">random forests</span>
-            <span class="chip">gradient boosting (XGBoost)</span>
-            <span class="chip">neural nets (LSTM, GRU-CNN)</span>
-            <span class="chip">SVMs</span>
-            <span class="chip">k-means</span>
-            <span class="chip">PCA</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="sg-label"><span class="gp">$</span>ai &amp; llms</div>
-          <div class="chips">
-            <span class="chip">Custom GPT development</span>
-            <span class="chip">prompt engineering</span>
-            <span class="chip">local LLM deployment</span>
-            <span class="chip">OpenAI API</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="sg-label"><span class="gp">$</span>cloud &amp; computing</div>
-          <div class="chips">
-            <span class="chip">JupyterLab</span>
-            <span class="chip">Google Cloud</span>
-            <span class="chip">AWS</span>
-            <span class="chip">CSUB AI Lab (GPU workstations)</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== MEMBERSHIPS + SERVICE ===================== -->
-    <section class="section-sm">
+    <!-- ══ 04 — STUDENT MENTORING AND RESEARCH SUPERVISION ═══════════════ -->
+    <section class="section section-alt" id="mentoring">
       <div class="wrap">
-        <div class="cv-grid cols-2">
-
-          <!-- Professional Memberships -->
-          <div data-reveal>
-            <div class="section-head">
-              <span class="s-num">05</span>
-              <h2 class="s-title"><span class="arrow">▸</span>Memberships</h2>
-              <span class="s-rule"></span>
-              <span class="s-tag">// affiliations</span>
-            </div>
-            <ul class="cv-list inline-meta">
-              <li><span class="ml-org">ASA</span> — <span class="ml-sub">American Statistical Association</span></li>
-              <li><span class="ml-org">AMS</span> — <span class="ml-sub">American Mathematical Society</span></li>
-            </ul>
-          </div>
-
-          <!-- Service -->
-          <div data-reveal data-delay="1">
-            <div class="section-head">
-              <span class="s-num">06</span>
-              <h2 class="s-title"><span class="arrow">▸</span>Service</h2>
-              <span class="s-rule"></span>
-              <span class="s-tag">// selected</span>
-            </div>
-            <ul class="cv-list">
-              <li>Proposed Center for Applied AI &amp; Data Science Innovation (CAADSI) at CSUB</li>
-              <li>Proposed CSUB AI Essentials Certificate</li>
-              <li>Planned &amp; developed AI Lab (Science III, Room 214)</li>
-              <li>Contributed to CSUB campus-wide ChatGPT deployment (ChatGPT Project Team)</li>
-              <li>Member, Scientific Committee, CSU Mathematical Sciences Conference (2023)</li>
-            </ul>
-          </div>
-
+        <div class="section-head">
+          <span class="s-eyebrow">04 &middot; Undergraduate research</span>
+          <h2 class="s-title">Student mentoring and research supervision</h2>
+          <span class="s-rule"></span>
         </div>
 
-        <p class="cv-foot-note" data-reveal>
-          Full CV available as PDF — <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
-        </p>
+        <p class="lede mb-8">Undergraduate research at CSUB runs through scholar programs,
+          sustained individual supervision, and the graduate-pathway work that follows it. Several
+          of these students are first, co-first, or contributing authors on peer-reviewed papers in
+          environmental statistics and environmental health.</p>
+
+        <h3 class="mb-5">Undergraduate research scholar programs</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2024, 2025</p>
+            <div class="measure">
+              <p class="role">Faculty Research Mentor, CV Pathway &mdash; Summer Research Apprenticeship for Doctoral Programs</p>
+              <ul class="stack-sm mt-2">
+                <li>Mentored Tom Regpala in 2024 and Emily DeJesus and Noah Gallego in 2025 through
+                  intensive summer research and doctoral-preparation experiences.</li>
+                <li>Supervised research design, literature review, data acquisition, statistical and
+                  computational analysis, research writing, and poster and presentation development.</li>
+                <li>Several collaborations continued beyond the summer program into sustained
+                  undergraduate research and publication.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">Summer 2025</p>
+            <div class="measure">
+              <p class="role">Faculty Research Mentor, Chevron Summer Undergraduate Research Experience (SURE)</p>
+              <p class="note-inline mt-2"><em>A Customizable AI Pipeline for Academic Excellence:
+                Locally Hosted Language Models in Higher Education.</em></p>
+              <p class="mt-2">Mentored undergraduate researchers in the development and evaluation
+                of locally hosted large language models for higher education, including
+                retrieval-augmented generation (RAG), model fine-tuning, quantization, GPU-based
+                deployment, and comparison with commercial cloud-based AI systems.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Principal Investigator &amp; Undergraduate Research Mentor, CES Mini-Grant</p>
+              <p class="note-inline mt-2"><em>Air Pollution Disparities in California,
+                2000&ndash;2025: Examining Environmental Inequities Across Income, Poverty, and
+                Minority Populations.</em></p>
+              <ul class="stack-sm mt-2">
+                <li>Supervised undergraduate research in environmental statistics, air-pollution
+                  exposure inequality, statistical computing, and large-scale demographic and
+                  environmental data integration.</li>
+                <li>Student research contributed to multiple peer-reviewed publications in
+                  environmental statistics and environmental health.</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Individual undergraduate research supervision</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2024&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Tom Regpala</p>
+              <p class="mt-2">Environmental statistics, air-pollution exposure inequality,
+                statistical computing, and environmental data integration. Began through CV Path
+                2024 and continued as a sustained research collaboration. Student co-first author on
+                peer-reviewed work published in <em>Atmospheric Environment: X</em>; continued
+                mentoring included research writing and doctoral-study preparation.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Eric Palafox</p>
+              <p class="mt-2">Environmental statistics and computational data analysis. Supervised
+                large-scale monitor&ndash;satellite air-quality analysis, R programming, statistical
+                methodology, and reproducible workflows. Student co-first author on peer-reviewed
+                work published in <em>Atmospheric Environment: X</em>.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Kayla Ko</p>
+              <p class="mt-2">Environmental inequality and statistical data science. Supervised
+                research on income-based pollution-exposure disparities across California counties.
+                Student first author on peer-reviewed work published in <em>Environmental Research:
+                Health</em>.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Christian Rodriguez</p>
+              <p class="mt-2">Environmental data science and applied AI; supported through Chevron
+                SURE and ELEVATE. Student coauthor on peer-reviewed work published in
+                <em>Environmental Research: Health</em> and co-presenter of undergraduate research
+                on open-source and local large language models.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Noah Gallego</p>
+              <p class="mt-2">Machine learning, time-series forecasting, and computational data
+                science; CV Path 2025 Research Scholar. Supervised hybrid GRU-CNN influenza
+                forecasting, computational implementation, statistical evaluation, and manuscript
+                development.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Emily DeJesus</p>
+              <p class="mt-2">Environmental data science; CV Path 2025 Research Scholar. Supervised
+                literature review, environmental and demographic data analysis, interpretation,
+                research writing, and poster preparation; continued graduate-school and
+                research-pathway mentoring.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2024&ndash;2026</p>
+            <div class="measure">
+              <p class="role">Juan Rodriguez Aguilar</p>
+              <p class="mt-2">Applied AI, forecasting, and open-source and local large language
+                models. Supervised research development, computational experimentation, poster
+                preparation, and communication of findings. Co-presented undergraduate research
+                through the CSUB Mathematics Seminar.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">Fall 2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Chase Davis &amp; Brian Martinez</p>
+              <p class="mt-2">Undergraduate mathematics research in cryptography and LLM text
+                watermarking; currently in the initial research-development stage.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Student research presentations and competitive achievements</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">February 2026</p>
+            <div class="measure">
+              <p class="role">CSU Channel Islands Plot-A-Thon</p>
+              <ul class="stack-sm mt-2">
+                <li>Mentored and helped organize participation of eight CSUB students, including
+                  recruitment, team formation, funding, travel, and lodging coordination.</li>
+                <li>CSUB Team 1 &mdash; Juancarlos Sandoval, Krrithik Ezhilarasan, Christine Leanna
+                  Bonoan, and Sean Toledo &mdash; won Best Overall, Best in Data Analysis, and Best
+                  in Data Communication.</li>
+              </ul>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">November 2025</p>
+            <div class="measure">
+              <p class="role">CSUB Mathematics Seminar &mdash; Undergraduate AI Research</p>
+              <p class="mt-2">Mentored Tom Regpala, Juan Rodriguez Aguilar, and Christian Rodriguez
+                in presenting undergraduate AI and data-science research; Aguilar and Rodriguez
+                presented <em>CSUB-GPT: Open-Source Local LLMs for Campus Use</em> (November 19,
+                2025).</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Joint Statistical Meetings</p>
+              <p class="mt-2">Undergraduate research with Noah Gallego contributed to presented work
+                on hybrid deep-learning methods for forecasting influenza-like illnesses.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2024&ndash;2025</p>
+            <div class="measure">
+              <p class="role">CV Path Research Symposia</p>
+              <p class="mt-2">Supervised preparation of undergraduate research reports, posters, and
+                presentations associated with the CV Path research program.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Graduate and professional pathway mentoring</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">CSU Chancellor&rsquo;s Doctoral Incentive Program (CDIP)</p>
+              <p class="mt-2">Faculty mentor and recommender for Tom Regpala&rsquo;s 2026&ndash;27
+                CDIP doctoral-pathway application.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Cal-Bridge graduate pathway mentoring</p>
+              <p class="mt-2">Supported Emily DeJesus in pursuing Cal-Bridge and communicated with
+                program faculty regarding her research preparation and graduate-school pathway.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">Ongoing</p>
+            <div class="measure">
+              <p class="role">Graduate school and career mentoring</p>
+              <p class="mt-2">Mentors undergraduate researchers in graduate and Ph.D. applications,
+                research CVs, statements of purpose, fellowships, internships, employment
+                applications, and letters of recommendation.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Regional research collaboration</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Local, Task-Specific Language Model for Automated Essay Grading</p>
+              <p class="note-inline mt-2">Collaboration with Dr. Jonathan P. Brown, Professor of
+                Mathematics, Bakersfield College &middot; Bakersfield, CA.</p>
+              <ul class="stack-sm mt-2">
+                <li>Developing a resource-efficient local language model for an existing automated
+                  essay-grading application, with shared computing resources and participation of
+                  Bakersfield College student researchers.</li>
+                <li>Investigating neural-network, small language model, and model-distillation
+                  approaches for task-specific essay grading and evaluation.</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
       </div>
     </section>
+
+    <!-- ══ 05 — GRANTS, FELLOWSHIPS & SPONSORED PROJECT ACTIVITY ═════════ -->
+    <section class="section" id="grants">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">05 &middot; Funded work</span>
+          <h2 class="s-title">Grants, fellowships and sponsored project activity</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <p class="lede mb-8">Funded work spans AI in education, environmental statistics, and
+          research computing, with support from the California Education Learning Lab, CSUB
+          Environmental Studies, the CSUB Center for Entrepreneurship &amp; Innovation, Amazon Web
+          Services, and Chevron.</p>
+
+        <h3 class="mb-5">Funded awards</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">California Education Learning Lab &mdash; AI FAST Challenge</p>
+              <p class="note-inline mt-2">Co-Principal Investigator &middot; <em>ELEVATE: Enhancing
+                Learning Experiences Via AI Techniques</em> &middot; $150,000.</p>
+              <p class="mt-2">Interdisciplinary project integrating generative AI and structured AI
+                tutoring into mathematics, statistics, and other university courses; included
+                student research, faculty development, and evaluation of AI-supported learning.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2025&ndash;2026</p>
+            <div class="measure">
+              <p class="role">CSUB Environmental Studies &mdash; CES Mini-Grant</p>
+              <p class="note-inline mt-2">Principal Investigator &middot; <em>Air Pollution
+                Disparities in California, 2000&ndash;2025: Examining Environmental Inequities Across
+                Income, Poverty, and Minority Populations.</em></p>
+              <p class="mt-2">Funded environmental statistics project supporting undergraduate
+                research, large-scale air-quality and demographic data analysis, and peer-reviewed
+                scholarship.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;2027</p>
+            <div class="measure">
+              <p class="role">CSUB Center for Entrepreneurship &amp; Innovation &mdash; Faculty R&amp;D Fellowship</p>
+              <p class="note-inline mt-2">Faculty R&amp;D Fellow / Project Lead &middot;
+                <em>KernelStats: AI-Powered Statistical Analysis Platform</em> &middot; $7,000.</p>
+              <p class="mt-2">Competitive R&amp;D fellowship supporting development,
+                intellectual-property planning, and commercialization of an AI-powered statistical
+                analysis platform, currently in private development.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">Amazon Web Services &mdash; Cloud &amp; AI Research Credit Award</p>
+              <p class="note-inline mt-2">Faculty Collaborator / Project Team Member &middot;
+                $200,000 in AWS cloud credits awarded to the collaborative CSUB project.</p>
+              <p class="mt-2">Contributed statistical evaluation and benchmarking expertise,
+                curricular-integration planning, and student-research applications.</p>
+            </div>
+          </li>
+
+          <li class="cv-grid">
+            <p class="yr">Summer 2025</p>
+            <div class="measure">
+              <p class="role">Chevron Summer Undergraduate Research Experience (SURE)</p>
+              <p class="note-inline mt-2">Faculty Research Mentor &middot; <em>A Customizable AI
+                Pipeline for Academic Excellence: Locally Hosted Language Models in Higher
+                Education</em> &middot; $7,000 faculty mentor award.</p>
+              <p class="mt-2">Supervised undergraduate research on locally hosted large language
+                models, retrieval-augmented generation (RAG), model fine-tuning, quantization,
+                GPU-based deployment, and development of institution-specific AI applications.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Submitted and under review</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">U.S. Department of Education &mdash; Title III Strengthening Institutions Program (SIP)</p>
+              <p class="note-inline mt-2"><em>CATALYST: Cultivating Adaptive Teaching And Learning
+                with AI-Supported Technologies</em> &middot; AI Learning Companion Tool Developer
+                (0.33 FTE); Key Personnel.</p>
+              <p class="mt-2">Revised institutional proposal submitted June 2026; decision pending.
+                Responsible for developing and maintaining the Adaptive AI Learning Companion, a
+                scaffolded AI tutoring system for STEM gateway courses, building on prior
+                mathematics and statistics AI-tutoring research and the ELEVATE project.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">U.S. Department of Education &mdash; Supporting Effective Educator Development (SEED)</p>
+              <p class="note-inline mt-2">Proposal Team Contributor &middot; Cruz, A. C. (PI),
+                Yatawara, A., et al. &middot; FY 2026 SEED Competition, Assistance Listing
+                84.423A.</p>
+              <p class="mt-2">Contributed quantitative research design, assessment, mathematics and
+                statistics learning materials, analysis of implementation and participant outcomes,
+                and proposal and budget development.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">In preparation</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">National Science Foundation &mdash; Mathematical Foundations of Artificial Intelligence (MFAI), NSF 24-569</p>
+              <p class="note-inline mt-2">Co-Principal Investigator &middot; PI: Jeremy Woods
+                &middot; planned submission October 2026.</p>
+              <p class="mt-2">Cross-CSU interdisciplinary proposal investigating mathematical and
+                statistical foundations of artificial intelligence, including reliability,
+                robustness, uncertainty, interpretability, computational efficiency, and responsible
+                AI.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Unfunded proposals</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">California State University &mdash; Learning Innovation for Future-Forward Teaching (LIFT), Tier 2</p>
+              <p class="note-inline mt-2">Principal Investigator &middot; <em>A CSUB Interactive
+                Learning Platform for MATH 2200</em> &middot; $20,000 requested.</p>
+              <p class="mt-2">Proposed an integrated, open, and interactive statistics-learning
+                environment combining a digital coursebook, computational tools, assessments,
+                browser-based statistical computing, and a course-material-grounded ChatGPT tutor
+                drawing on the instructor&rsquo;s own MATH 2200 materials. Not selected for funding.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">CSUB SPARKS &mdash; Students Partnering with AI for Regional Knowledge and Service</p>
+              <p class="note-inline mt-2">Principal Investigator / Faculty Applicant &middot;
+                <em>MATH 3209: Statistical Measures of Inequality in Society.</em></p>
+              <p class="mt-2">Proposed an AI-integrated, project-based redesign of the
+                upper-division GE course. Not funded because MATH 3209 was not scheduled for Fall
+                2026, a program eligibility requirement.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">NSME Seed Research &amp; Writing Grant</p>
+              <p class="note-inline mt-2">Principal Investigator &middot; <em>Enhancing Volatility
+                Modeling: High-Frequency Data Analysis and Theoretical Development of FIGJRGARCH
+                Models.</em></p>
+              <p class="mt-2">Proposed theoretical and empirical development of new volatility
+                models using high-frequency financial data. Not selected for funding.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">U.S. Department of Education &mdash; FIPSE Special Projects Program</p>
+              <p class="note-inline mt-2">Co-Principal Investigator &middot; <em>CATALYST:
+                Cultivating Adaptive Teaching And Learning with AI-Supported Technologies.</em></p>
+              <p class="mt-2">Institutional proposal to expand responsible AI-supported teaching and
+                learning across STEM disciplines. Led development of the mathematics and statistics
+                and scaffolded AI-tutoring components, including the SMARTS framework and
+                course-integrated AI learning companion. Submitted December 2025; not funded.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ 06 — PUBLICATIONS ════════════════════════════════════════════ -->
+    <section class="section section-alt" id="publications">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">06 &middot; Peer-reviewed</span>
+          <h2 class="s-title">Publications</h2>
+          <span class="s-tag">Reverse chronological</span>
+          <span class="s-rule"></span>
+        </div>
+
+        <div class="pub-group">
+          <h3>Peer-reviewed journal articles</h3>
+          <div class="pub-list">
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Good portfolios from bad forecasts: The anatomy of LLM volatility estimates</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Finance Research Letters, 109, 110572.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1016/j.frl.2026.110572" target="_blank" rel="noopener">doi:10.1016/j.frl.2026.110572</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Does trading volume improve long-term volatility forecasts? Evidence from the MF2-GARCH framework</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Journal of Forecasting.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1002/for.70199" target="_blank" rel="noopener">doi:10.1002/for.70199</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Air pollution exposure inequality across U.S. income and racial groups, 2000&ndash;2023: A hybrid monitor&ndash;satellite analysis with two new shape diagnostics</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors">Regpala, T., Palafox, E., &amp; <span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Atmospheric Environment: X, 31, 100492.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1016/j.aeaoa.2026.100492" target="_blank" rel="noopener">doi:10.1016/j.aeaoa.2026.100492</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Income-based exposure disparities across California counties, 2000 to 2023: A generalizable statistical framework</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors">Ko, K., Rodriguez, C., &amp; <span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Environmental Research: Health, 4(1), 011002.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1088/2752-5309/ae4134" target="_blank" rel="noopener">doi:10.1088/2752-5309/ae4134</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Evaluating fine-scale air-quality heterogeneity using a low-cost multipollutant sensor network in Twin Cities, Minnesota</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors">Abhayaratne, V., Hao, W., Ye, C., <span class="me">Yatawara, A.</span>, Hopke, P. K., Li, J., &amp; Wang, Y. (2026).</p>
+              <p class="pub-venue">ACS ES&amp;T Air, 3(4), 1057&ndash;1068.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1021/acsestair.5c00439" target="_blank" rel="noopener">doi:10.1021/acsestair.5c00439</a>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Accepted for publication</h3>
+          <div class="pub-list">
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Structured AI-Tutoring for Computer Architecture Courses</h4>
+                <span class="badge badge-accepted">Accepted</span>
+              </div>
+              <p class="pub-authors">Cruz, A. C., <span class="me">Yatawara, A.</span>, Mishra, M., &amp; Wang, J. J. (2026).</p>
+              <p class="pub-venue">ASEE Computers in Education Journal, 2026 FIE Special Issue. Accepted June 23, 2026.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Conference proceedings and peer-reviewed conference papers</h3>
+          <div class="pub-list">
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">WIP: Structured AI Tutoring in Engineering Education</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors">Cruz, A. C., <span class="me">Yatawara, A.</span>, Mishra, M., &amp; Wang, J. J. (2025).</p>
+              <p class="pub-venue">Proceedings of the 2025 IEEE Frontiers in Education Conference (FIE), 1&ndash;5.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1109/FIE63693.2025.11328293" target="_blank" rel="noopener">doi:10.1109/FIE63693.2025.11328293</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Computer-Aided Instruction for K&ndash;12 Teachers: A Cognitive Apprenticeship Approach to LLM Integration</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors">Cruz, A. C., <span class="me">Yatawara, A.</span>, Mishra, M., &amp; Wang, J. J. (2025).</p>
+              <p class="pub-venue">2025 Artificial Intelligence x Humanities, Education, and Art (AIxHEART), 13&ndash;16.</p>
+              <div class="pub-links">
+                <a class="doi" href="https://doi.org/10.1109/AIxHEART65685.2025.00009" target="_blank" rel="noopener">doi:10.1109/AIxHEART65685.2025.00009</a>
+              </div>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">The Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)&sup2;-EGARCH)</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, &amp; Samaranayake, V. A. (2022).</p>
+              <p class="pub-venue">Proceedings of the Joint Statistical Meetings, Business and Economic Statistics Section.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">The Asymmetric Hyperbolic Generalized Autoregressive Conditional Heteroscedastic (A-HYGARCH) Model</h4>
+                <span class="badge badge-published">Published</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, &amp; Samaranayake, V. A. (2021).</p>
+              <p class="pub-venue">Proceedings of the Joint Statistical Meetings, Business and Economic Statistics Section.</p>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Under review &mdash; artificial intelligence in mathematics and statistics education</h3>
+          <div class="pub-list">
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education</h4>
+                <span class="badge badge-review">Third revision submitted</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, Wang, J., Cruz, A. C., &amp; Mishra, M. (2026).</p>
+              <p class="pub-venue">Journal of Statistics and Data Science Education.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">From an Apparent Gain to a Composition Artefact: A Three-Condition Study of Generative AI in an Undergraduate Proof-Based Mathematics Course</h4>
+                <span class="badge badge-review">Under editorial assessment</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, Wang, J., Cruz, A. C., &amp; Mishra, M. (2026).</p>
+              <p class="pub-venue">Computers &amp; Education: Artificial Intelligence.</p>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Under review &mdash; statistics for artificial intelligence</h3>
+          <div class="pub-list">
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Empirical Asset Pricing via Large Language Models</h4>
+                <span class="badge badge-review">Revised manuscript submitted</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">The Journal of Finance and Data Science.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Under review &mdash; time series, stochastic modeling and financial econometrics</h3>
+          <div class="pub-list">
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">When Variance Arrives: Intraday Timing Information in Realized-Variance Forecasting</h4>
+                <span class="badge badge-review">Under review</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Journal of Econometrics.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">The Timescale Structure of Volatility Memory</h4>
+                <span class="badge badge-review">Under consideration</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Journal of Financial Econometrics.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">The Shape of Volatility Memory</h4>
+                <span class="badge badge-review">Under consideration</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Quantitative Finance.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">A Multiplicative-Factor Multi-Frequency Conditional-Mean Model for Count Time Series</h4>
+                <span class="badge badge-review">Revised manuscript submitted</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Journal of Time Series Analysis.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Quasi-Maximum Likelihood Estimation of EGARCH(p,q): Continuous Invertibility, Consistency, and Asymptotic Normality under Verifiable Conditions</h4>
+                <span class="badge badge-review">Under editorial assessment</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Econometric Theory.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Do Volatility Components Explain the Heavy Tails of GARCH Residuals?</h4>
+                <span class="badge badge-review">Under consideration</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">International Review of Economics &amp; Finance.</p>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Under review &mdash; spatial and environmental statistical methodology</h3>
+          <div class="pub-list">
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Lagged Causal Effects from Spatially Aggregated Data: A Change-of-Support Distributed-Lag Framework with Design Diagnostics</h4>
+                <span class="badge badge-review">Under consideration</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2026).</p>
+              <p class="pub-venue">Spatial Statistics.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Selected works in progress</h3>
+          <div class="pub-list">
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Prediction-Powered Inference with Model-Assisted Validation Labels</h4>
+                <span class="badge badge-inprogress">In preparation</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span></p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">(MF)&sup2;-GARCH-A: Volatility Modeling with a Sign-Sensitive Long-Run Component</h4>
+                <span class="badge badge-inprogress">In preparation</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, &amp; Samaranayake, V. A.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Multiple-Regime Hyperbolic GARCH (MR-HYGARCH)</h4>
+                <span class="badge badge-inprogress">In preparation</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, &amp; Samaranayake, V. A.</p>
+            </article>
+
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">Improving Influenza Forecasting: A GRU-CNN Hybrid Model with Yeo-Johnson Scaling</h4>
+                <span class="badge badge-inprogress">In preparation</span>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span>, Gallego, N., &amp; Ratnayake, I.</p>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="pub-group">
+          <h3>Dissertation</h3>
+          <div class="pub-list">
+            <article class="pub">
+              <div class="pub-head">
+                <h4 class="pub-title">The Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)&sup2;-EGARCH)</h4>
+              </div>
+              <p class="pub-authors"><span class="me">Yatawara, A.</span> (2023).</p>
+              <p class="pub-venue">Ph.D. dissertation, Missouri University of Science and Technology.</p>
+            </article>
+          </div>
+        </div>
+
+        <p class="cv-foot-note">The same record is on the
+          <a href="/publications.html">publications page</a>.</p>
+      </div>
+    </section>
+
+    <!-- ══ 07 — PRESENTATIONS ═══════════════════════════════════════════ -->
+    <section class="section" id="presentations">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">07 &middot; Conferences, seminars, workshops</span>
+          <h2 class="s-title">Presentations</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <h3 class="mb-5">Peer-reviewed and contributed presentations</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">From Answer Generators to Thinking Partners: Scaffolded LLM Tutors in Statistics Education</p>
+              <p class="note-inline mt-2">Yatawara, A., Wang, J., Cruz, A. C., &amp; Mishra, M.</p>
+              <p class="note-inline mt-2">Joint Statistical Meetings, Boston, MA, August 6, 2026.
+                Session: <em>AI in the Classroom: Research and Exploration</em>. Presenter: Anjana
+                Yatawara.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">Prompt-Engineered Cognitive Apprenticeship for In-Service K&ndash;9 Teacher Learning</p>
+              <p class="note-inline mt-2">Cruz, A. C., Yatawara, A., Mishra, M., &amp; Wang, J. J.</p>
+              <p class="note-inline mt-2">Annual Meeting of the American Educational Research
+                Association (AERA), Los Angeles, CA. Roundtable presentation.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Scaffolded Socratic Tutoring with a Retrieval-Augmented Mistral LLM for Psychology Laboratory Courses</p>
+              <p class="note-inline mt-2">LeBlanc-Grappendorf, S., Conlon, J., Johnson, M., Yatawara,
+                A., Wang, J. J., Cruz, A. C., &amp; Mishra, M.</p>
+              <p class="note-inline mt-2">IEEE International Conference on Artificial Intelligence x
+                Humanities, Education, and Art (AIxHEART), Laguna Hills, CA.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Computer-Aided Instruction for K&ndash;12 Teachers</p>
+              <p class="note-inline mt-2">Cruz, A. C., Yatawara, A., Mishra, M., &amp; Wang, J. J.</p>
+              <p class="note-inline mt-2">IEEE International Conference on Artificial Intelligence x
+                Humanities, Education, and Art (AIxHEART), Laguna Hills, CA.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Work-in-Progress: Structured AI Tutoring in Engineering Education</p>
+              <p class="note-inline mt-2">Cruz, A. C., Yatawara, A., Mishra, M., &amp; Wang, J. J.</p>
+              <p class="note-inline mt-2">ASEE/IEEE Frontiers in Education Conference, Nashville,
+                TN.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025</p>
+            <div class="measure">
+              <p class="role">Hybrid LSTM Deep Learning Model for Forecasting Influenza-Like Illnesses</p>
+              <p class="note-inline mt-2">Contributed paper presentation, Infectious Disease
+                Epidemiology Section, Joint Statistical Meetings, Nashville, TN.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2022</p>
+            <div class="measure">
+              <p class="role">The Multiplicative Factor Multi-Frequency Exponential GARCH ((MF)&sup2;-EGARCH)</p>
+              <p class="note-inline mt-2">Yatawara, A., &amp; Samaranayake, V. A.</p>
+              <p class="note-inline mt-2">Contributed paper presentation, Business and Economic
+                Statistics Section, Joint Statistical Meetings, Washington, DC.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2021</p>
+            <div class="measure">
+              <p class="role">The Asymmetric Hyperbolic Generalized Autoregressive Conditional Heteroscedastic (A-HYGARCH) Model</p>
+              <p class="note-inline mt-2">Yatawara, A., &amp; Samaranayake, V. A.</p>
+              <p class="note-inline mt-2">Contributed speed presentation, Time Series and Finance
+                Session, Joint Statistical Meetings, virtual conference.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8">Invited presentations, seminars and workshops</h3>
+        <p class="text-dim mt-2 mb-5">Artificial intelligence and statistics education</p>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">June 2025</p>
+            <div class="measure">
+              <p class="role">ELEVATE: Enhancing Learning Experiences Via AI Techniques &mdash; Findings from CSUB</p>
+              <p class="note-inline mt-2">Invited presentation and panel, AI in Education Day,
+                National Workshop on Data Science Education, University of California, Berkeley,
+                June 24, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">October 2025</p>
+            <div class="measure">
+              <p class="role">Build Your AI Teaching Assistant</p>
+              <p class="note-inline mt-2">Session lead, NextTech Kern, California State University,
+                Bakersfield, October 2, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">October 2025</p>
+            <div class="measure">
+              <p class="role">AI in Business</p>
+              <p class="note-inline mt-2">Session lead, NextTech Kern, California State University,
+                Bakersfield, October 2, 2025. In collaboration with Keelan Schule, Solutions
+                Engineer, OpenAI.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">April 2025</p>
+            <div class="measure">
+              <p class="role">Teaching With AI: Helping Students Learn Statistics With Custom GPTs and Prompts</p>
+              <p class="note-inline mt-2">Mathematics Seminar, California State University,
+                Bakersfield, April 2, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">April 2025</p>
+            <div class="measure">
+              <p class="role">Hands-On AI Workshop: Custom GPTs and Effective Prompt Engineering for Educators</p>
+              <p class="note-inline mt-2">Invited talk, NSME Teacher-Scholar Lecture Series,
+                California State University, Bakersfield, April 11, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">October 2025</p>
+            <div class="measure">
+              <p class="role">AI Workshop for First-Year Seminar Students and Course Coordinators</p>
+              <p class="note-inline mt-2">Faculty training workshop, California State University,
+                Bakersfield, October 13, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">November 2025</p>
+            <div class="measure">
+              <p class="role">AI as a Thinking Partner in Statistics: Results from Spring and Fall 2025</p>
+              <p class="note-inline mt-2">Mathematics Seminar, California State University,
+                Bakersfield, November 5, 2025.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">March 2025</p>
+            <div class="measure">
+              <p class="role">Effective Ways to Introduce AI in Your Classroom at CSUB</p>
+              <p class="note-inline mt-2">NSME Teacher-Scholar Lecture Series, California State
+                University, Bakersfield, March 6, 2025. With Alberto Cruz and Maruti Mishra.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">August 2025</p>
+            <div class="measure">
+              <p class="role">Teaching and Learning in the AI Era</p>
+              <p class="note-inline mt-2">NSME Teacher-Scholar Summer Workshop, California State
+                University, Bakersfield, August 19, 2025. With Alberto Cruz.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">November 2025</p>
+            <div class="measure">
+              <p class="role">Accelerate Your Intelligence</p>
+              <p class="note-inline mt-2">Panelist, California State University, Bakersfield,
+                November 20, 2025.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ 08 — SERVICE ═════════════════════════════════════════════════ -->
+    <section class="section section-alt" id="service">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="s-eyebrow">08 &middot; Professional, university, department, community</span>
+          <h2 class="s-title">Service</h2>
+          <span class="s-rule"></span>
+        </div>
+
+        <h3 class="mb-5">Professional</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Member, ADSA AI Tutoring Study Working Group, Alliance for Data Science and AI</p>
+              <p class="mt-2">Multi-institution working group examining AI tutoring and AI-supported
+                learning in statistics and data science education.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;2027</p>
+            <div class="measure">
+              <p class="role">Mentor, ASA Section on Statistics and Data Science Education (SSDSE) Mentoring Program</p>
+              <p class="note-inline mt-2">American Statistical Association.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">Program Committee Member and Reviewer, AIxHEART 2026</p>
+              <p class="note-inline mt-2">Artificial Intelligence &times; Humanities, Education, and
+                Art.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026</p>
+            <div class="measure">
+              <p class="role">Reviewer, IEEE International Conference on Tools with Artificial Intelligence (ICTAI)</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">University</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;2027</p>
+            <div class="measure">
+              <p class="role">Academic Affairs Committee (AAC), Academic Senate</p>
+              <p class="mt-2">Appointed member of the university standing committee concerned with
+                academic policy, programs, curricula, and related academic matters.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;2027</p>
+            <div class="measure">
+              <p class="role">General Education Curriculum Committee (GECCo)</p>
+              <p class="mt-2">Elected by acclamation as a Mathematics/NSME representative to
+                complete an existing term, May 2026&ndash;May 2027.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Department</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">2026&ndash;present</p>
+            <div class="measure">
+              <p class="role">Founding Faculty Advisor, CSUB Data Science &amp; Applied AI Society</p>
+              <p class="mt-2">Recruited founding student officers and guided development and
+                registration of the new student organization.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2024&ndash;2025</p>
+            <div class="measure">
+              <p class="role">Mathematics Department Website Subcommittee</p>
+              <p class="mt-2">Member; coordinated collection of faculty and staff information and
+                distributed the departmental faculty and staff webpage survey.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h3 class="mt-8 mb-5">Outreach and community engagement</h3>
+
+        <ul class="cv-list">
+          <li class="cv-grid">
+            <p class="yr">March 2026</p>
+            <div class="measure">
+              <p class="role">Co-Organizer, Data Science Exploration Challenge, Lee Webb Math Field Day</p>
+              <p class="mt-2">Developed a new high-school data science competition, including the
+                dataset, data dictionary, participant materials, judging framework, school
+                communication, and event implementation.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">2025, 2026</p>
+            <div class="measure">
+              <p class="role">Volunteer, Kern County Chapter MATHCOUNTS Competition</p>
+              <p class="mt-2">Supported competition operations and student activities, including
+                scoring support.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">March 2026</p>
+            <div class="measure">
+              <p class="role">Volunteer, Future &rsquo;Runner Day / Meet Your Major</p>
+              <p class="mt-2">Represented Mathematics in prospective-student and family outreach.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">October 2025</p>
+            <div class="measure">
+              <p class="role">Volunteer, NSME Open House</p>
+              <p class="mt-2">Represented the Mathematics Department to prospective students and
+                families.</p>
+            </div>
+          </li>
+          <li class="cv-grid">
+            <p class="yr">March 2025</p>
+            <div class="measure">
+              <p class="role">Faculty Volunteer, Math Club Runner Night</p>
+            </div>
+          </li>
+        </ul>
+
+        <p class="cv-foot-note">More detail on leadership and service is on the
+          <a href="/leadership.html">leadership &amp; service page</a>.</p>
+      </div>
+    </section>
+
+    <!-- ══ CLOSER ═══════════════════════════════════════════════════════ -->
+    <section class="cta-band">
+      <div class="wrap">
+        <h2>The full curriculum vitae, as a PDF</h2>
+        <p>The same record, formatted for print. Last updated September 2026.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/assets/Yatawara_CV.pdf" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg>
+            Download the PDF<span class="sr-only"> (opens in a new tab)</span>
+          </a>
+          <a class="btn btn-secondary" href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- ===================== FOOTER (identical on every page) ===================== -->
+  <!-- ======================= FOOTER (identical on every page) ================ -->
   <footer class="site-footer">
     <div class="wrap-wide">
       <div class="foot-grid">
         <div class="foot-brand">
           <div class="name">Anjana Yatawara</div>
-          <p>Statistician &amp; applied mathematician studying how complex systems encode and forget information. Assistant Professor, CSU Bakersfield.</p>
+          <p>Assistant Professor of Statistics, California State University, Bakersfield.
+            Founder &amp; Faculty Lead, CSUB Hub for Statistics, Applied AI &amp; Data Science
+            Innovation.</p>
           <div class="foot-socials">
-            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
-            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&hl=en&oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
-            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
-            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
-            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+            <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.3c0 4.5 2.9 8.3 6.8 9.7.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.4-3.4-1.4-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.3-1.1.6-1.4-2.2-.3-4.6-1.2-4.6-5.1 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9 9 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.8-4.6 5.1.3.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10.3 10.3 0 0 0 22 12.3C22 6.6 17.5 2 12 2Z"/></svg></a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener" aria-label="Google Scholar"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 1 8l11 6 9-4.9V16h2V8L12 2Z"/><path d="M5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg></a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener" aria-label="ORCID"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.3 7.4a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8ZM7.5 10.3H9v6.3H7.5v-6.3Zm3 0h2.9c2.8 0 4 2 4 3.1 0 1.7-1.3 3.2-4 3.2h-2.9v-6.3Zm1.5 1.3v3.7h1.3c1.8 0 2.5-.9 2.5-1.9 0-1.1-.8-1.8-2.5-1.8H12Z"/></svg></a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21H17v-5.3c0-1.3 0-2.9-1.8-2.9s-2 1.4-2 2.8V21H9V9Z"/></svg></a>
+            <a href="mailto:ayatawara@csub.edu" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
           </div>
         </div>
+
         <div>
-          <h4>Explore</h4>
+          <h3>Explore</h3>
           <div class="foot-links">
             <a href="/research.html">Research</a>
             <a href="/publications.html">Publications</a>
             <a href="/teaching.html">Teaching</a>
+            <a href="/leadership.html">Leadership &amp; Service</a>
+            <a href="/cv.html">Curriculum vitae</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Connect</h3>
+          <div class="foot-links">
+            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
+            <a href="https://scholar.google.com/citations?user=n5WtVd0AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+            <a href="https://orcid.org/0009-0007-8506-7763" target="_blank" rel="noopener">ORCID</a>
+            <a href="https://www.linkedin.com/in/anjana-yatawara/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://www.linkedin.com/company/csub-analytics" target="_blank" rel="noopener">CSUB Hub on LinkedIn</a>
+            <a href="/blog.html">Writing</a>
             <a href="/consulting.html">Consulting</a>
             <a href="/games/index.html">Games</a>
           </div>
         </div>
-        <div>
-          <h4>Connect</h4>
-          <div class="foot-links">
-            <a href="https://kernelstats.com" target="_blank" rel="noopener">KernelStats ↗</a>
-            <a href="/cv.html">Curriculum Vitae</a>
-            <a href="/blog.html">Blog</a>
-            <a href="mailto:ayatawara@csub.edu">ayatawara@csub.edu</a>
-            <button class="foot-link-btn" data-cmdk-open style="background:none;border:0;padding:0;color:var(--dim);font:inherit;text-align:left;cursor:pointer">Command palette ⌘K</button>
-          </div>
-        </div>
       </div>
+
       <div class="foot-bottom">
-        <span>© 2026 Anjana Yatawara · built as a living interface<span class="caret"></span></span>
-        <span>designed &amp; engineered from the future · <a href="https://github.com/anjana-yatawara" target="_blank" rel="noopener">source</a></span>
+        <span>&copy; 2026 Anjana Yatawara</span>
+        <span>California State University, Bakersfield</span>
       </div>
     </div>
   </footer>
 
-  <!-- ===================== SCRIPTS ===================== -->
-  <script src="/assets/js/cosmos.js" defer></script>
   <script src="/assets/js/shell.js" defer></script>
 </body>
 </html>

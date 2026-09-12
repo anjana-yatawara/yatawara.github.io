@@ -15,11 +15,13 @@
    gracefully with 0 mounts and supports many. Vanilla JS, no libraries, no math
    libs — exp/pow/log are the platform's; everything else is computed here.
 
-   LOOK: Apple × Cosmos — deep-space glass panel, hairline axes/gridlines, the
-   stretched-exponential curve in Apple blue #2997ff (faint blue fill), the
-   exponential reference in nebula violet #a98bff (dashed/dim), white/teal
-   markers. Sliders / buttons / readout panels: glassy, big rounding (--r-md),
-   pill thumbs, soft shadow, SF/Inter, accent-blue active fills. source-over.
+   LOOK: v8 Google. The figure is mounted ONLY inside the design system's one
+   dark band (.section-ink), and the injected CSS below reads that band's own
+   tokens — --surface-raised / --surface-sunken / --band-bg / --border* /
+   --ink* / --accent — so there is nothing left for a page to re-theme in a
+   <style> block of its own. Flat panel, hairline rules, no blur and no glow;
+   the curve in the band's link blue, the exponential reference in the band's
+   yellow, white / green markers. source-over.
    (Math / contract / readouts / reduced-motion all unchanged.)
    ========================================================================== */
 (function () {
@@ -48,26 +50,28 @@
   var ALPHA_MARKETS = 0.27;
   var T_DEFAULT = 19.4;
 
-  /* ---- palette (mirrors core.css APPLE × COSMOS tokens; canvas can't read
-         CSS var()s so these mirror the hexes). Deep-space ground => hairline
-         axes/gridlines + Apple blue / nebula violet, white/teal markers,
-         source-over. */
+  /* ---- palette. Canvas 2D cannot read CSS var()s, so these mirror the
+         .section-ink token hexes (components.css §1) the rest of the widget
+         resolves through var(). The well is --band-bg #202124; every value
+         below is measured against it:
+           #8ab4f8 7.6:1   #fdd663 11.6:1   #f5f7fa 16.0:1   #81c995 8.2:1
+           dim #bdc1c6 8.9:1   faint #9aa0a6 6.1:1                        */
   var COL = {
-    stretch: "#2997ff", // Apple blue — stretched-exponential (the finding)
-    expo: "#a98bff", // nebula violet — pure exponential reference (α = 1), dashed
+    stretch: "#8ab4f8", // --ink-band-link — stretched-exponential (the finding)
+    expo: "#fdd663", // --yellow-ink — pure exponential reference (α = 1), dashed
     half: "#f5f7fa", // near-white — w = 0.5 marker
-    tail: "#4fd6e6", // teal — w = 0.01 marker
-    grid: "rgba(255,255,255,0.09)", // ~var(--hair)
-    gridStrong: "rgba(255,255,255,0.20)", // emphasized gridline (~--hair-2)
-    axis: "rgba(255,255,255,0.34)", // ~var(--hair-3) — hairline axis
+    tail: "#81c995", // --green-ink — w = 0.01 marker
+    grid: "rgba(255,255,255,0.09)", // hairline gridline
+    gridStrong: "rgba(255,255,255,0.20)", // emphasized gridline
+    axis: "rgba(255,255,255,0.34)", // hairline axis
     ink: "#f5f7fa",
-    dim: "#8b92a1", // --dim
-    faint: "#5d6473" // --dimmer
+    dim: "#bdc1c6", // --grey-400 — axis labels
+    faint: "#9aa0a6" // --grey-500 — tick labels
   };
 
   // Canvas 2D cannot resolve CSS var() in ctx.font — use a concrete stack that
-  // mirrors --font-body (SF on Apple devices, Inter / system-ui elsewhere).
-  var MONO = '-apple-system, "Inter", "Segoe UI", system-ui, sans-serif';
+  // mirrors --font-body, including Google's own declared fallback.
+  var MONO = '"Google Sans Text", Arial, Helvetica, sans-serif';
 
   var prefersReduced = false;
   try {
@@ -138,20 +142,21 @@
   function injectCSS() {
     if (document.getElementById(STYLE_ID)) return;
     var css = [
-      ".kp{position:relative;background:var(--panel,rgba(255,255,255,0.045));border:1px solid var(--hair,rgba(255,255,255,0.09));border-radius:var(--r-lg,22px);padding:clamp(1rem,3vw,1.6rem);overflow:hidden;font-family:var(--font-body,-apple-system,'Inter',system-ui,sans-serif);box-shadow:var(--shadow-2,0 24px 60px -24px rgba(0,0,0,0.7));-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}",
+      ".kp{position:relative;background:var(--surface-raised);border:1px solid var(--border-soft);border-radius:var(--r-lg,24px);padding:clamp(1rem,3vw,1.6rem);overflow:hidden;font-family:var(--font-body,Arial,Helvetica,sans-serif)}",
       ".kp>*{position:relative}",
       // header
       ".kp-head{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem}",
-      ".kp-eyebrow{font-family:var(--font-code,ui-monospace,monospace);font-size:.62rem;letter-spacing:.06em;color:var(--text-soft,#c6ccd8);display:flex;align-items:center;gap:.5rem;background:var(--panel-2,rgba(255,255,255,0.075));border:1px solid var(--hair,rgba(255,255,255,0.09));padding:.34em .8em;border-radius:var(--r-pill,980px)}",
-      ".kp-eyebrow .kp-dot{width:6px;height:6px;border-radius:50%;background:var(--accent,#2997ff);box-shadow:0 0 8px var(--accent,#2997ff);animation:kp-pulse 2.4s infinite}",
-      ".kp-eq{font-family:var(--font-code,ui-monospace,monospace);font-size:clamp(.66rem,1.6vw,.78rem);color:var(--dim,#8b92a1);white-space:nowrap}",
-      ".kp-eq b{color:var(--accent,#2997ff);font-weight:600}",
-      ".kp-eq .kp-a{color:var(--accent,#2997ff)}",
-      // canvas
-      ".kp-canvas-wrap{position:relative;width:100%;border:1px solid var(--hair,rgba(255,255,255,0.09));border-radius:var(--r-md,16px);background:var(--bg-2,#06080f);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.04)}",
+      ".kp-eyebrow{font-family:var(--font-code,ui-monospace,monospace);font-size:.62rem;letter-spacing:.06em;color:var(--ink-3);display:flex;align-items:center;gap:.5rem;background:var(--surface-sunken);border:1px solid var(--border-soft);padding:.34em .8em;border-radius:var(--r-pill,32px)}",
+      ".kp-eyebrow .kp-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:kp-pulse 2.4s infinite}",
+      ".kp-eq{font-family:var(--font-code,ui-monospace,monospace);font-size:clamp(.66rem,1.6vw,.78rem);color:var(--ink-3);white-space:nowrap}",
+      ".kp-eq b{color:var(--accent);font-weight:600}",
+      ".kp-eq .kp-a{color:var(--accent)}",
+      // canvas — the well is the band ground, so it reads as recessed inside
+      // the panel and the canvas palette above keeps its measured contrast.
+      ".kp-canvas-wrap{position:relative;width:100%;border:1px solid var(--border-soft);border-radius:var(--r-md,16px);background:var(--band-bg);overflow:hidden}",
       ".kp-canvas-wrap canvas{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}",
       // legend
-      ".kp-legend{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:1rem;font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;color:var(--dim,#8b92a1)}",
+      ".kp-legend{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:1rem;font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;color:var(--ink-3)}",
       ".kp-legend span{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}",
       ".kp-legend i{width:16px;height:0;border-top-width:2px;border-top-style:solid;display:inline-block}",
       ".kp-legend i.dash{border-top-style:dashed}",
@@ -160,50 +165,50 @@
       ".kp-controls{display:grid;grid-template-columns:1fr;gap:1.1rem;margin-top:1.15rem}",
       "@media(min-width:680px){.kp-controls{grid-template-columns:1fr 1fr}}",
       ".kp-ctrl-label{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.55rem}",
-      ".kp-ctrl-label .kp-name{font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;letter-spacing:.04em;color:var(--dim,#8b92a1)}",
-      ".kp-ctrl-label .kp-val{font-family:var(--font-code,ui-monospace,monospace);font-size:.92rem;font-weight:600;color:var(--text,#f5f7fa);font-variant-numeric:tabular-nums}",
-      ".kp-ctrl-label .kp-val small{color:var(--dimmer,#5d6473);font-weight:400;font-size:.7em;margin-left:.15em}",
-      // range slider — glassy hairline rail, accent-blue fill + soft pill thumb
+      ".kp-ctrl-label .kp-name{font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;letter-spacing:.04em;color:var(--ink-3)}",
+      ".kp-ctrl-label .kp-val{font-family:var(--font-code,ui-monospace,monospace);font-size:.92rem;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}",
+      ".kp-ctrl-label .kp-val small{color:var(--ink-3);font-weight:400;font-size:.7em;margin-left:.15em}",
+      // range slider — hairline rail, accent fill, plain white pill thumb
       ".kp-range{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;cursor:pointer;margin:0;display:block}",
       ".kp-range:focus{outline:none}",
-      ".kp-range:focus-visible{outline:2px solid var(--accent,#2997ff);outline-offset:4px;border-radius:var(--r-pill,980px)}",
+      ".kp-range:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:var(--r-pill,32px)}",
       // track — webkit reads the element background (set inline as a sized gradient);
       // the track itself stays transparent so that fill shows through.
-      ".kp-range::-webkit-slider-runnable-track{height:6px;border-radius:var(--r-pill,980px);background:transparent}",
-      ".kp-range::-moz-range-track{height:6px;border-radius:var(--r-pill,980px);background:var(--panel-2,rgba(255,255,255,0.075))}",
-      ".kp-range::-moz-range-progress{height:6px;border-radius:var(--r-pill,980px);background:var(--accent,#2997ff)}",
-      // thumb (webkit) — soft white pill with a gentle shadow + hairline ring
-      ".kp-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:#fff;border:1px solid var(--hair-2,rgba(255,255,255,0.16));box-shadow:0 2px 8px rgba(0,0,0,0.5);transition:transform .15s var(--ease,ease),box-shadow .15s}",
-      ".kp-range:hover::-webkit-slider-thumb{box-shadow:0 2px 12px rgba(41,151,255,0.45)}",
-      ".kp-range:active::-webkit-slider-thumb{transform:scale(1.12);box-shadow:0 2px 14px rgba(41,151,255,0.6)}",
+      ".kp-range::-webkit-slider-runnable-track{height:6px;border-radius:var(--r-pill,32px);background:transparent}",
+      ".kp-range::-moz-range-track{height:6px;border-radius:var(--r-pill,32px);background:var(--border)}",
+      ".kp-range::-moz-range-progress{height:6px;border-radius:var(--r-pill,32px);background:var(--accent)}",
+      // thumb (webkit)
+      ".kp-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:var(--white);border:1px solid var(--border-strong);transition:transform .15s var(--ease,ease)}",
+      ".kp-range:active::-webkit-slider-thumb{transform:scale(1.12)}",
       // thumb (firefox)
-      ".kp-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--hair-2,rgba(255,255,255,0.16));box-shadow:0 2px 8px rgba(0,0,0,0.5);transition:transform .15s var(--ease,ease),box-shadow .15s}",
-      ".kp-range:hover::-moz-range-thumb{box-shadow:0 2px 12px rgba(41,151,255,0.45)}",
-      ".kp-range:active::-moz-range-thumb{transform:scale(1.12);box-shadow:0 2px 14px rgba(41,151,255,0.6)}",
-      ".kp-ticks{display:flex;justify-content:space-between;font-family:var(--font-code,ui-monospace,monospace);font-size:.58rem;color:var(--dimmer,#5d6473);margin-top:.45rem;letter-spacing:.02em}",
-      // quick-set buttons — glassy pill, hairline, soft lift (no hard offset/glow)
+      ".kp-range::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--white);border:1px solid var(--border-strong);transition:transform .15s var(--ease,ease)}",
+      ".kp-range:active::-moz-range-thumb{transform:scale(1.12)}",
+      ".kp-ticks{display:flex;justify-content:space-between;font-family:var(--font-code,ui-monospace,monospace);font-size:.58rem;color:var(--ink-3);margin-top:.45rem;letter-spacing:.02em}",
+      // quick-set buttons — outlined pill at rest, solid brand blue when active.
+      // The active fill is --blue and NOT --accent: on the ink band --accent is
+      // the light link blue, and white on it is 2.1:1. White on --blue is 4.5:1.
       ".kp-presets{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.3rem}",
-      ".kp-btn{font-family:var(--font-body,-apple-system,'Inter',system-ui,sans-serif);font-size:.78rem;font-weight:500;letter-spacing:0;padding:.55rem 1.1rem;border-radius:var(--r-pill,980px);border:1px solid var(--hair,rgba(255,255,255,0.09));background:var(--panel,rgba(255,255,255,0.045));color:var(--text-soft,#c6ccd8);cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s var(--ease,ease),border-color .2s,color .2s,transform .2s}",
-      ".kp-btn:hover{background:var(--panel-2,rgba(255,255,255,0.075));border-color:var(--hair-2,rgba(255,255,255,0.16));color:var(--text,#f5f7fa);transform:translateY(-1px)}",
-      ".kp-btn:active{transform:translateY(0)}",
-      ".kp-btn:focus-visible{outline:2px solid var(--accent,#2997ff);outline-offset:3px}",
-      ".kp-btn.kp-active{color:#fff;background:var(--accent,#2997ff);border-color:transparent}",
-      ".kp-btn.kp-exp.kp-active{color:#fff;background:var(--accent,#2997ff)}",
-      ".kp-btn.kp-mkt.kp-active{color:#fff;background:var(--accent,#2997ff);border-color:transparent}",
-      // readouts — glass panels, big rounding, hairline, soft shadow, accent edge
+      ".kp-btn{font-family:var(--font-display,Arial,Helvetica,sans-serif);font-size:.78rem;font-weight:500;letter-spacing:0;padding:.55rem 1.1rem;border-radius:var(--r-pill,32px);border:1px solid var(--border-control);background:transparent;color:var(--ink-2);cursor:pointer;transition:background .2s var(--ease,ease),border-color .2s,color .2s}",
+      ".kp-btn:hover{background:var(--surface-sunken);border-color:var(--border-strong);color:var(--ink)}",
+      ".kp-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}",
+      ".kp-btn.kp-active{color:var(--white);background:var(--blue);border-color:var(--blue)}",
+      ".kp-btn.kp-exp.kp-active{color:var(--white);background:var(--blue);border-color:var(--blue)}",
+      ".kp-btn.kp-mkt.kp-active{color:var(--white);background:var(--blue);border-color:var(--blue)}",
+      // readouts — flat wells, hairline, one accent edge. NOT a stat tile: the
+      // numerals are live simulator output and stay at reading size.
       ".kp-readouts{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:1.3rem}",
       "@media(min-width:520px){.kp-readouts{grid-template-columns:1fr 1fr}}",
-      ".kp-stat{position:relative;border:1px solid var(--hair,rgba(255,255,255,0.09));border-left-width:3px;border-radius:var(--r-md,16px);padding:.85rem 1rem;background:var(--panel,rgba(255,255,255,0.045));overflow:hidden;box-shadow:var(--shadow-1,0 2px 14px rgba(0,0,0,0.4))}",
-      ".kp-stat.kp-stat-half{border-left-color:var(--accent,#2997ff)}",
-      ".kp-stat.kp-stat-tail{border-left-color:var(--violet,#a98bff)}",
-      ".kp-stat .kp-stat-label{font-family:var(--font-code,ui-monospace,monospace);font-size:.6rem;letter-spacing:.04em;color:var(--dim,#8b92a1);display:flex;align-items:center;gap:.4rem}",
+      ".kp-stat{position:relative;border:1px solid var(--border-soft);border-left-width:3px;border-radius:var(--r-md,16px);padding:.85rem 1rem;background:var(--surface-sunken);overflow:hidden}",
+      ".kp-stat.kp-stat-half{border-left-color:var(--accent)}",
+      ".kp-stat.kp-stat-tail{border-left-color:var(--green-ink)}",
+      ".kp-stat .kp-stat-label{font-family:var(--font-code,ui-monospace,monospace);font-size:.6rem;letter-spacing:.04em;color:var(--ink-3);display:flex;align-items:center;gap:.4rem}",
       ".kp-stat .kp-stat-label i{width:8px;height:8px;border-radius:50%;flex:none}",
-      ".kp-stat .kp-stat-num{font-family:var(--font-display,-apple-system,'Inter',system-ui,sans-serif);font-size:clamp(1.5rem,4vw,2rem);font-weight:600;line-height:1.05;margin-top:.25rem;color:var(--text,#f5f7fa);font-variant-numeric:tabular-nums;letter-spacing:-.02em}",
-      ".kp-stat .kp-stat-sub{font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;color:var(--dimmer,#5d6473);margin-top:.2rem}",
+      ".kp-stat .kp-stat-num{font-family:var(--font-display,Arial,Helvetica,sans-serif);font-size:clamp(1.25rem,3vw,1.5rem);font-weight:500;line-height:1.15;margin-top:.25rem;color:var(--ink);font-variant-numeric:tabular-nums}",
+      ".kp-stat .kp-stat-sub{font-family:var(--font-code,ui-monospace,monospace);font-size:.64rem;color:var(--ink-3);margin-top:.2rem}",
       // narrative line
-      ".kp-note{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--hair,rgba(255,255,255,0.09));font-size:.9rem;line-height:1.6;color:var(--dim,#8b92a1)}",
-      ".kp-note b{color:var(--text,#f5f7fa);font-weight:600}",
-      ".kp-note .kp-amp{color:var(--accent,#2997ff);font-weight:600}",
+      ".kp-note{margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border-soft);font-size:.9rem;line-height:1.6;color:var(--ink-2)}",
+      ".kp-note b{color:var(--ink);font-weight:600}",
+      ".kp-note .kp-amp{color:var(--accent);font-weight:600}",
       "@keyframes kp-pulse{0%,100%{opacity:1}50%{opacity:.25}}",
       // reduced motion: kill the eyebrow pulse + thumb transitions
       "@media(prefers-reduced-motion:reduce){.kp *{transition-duration:.001ms!important;animation:none!important}}"
@@ -484,9 +489,9 @@
         ctx.lineTo(X(TAU_MAX), Y(0));
         ctx.closePath();
         var g = ctx.createLinearGradient(0, pad.t, 0, ch - pad.b);
-        g.addColorStop(0, "rgba(41,151,255,0.20)");
-        g.addColorStop(0.5, "rgba(41,151,255,0.07)");
-        g.addColorStop(1, "rgba(41,151,255,0.01)");
+        g.addColorStop(0, "rgba(138,180,248,0.20)");
+        g.addColorStop(0.5, "rgba(138,180,248,0.07)");
+        g.addColorStop(1, "rgba(138,180,248,0.01)");
         ctx.fillStyle = g;
         ctx.fill();
       }
@@ -500,8 +505,8 @@
         else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = stroke;
-      // Source-over on the cosmic ground — no additive glow; the curve is a
-      // clean, bold Apple line. (glow arg retained for signature compat, unused.)
+      // Source-over on the dark well — no additive glow; the curve is a clean,
+      // flat line. (glow arg retained for signature compat, unused.)
       void glow;
       ctx.stroke();
       ctx.restore();
@@ -545,13 +550,13 @@
       ctx.restore();
 
       ctx.save();
-      // marker dot (source-over on the cosmic ground)
+      // marker dot (source-over on the dark well)
       ctx.fillStyle = color;
       ctx.beginPath();
       ctx.arc(x, y, 4.2, 0, Math.PI * 2);
       ctx.fill();
-      // thin dark ring lifts the dot off the gridlines
-      ctx.strokeStyle = "rgba(6,8,15,0.92)";
+      // thin ring in the well's own colour lifts the dot off the gridlines
+      ctx.strokeStyle = "rgba(32,33,36,0.92)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(x, y, 4.2, 0, Math.PI * 2);
@@ -577,9 +582,9 @@
       if (!cw) return;
       clear();
       drawGrid();
-      // pure exponential reference (violet, dashed) — SAME T so contrast is α.
+      // pure exponential reference (yellow, dashed) — SAME T so contrast is α.
       strokeCurve(shown.T, 1, COL.expo, 1.8, [6, 5], false);
-      // the live stretched-exponential — bold Apple-blue line + faint blue fill.
+      // the live stretched-exponential — bold blue line + faint blue fill.
       strokeCurve(shown.T, shown.alpha, COL.stretch, 3.2, null, true, null);
       // markers on the live curve
       drawMarker(0.5, shown.T, shown.alpha, COL.half, "w=0.5");
@@ -645,11 +650,11 @@
       var pct = ((val - min) / (max - min)) * 100;
       pct = pct < 0 ? 0 : pct > 100 ? 100 : pct;
       input.style.background =
-        "var(--accent,#2997ff) left center / " +
+        "var(--accent) left center / " +
         pct +
         "% 6px no-repeat, " +
-        "var(--panel-2,rgba(255,255,255,0.075)) left center / 100% 6px no-repeat";
-      input.style.borderRadius = "980px";
+        "var(--border) left center / 100% 6px no-repeat";
+      input.style.borderRadius = "32px";
     }
 
     /* ---------- animation between states ---------- */
