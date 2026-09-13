@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Rendering diagnostic — yatawara.com</title>
+
+<!-- =============================================================================
+     TEMPORARY DIAGNOSTIC PAGE.
+     Anjana's browser renders the primary button as a blue pill with no label,
+     and his nav links blue where they should be dark grey. Both symptoms point
+     at aliased CSS custom properties failing to resolve, while literal ones
+     work. This page reports what his browser ACTUALLY computes so the cause
+     can be identified instead of guessed at. Delete once resolved.
+     Deliberately styles itself with NO custom properties so it cannot be
+     affected by the fault it is measuring.
+     ============================================================================= -->
+
+<link rel="stylesheet" href="/assets/css/core.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+
+<style>
+  /* self-contained: literal values only */
+  body { margin:0; padding:20px; background:#fff; color:#202124;
+         font:400 15px/1.6 Arial, Helvetica, sans-serif; }
+  h1 { font:500 22px/1.3 Arial, sans-serif; margin:0 0 4px; }
+  p.sub { color:#5f6368; margin:0 0 20px; }
+  table { border-collapse:collapse; width:100%; max-width:760px; margin-bottom:22px; }
+  th,td { text-align:left; padding:7px 9px; border-bottom:1px solid #dadce0;
+          font:400 13px/1.45 ui-monospace, Menlo, Consolas, monospace; vertical-align:top; }
+  th { background:#f1f3f4; font-weight:700; }
+  .ok   { color:#0d652d; font-weight:700; }
+  .bad  { color:#c5221f; font-weight:700; }
+  h2 { font:500 16px Arial, sans-serif; margin:24px 0 8px; }
+  .swatch { display:inline-block; width:14px; height:14px; border:1px solid #999;
+            vertical-align:-2px; margin-right:6px; }
+  #copy { font:500 15px Arial, sans-serif; background:#1558b0; color:#fff; border:0;
+          border-radius:32px; padding:12px 24px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h1>Rendering diagnostic</h1>
+<p class="sub">Nothing here is saved or sent anywhere. Screenshot it, or use the copy button at the bottom.</p>
+
+<!-- the two controls that misbehave, rendered with the real site CSS -->
+<h2>The actual controls</h2>
+<div class="btn-row" style="margin-bottom:8px">
+  <a class="btn btn-primary" href="#" id="pbtn">Explore the research</a>
+  <a class="btn btn-secondary" href="#" id="sbtn">Read publications</a>
+</div>
+<nav class="nav" style="display:flex;gap:4px;margin-bottom:8px">
+  <a class="nav-link" href="#" id="nlink">Research</a>
+</nav>
+
+<h2>What your browser computed</h2>
+<table id="computed"><tbody></tbody></table>
+
+<h2>Custom properties resolved on :root</h2>
+<table id="tokens"><tbody></tbody></table>
+
+<h2>Stylesheets + capabilities</h2>
+<table id="env"><tbody></tbody></table>
+
+<p><button id="copy">Copy all of this as text</button></p>
+
+<script>
+(function () {
+  function row(tb, k, v, state) {
+    var tr = tb.insertRow(), a = tr.insertCell(), b = tr.insertCell();
+    a.textContent = k;
+    if (/^#|^rgb/.test(String(v))) {
+      var s = document.createElement('span');
+      s.className = 'swatch'; s.style.background = v;
+      b.appendChild(s);
+    }
+    b.appendChild(document.createTextNode(String(v)));
+    if (state) b.className = state;
+  }
+
+  var cs = getComputedStyle(document.getElementById('pbtn'));
+  var ss = getComputedStyle(document.getElementById('sbtn'));
+  var ns = getComputedStyle(document.getElementById('nlink'));
+  var tb = document.querySelector('#computed tbody');
+
+  // The core test: does the primary button's text colour differ from its background?
+  var fg = cs.color, bg = cs.backgroundColor;
+  var same = fg.replace(/\s/g, '') === bg.replace(/\s/g, '');
+  row(tb, 'primary button color', fg, same ? 'bad' : 'ok');
+  row(tb, 'primary button background', bg);
+  row(tb, 'VERDICT', same ? 'BROKEN - label is the same colour as the fill' :
+                            'label colour differs from fill', same ? 'bad' : 'ok');
+  row(tb, 'primary -webkit-text-fill-color', cs.webkitTextFillColor || '(n/a)');
+  row(tb, 'primary opacity', cs.opacity);
+  row(tb, 'primary font-family', cs.fontFamily);
+  row(tb, 'secondary button color', ss.color);
+  row(tb, 'nav link color', ns.color);
+  row(tb, 'nav link EXPECTED', 'rgb(60, 64, 67) - dark grey',
+      ns.color.replace(/\s/g, '') === 'rgb(60,64,67)' ? 'ok' : 'bad');
+
+  var rs = getComputedStyle(document.documentElement);
+  var tt = document.querySelector('#tokens tbody');
+  var keys = ['--white', '--grey-800', '--grey-900', '--blue', '--blue-dark',
+              '--ink', '--ink-2', '--accent', '--on-accent', '--link',
+              '--font-display', '--fs-body'];
+  for (var i = 0; i < keys.length; i++) {
+    var v = rs.getPropertyValue(keys[i]).trim();
+    row(tt, keys[i], v === '' ? '(EMPTY - THIS IS THE FAULT)' : v, v === '' ? 'bad' : 'ok');
+  }
+
+  var et = document.querySelector('#env tbody');
+  var sheets = 0, rules = 0, blocked = [];
+  for (var j = 0; j < document.styleSheets.length; j++) {
+    var sh = document.styleSheets[j];
+    sheets++;
+    try { rules += sh.cssRules ? sh.cssRules.length : 0; }
+    catch (e) { blocked.push((sh.href || 'inline') + ' (' + e.name + ')'); }
+  }
+  row(et, 'stylesheets loaded', sheets);
+  row(et, 'total CSS rules readable', rules, rules > 200 ? 'ok' : 'bad');
+  row(et, 'unreadable sheets', blocked.length ? blocked.join(' | ') : 'none');
+  row(et, 'supports var()', (window.CSS && CSS.supports && CSS.supports('color', 'var(--x, #000)')) ? 'yes' : 'NO', (window.CSS && CSS.supports && CSS.supports('color', 'var(--x,#000)')) ? 'ok' : 'bad');
+  row(et, 'supports clamp()', (window.CSS && CSS.supports && CSS.supports('width', 'clamp(1px,2px,3px)')) ? 'yes' : 'no');
+  row(et, 'supports :has()', (function(){ try { return document.querySelector(':has(*)') !== undefined ? 'yes' : 'yes'; } catch (e) { return 'no'; } })());
+  row(et, 'forced-colors active', (window.matchMedia && matchMedia('(forced-colors: active)').matches) ? 'YES' : 'no');
+  row(et, 'prefers-contrast more', (window.matchMedia && matchMedia('(prefers-contrast: more)').matches) ? 'yes' : 'no');
+  row(et, 'prefers-color-scheme dark', (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'yes' : 'no');
+  row(et, 'devicePixelRatio', window.devicePixelRatio || 1);
+  row(et, 'viewport', window.innerWidth + ' x ' + window.innerHeight);
+  row(et, 'userAgent', navigator.userAgent);
+
+  document.getElementById('copy').onclick = function () {
+    var out = [];
+    ['computed', 'tokens', 'env'].forEach(function (id) {
+      out.push('== ' + id + ' ==');
+      var rows = document.querySelectorAll('#' + id + ' tbody tr');
+      for (var i = 0; i < rows.length; i++) {
+        out.push(rows[i].cells[0].textContent + ': ' + rows[i].cells[1].textContent);
+      }
+    });
+    var txt = out.join('\n');
+    try {
+      navigator.clipboard.writeText(txt);
+      this.textContent = 'Copied';
+    } catch (e) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.width = '100%'; ta.rows = 18;
+      document.body.appendChild(ta); ta.select();
+      this.textContent = 'Select the box below and copy';
+    }
+  };
+})();
+</script>
+</body>
+</html>
