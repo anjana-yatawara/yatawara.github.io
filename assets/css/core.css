@@ -73,16 +73,16 @@
   --green-tint:#e6f4ea;
 
   /* small-chip ground (badges, tags, inline code) */
-  --chip-bg:var(--grey-100);
+  --chip-bg:var(--grey-100, #f1f3f4);
 
   /* ---- semantic surfaces ---- */
-  --surface:var(--white);          /* page ground */
-  --surface-alt:var(--grey-50);    /* the alternating full-bleed band */
-  --surface-sunken:var(--grey-100);
-  --surface-raised:var(--white);   /* a panel that stays light on ANY band —
+  --surface:var(--white, #ffffff);          /* page ground */
+  --surface-alt:var(--grey-50, #f8f9fa);    /* the alternating full-bleed band */
+  --surface-sunken:var(--grey-100, #f1f3f4);
+  --surface-raised:var(--white, #ffffff);   /* a panel that stays light on ANY band —
                                       use this, not --surface, for cards,
                                       table wrappers, chips and icon buttons */
-  --band-bg:var(--surface);        /* the ground of the CURRENT full-bleed
+  --band-bg:var(--surface, #ffffff);        /* the ground of the CURRENT full-bleed
                                       band. Every band rebinds it (see
                                       components.css §1) so anything that has
                                       to knock a hole in its own background —
@@ -90,11 +90,11 @@
                                       surface instead of only on white. */
 
   /* ---- semantic lines ---- */
-  --border:var(--grey-300);        /* the standard hairline, and the border on
+  --border:var(--grey-300, #dadce0);        /* the standard hairline, and the border on
                                       controls whose text is already blue */
-  --border-soft:var(--grey-200);
-  --border-strong:var(--grey-500);
-  --border-control:var(--grey-500);/* 3.68:1 — the boundary of a control that
+  --border-soft:var(--grey-200, #e8eaed);
+  --border-strong:var(--grey-500, #9aa0a6);
+  --border-control:var(--grey-500, #9aa0a6);/* 3.68:1 — the boundary of a control that
                                       has NO other affordance (see .chip).
                                       Never animated on hover: a border that
                                       darkens under the cursor is a tell
@@ -131,9 +131,9 @@
   --on-accent:var(--white, #ffffff);        /* the one that broke the button */
   --link:#1558b0;                          /* 6.87:1 on white, 5.9:1 on --grey-50 */
   --link-hover:var(--blue-dark, #174ea6);
-  --focus-ring:var(--blue);
-  --selection:var(--blue-tint-2);
-  --selection-ink:var(--grey-900);
+  --focus-ring:var(--blue, #1a73e8);
+  --selection:var(--blue-tint-2, #d2e3fc);
+  --selection-ink:var(--grey-900, #202124);
 
   /* ---- type families ---- */
   --font-display:"Google Sans","Google Sans Flex",Arial,Helvetica,sans-serif;
@@ -415,7 +415,7 @@ a:active { color: var(--accent-deep); }
 .surface-tint,
 .callout,
 .cta-band,
-.site-footer { --link: var(--blue-ink); }
+.site-footer { --link: var(--blue-ink, #1967d2); }
 
 
 /* -----------------------------------------------------------------------------
