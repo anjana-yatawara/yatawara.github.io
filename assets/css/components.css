@@ -347,6 +347,13 @@
   color: var(--ink-3); letter-spacing: 0.02em;
 }
 .rule-row .rr-body { min-width: 0; }
+
+/* .rule-list.no-key — a ruled list with no key column at all.
+   The home page used to number his research areas 01-04 in the key column,
+   which is a count of his own record and therefore out (see _dev/_BRIEF-V8.md
+   §2). Dropping the spans alone would leave a dead 9rem column, so the grid
+   collapses to a single track instead. */
+.rule-list.no-key .rule-row { grid-template-columns: minmax(0, 1fr); }
 .rule-row .rr-title { font-family: var(--font-display); font-weight: var(--w-medium); color: var(--ink); }
 @media (max-width: 640px) { .rule-row { grid-template-columns: minmax(0, 1fr); } }
 
