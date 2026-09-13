@@ -892,3 +892,85 @@ a.card.card-flat:hover { border-color: transparent; box-shadow: none; }
 @media (max-width: 900px) {
   .cols-2:has(.rule-row, .course) { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* -----------------------------------------------------------------------------
+   22. GAUSS FIELD — the animated distribution band
+   A full-bleed strip of its own, directly under the header and directly above
+   the <h1>. It is NOT a backdrop: nothing is layered on top of the canvas. The
+   one line of copy that names the model sits BELOW the band, in normal flow,
+   outside the element the canvas lives in.
+
+   WHY IT IS A SEPARATE STRIP AND MUST STAY ONE
+   The reveal animation that shipped before promoted a text ancestor to a GPU
+   layer with transform + opacity, and on some drivers the text inside then
+   silently failed to paint until something forced a repaint. So this band
+   carries NO transform, NO opacity animation, NO filter and NO will-change,
+   and it holds no text of its own. Do not put copy inside .gauss-band, do not
+   give it a [data-reveal], and do not wrap it and the hero in a shared animated
+   element. The whole point of a strip is that it has no text to break.
+
+   NO LAYOUT SHIFT
+   The height is declared here, so the band occupies its final space from the
+   first paint. The canvas is absolutely positioned inside it and therefore
+   contributes nothing to layout whenever it arrives — or never arrives,
+   because the script failed and removed itself.
+
+   THE HEIGHT IS DELIBERATELY SHORTER THAN THE PICTURE COULD FILL
+   An earlier clamp(156px, 19vw, 280px) reserved roughly 40px that held no
+   perceptible ink: the back rows emerge from paper colour, so the top quarter
+   of the band was blank and the <h1> was pushed down to pay for it. The module
+   reads this height and scales the whole composition to it, including the
+   horizontal domain, so shortening the band does not crop the picture — it
+   fits the box to the picture.
+   -------------------------------------------------------------------------- */
+.gauss-strip {
+  width: 100%;
+  background: var(--surface);
+}
+
+.gauss-band {
+  position: relative;                /* the canvas's containing block */
+  width: 100%;
+  height: clamp(148px, 16vw, 236px); /* reserved before the canvas paints */
+  overflow: hidden;                  /* requirement 10: never a horizontal scrollbar */
+  background: var(--surface);
+}
+
+/* No border-bottom. The near rows are the crispest, darkest strokes in the
+   composition and they used to terminate on a hairline; the module now fades
+   the bottom of the canvas to the band's own paper colour so they melt out of
+   the page instead. A rule under them would put the guillotine back. */
+
+/* The canvas is decorative furniture: it is aria-hidden, it is not focusable,
+   and it is transparent to the pointer so a selection drag or a link hover
+   near the top of the page behaves as if it were not there. The script sets
+   these inline as well, so the band degrades correctly if this rule is ever
+   dropped from the bundle. */
+.gauss-band > canvas {
+  position: absolute;
+  top: 0; left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* One quiet line naming the model, on the page's own gutter so it lines up
+   with the <h1> beneath it. It is ordinary flow text in an ordinary element:
+   nothing here is composited, and it is not inside .gauss-band. */
+.gauss-caption {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  max-width: var(--measure);
+}
+
+/* The hero that follows loses its top padding: the band already supplies the
+   breathing room, and 7rem of whitespace under the strip reads as a gap rather
+   than as a margin. */
+.gauss-strip + .wrap > .hero { padding-top: var(--space-7); }
+
+/* prefers-reduced-motion needs no rule here. The module reads the query itself
+   and paints one settled still frame instead of starting a loop — hiding the
+   band would replace a considered composition with a blank strip, which is a
+   worse answer for a reader who only asked for less movement. */
