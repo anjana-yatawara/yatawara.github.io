@@ -46,8 +46,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500&display=swap" rel="stylesheet">
 
   <!-- styles -->
-  <link rel="stylesheet" href="/assets/css/core.css?v9">
-  <link rel="stylesheet" href="/assets/css/components.css?v9">
+  <link rel="stylesheet" href="/assets/css/core.css?v10">
+  <link rel="stylesheet" href="/assets/css/components.css?v10">
 
   <!-- Structured data — home page only. Every value here is already visible on
        this page (role line, affiliation, the footer's public profile links), so
@@ -108,6 +108,29 @@
 
   <main id="main">
 
+    <!-- ══ THE DISTRIBUTION BAND ═══════════════════════════════════════════
+         A full-bleed strip of its own, between the header and the hero. The
+         band element is EMPTY: gaussfield.js finds it by its data-component and
+         builds one absolutely-positioned, aria-hidden canvas inside it.
+
+         NO TEXT MAY GO INSIDE .gauss-band. The caption below is a sibling in
+         normal flow, not an overlay, and nothing here — band, strip or caption
+         — carries a transform, an opacity animation or a will-change. That is
+         the rule that keeps the earlier text-painting failure from returning.
+
+         If the script is blocked, fails, or never arrives, what remains is a
+         clean 148-236px strip of --surface and one line of grey text, which is
+         a perfectly reasonable thing for a page to start with. -->
+    <div class="gauss-strip">
+      <div class="gauss-band" data-component="gauss-field"></div>
+      <div class="wrap">
+        <p class="gauss-caption">The dark curve is a kernel density estimate of the points
+          arriving beneath it: smoothing holds it under the dashed truth on average, though
+          a downward jump in the bandwidth will often send it over.</p>
+      </div>
+    </div>
+
+
     <!-- ── OPENING — name, role, positioning, portrait ──────────────────── -->
     <div class="wrap">
       <section class="hero">
@@ -146,7 +169,7 @@
       </section>
     </div>
 
-    <!-- ── RESEARCH — four lines of work, as hairline-ruled rows ─────────── -->
+    <!-- ── RESEARCH — the lines of work, as hairline-ruled rows ──────────── -->
     <section class="section section-alt">
       <div class="wrap">
         <div class="section-head" data-reveal>
@@ -425,6 +448,7 @@
   </footer>
 
   <!-- ======================= SCRIPTS ======================================== -->
-  <script src="/assets/js/shell.js?v9" defer></script>
+  <script src="/assets/js/shell.js?v10" defer></script>
+  <script src="/assets/js/gaussfield.js?v10" defer></script>
 </body>
 </html>
