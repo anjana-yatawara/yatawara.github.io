@@ -479,8 +479,12 @@ main { display: block; }
   cursor: pointer;
   white-space: nowrap;
   text-decoration: none;
+  /* `color` is deliberately NOT transitioned. A transitioned colour is an
+     animated value, and on the driver where the reveal layer failed to
+     re-rasterise that is precisely what left the label unpainted until a
+     hover forced a repaint. Background and shadow may animate; the text
+     colour is now a static value that is correct on the very first paint. */
   transition: background-color var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease),
               box-shadow var(--t-fast) var(--ease);
 }
 .btn:hover { text-decoration: none; }
@@ -501,6 +505,36 @@ main { display: block; }
   border-color: var(--accent, #1558b0);
   color: var(--on-accent, #ffffff);
 }
+
+/* ---------------------------------------------------------------------------
+   THE FILLED-BUTTON LABEL, MADE UNCONDITIONAL.
+
+   Anjana reported this button rendering as a solid blue pill with no label,
+   three fixes running. It renders correctly in every browser available here,
+   so the cause is something specific to his machine that cannot be reproduced
+   or reasoned about from this side.
+
+   This stops trying to be clever. The declarations below use a literal colour
+   (no custom property that can fail to resolve), !important (so no specificity
+   or cascade accident can lose to `.btn { color: var(--link) }`), and TWO
+   different selector shapes — a class selector and an attribute selector — so
+   that if one form is not being applied for some reason, the other still is.
+
+   This is deliberately belt-and-braces and should stay until the underlying
+   cause is actually identified via /diag.html.
+   ------------------------------------------------------------------------- */
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:visited { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+
+[class~="btn-primary"] { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+
+/* the same guarantee for the one dark band, where the fill is light blue and
+   the label must be dark rather than white */
+.section-ink .btn-primary,
+.cta-band.ink .btn-primary { color: #202124 !important; -webkit-text-fill-color: #202124 !important; }
 .btn-primary:hover {
   background: var(--accent-hover, #174ea6);
   border-color: var(--accent-hover, #174ea6);
@@ -788,11 +822,23 @@ main:has(> .cta-band:last-child) + .site-footer { margin-top: 0; }
    has not asked for less motion. A blocked, failed or slow script therefore
    cannot hide a single word: without the class, [data-reveal] is just a div.
    -------------------------------------------------------------------------- */
+/* NO TRANSFORM HERE. It used to be `opacity: 0; transform: translateY(12px)`,
+   which promotes every revealed block to a GPU-composited layer. On some
+   drivers that layer is not correctly re-rasterised when the transform
+   settles, and text inside it never paints until something forces a repaint —
+   which is why Anjana saw filled buttons as empty blue boxes whose labels
+   appeared the instant he moved the cursor over them. It is invisible in
+   headless Chromium, which composites on the CPU, so it survived every test
+   here through three wrong diagnoses.
+   Opacity alone still promotes a layer, but it does not carry the
+   transform-settling bug, and `will-change: auto` on the revealed state tells
+   the compositor it may drop the layer once the animation is done.
+   The 12px rise is not worth an invisible button. Do not put it back. */
 html.reveal-ready [data-reveal] {
-  opacity: 0; transform: translateY(12px);
-  transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+  opacity: 0;
+  transition: opacity var(--t-slow) var(--ease-out);
 }
-html.reveal-ready [data-reveal].is-revealed { opacity: 1; transform: none; }
+html.reveal-ready [data-reveal].is-revealed { opacity: 1; will-change: auto; }
 html.reveal-ready [data-reveal][data-delay="1"]{transition-delay:.06s}
 html.reveal-ready [data-reveal][data-delay="2"]{transition-delay:.12s}
 html.reveal-ready [data-reveal][data-delay="3"]{transition-delay:.18s}
