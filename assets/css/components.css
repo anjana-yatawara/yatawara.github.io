@@ -25,8 +25,8 @@
 .section-lg { padding-block: var(--section-y-lg); position: relative; }
 
 /* the alternate surface — grey-50, edge to edge */
-.section-alt   { background: var(--surface-alt);    --band-bg: var(--surface-alt); }
-.section-tint  { background: var(--accent-surface); --band-bg: var(--accent-surface); }
+.section-alt   { background: var(--surface-alt);    --band-bg: var(--surface-alt, #292a2d); }
+.section-tint  { background: var(--accent-surface); --band-bg: var(--accent-surface, rgba(138,180,248,.16)); }
 
 /* a hairline instead of a change of surface */
 .section-ruled { border-top: 1px solid var(--border); }
@@ -51,37 +51,37 @@
 
   background: var(--ink-band-bg);
   color: var(--grey-300);
-  --band-bg: var(--ink-band-bg);
+  --band-bg: var(--ink-band-bg, #202124);
 
-  --surface: var(--ink-band-bg);
-  --surface-alt: var(--ink-band-raised);
-  --surface-sunken: var(--ink-band-sunken);
-  --surface-raised: var(--ink-band-raised);
-  --chip-bg: var(--ink-band-sunken);
+  --surface: var(--ink-band-bg, #202124);
+  --surface-alt: var(--ink-band-raised, #292a2d);
+  --surface-sunken: var(--ink-band-sunken, #35363a);
+  --surface-raised: var(--ink-band-raised, #292a2d);
+  --chip-bg: var(--ink-band-sunken, #35363a);
 
-  --ink: var(--white);
-  --ink-2: var(--grey-300);
-  --ink-3: var(--grey-400);
-  --ink-muted: var(--grey-600);
+  --ink: var(--white, #ffffff);
+  --ink-2: var(--grey-300, #dadce0);
+  --ink-3: var(--grey-400, #bdc1c6);
+  --ink-muted: var(--grey-600, #80868b);
 
   --border: #5f6368;
   --border-soft: #3c4043;
   --border-strong: #80868b;
   --border-control: #80868b;
 
-  --link: var(--ink-band-link);
-  --link-hover: var(--ink-band-link-hover);
-  --accent: var(--ink-band-link);
-  --accent-hover: var(--ink-band-link-hover);
+  --link: var(--ink-band-link, #8ab4f8);
+  --link-hover: var(--ink-band-link-hover, #aecbfa);
+  --accent: var(--ink-band-link, #8ab4f8);
+  --accent-hover: var(--ink-band-link-hover, #aecbfa);
   --accent-deep: #d2e3fc;
   --accent-surface: rgba(138,180,248,.16);
   --accent-surface-2: rgba(138,180,248,.26);
-  --on-accent: var(--ink-band-bg);
-  --focus-ring: var(--ink-band-link);
+  --on-accent: var(--ink-band-bg, #202124);
+  --focus-ring: var(--ink-band-link, #8ab4f8);
 
   /* the accent "ink" weights are the light-ground values; on this band the
      readable weight is the light tint, not the dark one */
-  --blue-ink: var(--ink-band-link);
+  --blue-ink: var(--ink-band-link, #8ab4f8);
   --red-ink: #f28b82;
   --yellow-ink: #fdd663;
   --green-ink: #81c995;
@@ -555,7 +555,7 @@ table.data .mono, table.data .code { font-family: var(--font-code); font-size: v
 .callout {
   display: flex; gap: var(--space-4); align-items: flex-start;
   background: var(--surface-alt);
-  --band-bg: var(--surface-alt);
+  --band-bg: var(--surface-alt, #292a2d);
   border-radius: var(--r-md);
   padding: var(--space-6);
 }
@@ -576,11 +576,11 @@ table.data .mono, table.data .code { font-family: var(--font-code); font-size: v
 .callout p + p { margin-top: var(--space-3); }
 .callout a { font-weight: var(--w-medium); }
 
-.callout.note { background: var(--blue-tint);   --band-bg: var(--blue-tint); }
+.callout.note { background: var(--blue-tint);   --band-bg: var(--blue-tint, rgba(138,180,248,.16)); }
 .callout.note .co-ico { background: var(--blue-tint-2); color: var(--blue-ink); }
-.callout.tip  { background: var(--green-tint);  --band-bg: var(--green-tint); }
+.callout.tip  { background: var(--green-tint);  --band-bg: var(--green-tint, rgba(129,201,149,.16)); }
 .callout.tip .co-ico  { background: var(--surface-raised); color: var(--green-ink); }
-.callout.warn { background: var(--yellow-tint); --band-bg: var(--yellow-tint); }
+.callout.warn { background: var(--yellow-tint); --band-bg: var(--yellow-tint, rgba(253,214,99,.16)); }
 .callout.warn .co-ico { background: var(--surface-raised); color: var(--yellow-ink); }
 
 /* an even quieter variant — a hairline rule instead of a filled block */
@@ -650,7 +650,7 @@ a.chip:hover, button.chip:hover { background: var(--surface-alt); color: var(--i
 .card {
   position: relative;
   background: var(--surface-raised);
-  --band-bg: var(--surface-raised);
+  --band-bg: var(--surface-raised, #292a2d);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
   padding: var(--space-6);
@@ -763,7 +763,7 @@ a.card.card-flat:hover { border-color: transparent; box-shadow: none; }
    -------------------------------------------------------------------------- */
 .cta-band {
   background: var(--accent-surface);
-  --band-bg: var(--accent-surface);
+  --band-bg: var(--accent-surface, rgba(138,180,248,.16));
   padding-block: var(--section-y);
   text-align: center;
 }
@@ -777,7 +777,7 @@ a.card.card-flat:hover { border-color: transparent; box-shadow: none; }
   color: var(--ink-2); font-size: var(--fs-lead); line-height: 1.5;
 }
 .cta-band .btn-row { justify-content: center; margin-top: var(--space-6); }
-.cta-band.quiet { background: var(--surface-alt); --band-bg: var(--surface-alt); }
+.cta-band.quiet { background: var(--surface-alt); --band-bg: var(--surface-alt, #292a2d); }
 .cta-band.boxed {
   border-radius: var(--r-lg);
   padding: var(--section-y-sm) var(--gutter);
