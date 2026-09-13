@@ -100,11 +100,17 @@
                                       darkens under the cursor is a tell
                                       Google does not have. */
 
-  /* ---- semantic ink ---- */
-  --ink:var(--grey-900);           /* headings + primary text   16.10 on white */
-  --ink-2:var(--grey-800);         /* body                      10.47 */
-  --ink-3:var(--grey-700);         /* secondary, captions, meta  6.05 */
-  --ink-muted:var(--grey-500);     /* 2.64:1 — DISABLED CONTROLS ONLY.
+  /* ---- semantic ink ----
+     Every alias below carries a literal fallback. A var() that cannot resolve
+     is "invalid at computed-value time" and computes to `inherit` — it does
+     NOT fall back to an earlier declaration — so one unresolved alias silently
+     turns body text and button labels into inherited link-blue. That is
+     exactly the fault that made the primary button render as an empty blue
+     pill. The fallbacks make the whole token chain fail-safe. Keep them. */
+  --ink:var(--grey-900, #202124);     /* headings + primary text  16.10 on white */
+  --ink-2:var(--grey-800, #3c4043);   /* body                     10.47 */
+  --ink-3:var(--grey-700, #5f6368);   /* secondary, captions, meta 6.05 */
+  --ink-muted:var(--grey-500, #9aa0a6); /* 2.64:1 — DISABLED CONTROLS ONLY.
                                       Never for text a reader must read, and
                                       never for a glyph that carries meaning. */
 
@@ -116,15 +122,15 @@
      6.87:1) while #1a73e8 stays as the brand colour for tints, focus rings
      and the header. Do not "restore" #1a73e8 here for fidelity: the reference
      site's own blue is the thing that failed. */
-  --accent:#1558b0;                /* filled-control ground · white on it = 6.87:1 */
-  --accent-hover:var(--blue-dark);  /* #174ea6 · 7.85:1 */
+  --accent:#1558b0;                        /* filled-control ground · white on it = 6.87:1 */
+  --accent-hover:var(--blue-dark, #174ea6); /* 7.85:1 */
   --accent-deep:#103f7d;
-  --accent-brand:var(--blue);       /* #1a73e8 — tints, rings, brand marks only */
-  --accent-surface:var(--blue-tint);
-  --accent-surface-2:var(--blue-tint-2);
-  --on-accent:var(--white);
-  --link:#1558b0;                  /* 6.87:1 on white, 5.9:1 on --grey-50 */
-  --link-hover:var(--blue-dark);
+  --accent-brand:var(--blue, #1a73e8);      /* tints, rings, brand marks only */
+  --accent-surface:var(--blue-tint, #e8f0fe);
+  --accent-surface-2:var(--blue-tint-2, #d2e3fc);
+  --on-accent:var(--white, #ffffff);        /* the one that broke the button */
+  --link:#1558b0;                          /* 6.87:1 on white, 5.9:1 on --grey-50 */
+  --link-hover:var(--blue-dark, #174ea6);
   --focus-ring:var(--blue);
   --selection:var(--blue-tint-2);
   --selection-ink:var(--grey-900);
@@ -480,16 +486,25 @@ main { display: block; }
 .btn:hover { text-decoration: none; }
 .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
-/* Primary — filled blue pill */
+/* Primary — filled blue pill.
+   EVERY var() here carries a literal fallback, and that is deliberate.
+   Anjana reported this button rendering as a solid blue pill with NO label.
+   Cause: when a var() cannot resolve, CSS does NOT fall back to an earlier
+   declaration — the property becomes "invalid at computed-value time" and
+   computes to `inherit`. So `color: var(--on-accent)` failing meant the label
+   inherited `.btn`'s `color: var(--link)` — blue text on a blue button.
+   `--accent` is a literal and resolved fine, which is why the pill was still
+   blue while the text vanished. A fallback INSIDE var() is the only thing that
+   actually prevents this. Do not "tidy" these away. */
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
+  background: var(--accent, #1558b0);
+  border-color: var(--accent, #1558b0);
+  color: var(--on-accent, #ffffff);
 }
 .btn-primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  color: var(--on-accent);
+  background: var(--accent-hover, #174ea6);
+  border-color: var(--accent-hover, #174ea6);
+  color: var(--on-accent, #ffffff);
   box-shadow: var(--shadow-raised);
 }
 .btn-primary:active { background: var(--accent-deep); border-color: var(--accent-deep); box-shadow: var(--shadow-rest); }
