@@ -23,7 +23,7 @@
 
   <!-- (1) PER-PAGE -->
   <title>Games — Anjana Yatawara</title>
-  <meta name="description" content="Small browser games by Anjana Yatawara: a six-act revision game for a probability course, and arcade games.">
+  <meta name="description" content="Small browser games by Anjana Yatawara: Sudomathania, a sudoku cube crossed with arithmetic; a game about scale; a six-act revision game for a probability course; and arcade games.">
   <meta name="author" content="Anjana Yatawara">
 
   <!-- (2) PER-PAGE -->
@@ -34,7 +34,7 @@
   <meta property="og:site_name" content="Anjana Yatawara">
   <meta property="og:url" content="https://www.yatawara.com/games/index.html">
   <meta property="og:title" content="Games — Anjana Yatawara">
-  <meta property="og:description" content="A six-act revision game for a probability course, and arcade games.">
+  <meta property="og:description" content="Sudomathania, a 3D sudoku crossed with arithmetic — plus a game about scale, a probability revision game, and arcade games.">
   <meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
   <meta property="og:image:alt" content="Anjana Yatawara — yatawara.com">
   <meta name="twitter:card" content="summary_large_image">
@@ -122,11 +122,51 @@
       </section>
     </div>
 
-    <!-- ── NEW — the headline game ──────────────────────────────────────── -->
+    <!-- ── NEWEST — Sudomathania ────────────────────────────────────────── -->
     <section class="section section-flush-top">
       <div class="wrap">
         <div class="section-head wide" data-reveal>
           <span class="s-eyebrow">New</span>
+          <h2 class="s-title">Sudomathania</h2>
+          <span class="s-tag">Sudoku and arithmetic, in three dimensions</span>
+          <span class="s-rule"></span>
+        </div>
+
+        <div class="grid cols-2 gap-lg align-start">
+          <div data-reveal>
+            <p>A sudoku that does not lie flat. The board is a <strong>4 × 4 × 4 cube</strong>, and
+              every row, every column and every <em>pillar</em> of four cells must contain 1, 2, 3
+              and 4 exactly once. Three directions to satisfy at once instead of two.</p>
+            <p class="mt-4">Crossed over the top of that are <strong>arithmetic cages</strong>: small
+              outlined groups of cells that must hit a target under a given operation. A cage
+              marked <code>12×</code> holds values that multiply to twelve; one marked
+              <code>3−</code> holds two that differ by three. The cages wrap around corners and
+              climb between layers, so the arithmetic is three-dimensional too.</p>
+
+            <div class="btn-row mt-6">
+              <a class="btn btn-primary" href="/games/sudomathania.html">Play Sudomathania</a>
+            </div>
+            <p class="note-inline mt-4">Drag to rotate, click a cell, press 1–4. Plays on a phone
+              or a keyboard.</p>
+          </div>
+
+          <div data-reveal>
+            <h3 class="mb-5">How it is built</h3>
+            <dl class="kv ruled">
+              <dt>The board</dt><dd>A randomly generated Latin cube — sixty-four cells, forty-eight lines to satisfy.</dd>
+              <dt>The cages</dt><dd>Grown as connected regions through the cube, then given an operation their own values admit.</dd>
+              <dt>The guarantee</dt><dd>A solver counts the solutions before a puzzle is ever shown. It ships only if there is exactly one.</dd>
+              <dt>The promise</dt><dd>No guessing is ever required. Every puzzle yields to reasoning alone.</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="wrap">
+        <div class="section-head wide" data-reveal>
+          <span class="s-eyebrow">Also new</span>
           <h2 class="s-title">Powers of Ten</h2>
           <span class="s-tag">A game about scale · 26 orders of magnitude</span>
           <span class="s-rule"></span>
@@ -164,7 +204,7 @@
     </section>
 
     <!-- ── ALTERNATE BAND — the study game ──────────────────────────────── -->
-    <section class="section section-alt">
+    <section class="section">
       <div class="wrap">
         <div class="section-head wide">
           <span class="s-eyebrow">Built for a course</span>
@@ -239,7 +279,7 @@
     </section>
 
     <!-- ── THE TWO ARCADE GAMES — hairline-ruled records, not tiles ──────── -->
-    <section class="section">
+    <section class="section section-alt">
       <div class="wrap">
         <div class="section-head wide">
           <span class="s-eyebrow">For fun</span>
