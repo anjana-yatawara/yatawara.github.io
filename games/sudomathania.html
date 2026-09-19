@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
+
+<title>Sudomathania — Anjana Yatawara</title>
+<meta name="description" content="A 4×4×4 Latin cube crossed with arithmetic cages. Every row, column and pillar holds 1 to 4 once, and every cage must hit its target. Rotate the cube and solve it in three dimensions.">
+<meta name="author" content="Anjana Yatawara">
+<link rel="canonical" href="https://www.yatawara.com/games/sudomathania.html">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Anjana Yatawara">
+<meta property="og:url" content="https://www.yatawara.com/games/sudomathania.html">
+<meta property="og:title" content="Sudomathania">
+<meta property="og:description" content="Sudoku and arithmetic, in three dimensions. A 4×4×4 Latin cube with math cages.">
+<meta property="og:image" content="https://www.yatawara.com/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sudomathania — yatawara.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sudomathania">
+<meta name="twitter:description" content="Sudoku and arithmetic, in three dimensions.">
+<meta name="twitter:image" content="https://www.yatawara.com/assets/img/og.png">
+
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/img/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css?family=Google+Sans+Text:400,500,700|Google+Sans:400,500,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#202124; --ink-2:#3c4043; --ink-3:#5f6368; --ink-4:#9aa0a6;
+  --line:#dadce0; --line-2:#e8eaed; --surf:#ffffff; --surf-2:#f8f9fa; --surf-3:#f1f3f4;
+  --blue:#1a73e8; --blue-d:#1558b0; --red:#ea4335; --red-d:#c5221f;
+  --yellow:#fbbc04; --yellow-d:#a15c00; --green:#34a853; --green-d:#0d652d;
+  --disp:"Google Sans",Arial,Helvetica,sans-serif;
+  --body:"Google Sans Text",Arial,Helvetica,sans-serif;
+  --mono:"Google Sans Code",ui-monospace,Menlo,Consolas,monospace;
+}
+html,body{height:100%}
+body{
+  background:var(--surf); color:var(--ink-2);
+  font-family:var(--body); font-size:15px; line-height:1.55;
+  display:flex; flex-direction:column; overflow-x:hidden;
+}
+a{color:var(--blue-d);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+
+/* ---- chrome ---- */
+.bar{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:10px clamp(12px,3vw,28px);
+  border-bottom:1px solid var(--line); background:var(--surf);
+  position:sticky;top:0;z-index:5;
+}
+.brand{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;font-size:1.05rem;color:var(--ink)}
+.brand span{color:var(--blue)}
+.bar nav{display:flex;gap:14px;font-size:.88rem}
+.bar nav a{color:var(--ink-3)}
+.bar .sp{flex:1}
+
+/* ---- layout ---- */
+main{flex:1;display:flex;flex-direction:column;min-height:0}
+.wrap{
+  flex:1;display:grid;gap:clamp(10px,2vw,22px);
+  grid-template-columns:minmax(0,1fr) 260px;
+  padding:clamp(10px,2vw,20px) clamp(12px,3vw,28px) clamp(14px,3vw,24px);
+  min-height:0;
+}
+/* On a phone the grid goes single-column, and a `flex:1` row with
+   `min-height:0` then gives the canvas ZERO height — the cube vanishes and the
+   panel takes the screen. Below the breakpoint the page stops being a fixed
+   full-height app and becomes an ordinary scrolling document with the board
+   given a real height of its own. */
+@media (max-width:860px){
+  html,body{height:auto}
+  body{display:block;overflow-y:auto}
+  main{display:block}
+  .wrap{display:block}
+  #stagewrap{height:min(64vh,540px);margin-bottom:14px}
+  .side{display:flex}
+}
+
+#stagewrap{
+  position:relative;min-height:0;
+  background:var(--surf-2);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  touch-action:none;
+}
+#stage{display:block;width:100%;height:100%}
+.hint{
+  position:absolute;left:14px;top:11px;max-width:min(62%,30rem);
+  font:400 11px/1.4 var(--mono);color:var(--ink-4);pointer-events:none;
+}
+
+/* ---- side panel ---- */
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--surf)}
+.card h2{font:500 .72rem/1.3 var(--disp);letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.rowline{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.9rem}
+.rowline+.rowline{margin-top:5px}
+.rowline b{font-family:var(--mono);font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.seg{display:flex;gap:4px;background:var(--surf-3);padding:3px;border-radius:999px}
+.seg button{
+  flex:1;border:0;background:none;border-radius:999px;cursor:pointer;
+  font:500 .82rem var(--disp);color:var(--ink-3);padding:6px 4px;
+}
+.seg button[aria-pressed="true"]{background:var(--blue-d);color:#fff}
+
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.pad button{
+  aspect-ratio:1;border:1px solid var(--line);background:var(--surf);border-radius:11px;
+  font:500 1.25rem var(--disp);color:var(--ink);cursor:pointer;
+}
+.pad button:hover{background:var(--surf-3)}
+.pad button.done{color:var(--ink-4);background:var(--surf-2)}
+
+.btnrow{display:flex;gap:7px;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--line);background:var(--surf);border-radius:999px;
+  font:500 .84rem var(--disp);color:var(--ink-2);padding:8px 15px;cursor:pointer;
+}
+.btn:hover{background:var(--surf-3)}
+.btn.pri{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+.btn.pri:hover{background:#12488f}
+.btn[aria-pressed="true"]{background:var(--blue-d);border-color:var(--blue-d);color:#fff}
+
+.rules{font-size:.82rem;color:var(--ink-3)}
+.rules li{margin:0 0 5px 16px}
+.rules code{font-family:var(--mono);font-size:.95em;color:var(--ink-2)}
+
+/* ---- overlays ---- */
+.veil{
+  position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;
+  background:rgba(255,255,255,.93);
+}
+.veil[hidden]{display:none}
+.panel{
+  max-width:34rem;width:100%;background:var(--surf);
+  border:1px solid var(--line);border-radius:18px;padding:clamp(20px,4vw,32px);
+  box-shadow:0 1px 3px rgba(60,64,67,.3),0 4px 12px rgba(60,64,67,.15);
+}
+.panel h1{font:500 clamp(1.7rem,5vw,2.3rem)/1.15 var(--disp);color:var(--ink);letter-spacing:-.02em;margin-bottom:6px}
+.panel h1 em{font-style:normal;color:var(--blue)}
+.panel .sub{color:var(--ink-3);margin-bottom:16px;font-size:.95rem}
+.panel ol{margin:0 0 18px 18px;font-size:.92rem}
+.panel ol li{margin-bottom:7px}
+.panel .k{font-family:var(--mono);background:var(--surf-3);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.85em}
+.big{font:500 2.6rem/1 var(--disp);color:var(--ink);font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="brand">SUDO<span>MATH</span>ANIA</span>
+  <nav>
+    <a href="/games/index.html">Games</a>
+    <a href="/index.html">yatawara.com</a>
+  </nav>
+  <span class="sp"></span>
+  <button class="btn" id="howBtn" type="button">How to play</button>
+</div>
+
+<main>
+  <div class="wrap">
+    <div id="stagewrap">
+      <canvas id="stage" aria-label="Sudomathania cube. Use arrow keys to move between cells and 1 to 4 to fill them." role="img" tabindex="0"></canvas>
+      <p class="hint" id="hint">drag to rotate · click a cell · 1–4 to fill · Q/E change layer</p>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h2>Puzzle</h2>
+        <div class="rowline"><span>Time</span><b id="clock">0:00</b></div>
+        <div class="rowline"><span>Best</span><b id="best">—</b></div>
+        <div class="rowline"><span>Filled</span><b id="filled">0 / 64</b></div>
+      </div>
+
+      <div class="card">
+        <h2>Difficulty</h2>
+        <div class="seg" id="diff" role="group" aria-label="Difficulty">
+          <button type="button" data-d="0" aria-pressed="true">Gentle</button>
+          <button type="button" data-d="1" aria-pressed="false">Sharp</button>
+          <button type="button" data-d="2" aria-pressed="false">Brutal</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Enter a value</h2>
+        <div class="pad" id="pad">
+          <button type="button" data-v="1">1</button>
+          <button type="button" data-v="2">2</button>
+          <button type="button" data-v="3">3</button>
+          <button type="button" data-v="4">4</button>
+        </div>
+        <div class="btnrow" style="margin-top:9px">
+          <button class="btn" id="noteBtn" type="button" aria-pressed="false">Notes</button>
+          <button class="btn" id="clearBtn" type="button">Erase</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Cube</h2>
+        <div class="btnrow">
+          <button class="btn" id="spreadBtn" type="button" aria-pressed="false">Spread layers</button>
+          <button class="btn" id="resetViewBtn" type="button">Reset view</button>
+        </div>
+        <div class="btnrow" style="margin-top:7px">
+          <button class="btn pri" id="newBtn" type="button">New puzzle</button>
+          <button class="btn" id="checkBtn" type="button">Check</button>
+        </div>
+      </div>
+
+      <div class="card rules">
+        <h2>The two rules</h2>
+        <ul>
+          <li>Every <strong>row, column and pillar</strong> of four holds 1, 2, 3 and 4 exactly once.</li>
+          <li>Every outlined <strong>cage</strong> must hit its target using the shown operation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="veil" id="intro">
+  <div class="panel">
+    <h1>Sudo<em>math</em>ania</h1>
+    <p class="sub">Sudoku and arithmetic, in three dimensions.</p>
+    <ol>
+      <li>The cube is <strong>4 × 4 × 4</strong>. Every row, every column and every <em>pillar</em> of four cells must contain 1, 2, 3 and 4 — each exactly once. Three directions, not two.</li>
+      <li>Cells are grouped into outlined <strong>cages</strong>. A cage shows a target and an operation: <span class="k">12×</span> means its values multiply to 12, <span class="k">3−</span> means they differ by 3.</li>
+      <li><strong>Drag</strong> to rotate the cube. <strong>Click</strong> a cell, then press <span class="k">1</span>–<span class="k">4</span>. Arrow keys move, <span class="k">Q</span>/<span class="k">E</span> change layer, <span class="k">Backspace</span> erases.</li>
+      <li>Every puzzle has exactly one solution, and it is always reachable by reasoning alone. No guessing is ever required.</li>
+    </ol>
+    <div class="btnrow">
+      <button class="btn pri" id="startBtn" type="button">Start solving</button>
+    </div>
+  </div>
+</div>
+
+<div class="veil" id="win" hidden>
+  <div class="panel">
+    <h1>Solved.</h1>
+    <p class="sub" id="winsub">Every line and every cage checks out.</p>
+    <p class="big" id="wintime">0:00</p>
+    <div class="btnrow" style="margin-top:18px">
+      <button class="btn pri" id="againBtn" type="button">Another one</button>
+      <a class="btn" href="/games/index.html">Back to games</a>
+    </div>
+  </div>
+</div>
+
+<div class="veil" id="oops" hidden>
+  <div class="panel">
+    <h1>Sudomathania hit a problem.</h1>
+    <p class="sub">This is a bug, not something you did. Screenshotting this message is genuinely useful.</p>
+    <pre id="oopsmsg" style="white-space:pre-wrap;word-break:break-word;background:#202124;color:#fdd663;padding:12px 14px;border-radius:8px;font:400 12px/1.5 var(--mono);margin-bottom:16px"></pre>
+    <div class="btnrow">
+      <button class="btn pri" type="button" onclick="location.reload()">Reload</button>
+      <a class="btn" href="/games/index.html">Back to games</a>
+    </div>
+  </div>
+</div>
+
+<p class="sr" id="live" role="status" aria-live="polite"></p>
+
+<script>
+"use strict";
+/* ===========================================================================
+   SUDOMATHANIA
+   A 4x4x4 Latin cube crossed with KenKen-style arithmetic cages.
+
+   RULES
+     · every axis-aligned line of four (row, column, pillar) holds 1..4 once
+     · every cage's values combine under its operation to hit its target
+
+   GENERATION
+     1. a random Latin cube, by randomised backtracking
+     2. a random partition into 3D-connected cages of 1..4 cells
+     3. an operation per cage, chosen from what its values actually admit
+     4. a solver counts solutions; the puzzle ships only when it is UNIQUE,
+        otherwise a cage is split and it tries again
+   So every puzzle is solvable by reasoning alone - never by guessing.
+
+   The whole thing is wrapped in an error boundary: if anything throws, the
+   game stops cleanly and says so rather than leaving a dead canvas.
+   =========================================================================== */
+
+(function () {
+
+var N = 4, NN = 16, NNN = 64;
+
+/* ------------------------------------------------------------------ errors */
+var dead = false;
+function fail(e) {
+  if (dead) return; dead = true;
+  try {
+    if (raf) cancelAnimationFrame(raf);
+    var box = document.getElementById("oops");
+    var msg = document.getElementById("oopsmsg");
+    if (msg) {
+      msg.textContent = (e && (e.stack || e.message) || String(e)) +
+        "\n\n" + navigator.userAgent +
+        "\nviewport " + window.innerWidth + "x" + window.innerHeight;
+    }
+    if (box) box.hidden = false;
+  } catch (_) { /* never loop */ }
+}
+function guard(fn) {
+  return function () {
+    if (dead) return;
+    try { return fn.apply(this, arguments); } catch (e) { fail(e); }
+  };
+}
+window.addEventListener("error", function (ev) { fail(ev && ev.error || (ev && ev.message)); });
+window.addEventListener("unhandledrejection", function (ev) { fail(ev && ev.reason); });
+
+/* --------------------------------------------------------------- utilities */
+function idx(x, y, z) { return (z * N + y) * N + x; }
+function shuffled(a) {
+  var arr = a.slice();
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = (Math.random() * (i + 1)) | 0, t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function store(k, v) {
+  try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }
+  catch (_) { return null; }
+}
+
+/* ============================================================ LATIN CUBE ==
+   Each of the three axis-aligned lines through a cell must hold 1..4 once.
+   Bitmasks per line make the check O(1).
+   ========================================================================= */
+function makeSolution() {
+  var sol = new Int8Array(NNN);
+  var rowM = new Int8Array(NN);   // along x, keyed by (y,z)
+  var colM = new Int8Array(NN);   // along y, keyed by (x,z)
+  var pilM = new Int8Array(NN);   // along z, keyed by (x,y)
+
+  function place(c) {
+    if (c === NNN) return true;
+    var x = c % N, y = ((c / N) | 0) % N, z = (c / NN) | 0;
+    var r = z * N + y, k = z * N + x, p = y * N + x;
+    var order = shuffled([1, 2, 3, 4]);
+    for (var i = 0; i < 4; i++) {
+      var v = order[i], b = 1 << v;
+      if ((rowM[r] & b) || (colM[k] & b) || (pilM[p] & b)) continue;
+      rowM[r] |= b; colM[k] |= b; pilM[p] |= b; sol[c] = v;
+      if (place(c + 1)) return true;
+      rowM[r] &= ~b; colM[k] &= ~b; pilM[p] &= ~b; sol[c] = 0;
+    }
+    return false;
+  }
+  if (!place(0)) throw new Error("no Latin cube");
+  return sol;
+}
+
+/* ================================================================= CAGES ==
+   Grow 3D-connected regions of 1..maxSize cells over the whole cube.
+   ========================================================================= */
+function neighbours(c) {
+  var x = c % N, y = ((c / N) | 0) % N, z = (c / NN) | 0, out = [];
+  if (x > 0) out.push(idx(x - 1, y, z));
+  if (x < N - 1) out.push(idx(x + 1, y, z));
+  if (y > 0) out.push(idx(x, y - 1, z));
+  if (y < N - 1) out.push(idx(x, y + 1, z));
+  if (z > 0) out.push(idx(x, y, z - 1));
+  if (z < N - 1) out.push(idx(x, y, z + 1));
+  return out;
+}
+
+function partition(maxSize, singleChance) {
+  var owner = new Int8Array(NNN).fill(-1);
+  var cages = [];
+  var order = shuffled(Array.from({ length: NNN }, function (_, i) { return i; }));
+  for (var oi = 0; oi < order.length; oi++) {
+    var seed = order[oi];
+    if (owner[seed] !== -1) continue;
+    var id = cages.length, cells = [seed];
+    owner[seed] = id;
+    var want = (Math.random() < singleChance) ? 1
+             : 2 + ((Math.random() * maxSize) | 0) % (maxSize - 1);
+    if (want > maxSize) want = maxSize;
+    while (cells.length < want) {
+      var opts = [];
+      for (var i = 0; i < cells.length; i++) {
+        var nb = neighbours(cells[i]);
+        for (var j = 0; j < nb.length; j++) if (owner[nb[j]] === -1) opts.push(nb[j]);
+      }
+      if (!opts.length) break;
+      var pick = opts[(Math.random() * opts.length) | 0];
+      owner[pick] = id; cells.push(pick);
+    }
+    cages.push({ cells: cells });
+  }
+  return { cages: cages, owner: owner };
+}
+
+/* Choose an operation the cage's own values actually admit. */
+function label(cage, sol) {
+  var v = cage.cells.map(function (c) { return sol[c]; });
+  if (v.length === 1) { cage.op = "="; cage.target = v[0]; return; }
+  var sum = 0, prod = 1;
+  for (var i = 0; i < v.length; i++) { sum += v[i]; prod *= v[i]; }
+  var choices = [{ op: "+", t: sum }, { op: "×", t: prod }];
+  if (v.length === 2) {
+    var hi = Math.max(v[0], v[1]), lo = Math.min(v[0], v[1]);
+    if (hi - lo > 0) choices.push({ op: "−", t: hi - lo });
+    if (hi % lo === 0) choices.push({ op: "÷", t: hi / lo });
+  }
+  var pick = choices[(Math.random() * choices.length) | 0];
+  cage.op = pick.op; cage.target = pick.t;
+}
+
+/* ================================================================ SOLVER ==
+   Counts solutions up to `limit`. Cells are visited cage by cage so a cage
+   closes as early as possible, which is what makes the pruning bite.
+   ========================================================================= */
+function countSolutions(cages, owner, limit) {
+  var order = [], cagePos = new Int8Array(NNN);
+  for (var i = 0; i < cages.length; i++) {
+    for (var j = 0; j < cages[i].cells.length; j++) { cagePos[cages[i].cells[j]] = j; order.push(cages[i].cells[j]); }
+  }
+  var val = new Int8Array(NNN);
+  var rowM = new Int8Array(NN), colM = new Int8Array(NN), pilM = new Int8Array(NN);
+  var found = 0, steps = 0;
+
+  function cageOK(cage, closed) {
+    var vs = [], full = true;
+    for (var i = 0; i < cage.cells.length; i++) {
+      var q = val[cage.cells[i]];
+      if (q) vs.push(q); else full = false;
+    }
+    if (!vs.length) return true;
+    var sum = 0, prod = 1, hi = 0, lo = 9;
+    for (var k = 0; k < vs.length; k++) {
+      sum += vs[k]; prod *= vs[k];
+      if (vs[k] > hi) hi = vs[k];
+      if (vs[k] < lo) lo = vs[k];
+    }
+    var miss = cage.cells.length - vs.length;
+    switch (cage.op) {
+      case "=": return vs[0] === cage.target;
+      case "+":
+        if (sum + miss * 1 > cage.target) return false;
+        if (sum + miss * 4 < cage.target) return false;
+        return full ? sum === cage.target : true;
+      case "×":
+        if (prod > cage.target) return false;
+        if (cage.target % prod !== 0) return false;
+        return full ? prod === cage.target : true;
+      case "−": return full ? (hi - lo) === cage.target : true;
+      case "÷": return full ? (lo > 0 && hi % lo === 0 && hi / lo === cage.target) : true;
+    }
+    return true;
+  }
+
+  function rec(p) {
+    if (++steps > 4000000) throw new Error("solver budget");
+    if (p === order.length) { found++; return found >= limit; }
+    var c = order[p];
+    var x = c % N, y = ((c / N) | 0) % N, z = (c / NN) | 0;
+    var r = z * N + y, k = z * N + x, pl = y * N + x;
+    for (var v = 1; v <= 4; v++) {
+      var b = 1 << v;
+      if ((rowM[r] & b) || (colM[k] & b) || (pilM[pl] & b)) continue;
+      rowM[r] |= b; colM[k] |= b; pilM[pl] |= b; val[c] = v;
+      if (cageOK(cages[owner[c]])) { if (rec(p + 1)) { rowM[r] &= ~b; colM[k] &= ~b; pilM[pl] &= ~b; val[c] = 0; return true; } }
+      rowM[r] &= ~b; colM[k] &= ~b; pilM[pl] &= ~b; val[c] = 0;
+    }
+    return false;
+  }
+  rec(0);
+  return found;
+}
+
+/* =========================================================== GENERATION == */
+var LEVELS = [
+  { name: "Gentle", maxSize: 3, single: 0.30 },
+  { name: "Sharp",  maxSize: 4, single: 0.14 },
+  { name: "Brutal", maxSize: 4, single: 0.05 }
+];
+
+function generate(level) {
+  var L = LEVELS[level] || LEVELS[0];
+  for (var attempt = 0; attempt < 60; attempt++) {
+    var sol = makeSolution();
+    var part = partition(L.maxSize, L.single);
+    var cages = part.cages, owner = part.owner;
+    for (var i = 0; i < cages.length; i++) label(cages[i], sol);
+
+    // split cages until the puzzle is unique (or we give up and restart)
+    for (var round = 0; round < 26; round++) {
+      var n;
+      try { n = countSolutions(cages, owner, 2); }
+      catch (_) { n = 2; }                   // budget blown -> treat as ambiguous
+      if (n === 1) return { sol: sol, cages: cages, owner: owner, level: level };
+      if (n === 0) break;                    // shouldn't happen; regenerate
+
+      // make it easier: peel one cell off the biggest cage into a given
+      var big = -1, bs = 1;
+      for (var c = 0; c < cages.length; c++) if (cages[c].cells.length > bs) { bs = cages[c].cells.length; big = c; }
+      if (big < 0) break;
+      var cell = cages[big].cells.pop();
+      label(cages[big], sol);
+      var nid = cages.length;
+      cages.push({ cells: [cell] });
+      owner[cell] = nid;
+      label(cages[nid], sol);
+    }
+  }
+  throw new Error("could not generate a unique puzzle");
+}
+
+/* =============================================================== STATE == */
+var puzzle = null, given = null, board = null, notes = null;
+var sel = 0, level = 0, noteMode = false, spread = false;
+var t0 = 0, elapsed = 0, running = false, solved = false;
+
+var cv = document.getElementById("stage");
+var ctx = cv.getContext("2d");
+var yaw = -0.62, pitch = 0.80, dpr = 1, W = 0, H = 0;
+var raf = 0;
+
+/* --------------------------------------------------------------- geometry */
+/* Cube coords -> unit camera space. z is the vertical (layer) axis.
+   The layer GAP is the whole readability of this game: at 1.0 the four plates
+   overlap almost exactly and the cube is an unreadable pile. They have to read
+   as four separate floating boards that happen to be stacked. */
+function raw(x, y, z) {
+  var gap = spread ? 3.5 : 2.4;
+  var wx = x - (N - 1) / 2, wy = y - (N - 1) / 2, wz = (z - (N - 1) / 2) * gap;
+  var cy = Math.cos(yaw), sy = Math.sin(yaw);
+  var rx = wx * cy - wy * sy, ry = wx * sy + wy * cy;
+  var cp = Math.cos(pitch), sp = Math.sin(pitch);
+  var uy = ry * cp - wz * sp, depth = ry * sp + wz * cp;
+  var f = 16, s = f / (f + depth);
+  return { ux: rx * s, uy: uy * s, s: s, d: depth };
+}
+
+/* Fit the whole stack to the canvas every frame rather than trusting a
+   hand-tuned constant: rotation, pitch and the spread toggle all change the
+   silhouette, and a fixed scale clipped the top board. 64 cells x 4 corners
+   is nothing, and it means the cube can never fall off the edge. */
+var fitS = 1, fitX = 0, fitY = 0;
+function computeFit() {
+  var minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+  for (var z = 0; z < N; z++) for (var y = 0; y < N; y++) for (var x = 0; x < N; x++) {
+    for (var k = 0; k < 4; k++) {
+      var ox = (k === 1 || k === 2) ? 0.5 : -0.5;
+      var oy = (k >= 2) ? 0.5 : -0.5;
+      var r = raw(x + ox, y + oy, z);
+      if (r.ux < minX) minX = r.ux; if (r.ux > maxX) maxX = r.ux;
+      if (r.uy < minY) minY = r.uy; if (r.uy > maxY) maxY = r.uy;
+    }
+  }
+  var pad = 26;
+  var w = Math.max(0.001, maxX - minX), h = Math.max(0.001, maxY - minY);
+  fitS = Math.min((W - pad * 2) / w, (H - pad * 2 - 18) / h);
+  fitX = W / 2 - (minX + maxX) / 2 * fitS;
+  fitY = H / 2 + 8 - (minY + maxY) / 2 * fitS;
+}
+function project(x, y, z) {
+  var r = raw(x, y, z);
+  return { sx: fitX + r.ux * fitS, sy: fitY + r.uy * fitS, s: r.s, d: r.d };
+}
+
+/* ---------------------------------------------------------------- drawing */
+var CAGE_TINTS = ["26,115,232", "234,67,53", "251,188,4", "52,168,83", "95,99,104"];
+
+function draw() {
+  if (!puzzle) return;
+  computeFit();
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  // gather cells, far to near
+  var list = [];
+  for (var c = 0; c < NNN; c++) {
+    var x = c % N, y = ((c / N) | 0) % N, z = (c / NN) | 0;
+    var p = project(x, y, z);
+    list.push({ c: c, x: x, y: y, z: z, p: p });
+  }
+  list.sort(function (a, b) { return b.p.d - a.p.d; });
+
+  var selX = sel % N, selY = ((sel / N) | 0) % N, selZ = (sel / NN) | 0;
+  var conflict = conflicts();
+
+  for (var i = 0; i < list.length; i++) {
+    var it = list[i], c = it.c, p = it.p;
+    var half = 0.46;
+    var q = [
+      project(it.x - half, it.y - half, it.z),
+      project(it.x + half, it.y - half, it.z),
+      project(it.x + half, it.y + half, it.z),
+      project(it.x - half, it.y + half, it.z)
+    ];
+    var cage = puzzle.cages[puzzle.owner[c]];
+    var tint = CAGE_TINTS[puzzle.owner[c] % CAGE_TINTS.length];
+    var onSelLine = (it.x === selX && it.y === selY) || (it.x === selX && it.z === selZ) || (it.y === selY && it.z === selZ);
+
+    /* FOCUS. Four boards of sixteen cells is far too much ink to read at
+       once. The layer you are working in is drawn at full strength and the
+       others recede, so the eye always knows which board it is on. */
+    var here = (it.z === selZ);
+    var f = here ? 1 : 0.34;
+
+    ctx.beginPath();
+    ctx.moveTo(q[0].sx, q[0].sy);
+    for (var k = 1; k < 4; k++) ctx.lineTo(q[k].sx, q[k].sy);
+    ctx.closePath();
+
+    ctx.fillStyle = here ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.55)";
+    ctx.fill();
+    var a = (0.085 + 0.05 * p.s) * f;
+    if (c === sel) ctx.fillStyle = "rgba(26,115,232,0.30)";
+    else if (conflict[c]) ctx.fillStyle = "rgba(234,67,53," + (0.26 * f) + ")";
+    else if (onSelLine && here) ctx.fillStyle = "rgba(" + tint + "," + (a + 0.09) + ")";
+    else ctx.fillStyle = "rgba(" + tint + "," + a + ")";
+    ctx.fill();
+    ctx.lineWidth = Math.max(0.5, 1.0 * p.s);
+    ctx.strokeStyle = "rgba(95,99,104," + (0.32 * f) + ")";
+    ctx.stroke();
+
+    // cage borders: thicker edge where the neighbour is in another cage
+    ctx.lineWidth = Math.max(1.1, 2.3 * p.s);
+    ctx.strokeStyle = "rgba(32,33,36," + (0.78 * f) + ")";
+    var sides = [[0, 1, it.x, it.y - 1], [1, 2, it.x + 1, it.y], [2, 3, it.x, it.y + 1], [3, 0, it.x - 1, it.y]];
+    for (var s2 = 0; s2 < 4; s2++) {
+      var nx = sides[s2][2], ny = sides[s2][3];
+      var outside = nx < 0 || nx >= N || ny < 0 || ny >= N;
+      var other = outside ? true : (puzzle.owner[idx(nx, ny, it.z)] !== puzzle.owner[c]);
+      if (!other) continue;
+      ctx.beginPath();
+      ctx.moveTo(q[sides[s2][0]].sx, q[sides[s2][0]].sy);
+      ctx.lineTo(q[sides[s2][1]].sx, q[sides[s2][1]].sy);
+      ctx.stroke();
+    }
+
+    // cage label on its anchor cell
+    if (cage.cells[0] === c && cage.op !== "=") {
+      var fs = Math.max(8.5, 12.5 * p.s);
+      ctx.font = "500 " + fs.toFixed(1) + 'px "Google Sans Code",monospace';
+      ctx.fillStyle = "rgba(32,33,36," + (0.95 * f) + ")";
+      ctx.textAlign = "left"; ctx.textBaseline = "top";
+      ctx.fillText(cage.target + cage.op, q[0].sx + 3.5 * p.s, q[0].sy + 2.5 * p.s);
+    }
+
+    // the value, or notes
+    var v = board[c];
+    if (v) {
+      var vs = Math.max(12, 26 * p.s);
+      ctx.font = (given[c] ? "700 " : "400 ") + vs.toFixed(1) + 'px "Google Sans",sans-serif';
+      ctx.fillStyle = conflict[c] ? "rgba(197,34,31," + (0.95 * f) + ")"
+                    : given[c] ? "rgba(32,33,36," + (0.95 * f) + ")"
+                               : "rgba(21,88,176," + (0.95 * f) + ")";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(String(v), p.sx, p.sy);
+    } else if (notes[c]) {
+      var ns = Math.max(6.5, 9.5 * p.s);
+      ctx.font = "400 " + ns.toFixed(1) + 'px "Google Sans Code",monospace';
+      ctx.fillStyle = "rgba(95,99,104," + (0.85 * f) + ")";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      var str = "";
+      for (var n = 1; n <= 4; n++) if (notes[c] & (1 << n)) str += n;
+      ctx.fillText(str, p.sx, p.sy + 5 * p.s);
+    }
+  }
+
+  // which board am I on
+  ctx.font = '500 11px "Google Sans Code",monospace';
+  ctx.fillStyle = "rgba(95,99,104,0.9)";
+  ctx.textAlign = "right"; ctx.textBaseline = "bottom";
+  ctx.fillText("layer " + (selZ + 1) + " / 4", W - 12, H - 10);
+}
+
+/* ------------------------------------------------------------- validation */
+function conflicts() {
+  var bad = new Uint8Array(NNN);
+  // lines
+  for (var z = 0; z < N; z++) for (var y = 0; y < N; y++) {
+    checkLine(bad, function (i) { return idx(i, y, z); });
+  }
+  for (var z2 = 0; z2 < N; z2++) for (var x = 0; x < N; x++) {
+    checkLine(bad, function (i) { return idx(x, i, z2); });
+  }
+  for (var y2 = 0; y2 < N; y2++) for (var x2 = 0; x2 < N; x2++) {
+    checkLine(bad, function (i) { return idx(x2, y2, i); });
+  }
+  // cages, only once full
+  for (var ci = 0; ci < puzzle.cages.length; ci++) {
+    var cg = puzzle.cages[ci], vals = [], full = true;
+    for (var j = 0; j < cg.cells.length; j++) {
+      var v = board[cg.cells[j]];
+      if (v) vals.push(v); else full = false;
+    }
+    if (!full) continue;
+    if (!cageSatisfied(cg, vals)) for (var j2 = 0; j2 < cg.cells.length; j2++) bad[cg.cells[j2]] = 1;
+  }
+  return bad;
+}
+function checkLine(bad, at) {
+  var seen = {};
+  for (var i = 0; i < N; i++) {
+    var c = at(i), v = board[c];
+    if (!v) continue;
+    if (seen[v] !== undefined) { bad[c] = 1; bad[seen[v]] = 1; }
+    else seen[v] = c;
+  }
+}
+function cageSatisfied(cg, vals) {
+  var sum = 0, prod = 1, hi = 0, lo = 9;
+  for (var i = 0; i < vals.length; i++) {
+    sum += vals[i]; prod *= vals[i];
+    if (vals[i] > hi) hi = vals[i];
+    if (vals[i] < lo) lo = vals[i];
+  }
+  switch (cg.op) {
+    case "=": return vals[0] === cg.target;
+    case "+": return sum === cg.target;
+    case "×": return prod === cg.target;
+    case "−": return (hi - lo) === cg.target;
+    case "÷": return lo > 0 && hi % lo === 0 && (hi / lo) === cg.target;
+  }
+  return true;
+}
+function isSolved() {
+  for (var c = 0; c < NNN; c++) if (!board[c]) return false;
+  var bad = conflicts();
+  for (var i = 0; i < NNN; i++) if (bad[i]) return false;
+  return true;
+}
+
+/* ------------------------------------------------------------------- HUD */
+function fmt(ms) {
+  var s = Math.floor(ms / 1000), m = Math.floor(s / 60);
+  s -= m * 60;
+  return m + ":" + (s < 10 ? "0" : "") + s;
+}
+function bestKey() { return "sudomathania.best." + level; }
+function syncHUD() {
+  var n = 0; for (var c = 0; c < NNN; c++) if (board[c]) n++;
+  document.getElementById("filled").textContent = n + " / 64";
+  var b = store(bestKey());
+  document.getElementById("best").textContent = b ? fmt(parseInt(b, 10)) : "—";
+  var pad = document.getElementById("pad").children;
+  for (var v = 1; v <= 4; v++) {
+    var used = 0;
+    for (var c2 = 0; c2 < NNN; c2++) if (board[c2] === v) used++;
+    pad[v - 1].classList.toggle("done", used >= NN);
+  }
+}
+function tick() {
+  if (running && !solved) {
+    elapsed = Date.now() - t0;
+    document.getElementById("clock").textContent = fmt(elapsed);
+  }
+}
+
+/* ---------------------------------------------------------------- actions */
+function newGame() {
+  var g = generate(level);
+  puzzle = g;
+  board = new Int8Array(NNN);
+  given = new Uint8Array(NNN);
+  notes = new Int8Array(NNN);
+  for (var i = 0; i < puzzle.cages.length; i++) {
+    var cg = puzzle.cages[i];
+    if (cg.op === "=" ) { board[cg.cells[0]] = cg.target; given[cg.cells[0]] = 1; }
+  }
+  sel = 0; solved = false; elapsed = 0; t0 = Date.now(); running = true;
+  document.getElementById("clock").textContent = "0:00";
+  document.getElementById("win").hidden = true;
+  syncHUD(); draw();
+  say("New " + LEVELS[level].name + " puzzle.");
+}
+function say(m) { var el = document.getElementById("live"); if (el) el.textContent = m; }
+
+function setCell(v) {
+  if (solved || given[sel]) return;
+  if (noteMode && v) {
+    notes[sel] ^= (1 << v);
+    if (board[sel]) board[sel] = 0;
+  } else {
+    board[sel] = (board[sel] === v) ? 0 : v;
+    notes[sel] = 0;
+  }
+  syncHUD(); draw();
+  if (isSolved()) finish();
+}
+function finish() {
+  solved = true; running = false;
+  var b = store(bestKey());
+  var isBest = !b || elapsed < parseInt(b, 10);
+  if (isBest) store(bestKey(), String(elapsed));
+  document.getElementById("wintime").textContent = fmt(elapsed);
+  document.getElementById("winsub").textContent = isBest
+    ? "Every line and every cage checks out — and that is your fastest " + LEVELS[level].name + " yet."
+    : "Every line and every cage checks out.";
+  document.getElementById("win").hidden = false;
+  syncHUD(); draw();
+  say("Solved in " + fmt(elapsed));
+}
+
+/* ------------------------------------------------------------------ input */
+function move(dx, dy, dz) {
+  var x = sel % N, y = ((sel / N) | 0) % N, z = (sel / NN) | 0;
+  x = Math.max(0, Math.min(N - 1, x + dx));
+  y = Math.max(0, Math.min(N - 1, y + dy));
+  z = Math.max(0, Math.min(N - 1, z + dz));
+  sel = idx(x, y, z); draw();
+}
+function pickAt(px, py) {
+  var bestC = -1, bestD = 1e9, bestDepth = 1e9;
+  for (var c = 0; c < NNN; c++) {
+    var x = c % N, y = ((c / N) | 0) % N, z = (c / NN) | 0;
+    var p = project(x, y, z);
+    var d = (p.sx - px) * (p.sx - px) + (p.sy - py) * (p.sy - py);
+    var r = 26 * p.s;
+    if (d < r * r && (d < bestD - 40 || p.d < bestDepth)) { bestC = c; bestD = d; bestDepth = p.d; }
+  }
+  return bestC;
+}
+
+function resize() {
+  var box = document.getElementById("stagewrap");
+  var r = box.getBoundingClientRect();
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = Math.max(200, Math.round(r.width));
+  H = Math.max(200, Math.round(r.height));
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + "px"; cv.style.height = H + "px";
+  draw();
+}
+
+/* ------------------------------------------------------------------- boot */
+var start = guard(function () {
+  newGame();
+  resize();
+  setInterval(guard(tick), 250);
+});
+
+// pointer: drag to rotate, tap to select
+var drag = null;
+cv.addEventListener("pointerdown", guard(function (e) {
+  cv.setPointerCapture(e.pointerId);
+  drag = { x: e.clientX, y: e.clientY, yaw: yaw, pitch: pitch, moved: 0 };
+}));
+cv.addEventListener("pointermove", guard(function (e) {
+  if (!drag) return;
+  var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  drag.moved = Math.max(drag.moved, Math.abs(dx) + Math.abs(dy));
+  yaw = drag.yaw + dx * 0.008;
+  pitch = Math.max(0.12, Math.min(1.32, drag.pitch + dy * 0.006));
+  draw();
+}));
+cv.addEventListener("pointerup", guard(function (e) {
+  if (drag && drag.moved < 6) {
+    var r = cv.getBoundingClientRect();
+    var c = pickAt(e.clientX - r.left, e.clientY - r.top);
+    if (c >= 0) { sel = c; draw(); }
+  }
+  drag = null;
+  cv.focus();
+}));
+cv.addEventListener("pointercancel", guard(function () { drag = null; }));
+
+document.addEventListener("keydown", guard(function (e) {
+  if (!puzzle) return;
+  if (!document.getElementById("intro").hidden) return;
+  var k = e.key;
+  if (k >= "1" && k <= "4") { setCell(parseInt(k, 10)); e.preventDefault(); return; }
+  if (k === "Backspace" || k === "Delete" || k === "0") { setCell(0); notes[sel] = 0; draw(); e.preventDefault(); return; }
+  if (k === "ArrowLeft") { move(-1, 0, 0); e.preventDefault(); }
+  else if (k === "ArrowRight") { move(1, 0, 0); e.preventDefault(); }
+  else if (k === "ArrowUp") { move(0, -1, 0); e.preventDefault(); }
+  else if (k === "ArrowDown") { move(0, 1, 0); e.preventDefault(); }
+  else if (k === "q" || k === "Q") { move(0, 0, -1); e.preventDefault(); }
+  else if (k === "e" || k === "E") { move(0, 0, 1); e.preventDefault(); }
+  else if (k === "n" || k === "N") { noteMode = !noteMode; document.getElementById("noteBtn").setAttribute("aria-pressed", String(noteMode)); }
+}));
+
+document.getElementById("pad").addEventListener("click", guard(function (e) {
+  var b = e.target.closest("button[data-v]"); if (!b) return;
+  setCell(parseInt(b.getAttribute("data-v"), 10));
+}));
+document.getElementById("clearBtn").addEventListener("click", guard(function () { setCell(0); notes[sel] = 0; draw(); }));
+document.getElementById("noteBtn").addEventListener("click", guard(function (e) {
+  noteMode = !noteMode; e.currentTarget.setAttribute("aria-pressed", String(noteMode));
+}));
+document.getElementById("spreadBtn").addEventListener("click", guard(function (e) {
+  spread = !spread; e.currentTarget.setAttribute("aria-pressed", String(spread)); draw();
+}));
+document.getElementById("resetViewBtn").addEventListener("click", guard(function () {
+  yaw = -0.62; pitch = 0.80; draw();
+}));
+document.getElementById("newBtn").addEventListener("click", guard(function () { newGame(); }));
+document.getElementById("againBtn").addEventListener("click", guard(function () { newGame(); }));
+document.getElementById("checkBtn").addEventListener("click", guard(function () {
+  var bad = conflicts(), n = 0;
+  for (var i = 0; i < NNN; i++) if (bad[i]) n++;
+  say(n ? (n + " cells conflict.") : "Nothing wrong so far.");
+  document.getElementById("hint").textContent = n ? (n + " cells conflict") : "nothing wrong so far";
+  setTimeout(guard(function () {
+    document.getElementById("hint").textContent = "drag to rotate · click a cell · 1–4 to fill · Q/E change layer";
+  }), 2600);
+  draw();
+}));
+document.getElementById("diff").addEventListener("click", guard(function (e) {
+  var b = e.target.closest("button[data-d]"); if (!b) return;
+  level = parseInt(b.getAttribute("data-d"), 10);
+  var bs = e.currentTarget.querySelectorAll("button");
+  for (var i = 0; i < bs.length; i++) bs[i].setAttribute("aria-pressed", String(i === level));
+  newGame();
+}));
+document.getElementById("howBtn").addEventListener("click", guard(function () {
+  document.getElementById("intro").hidden = false;
+}));
+document.getElementById("startBtn").addEventListener("click", guard(function () {
+  document.getElementById("intro").hidden = true;
+  t0 = Date.now() - elapsed; running = true;
+  cv.focus();
+}));
+
+var rt = 0;
+window.addEventListener("resize", guard(function () {
+  clearTimeout(rt); rt = setTimeout(guard(resize), 120);
+}));
+
+/* Test hook. Shipped OFF and only reachable with ?test=1 on the URL, so it
+   costs a normal player nothing. It exists because "the puzzle is always
+   solvable and always unique" is a claim that has to be checked by machine,
+   not asserted: a generator bug would hand someone an unsolvable board and
+   they would never know whether it was the puzzle or them. */
+try {
+  if (String(window.location.search).indexOf("test=1") >= 0) {
+    window.__sudo = {
+      gen: function (l) { level = l; newGame(); return true; },
+      state: function () {
+        return {
+          sol: Array.prototype.slice.call(puzzle.sol),
+          board: Array.prototype.slice.call(board),
+          given: Array.prototype.slice.call(given),
+          cages: puzzle.cages.map(function (cg) {
+            return { cells: cg.cells.slice(), op: cg.op, target: cg.target };
+          })
+        };
+      },
+      solutions: function () { return countSolutions(puzzle.cages, puzzle.owner, 3); },
+      fill: function () {
+        for (var c = 0; c < NNN; c++) { board[c] = puzzle.sol[c]; notes[c] = 0; }
+        syncHUD(); draw();
+        if (isSolved()) finish();
+        return solved;
+      }
+    };
+  }
+} catch (_) { /* a broken hook must never break the game */ }
+
+start();
+})();
+</script>
+</body>
+</html>
