@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why 80% isn't exactly 80%</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* The real graded run: Qwen2.5-0.5B-Instruct on the 20-question GE statistics
+   bank, lab/out/we6_eval.json. One entry per question, in question order,
+   1 = the model got it right. Five ones, so 5/20 = 25.0 percent. */
+var CORRECT = [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0];
+var N = CORRECT.length;
+
+Sim.mount({
+  type: 'sampling',
+  seed: 20260912,                 /* the seed of the lab bootstrap run */
+  title: {
+    en: 'Why 25% is not exactly 25%',
+    es: 'Por que 25% no es exactamente 25%'
+  },
+  /* One resample: draw 20 questions from the 20 with replacement, regrade. */
+  draw: function (rng) {
+    var picks = rng.bootIndices(N), right = 0, ids = [], i;
+    for (i = 0; i < picks.length; i++) {
+      right += CORRECT[picks[i]];
+      ids.push(picks[i] + 1);     /* question number, 1 to 20 */
+    }
+    return { stat: 100 * right / N, sample: ids };
+  },
+  xRange: [-2.5, 77.5],           /* bars of width 5 centred on 0, 5, ..., 75 */
+  bins: 16,
+  sampleRange: [0, 21],
+  showLastSample: true,
+  showNormal: true,
+  trueValue: 25,
+  trueValueLabel: { en: 'measured 25%', es: 'medido 25%' },
+  tail: function (v) { return v < 2.5 || v > 47.5; },   /* outside 5% to 45% */
+  xLabel: {
+    en: 'score on the 20-question bank (%)',
+    es: 'puntaje en el banco de 20 preguntas (%)'
+  },
+  ariaLabel: {
+    en: 'Histogram of the score from every resample of the 20 graded questions',
+    es: 'Histograma del puntaje de cada remuestreo de las 20 preguntas calificadas'
+  },
+  drawOneLabel: { en: 'Resample once', es: 'Remuestrear una vez' },
+  drawManyLabel: { en: 'Resample 1000', es: 'Remuestrear 1000' },
+  readouts: [
+    { id: 'n',    label: { en: 'Resamples',   es: 'Remuestreos' } },
+    { id: 'last', label: { en: 'Last score %', es: 'Ultimo %' }, digits: 1 },
+    { id: 'mean', label: { en: 'Mean %',      es: 'Media %' }, accent: 1, digits: 1 },
+    { id: 'sd',   label: { en: 'SD points',   es: 'DE puntos' }, accent: 2, digits: 2 },
+    { id: 'seen', label: { en: 'Scores seen', es: 'Valores vistos' }, digits: 0,
+      compute: function (draws) {
+        var seen = {}, k = 0;
+        for (var i = 0; i < draws.length; i++) {
+          if (!seen[draws[i]]) { seen[draws[i]] = 1; k++; }
+        }
+        return k;
+      } },
+    { id: 'off',  label: { en: 'Not 25% %',   es: 'No es 25% %' }, digits: 1,
+      compute: function (draws) {
+        if (!draws.length) { return NaN; }
+        var k = 0;
+        for (var i = 0; i < draws.length; i++) { if (draws[i] !== 25) { k++; } }
+        return 100 * k / draws.length;
+      } }
+  ],
+  caption: {
+    en: 'Qwen2.5-0.5B-Instruct answered a 20-question statistics bank written for this ' +
+        'course and got 5 of them right, a score of 25.0 percent. The top strip shows which ' +
+        'of the 20 questions the current resample happened to draw: some questions come up ' +
+        'twice, some never come up at all, and that is what drawing with replacement means. ' +
+        'The histogram below collects the score from every resample so far. The amber line ' +
+        'marks the one score we actually measured, 25 percent, the amber bars at the two ' +
+        'ends are the scores that fall outside the lab interval of 5 percent to 45 percent, ' +
+        'and the dashed curve is the smooth bell the textbook formula assumes.\n\n' +
+        '**Try this.** Press Resample once about ten times and watch **Last score**: 20, 35, ' +
+        '15, 30. Nothing about the model changed, only which questions got drawn. Now press ' +
+        'Resample 1000 and the whole pile appears at once. The lab run of 10,000 resamples ' +
+        'came out at mean 24.8 percent, SD 9.74 points, with the middle 95 percent running ' +
+        'from 5 percent to 45 percent, and your pile should land close to that. Check ' +
+        '**Scores seen**: with 20 questions a score can only be a multiple of 5 points, and ' +
+        'those 10,000 resamples produced just 14 different scores. Check **Not 25%**: the ' +
+        'lab run came out at something other than 25 percent on 79.9 percent of resamples. ' +
+        'The textbook formula agrees with the pile, standard error 0.0968 and an interval of ' +
+        '6.0 percent to 44.0 percent. So the honest statement is not 25 percent, it is ' +
+        'somewhere around 6 to 44 percent. One number was never the truth, it was one draw.',
+    es: 'Qwen2.5-0.5B-Instruct respondio un banco de 20 preguntas de estadistica escrito ' +
+        'para este curso y acerto 5, un puntaje de 25.0 por ciento. La franja de arriba ' +
+        'muestra cuales de las 20 preguntas le tocaron al remuestreo actual: algunas salen ' +
+        'dos veces y otras no salen ninguna vez, y eso es lo que significa sortear con ' +
+        'reemplazo. El histograma de abajo reune el puntaje de cada remuestreo hecho hasta ' +
+        'ahora. La linea ambar marca el unico puntaje que de verdad medimos, 25 por ciento, ' +
+        'las barras ambar de los dos extremos son los puntajes que caen fuera del intervalo ' +
+        'del laboratorio de 5 por ciento a 45 por ciento, y la curva punteada es la campana ' +
+        'suave que supone la formula del libro.\n\n' +
+        '**Prueba esto.** Presiona Remuestrear una vez unas diez veces y observa **Ultimo ' +
+        '%**: 20, 35, 15, 30. Nada cambio en el modelo, solo cambiaron las preguntas que ' +
+        'salieron. Ahora presiona Remuestrear 1000 y aparece el monton completo de golpe. ' +
+        'La corrida del laboratorio, con 10,000 remuestreos, dio media 24.8 por ciento, DE ' +
+        '9.74 puntos y un 95 por ciento central que va de 5 por ciento a 45 por ciento, y tu ' +
+        'monton deberia quedar cerca de eso. Revisa **Valores vistos**: con 20 preguntas el ' +
+        'puntaje solo puede ser un multiplo de 5 puntos, y esos 10,000 remuestreos dieron ' +
+        'apenas 14 puntajes distintos. Revisa **No es 25%**: en la corrida del laboratorio ' +
+        'el puntaje salio distinto de 25 por ciento en el 79.9 por ciento de los ' +
+        'remuestreos. La formula del libro coincide con el monton, error estandar 0.0968 y ' +
+        'un intervalo de 6.0 por ciento a 44.0 por ciento. Entonces la afirmacion honesta no ' +
+        'es 25 por ciento, es algo entre 6 y 44 por ciento. Un solo numero nunca fue la ' +
+        'verdad, fue un solo sorteo.'
+  }
+});
+</script>
+</body>
+</html>

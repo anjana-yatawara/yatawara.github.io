@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The aggregate hides the subgroups</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Qwen2.5-0.5B-Instruct, 20-question GE statistics bank, naive letter
+   scoring. Every count below is from lab/out/we6_eval.json: "by_topic"
+   for the nine topic rows, and correct 5 / n 20 / accuracy 0.25 with
+   Wald CI (6.0%, 44.0%) for the ALL row. Nothing here is estimated. */
+var ROWS = [
+  { label: { en: 'ALL n=20',     es: 'TODAS n=20' },       n: 20, correct: 5, overall: true },
+  { label: { en: 'design n=2',   es: 'estudio n=2' },      n: 2,  correct: 2 },
+  { label: { en: 'center n=4',   es: 'centro n=4' },       n: 4,  correct: 2 },
+  { label: { en: 'assoc n=2',    es: 'asociacion n=2' },   n: 2,  correct: 1 },
+  { label: { en: 'spread n=3',   es: 'dispersion n=3' },   n: 3,  correct: 0 },
+  { label: { en: 'prob n=3',     es: 'probabilidad n=3' }, n: 3,  correct: 0 },
+  { label: { en: 'graphs n=2',   es: 'graficas n=2' },     n: 2,  correct: 0 },
+  { label: { en: 'infer n=2',    es: 'inferencia n=2' },   n: 2,  correct: 0 },
+  { label: { en: 'types n=1',    es: 'tipos n=1' },        n: 1,  correct: 0 },
+  { label: { en: 'shape n=1',    es: 'forma n=1' },        n: 1,  correct: 0 }
+];
+
+/* The slider is a what-if, not data: it moves one answer inside each
+   topic and recomputes the ALL bar from those same answers, so the
+   arithmetic stays consistent. At flip = 0 every bar is the measurement. */
+function topicValues(flip) {
+  var out = [], got = 0, asked = 0;
+  for (var i = 0; i < ROWS.length; i++) {
+    if (ROWS[i].overall) { continue; }
+    var c = Math.min(ROWS[i].n, Math.max(0, ROWS[i].correct + flip));
+    got += c; asked += ROWS[i].n;
+    out.push({ label: ROWS[i].label, value: c / ROWS[i].n });
+  }
+  return { topics: out, all: asked ? got / asked : 0 };
+}
+
+function isEs() { return document.documentElement.lang === 'es'; }
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'The aggregate hides the subgroups',
+    es: 'El total esconde a los subgrupos'
+  },
+  items: ROWS,
+  transform: function (items, p) {
+    var r = topicValues(Math.round(p.flip));
+    return [{ label: items[0].label, value: r.all, accent: 2 }].concat(r.topics);
+  },
+  yFormat: 'percent',
+  valueDigits: 0,
+  yMin: 0,
+  yMax: 1.08,
+  yLabel: { en: 'accuracy', es: 'aciertos' },
+  xLabel: {
+    en: 'topic (n = questions asked)',
+    es: 'tema (n = preguntas hechas)'
+  },
+  ariaLabel: {
+    en: 'Bar chart of a 0.5B model scored by statistics topic, with the whole 20-question score as the first bar',
+    es: 'Grafica de barras de un modelo de 0.5B por tema de estadistica, con el puntaje de las 20 preguntas como primera barra'
+  },
+  params: [
+    { id: 'flip', min: -1, max: 1, step: 1, value: 0, digits: 0,
+      label: { en: 'What if one answer inside every topic had gone the other way',
+               es: 'Que pasaria si una respuesta dentro de cada tema hubiera salido al reves' } }
+  ],
+  annotations: [
+    { compute: function (items, p) {
+        if (Math.round(p.flip) === 0) {
+          return isEs()
+            ? 'Todas las barras son medidas: un modelo, 20 preguntas, calificadas una vez.'
+            : 'Every bar is measured: one model, 20 questions, scored once.';
+        }
+        return isEs()
+          ? 'Vista hipotetica: una respuesta cambiada por tema. Nada de esto es una medicion.'
+          : 'What-if view: one answer changed per topic. None of this is a measurement.';
+      } }
+  ],
+  readouts: [
+    { id: 'all', label: { en: 'Overall', es: 'Global' }, accent: 1,
+      compute: function () { return '25% (5/20)'; } },
+    { id: 'ci', label: { en: '95% interval', es: 'Intervalo 95%' },
+      compute: function () { return '[6%, 44%]'; } },
+    { id: 'lo', label: { en: 'Lowest topic', es: 'Tema mas bajo' },
+      format: 'percent', digits: 0,
+      compute: function (items, p) {
+        var v = topicValues(Math.round(p.flip)).topics, m = 1, i;
+        for (i = 0; i < v.length; i++) { if (v[i].value < m) { m = v[i].value; } }
+        return m;
+      } },
+    { id: 'hi', label: { en: 'Highest topic', es: 'Tema mas alto' }, accent: 2,
+      format: 'percent', digits: 0,
+      compute: function (items, p) {
+        var v = topicValues(Math.round(p.flip)).topics, m = 0, i;
+        for (i = 0; i < v.length; i++) { if (v[i].value > m) { m = v[i].value; } }
+        return m;
+      } }
+  ],
+  caption: {
+    en: 'All ten bars come from one run: Qwen2.5-0.5B-Instruct answering the same ' +
+        '20-question statistics quiz, scored the naive way, one letter at a time. The ' +
+        'first bar is the whole quiz, 5 right out of 20, or 25 percent, and it is the ' +
+        'reference the other nine are measured against. Those nine cut the same 20 ' +
+        'questions into topics, and the cut looks dramatic: 100 percent on study design, ' +
+        '0 percent on probability. Now read the n under each bar. That 100 percent is two ' +
+        'questions. Six of the nine topics rest on two questions or fewer, and no topic ' +
+        'has more than four. **A 100 percent built on two questions and a 0 percent built ' +
+        'on one question are not findings, they are noise.**\n\n' +
+        '**Try this.** Drag the slider to +1. That changes exactly one answer inside every ' +
+        'topic, and it shows what a single answer is worth. In a one-question topic it is ' +
+        'worth 100 points: types and shape jump from 0 to 100. In the four-question topic ' +
+        'it is worth 25 points. Across the whole 20-question quiz it is worth 5 points. ' +
+        'Nothing you see at -1 or +1 was measured, and anything one answer can move that ' +
+        'far was never a measurement of the topic. That is chapter 12 arriving again: the ' +
+        'smaller the group, the further a single lucky or unlucky answer throws it. The ' +
+        'honest reading here is the first bar with its interval, somewhere between 6 and ' +
+        '44 percent, and nine topic bars that do not yet show this model is better at one ' +
+        'topic than another.',
+    es: 'Las diez barras salen de una sola corrida: Qwen2.5-0.5B-Instruct respondiendo el ' +
+        'mismo examen de 20 preguntas de estadistica, calificado de la manera ingenua, una ' +
+        'letra a la vez. La primera barra es el examen completo, 5 aciertos de 20, o sea 25 ' +
+        'por ciento, y es la referencia contra la que se miden las otras nueve. Esas nueve ' +
+        'cortan las mismas 20 preguntas por tema, y el corte se ve dramatico: 100 por ' +
+        'ciento en el tema estudio, 0 por ciento en probabilidad. Ahora lee la n que esta ' +
+        'debajo de cada barra. Ese 100 por ciento son dos preguntas. Seis de los nueve ' +
+        'temas se apoyan en dos preguntas o menos, y ninguno pasa de cuatro. **Un 100 por ' +
+        'ciento construido sobre dos preguntas y un 0 por ciento construido sobre una ' +
+        'pregunta no son hallazgos, son ruido.**\n\n' +
+        '**Prueba esto.** Mueve el deslizador a +1. Eso cambia exactamente una respuesta ' +
+        'dentro de cada tema, y te muestra cuanto vale una sola respuesta. En un tema de ' +
+        'una pregunta vale 100 puntos: tipos y forma saltan de 0 a 100. En el tema de ' +
+        'cuatro preguntas vale 25 puntos. En el examen completo de 20 preguntas vale 5 ' +
+        'puntos. Nada de lo que ves en -1 o en +1 fue medido, y lo que una sola respuesta ' +
+        'puede mover tanto nunca fue una medicion del tema. Esto es el capitulo 12 llegando ' +
+        'otra vez: mientras mas chico es el grupo, mas lejos lo lanza una sola respuesta, ' +
+        'afortunada o no. La lectura honesta de esta grafica es la primera barra con su ' +
+        'intervalo, algo entre 6 y 44 por ciento, y nueve barras por tema que todavia no ' +
+        'muestran que este modelo sea mejor en un tema que en otro.'
+  }
+});
+</script>
+</body>
+</html>

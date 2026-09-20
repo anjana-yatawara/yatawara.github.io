@@ -1,0 +1,159 @@
+/* MyST Theme Options */
+
+:root {
+  --cite-group-open: '[';
+  --cite-group-close: ']';
+}
+
+/* User Provided Stylesheet */
+
+/* ==========================================================================
+   MATH 3219 -- embedded simulation sizing
+   book/sims/_llm.css
+
+   Loaded by the BOOK PAGE (referenced from myst.yml), not by the sims. A
+   sim file links _engine.css and nothing else, so this stylesheet is the
+   host side of the pair: it gives the embedded frame a height, a radius
+   and a border that agree with the card the sim draws inside itself.
+
+   Dependency free. Zero external requests. No @import, no web font, no
+   image. Every rule is scoped to .sim, so dropping this file into a sim
+   frame by accident changes nothing.
+
+   WHY IT EXISTS. A sim is embedded with the native MyST {iframe}
+   directive plus the author's own size class:
+
+       ```{iframe} ../sims/ch04-softmax.html
+       :class: sim sim-m
+       :width: 100%
+       ```
+
+   MyST renders that as a fixed-ASPECT box:
+
+       <figure class="fig-figure sim sim-m">
+         <div class="leading-[0]" style="text-align:center">
+           <div class="relative inline-block"
+                style="padding-bottom:60%;width:min(max(100%,500px),100%)">
+             <iframe style="position:absolute;height:100%;...">
+
+   An aspect box is the wrong shape for a simulation. On a 320px phone,
+   60% is about 190px of height, and that is the width where a sim needs
+   the MOST height, because the readout grid and the button row both wrap.
+   The markdown cannot fix it and there is no script channel to resize the
+   frame from the page (MyST strips <script> from page content), so the
+   aspect box is converted here into a fixed-HEIGHT box.
+
+   padding-bottom and width are INLINE styles, so !important is required
+   to beat them. height is not set inline, so it needs no flag. The iframe
+   is already position:absolute; height:100%, so it fills whatever height
+   the box is given.
+
+   PROVENANCE OF THE NUMBERS. 820 / 1040 / 1300 are the three sizes fixed
+   in _planning/01-BUILD-PLAN.md, and they are the sizes measured for the
+   MATH 4210 engine, whose five primitives this book also uses. The four
+   MATH 3219 primitives (bars, tokens, quantize, vectors2d) have NOT yet
+   been measured in a browser at these widths. Treat the narrow-screen
+   tiers below as a starting point and confirm them once the sims render;
+   the sim's own stylesheet keeps overflow-y available inside the frame,
+   which is the safety net if a caption runs long.
+
+   WHICH CLASS FOR WHICH PRIMITIVE (a starting point, same caveat):
+     sim-s   one short panel, few readouts       tokens
+     sim-m   one plot plus sliders or buttons    bars, vectors2d, sliders,
+                                                 curve, scatter-drag
+     sim-l   two stacked panels                  quantize, sampling with a
+                                                 last-sample strip, resample
+   ========================================================================== */
+
+figure.sim {
+  /* Matches _engine.css: --sim-radius is 12px there, and the sim draws its
+     own 1px hairline card inside the frame, so the frame itself carries
+     the radius and no second border. */
+  --sim-frame-radius: 12px;
+  --sim-h: 1040px;                    /* default = the sim-m desktop size */
+  margin: 1.75rem 0;
+}
+
+/* Kill the aspect box and give the wrapper a real height. */
+figure.sim > div > div {
+  padding-bottom: 0 !important;
+  width: 100% !important;
+  height: var(--sim-h);
+}
+
+figure.sim > div > div > iframe {
+  border: 0;                          /* browsers default to an inset border */
+  border-radius: var(--sim-frame-radius);
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;            /* the sim paints its own background */
+  color-scheme: light dark;           /* the frame follows the page theme */
+}
+
+/* Desktop and tablet. */
+figure.sim.sim-s { --sim-h: 820px; }   /* one panel, short caption */
+figure.sim.sim-m { --sim-h: 1040px; }  /* one plot plus sliders or buttons */
+figure.sim.sim-l { --sim-h: 1300px; }  /* two stacked panels */
+
+/* Below 700px the sim's readout grid drops to two or three columns and the
+   button row wraps, so the frame needs more height, not less. The plot
+   itself gets shorter in absolute terms as the page narrows, which is why
+   sim-l grows by less than the other two. */
+@media (max-width: 700px) {
+  figure.sim { --sim-h: 1120px; margin: 1.5rem 0; }
+  figure.sim.sim-s { --sim-h: 900px; }
+  figure.sim.sim-m { --sim-h: 1120px; }
+  figure.sim.sim-l { --sim-h: 1340px; }
+}
+
+/* Phones. The engine switches to its compact layout at 430px: tighter
+   gutters, a taller plot ratio, two-across readouts, full-width buttons. */
+@media (max-width: 430px) {
+  figure.sim { --sim-frame-radius: 10px; --sim-h: 1120px; }
+  figure.sim.sim-s { --sim-h: 920px; }
+  figure.sim.sim-m { --sim-h: 1120px; }
+  figure.sim.sim-l { --sim-h: 1280px; }
+}
+
+/* The sim caption is book prose, so it keeps the reading measure. */
+figure.sim figcaption {
+  max-width: 70ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* A hand-written frame, for a page that is not built by MyST. Same three
+   sizes, same radius. */
+iframe.sim {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 12px;
+  height: 1040px;
+  background: transparent;
+  color-scheme: light dark;
+}
+iframe.sim.sim-s { height: 820px; }
+iframe.sim.sim-m { height: 1040px; }
+iframe.sim.sim-l { height: 1300px; }
+
+@media (max-width: 700px) {
+  iframe.sim.sim-s { height: 900px; }
+  iframe.sim.sim-m { height: 1120px; }
+  iframe.sim.sim-l { height: 1340px; }
+}
+@media (max-width: 430px) {
+  iframe.sim { border-radius: 10px; }
+  iframe.sim.sim-s { height: 920px; }
+  iframe.sim.sim-m { height: 1120px; }
+  iframe.sim.sim-l { height: 1280px; }
+}
+
+/* Printing an interactive frame prints one static screenshot at best, so
+   cap the height rather than spending a page and a half on white space.
+   The caption still carries the point of the figure. */
+@media print {
+  figure.sim > div > div { height: 480px; }
+  iframe.sim, iframe.sim.sim-s, iframe.sim.sim-m, iframe.sim.sim-l { height: 480px; }
+}

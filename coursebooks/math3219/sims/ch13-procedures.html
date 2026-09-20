@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Measure your measurement</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Real measurements, not a demo.
+   Source: lab/out/we6b_eval_debiased.json, written by lab/we6b_eval_debiased.py,
+   and _research/00-lab-verified-findings.md section 8.
+
+   Model Qwen/Qwen2.5-0.5B-Instruct. One model. The same 20 multiple-choice
+   questions from the GE statistics bank written for this course. Four options
+   per question, so guessing scores 1 in 4.
+
+     naive_accuracy               0.25   -> 5 of 20, log-probability of the letter
+     option_text_accuracy         0.35   -> 7 of 20, log-probability of the option text
+     rotation_majority_accuracy   0.15   -> 3 of 20, majority over 4 cyclic rotations
+     naive_letter_counts          A 16, B 2, C 0, D 2
+     fully_consistent_questions   1      -> of 20, under the four rotations
+
+   The answer-key spread B 8, C 8, D 2, A 2 is recorded in findings section 8.
+   Every one of those counts is out of the same 20 questions, which is why both
+   views on this page can be drawn on one percent axis.
+
+   The 25% chance level is arithmetic, not a measurement: one option in four.
+   It is drawn as a grey reference bar rather than a horizontal line because
+   _engine.js has no reference-line option and this file must not edit it. Ten
+   other sims in this book and 58 MATH 4210 sims depend on that file. */
+
+var CHANCE = 0.25;
+
+/* The three procedures, in the order the investigation actually went. */
+var PROCEDURES = [
+  { label: { en: 'chance', es: 'azar' },
+    value: CHANCE, right: 5, color: '#999999' },
+
+  { label: { en: 'the letter', es: 'la letra' },
+    value: 0.25, right: 5, accent: 2 },
+
+  { label: { en: 'the option text', es: 'el texto' },
+    value: 0.35, right: 7, accent: 1 },
+
+  { label: { en: '4 rotations', es: '4 rotaciones' },
+    value: 0.15, right: 3, accent: 1 }
+];
+
+/* The diagnosis. How often the model picked each letter, against how often
+   that letter is the correct answer. Both are counts out of the same 20
+   questions, shown here as a share of 20 so the axis does not change. */
+var LETTERS = [
+  { letter: 'A', chosen: 16, key: 2 },
+  { letter: 'B', chosen: 2,  key: 8 },
+  { letter: 'C', chosen: 0,  key: 8 },
+  { letter: 'D', chosen: 2,  key: 2 }
+];
+
+var QUESTIONS = 20;
+
+function procedureBars() {
+  var out = [], i;
+  for (i = 0; i < PROCEDURES.length; i++) {
+    out.push({
+      label: PROCEDURES[i].label,
+      value: PROCEDURES[i].value,
+      color: PROCEDURES[i].color,
+      accent: PROCEDURES[i].accent
+    });
+  }
+  return out;
+}
+
+function letterBars() {
+  var out = [], i;
+  for (i = 0; i < LETTERS.length; i++) {
+    out.push({
+      label: { en: LETTERS[i].letter + ' model', es: LETTERS[i].letter + ' modelo' },
+      value: LETTERS[i].chosen / QUESTIONS,
+      accent: 1
+    });
+    out.push({
+      label: { en: LETTERS[i].letter + ' key', es: LETTERS[i].letter + ' clave' },
+      value: LETTERS[i].key / QUESTIONS,
+      accent: 2
+    });
+  }
+  return out;
+}
+
+function isSpanish() { return document.documentElement.lang === 'es'; }
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'One model, twenty questions, three scoring procedures, three answers',
+    es: 'Un modelo, veinte preguntas, tres procedimientos, tres respuestas'
+  },
+  items: PROCEDURES,
+  params: [
+    { id: 'view',
+      label: { en: 'View:  0 = the three procedures,  1 = why the first one lied',
+               es: 'Vista:  0 = los tres procedimientos,  1 = por que el primero mintio' },
+      min: 0, max: 1, step: 1, value: 0, digits: 0 }
+  ],
+  transform: function (items, p) {
+    if (p.view >= 0.5) { return letterBars(); }
+    return procedureBars();
+  },
+  yFormat: 'percent',
+  valueDigits: 0,
+  yMin: 0,
+  yLabel: { en: 'share of the same 20 questions', es: 'parte de las mismas 20 preguntas' },
+  xLabel: {
+    en: 'one model, one question bank, different rules for scoring it',
+    es: 'un modelo, un banco de preguntas, distintas reglas para calificarlo'
+  },
+  ariaLabel: {
+    en: 'Bar chart comparing three scoring procedures applied to one model on the same twenty questions, with a chance reference bar at 25 percent',
+    es: 'Grafica de barras que compara tres procedimientos de calificacion aplicados a un modelo en las mismas veinte preguntas, con una barra de referencia del azar en 25 por ciento'
+  },
+  annotations: [
+    { compute: function (items, p) {
+        if (p.view >= 0.5) {
+          return isSpanish()
+            ? 'Cada letra tiene dos barras. La barra "modelo" es cuantas veces el modelo eligio esa letra. La barra "clave" es cuantas veces esa letra era la respuesta correcta.'
+            : 'Each letter gets two bars. The bar marked model is how often the model picked that letter. The bar marked key is how often that letter was the right answer.';
+        }
+        return isSpanish()
+          ? 'Tres reglas de calificacion, un modelo, las mismas 20 preguntas. La barra gris no es una medicion del modelo: con cuatro opciones, adivinar da 1 de 4.'
+          : 'Three scoring rules, one model, the same 20 questions. The grey bar is not a measurement of the model: with four options, guessing gives 1 in 4.';
+      } }
+  ],
+  readouts: [
+    { id: 'high', accent: 1,
+      label: { en: 'Highest procedure', es: 'Procedimiento mas alto' },
+      compute: function () { return isSpanish() ? '35.0% (7 de 20)' : '35.0% (7 of 20)'; } },
+
+    { id: 'low', accent: 2,
+      label: { en: 'Lowest procedure', es: 'Procedimiento mas bajo' },
+      compute: function () { return isSpanish() ? '15.0% (3 de 20)' : '15.0% (3 of 20)'; } },
+
+    { id: 'chance',
+      label: { en: 'Chance, 4 options', es: 'Azar, 4 opciones' },
+      compute: function () { return isSpanish() ? '25.0% (5 de 20)' : '25.0% (5 of 20)'; } },
+
+    { id: 'letterA', accent: 2,
+      label: { en: 'Model answered A', es: 'El modelo contesto A' },
+      compute: function () { return isSpanish() ? '16 de 20' : '16 of 20'; } },
+
+    { id: 'consistent',
+      label: { en: 'Same in 4 rotations', es: 'Igual en 4 rotaciones' },
+      compute: function () { return isSpanish() ? '1 de 20' : '1 of 20'; } }
+  ],
+  caption: {
+    en: 'Everything on this page comes from one run. One model, ' +
+        'Qwen2.5-0.5B-Instruct. One question bank, the same 20 multiple-choice ' +
+        'statistics questions, four options each. What changes from bar to bar is the ' +
+        '**procedure**, and a procedure is the rule you use to turn what the model ' +
+        'produced into a right or a wrong. Nothing about the model changes. ' +
+        'Nothing about the questions changes. Only the rule.\n\n' +
+        '**Rule one, the letter.** Show the model the question with its four options and ' +
+        'ask which of the four letters A, B, C and D it gives the highest score to. ' +
+        'Score: **25.0%**, 5 right out of 20. **Rule two, the option text.** Ignore the ' +
+        'letters. Score the actual wording of each option, then divide by its length so ' +
+        'a long option is not punished for being long, and take the best. Score: ' +
+        '**35.0%**, 7 out of 20. **Rule three, rotation.** Ask the same question four ' +
+        'times, moving the options around the page each time so every option gets a turn ' +
+        'in every slot, and keep the answer that wins the majority. Score: **15.0%**, 3 ' +
+        'out of 20. All three rules are defensible. All three appear in published work. ' +
+        'Same model, same questions, **15% to 35%**.\n\n' +
+        '**The grey bar is not a measurement.** With four options, somebody answering at ' +
+        'random gets one in four right, which is 25%, or 5 questions out of 20. That is ' +
+        'arithmetic, and it is on the chart as the height every score has to clear before ' +
+        'it means anything. Look where rule one landed. Exactly on it. A score that ' +
+        'lands exactly on chance is not a result, it is a question, and the question is ' +
+        'what the scorer was actually measuring.\n\n' +
+        '**Move the slider to 1 for the answer.** Under rule one the model answered ' +
+        '**A on 16 of the 20 questions**: A sixteen times, B twice, C never, D twice. ' +
+        'Now look at the other bar in each pair, the answer key. The right answer was B ' +
+        'eight times, C eight times, D twice and A twice. The model was reaching for the ' +
+        'letter A no matter what the question said, and the key almost never rewarded ' +
+        'it. **Rule one was measuring the model habit of liking the letter A, not its ' +
+        'knowledge of statistics.** That is called position bias, and once you have seen ' +
+        'this picture you cannot unsee it in a leaderboard.\n\n' +
+        '**The number that settles it is in the last readout.** Under the four ' +
+        'rotations, only **1 question out of 20** got the same answer all four times. A ' +
+        'model that knows an answer gives that answer wherever it sits on the page. This ' +
+        'model does not know this material, and the honest report is not 25%, not 35% ' +
+        'and not 15%. The honest report is that no single number should have been ' +
+        'printed. Chapter 12 already showed you the width of the problem: a 25% score on ' +
+        '20 questions carries a 95% interval running from 6% to 44%.\n\n' +
+        '**What to carry forward, and it is the point of this course.** An evaluation ' +
+        'number is a property of the **procedure**, not only of the model. When you read ' +
+        'that a model scores some percentage on some benchmark, that number belongs to a ' +
+        'pair: this model, scored this way. Change the way and you change the number, by ' +
+        '20 percentage points here, without touching the model at all. So the first ' +
+        'question to ask about any AI score you meet is not how big it is. It is how it ' +
+        'was scored.',
+    es: 'Todo lo que ves en esta pagina viene de una sola corrida. Un modelo, ' +
+        'Qwen2.5-0.5B-Instruct. Un banco de preguntas, las mismas 20 preguntas de ' +
+        'opcion multiple de estadistica, con cuatro opciones cada una. Lo que cambia de ' +
+        'barra a barra es el **procedimiento**, y un procedimiento es la regla que ' +
+        'usas para convertir lo que produjo el modelo en un acierto o un ' +
+        'error. Nada del modelo cambia. Nada de las preguntas cambia. Solo la regla.\n\n' +
+        '**Regla uno, la letra.** Le muestras al modelo la pregunta con sus cuatro ' +
+        'opciones y le preguntas a cual de las cuatro letras A, B, C o D le da el ' +
+        'puntaje mas alto. Resultado: **25.0%**, 5 aciertos de 20. **Regla dos, el texto ' +
+        'de la opcion.** Olvida las letras. Califica la redaccion de cada opcion, luego ' +
+        'divide entre su largo para que una opcion larga no salga castigada por ser ' +
+        'larga, y quedate con la mejor. Resultado: **35.0%**, 7 de 20. **Regla tres, ' +
+        'rotacion.** Haz la misma pregunta cuatro veces, moviendo las opciones de lugar ' +
+        'cada vez para que cada opcion pase por cada posicion, y quedate con la ' +
+        'respuesta que gane la mayoria. Resultado: **15.0%**, 3 de 20. Las tres reglas ' +
+        'se pueden defender. Las tres aparecen en trabajos publicados. Mismo modelo, ' +
+        'mismas preguntas, **de 15% a 35%**.\n\n' +
+        '**La barra gris no es una medicion.** Con cuatro opciones, alguien que contesta ' +
+        'al azar acierta una de cada cuatro, o sea 25%, o 5 preguntas de 20. Eso es ' +
+        'aritmetica, y esta en la grafica como la marca que cualquier puntaje tiene que ' +
+        'pasar antes de significar algo. Mira donde cayo la regla uno. Justo encima. Un ' +
+        'puntaje que cae exactamente en el azar no es un resultado, es una pregunta, y ' +
+        'la pregunta es que estaba midiendo en realidad el calificador.\n\n' +
+        '**Mueve el deslizador a 1 para ver la respuesta.** Con la regla uno el modelo ' +
+        'contesto **A en 16 de las 20 preguntas**: A dieciseis veces, B dos, C ninguna, ' +
+        'D dos. Ahora mira la otra barra de cada par, la clave de respuestas. La ' +
+        'respuesta correcta era B ocho veces, C ocho veces, D dos y A dos. El modelo ' +
+        'agarraba la letra A sin importar lo que dijera la pregunta, y la clave casi ' +
+        'nunca lo premiaba. **La regla uno estaba midiendo la costumbre del modelo de ' +
+        'preferir la letra A, no su conocimiento de estadistica.** A eso se le llama ' +
+        'sesgo de posicion, y una vez que ves esta imagen ya no la puedes dejar de ver ' +
+        'en una tabla de resultados.\n\n' +
+        '**El numero que cierra el caso esta en el ultimo valor.** Con las cuatro ' +
+        'rotaciones, solo **1 pregunta de 20** recibio la misma respuesta las cuatro ' +
+        'veces. Un modelo que sabe una respuesta la da este donde este en la pagina. ' +
+        'Este modelo no sabe este material, y el reporte honesto no es 25%, ni 35%, ni ' +
+        '15%. El reporte honesto es que no se debio imprimir ningun numero solo. El ' +
+        'capitulo 12 ya te mostro el tamano del problema: un puntaje de 25% sobre 20 ' +
+        'preguntas trae un intervalo del 95% que va de 6% a 44%.\n\n' +
+        '**Que llevarte de aqui, y es el punto de todo el curso.** Un numero de ' +
+        'evaluacion es una propiedad del **procedimiento**, no solo del modelo. Cuando ' +
+        'leas que un modelo saca cierto porcentaje en cierta prueba, ese numero le ' +
+        'pertenece a un par: este modelo, calificado de esta manera. Cambia la manera y ' +
+        'cambias el numero, aqui por 20 puntos porcentuales, sin tocar el modelo. Asi ' +
+        'que la primera pregunta ante cualquier puntaje de IA que te encuentres no es ' +
+        'que tan grande es. Es como se califico.'
+  }
+});
+</script>
+</body>
+</html>

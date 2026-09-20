@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>From scores to probabilities</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Real measurements, not a demo curve.
+   Source: lab/out/we2_softmax.json (Qwen/Qwen2.5-0.5B-Instruct, 494,032,768
+   parameters, vocabulary 151,936; prompt "The capital of France is").
+     logit = the raw next-token score, top_k[i].logit
+     prob  = softmax_by_temperature["1.0"][i], taken over the FULL vocabulary,
+             which is why these eight probabilities sum to 0.7206 and not to 1.
+   Do not recompute prob from the eight logits below. A softmax over eight
+   numbers is a different distribution: it would put ' Paris' at 41.9%. */
+var TOP8 = [
+  { label: "' Paris'",   logit: 17.2173, prob: 0.302188 },
+  { label: "' ______'",  logit: 16.3196, prob: 0.123149 },
+  { label: "':\n'",      logit: 15.6955, prob: 0.065971 },
+  { label: "':\n\n'",    logit: 15.5711, prob: 0.058257 },
+  { label: "' __'",      logit: 15.3869, prob: 0.048456 },
+  { label: "' ____'",    logit: 15.3036, prob: 0.044581 },
+  { label: "' located'", logit: 15.2772, prob: 0.043422 },
+  { label: "' the'",     logit: 15.0482, prob: 0.034536 }
+];
+
+function probSum(items) {
+  var s = 0, i;
+  for (i = 0; i < items.length; i++) { s += items[i].prob; }
+  return s;
+}
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'Slide from raw scores to probabilities and watch the order hold',
+    es: 'Pasa de puntajes crudos a probabilidades y observa que el orden se mantiene'
+  },
+  items: TOP8,
+  /* No sort. The items already sit in the model's own rank order, and leaving
+     them alone is what lets the reader see that softmax never reorders. */
+  params: [
+    { id: 'view',
+      label: { en: 'View:  0 = raw logit scores,  1 = softmax probabilities',
+               es: 'Vista:  0 = puntajes logit crudos,  1 = probabilidades softmax' },
+      min: 0, max: 1, step: 1, value: 0, digits: 0 }
+  ],
+  transform: function (items, p) {
+    var asProb = p.view >= 0.5;
+    var out = [], i;
+    for (i = 0; i < items.length; i++) {
+      out.push({
+        label: items[i].label,
+        value: asProb ? items[i].prob : items[i].logit,
+        accent: i === 1 ? 2 : 1
+      });
+    }
+    return out;
+  },
+  yFormat: 'number',
+  valueDigits: 3,
+  yLabel: { en: 'logit score  /  probability', es: 'puntaje logit  /  probabilidad' },
+  xLabel: { en: 'the eight most likely next tokens',
+            es: 'los ocho tokens siguientes mas probables' },
+  ariaLabel: {
+    en: 'Bar chart of the eight highest scoring next tokens after the prompt The capital of France is',
+    es: 'Grafica de barras de los ocho tokens siguientes con mayor puntaje despues de la frase The capital of France is'
+  },
+  annotations: [
+    { id: 'mode',
+      label: { en: 'Bar height', es: 'Altura de la barra' },
+      compute: function (items, p) {
+        return p.view >= 0.5
+          ? { en: 'the probability, a number between 0 and 1',
+              es: 'la probabilidad, un numero entre 0 y 1' }
+          : { en: 'the raw logit, a score with no ceiling and no floor',
+              es: 'el logit crudo, un puntaje sin techo ni piso' };
+      } }
+  ],
+  readouts: [
+    { id: 'top1',  label: { en: "P( ' Paris' )", es: "P( ' Paris' )" },
+      accent: 1, format: 'percent', digits: 1,
+      compute: function (items) { return items[0].prob; } },
+    { id: 'blank', label: { en: "P( ' ______' )", es: "P( ' ______' )" },
+      accent: 2, format: 'percent', digits: 1,
+      compute: function (items) { return items[1].prob; } },
+    { id: 'sum8',  label: { en: 'These 8 bars add to', es: 'Estas 8 barras suman' },
+      format: 'percent', digits: 1,
+      compute: function (items) { return probSum(items); } },
+    { id: 'rest',  label: { en: 'Other 151,928 tokens', es: 'Los otros 151,928 tokens' },
+      format: 'percent', digits: 1,
+      compute: function (items) { return 1 - probSum(items); } }
+  ],
+  caption: {
+    en: 'These are the real numbers Qwen2.5-0.5B produced for the prompt **The capital of ' +
+        'France is**. With the slider at 0 you see the model\'s raw output: a **logit**, one ' +
+        'score per token. Logits have no ceiling and no floor (across this whole vocabulary ' +
+        'they run from -14.495 to 17.217), and these eight bars look almost the same height. ' +
+        'Slide to 1 and softmax rewrites them as probabilities. Three things happen at once: ' +
+        'every number turns **positive**, the whole set **adds up to 1**, and the **order ' +
+        'never changes**. The tallest bar is still \' Paris\' and the shortest is still ' +
+        '\' the\'.\n\n' +
+        '**One honest warning.** These eight bars are only the top of a **151,936**-token ' +
+        'list, so they do not add up to 1 by themselves. They add up to **72.1%**, and the ' +
+        'other 151,928 tokens hold the remaining 27.9%. Over the full vocabulary the ' +
+        'probabilities really do sum to 1.000; you are looking at a slice of that. The ' +
+        'readouts always report probabilities, even while the bars are showing logits.\n\n' +
+        '**Try this.** Start at 0 and try to pick the winner by eye. You cannot really: ' +
+        '17.217 for \' Paris\' against 15.048 for \' the\' is a difference of about 14% in ' +
+        'bar height. Now slide to 1. \' Paris\' takes 30.2% and \' the\' takes 3.5%, almost ' +
+        'nine times less, because softmax raises e to each score before it divides, so a ' +
+        'small lead in points becomes a large lead in probability. Then look at bar number ' +
+        'two, the one drawn in the second colour. The model\'s second choice is not a city, ' +
+        'it is **\' ______\'**, a fill-in-the-blank rule, at 12.3%. The model is not confused ' +
+        'about France. It has read this exact sentence on worksheets, where a blank follows ' +
+        'the word "is", and that habit is sitting right there in the scores.',
+    es: 'Estos son los numeros reales que produjo Qwen2.5-0.5B para la frase **The capital ' +
+        'of France is** (la capital de Francia es). Con el deslizador en 0 ves la salida ' +
+        'cruda del modelo: un **logit**, un puntaje por token. Los logits no tienen techo ni ' +
+        'piso (en todo este vocabulario van de -14.495 a 17.217), y estas ocho barras se ven ' +
+        'casi de la misma altura. Mueve el deslizador a 1 y la softmax las reescribe como ' +
+        'probabilidades. Pasan tres cosas a la vez: cada numero se vuelve **positivo**, el ' +
+        'conjunto completo **suma 1**, y el **orden nunca cambia**. La barra mas alta sigue ' +
+        'siendo \' Paris\' y la mas baja sigue siendo \' the\'.\n\n' +
+        '**Una advertencia honesta.** Estas ocho barras son apenas la punta de una lista de ' +
+        '**151,936** tokens, asi que por si solas no suman 1. Suman **72.1%**, y los otros ' +
+        '151,928 tokens se quedan con el 27.9% restante. Sobre el vocabulario completo las ' +
+        'probabilidades si suman 1.000; aqui ves solo una parte. Los valores de abajo ' +
+        'siempre reportan probabilidades, incluso cuando las barras muestran logits.\n\n' +
+        '**Prueba esto.** Empieza en 0 e intenta elegir al ganador a simple vista. En ' +
+        'realidad no puedes: 17.217 para \' Paris\' contra 15.048 para \' the\' es una ' +
+        'diferencia de apenas un 14% de altura. Ahora mueve el deslizador a 1. \' Paris\' se ' +
+        'lleva 30.2% y \' the\' se lleva 3.5%, casi nueve veces menos, porque la softmax ' +
+        'eleva e a cada puntaje antes de dividir, y asi una ventaja pequena en puntos se ' +
+        'vuelve una ventaja grande en probabilidad. Luego mira la barra numero dos, la del ' +
+        'segundo color. La segunda opcion del modelo no es una ciudad, es ' +
+        '**\' ______\'**, una regla de llenar el espacio en blanco, con 12.3%. El modelo no ' +
+        'esta confundido sobre Francia. Ha leido esta misma frase en hojas de ejercicios, ' +
+        'donde despues de "is" viene un espacio en blanco, y esa costumbre esta ahi mismo en ' +
+        'los puntajes.'
+  }
+});
+</script>
+</body>
+</html>

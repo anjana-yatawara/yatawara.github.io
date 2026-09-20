@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How many bits does a number need?</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* One measured weight from Qwen2.5-0.5B-Instruct, layer 0, self_attn.q_proj,
+   a 896 x 896 matrix holding 802,816 numbers.
+     median |w| = 0.02697754   (lab/out/we3_params_quant.json, findings 4 and 5)
+     largest magnitude in the same matrix = 1.2265625  (W_stats.min)
+   The scale slider tops out at that measured magnitude. Every readout is
+   computed live from the value and the two sliders; nothing is asserted. */
+var TYPICAL_WEIGHT = 0.02697754;
+var MATRIX_MAX = 1.2265625;
+
+Sim.mount({
+  type: 'quantize',
+  title: {
+    en: 'How many bits does a number need?',
+    es: 'Cuantos bits necesita un numero?'
+  },
+  value: TYPICAL_WEIGHT,
+  params: [
+    { id: 'bits', label: { en: 'Bits per number', es: 'Bits por numero' },
+      min: 2, max: 8, step: 1, value: 8, digits: 0 },
+    { id: 'scaleMax', label: { en: 'Scale maximum (top of the range)',
+                               es: 'Maximo de la escala (tope del rango)' },
+      min: 0.03125, max: 1.25, step: 0.0078125, value: MATRIX_MAX, digits: 4 }
+  ],
+  readouts: [
+    { id: 'levels',  label: { en: 'Levels (2^bits)',    es: 'Niveles (2^bits)' } },
+    { id: 'step',    label: { en: 'Gap between levels', es: 'Paso entre niveles' },
+      digits: 6 },
+    { id: 'snapped', label: { en: 'Snapped value',      es: 'Valor redondeado' },
+      accent: 1, digits: 8 },
+    { id: 'absErr',  label: { en: 'Error, ignoring sign', es: 'Error, sin el signo' },
+      accent: 2, digits: 8,
+      compute: function (q) { return Math.abs(q.err); } },
+    { id: 'halfGap', label: { en: 'Worst error (half a gap)',
+                              es: 'Error maximo (medio paso)' },
+      digits: 6,
+      compute: function (q) { return q.step / 2; } }
+  ],
+  presets: [
+    { label: { en: 'Whole matrix, 4 bits', es: 'Matriz completa, 4 bits' },
+      set: { bits: 4, scaleMax: MATRIX_MAX } },
+    { label: { en: 'Whole matrix, 8 bits', es: 'Matriz completa, 8 bits' },
+      set: { bits: 8, scaleMax: MATRIX_MAX } },
+    { label: { en: 'Narrow range, 4 bits', es: 'Rango estrecho, 4 bits' },
+      set: { bits: 4, scaleMax: 0.03125 } }
+  ],
+  fullAriaLabel: {
+    en: 'Whole scale: every level these bits can write down, from minus the scale ' +
+        'maximum to plus the scale maximum',
+    es: 'Escala completa: todos los niveles que estos bits pueden escribir, desde ' +
+        'menos el maximo de la escala hasta mas el maximo de la escala'
+  },
+  zoomAriaLabel: {
+    en: 'Zoom: the two levels on either side of the weight, and the gap it falls into',
+    es: 'Acercamiento: los dos niveles a cada lado del peso, y el hueco donde cae'
+  },
+  caption: {
+    en: 'The dot is one real number from a real model: 0.02697754, the median size of ' +
+        'the 802,816 numbers in the first attention matrix of Qwen2.5-0.5B (layer 0, ' +
+        'q_proj), ignoring signs. Half of that matrix is smaller than this and half is ' +
+        'bigger. The tick marks are the only values that b bits can write down, and the ' +
+        'diamond is the one our number gets rounded to. The top panel shows the whole ' +
+        'range those levels have to cover; the bottom panel zooms in until you can see ' +
+        'the gap the number falls into. One fussy detail: the **Levels** readout counts ' +
+        '2^b labels, but this line is symmetric around zero, so one label goes unused ' +
+        'and you will always count one tick fewer than the readout says.\n\n' +
+        '**Try this.** Start at 8 bits and drag **Bits per number** down one notch at a ' +
+        'time. Each notch throws away half the levels, and the gap between them grows to ' +
+        'a little more than twice what it was. By 5 bits the nearest level is ' +
+        '0.00000000: the line no longer has a rung anywhere near our number, even though ' +
+        '32 levels sounds like plenty. Now set bits back to 4 and drag **Scale maximum** ' +
+        'all the way down to 0.0313. Nothing about the bits changed, and the error drops ' +
+        'to about 0.0002. Bits decide how many rungs you get. The scale maximum decides ' +
+        'how far apart you have to spread them, and that is what the error actually ' +
+        'depends on.',
+    es: 'El punto es un numero real de un modelo real: 0.02697754, la mediana de los ' +
+        'valores absolutos de los 802,816 numeros de la primera matriz de atencion de ' +
+        'Qwen2.5-0.5B (capa 0, q_proj). La mitad de esa matriz es menor que esto y la ' +
+        'mitad es mayor, sin mirar el signo. Las marcas son los unicos valores que b ' +
+        'bits pueden escribir, y el rombo es aquel al que se redondea nuestro numero. El ' +
+        'panel de arriba muestra todo el rango que esos niveles tienen que cubrir; el de ' +
+        'abajo se acerca hasta que se ve el hueco donde cae el numero. Un detalle ' +
+        'quisquilloso: el indicador **Niveles** cuenta 2^b etiquetas, pero esta recta es ' +
+        'simetrica alrededor del cero, asi que una etiqueta queda sin usar y siempre ' +
+        'contaras una marca menos de las que dice el indicador.\n\n' +
+        '**Prueba esto.** Empieza en 8 bits y baja **Bits por numero** de uno en uno. ' +
+        'Cada paso tira la mitad de los niveles, y el hueco entre ellos crece a poco mas ' +
+        'del doble. Al llegar a 5 bits el nivel mas cercano es 0.00000000: la recta ya ' +
+        'no tiene ningun escalon cerca de nuestro numero, aunque 32 niveles suenen a ' +
+        'muchos. Ahora regresa a 4 bits y baja **Maximo de la escala** hasta 0.0313. Los ' +
+        'bits no cambiaron, y el error baja a unos 0.0002. Los bits deciden cuantos ' +
+        'escalones tienes. El maximo de la escala decide que tan separados hay que ' +
+        'ponerlos, y de eso es de lo que depende el error.'
+  }
+});
+</script>
+</body>
+</html>
