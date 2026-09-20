@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A sentence is an arrow</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Every number below is a measured anchor, not a guess.
+
+   lab/out/appendix_formulas_checks.json -> vectors_2d
+     a = (3, 4) with b = (4, 3):   dot 24, |a| 5, |b| 5, cos 0.9600, angle 16.26 deg
+     a = (3, 4) with c = (-4, 3):  dot 0,            cos 0.0000, angle 90.00 deg
+   (same table, _research/00-lab-verified-findings.md section 6)
+
+   lab/out/we5_embeddings.json -> dim = 384, the width of all-MiniLM-L6-v2,
+   quoted once in the caption. */
+
+Sim.mount({
+  type: 'vectors2d',
+  title: {
+    en: 'A sentence is an arrow',
+    es: 'Una oracion es una flecha'
+  },
+  a: { x: 3, y: 4 },
+  b: { x: 4, y: 3 },
+  range: [-7, 7],
+  yRange: [-7, 7],
+  snap: 0.25,
+  labelA: 'a',
+  labelB: 'b',
+  xLabel: { en: 'first coordinate', es: 'primera coordenada' },
+  yLabel: { en: 'second coordinate', es: 'segunda coordenada' },
+  ariaLabel: {
+    en: 'Two arrows drawn from the origin on a square grid, with the angle between them marked by an arc',
+    es: 'Dos flechas trazadas desde el origen en una cuadricula, con el angulo entre ellas marcado por un arco'
+  },
+  readouts: [
+    { id: 'dot', label: { en: 'Dot product',      es: 'Producto punto' },  accent: 1, digits: 2 },
+    { id: 'la',  label: { en: 'Length |a|',       es: 'Longitud |a|' },               digits: 2 },
+    { id: 'lb',  label: { en: 'Length |b|',       es: 'Longitud |b|' },               digits: 2 },
+    { id: 'cos', label: { en: 'Cosine',           es: 'Coseno' },          accent: 2, digits: 4 },
+    { id: 'ang', label: { en: 'Angle (degrees)',  es: 'Angulo (grados)' },            digits: 2 }
+  ],
+  presets: [
+    { label: { en: 'Set b to (-4, 3)', es: 'Pon b en (-4, 3)' },
+      a: { x: 3, y: 4 }, b: { x: -4, y: 3 } }
+  ],
+  caption: {
+    en: 'Both arrows start at the origin. The solid arrow is a, the dashed one is b, and each ' +
+        'carries its name at the tip. The **dot product** is the one number this chapter turns ' +
+        'on, and you can build it by hand: multiply the two first coordinates, multiply the two ' +
+        'second coordinates, add the two results. For a = (3, 4) and b = (4, 3) that is 3 times ' +
+        '4 plus 4 times 3, which is 24, exactly what the Dot product readout shows. A big positive dot ' +
+        'product says the arrows lean the same way. The sentence vectors later in this chapter ' +
+        'have 384 coordinates instead of 2, but the recipe never changes: multiply matching ' +
+        'coordinates, add them up.\n\n' +
+        '**Try this.** Press Set b to (-4, 3). The dot product falls to 0.00 and the angle reads ' +
+        '90.00 degrees, and the arc between the arrows is a square corner. Check the arithmetic ' +
+        'yourself: 3 times -4 is -12, 4 times 3 is 12, and the two cancel. Now drag the tip of b ' +
+        'slowly around the origin and watch the sign. The dot product stays positive while b ' +
+        'leans toward a, passes through zero exactly when the corner is square, and turns ' +
+        'negative once b leans the other way. Zero is not a small amount of agreement. It is the ' +
+        'fence between agreeing and disagreeing, and it is what a right angle looks like in ' +
+        'arithmetic.',
+    es: 'Las dos flechas salen del origen. La flecha solida es a, la punteada es b, y cada una ' +
+        'lleva su nombre en la punta. El **producto punto** es el numero del que depende todo ' +
+        'este capitulo, y lo puedes armar a mano: multiplica las dos primeras coordenadas, ' +
+        'multiplica las dos segundas, y suma los dos resultados. Para a = (3, 4) y b = (4, 3) eso ' +
+        'es 3 por 4 mas 4 por 3, o sea 24, exactamente lo que marca el recuadro Producto punto. Un producto punto ' +
+        'grande y positivo dice que las flechas se inclinan hacia el mismo lado. Los vectores de ' +
+        'oraciones que veras mas adelante en el capitulo tienen 384 coordenadas en vez de 2, pero ' +
+        'la receta no cambia: multiplicar coordenadas que se corresponden y sumarlas.\n\n' +
+        '**Prueba esto.** Presiona Pon b en (-4, 3). El producto punto cae a 0.00 y el angulo ' +
+        'marca 90.00 grados, y el arco entre las flechas es una esquina cuadrada. Comprueba la ' +
+        'cuenta tu mismo: 3 por -4 da -12, 4 por 3 da 12, y los dos se cancelan. Ahora arrastra ' +
+        'la punta de b despacio alrededor del origen y fijate en el signo. El producto punto se ' +
+        'mantiene positivo mientras b se inclina hacia a, pasa por cero justo cuando la esquina ' +
+        'queda cuadrada, y se vuelve negativo en cuanto b se inclina al otro lado. El cero no ' +
+        'quiere decir que se parecen un poco. Es la frontera entre parecerse y no parecerse, y es lo que un ' +
+        'angulo recto significa en aritmetica.'
+  }
+});
+</script>
+</body>
+</html>

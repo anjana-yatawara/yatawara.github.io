@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ranking by meaning</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Measured, not invented. lab/out/we5_embeddings.json: all-MiniLM-L6-v2,
+   384 dimensions, 22,713,216 parameters. query_sims for the query
+   "Which California county is Bakersfield in?" against these six sentences,
+   verbatim to full precision. The sentences stay in English in both
+   languages because English is the text the model actually embedded. */
+var DOCS = [
+  { value: 0.08934633433818817, onTopic: false,
+    text: "The cat sat on the mat.",
+    tag: { en: 'cat, mat', es: 'gato, tapete' } },
+  { value: 0.06152140349149704, onTopic: false,
+    text: "A kitten rested on the rug.",
+    tag: { en: 'kitten, rug', es: 'gatito, alfombra' } },
+  { value: 0.9101471900939941, onTopic: true,
+    text: "Bakersfield is in Kern County, California.",
+    tag: { en: 'Kern County', es: 'Kern County' } },
+  { value: 0.719054102897644, onTopic: true,
+    text: "Kern County's largest city is Bakersfield.",
+    tag: { en: 'largest city', es: 'ciudad grande' } },
+  { value: 0.011616942472755909, onTopic: false,
+    text: "The stock market fell sharply on Tuesday.",
+    tag: { en: 'stock market', es: 'la bolsa' } },
+  { value: 0.05557522177696228, onTopic: false,
+    text: "Photosynthesis converts light into chemical energy.",
+    tag: { en: 'photosynthesis', es: 'fotosintesis' } }
+];
+
+/* Ranked copy, highest cosine first. cfg.items is never mutated. */
+function ranked(items) {
+  return items.slice().sort(function (a, b) { return b.value - a.value; });
+}
+function topK(p) { return Math.round(p.k); }
+function words(s) { return s.trim().split(/\s+/).length; }
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'Ranking by meaning',
+    es: 'Ordenar por significado'
+  },
+  sort: 'desc',
+  yMin: 0,
+  yMax: 1,
+  valueDigits: 3,
+  yLabel: { en: 'cosine similarity to the question',
+            es: 'similitud coseno con la pregunta' },
+  xLabel: { en: 'six sentences, ranked by score',
+            es: 'seis frases, ordenadas por puntaje' },
+  ariaLabel: {
+    en: 'Bar chart: cosine similarity between one question and six sentences, ' +
+        'ranked from highest to lowest, with the top k marked as sent to the model',
+    es: 'Grafico de barras: similitud coseno entre una pregunta y seis frases, ' +
+        'ordenadas de mayor a menor, con las k primeras marcadas como enviadas al modelo'
+  },
+  items: DOCS,
+  params: [
+    { id: 'k', label: { en: 'k: sentences handed to the model',
+                        es: 'k: frases que le damos al modelo' },
+      min: 1, max: 6, step: 1, value: 2, digits: 0 }
+  ],
+  /* Rank, then mark the cut. The in / out word is part of every label, so
+     the two accent colours never carry the meaning on their own. */
+  transform: function (items, p) {
+    var k = topK(p);
+    return ranked(items).map(function (d, i) {
+      var sent = i < k;
+      return {
+        value: d.value,
+        accent: sent ? 1 : 2,
+        label: sent ? { en: 'in  ' + d.tag.en, es: 'dentro ' + d.tag.es }
+                    : { en: 'out ' + d.tag.en, es: 'fuera  ' + d.tag.es }
+      };
+    });
+  },
+  readouts: [
+    { id: 'sent', accent: 1,
+      label: { en: 'Sentences sent', es: 'Frases enviadas' },
+      compute: function (items, p) { return topK(p) + ' / ' + items.length; } },
+    { id: 'lowest', digits: 3,
+      label: { en: 'Lowest score sent', es: 'Puntaje mas bajo enviado' },
+      compute: function (items, p) { return ranked(items)[topK(p) - 1].value; } },
+    { id: 'drop', accent: 2, digits: 3,
+      label: { en: 'Drop at the cut', es: 'Caida en el corte' },
+      compute: function (items, p) {
+        var r = ranked(items), k = topK(p);
+        return k < r.length ? r[k - 1].value - r[k].value : NaN;
+      } },
+    { id: 'off',
+      label: { en: 'Off-topic words sent', es: 'Palabras fuera de tema' },
+      compute: function (items, p) {
+        var r = ranked(items), k = topK(p), all = 0, junk = 0;
+        for (var i = 0; i < k; i++) {
+          all += words(r[i].text);
+          if (!r[i].onTopic) { junk += words(r[i].text); }
+        }
+        return junk + ' / ' + all + ' (' + Math.round(100 * junk / all) + '%)';
+      } }
+  ],
+  annotations: [
+    { id: 'lastIn', label: { en: 'Last one in', es: 'Ultima que entra' },
+      compute: function (items, p) {
+        var d = ranked(items)[topK(p) - 1];
+        return '"' + d.text + '" ' + d.value.toFixed(3);
+      } },
+    { id: 'firstOut', label: { en: 'First one out', es: 'Primera que queda fuera' },
+      compute: function (items, p) {
+        var r = ranked(items), k = topK(p);
+        if (k >= r.length) { return null; }
+        return '"' + r[k].text + '" ' + r[k].value.toFixed(3);
+      } }
+  ],
+  caption: {
+    en: 'Six sentences, one question: **"Which California county is Bakersfield in?"** ' +
+        'Each bar is the cosine similarity between the question and one sentence, measured ' +
+        'with all-MiniLM-L6-v2, an embedding model with 22,713,216 parameters and 384 ' +
+        'dimensions. The two Kern County sentences score 0.910 and 0.719. The next sentence ' +
+        'down scores 0.089. Nothing in the machine understands the question. It sorts by a ' +
+        'number, and on easy material that number separates the sentences about the topic ' +
+        'from the rest by a cliff. The sentences are shown in English because English is ' +
+        'what the model measured.\n\n' +
+        '**Try this.** Set k to 1, then step it up one notch at a time and watch **Drop at ' +
+        'the cut**, which is the score of the last sentence you send minus the score of the ' +
+        'first one you leave out. From 1 to 2 it is 0.191. From 2 to 3 it is 0.630, the ' +
+        'biggest drop in the list, and it falls exactly where the sentences about the topic ' +
+        'run out. Keep going to k = 6 and the off-topic readout reaches 25 / 37 (68%): the ' +
+        'model now has to read about cats, photosynthesis and the stock market to answer a ' +
+        'question about a county.\n\n' +
+        '**The honest part.** This corpus is easy. The same method run on the GE ' +
+        'Compendium that CSUB publishes for its own students retrieved the wrong section ' +
+        'on the first attempt: a question about Area ' +
+        '2 came back with Area 6 text, because fixed 120-word windows do not know which ' +
+        'section they sit in. Heading-aware chunks got 3 of 6 questions right. Swapping the ' +
+        'embedding model for bge-small-en-v1.5, 33,360,000 parameters, got 6 of 6 on the ' +
+        'same chunks. Here is the sting: the 6 of 6 system had a mean rank 1 minus rank 2 ' +
+        'gap of 0.055, lower than the 0.058 of the 3 of 6 system. The gap is a useful ' +
+        'confidence signal inside one system, and it does not transfer across systems.',
+    es: 'Seis frases, una pregunta: **"Which California county is Bakersfield in?"** (en ' +
+        'que condado de California esta Bakersfield). Cada barra es la similitud coseno ' +
+        'entre la pregunta y una frase, medida con all-MiniLM-L6-v2, un modelo de ' +
+        'incrustaciones de 22,713,216 parametros y 384 dimensiones. Las dos frases sobre ' +
+        'Kern County obtienen 0.910 y 0.719. La siguiente frase obtiene 0.089. Nada en la ' +
+        'maquina entiende la pregunta: ordena por un numero, y en material facil ese numero ' +
+        'separa con un barranco las frases del tema de las demas. Las frases se muestran en ' +
+        'ingles porque el ingles es lo que el modelo midio.\n\n' +
+        '**Prueba esto.** Pon k en 1 y sube de uno en uno mirando **Caida en el corte**, ' +
+        'que es el puntaje de la ultima frase que envias menos el puntaje de la primera que ' +
+        'dejas fuera. De 1 a 2 vale 0.191. De 2 a 3 vale 0.630, la caida mas grande de la ' +
+        'lista, y cae justo donde se acaban las frases del tema. Sigue hasta k = 6 y el ' +
+        'marcador de palabras fuera de tema llega a 25 / 37 (68%): ahora el modelo tiene ' +
+        'que leer sobre gatos, fotosintesis y la bolsa para responder una pregunta sobre ' +
+        'un condado.\n\n' +
+        '**La parte honesta.** Este corpus es facil. El mismo metodo aplicado al GE ' +
+        'Compendium de CSUB recupero la seccion equivocada en el primer intento: una ' +
+        'pregunta sobre el Area 2 devolvio texto del Area 6, porque las ventanas fijas de ' +
+        '120 palabras no saben en que seccion estan. Con trozos que respetan los ' +
+        'encabezados acerto 3 de 6 preguntas. Cambiar el modelo de incrustaciones por ' +
+        'bge-small-en-v1.5, de 33,360,000 parametros, dio 6 de 6 con los mismos trozos. ' +
+        'Aqui viene lo dificil: el sistema de 6 de 6 tuvo una brecha media de rango 1 menos ' +
+        'rango 2 de 0.055, menor que el 0.058 del sistema de 3 de 6. La brecha es una senal ' +
+        'de confianza util dentro de un sistema y no se traslada entre sistemas.'
+  }
+});
+</script>
+</body>
+</html>

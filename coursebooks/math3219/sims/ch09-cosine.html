@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why we divide by the lengths</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Lab-verified 2-D pairs (_research/00-lab-verified-findings.md, sec. 6):
+     a=(3,4), b=(6,8)  -> dot 50, |a| 5, |b| 10, cosine 1.0000, angle  0.00
+     a=(3,4), b=(4,3)  -> dot 24, |a| 5, |b|  5, cosine 0.9600, angle 16.26
+     a=(3,4), b=(-4,3) -> dot  0, |a| 5, |b|  5, cosine 0.0000, angle 90.00
+   The 384-d sentence numbers quoted in the caption come from
+   lab/out/we5_embeddings.json (all-MiniLM-L6-v2). Snap is 0.5 so that a
+   dragged tip can land exactly on the line through a and read 1.0000. */
+
+Sim.mount({
+  type: 'vectors2d',
+  title: {
+    en: 'Why we divide by the lengths',
+    es: 'Por que dividimos entre las longitudes'
+  },
+  a: { x: 3, y: 4 },
+  b: { x: 6, y: 8 },
+  range: [-11, 11],
+  snap: 0.5,
+  xLabel: { en: 'dimension 1', es: 'dimension 1' },
+  yLabel: { en: 'dimension 2', es: 'dimension 2' },
+  ariaLabel: {
+    en: 'Two arrows drawn from the origin, a and b, with the angle between them',
+    es: 'Dos flechas dibujadas desde el origen, a y b, con el angulo entre ellas'
+  },
+  readouts: [
+    { id: 'dot', label: { en: 'Dot product', es: 'Producto punto' },
+      accent: 1, digits: 4 },
+    { id: 'la',  label: { en: 'Length |a|', es: 'Longitud |a|' }, digits: 4 },
+    { id: 'lb',  label: { en: 'Length |b|', es: 'Longitud |b|' }, digits: 4 },
+    { id: 'ratio', label: { en: 'Ratio |b| / |a|', es: 'Razon |b| / |a|' },
+      digits: 2,
+      compute: function (a, b, g) { return g.la > 0 ? g.lb / g.la : NaN; } },
+    { id: 'cos', label: { en: 'Cosine', es: 'Coseno' }, accent: 2, digits: 4 },
+    { id: 'ang', label: { en: 'Angle (degrees)', es: 'Angulo (grados)' }, digits: 2 }
+  ],
+  presets: [
+    { label: { en: 'b = 2a', es: 'b = 2a' },
+      a: { x: 3, y: 4 }, b: { x: 6, y: 8 } },
+    { label: { en: 'b = (4, 3)', es: 'b = (4, 3)' },
+      a: { x: 3, y: 4 }, b: { x: 4, y: 3 } },
+    { label: { en: 'b = (-4, 3)', es: 'b = (-4, 3)' },
+      a: { x: 3, y: 4 }, b: { x: -4, y: 3 } }
+  ],
+  caption: {
+    en: 'Both arrows start at the origin. a points to (3, 4), and b points to (6, 8), ' +
+        'which is exactly a doubled: the same direction, twice as long. The dot product ' +
+        'reads 50 and the lengths read 5 and 10, so those three readouts all react to ' +
+        'the doubling. The cosine does not. It reads exactly 1.0000, at an angle of 0.00 ' +
+        'degrees. That is the whole job of dividing by the two lengths: it throws the ' +
+        'lengths away and keeps only the direction. **Length is not meaning. Direction is.**\n\n' +
+        'The same measure runs in 384 dimensions inside a real embedding model. Two ' +
+        'sentences about Bakersfield and Kern County score **0.833**. The cat sentence and ' +
+        'the kitten sentence score **0.612**, and they share no content words at all. A ' +
+        'sentence about the stock market against one about photosynthesis scores ' +
+        '**-0.017**, so the cosine can go negative when two texts have nothing to do with ' +
+        'each other.\n\n' +
+        '**Try this.** Drag the tip of b along the line that a already points down, ' +
+        'further out from the origin and then back in toward it, and watch the **cosine ' +
+        'stay pinned at 1.0000** and the angle at 0.00 while the dot product and the ' +
+        'length ratio change freely. From the keyboard, b starts selected: press the right ' +
+        'arrow three times, then the up arrow four times. Three across and four up is the ' +
+        'shape of a itself, so b lands back on the same line and the cosine does not move. ' +
+        'Then press **b = (4, 3)** and **b = (-4, 3)**. Both arrows now have length 5 and ' +
+        'nothing but the direction has changed, and the cosine falls to 0.9600 and then to ' +
+        '0.0000 at a right angle. Length changed without the cosine moving; direction moved ' +
+        'the cosine without any length changing.',
+    es: 'Las dos flechas salen del origen. a apunta a (3, 4), y b apunta a (6, 8), que es ' +
+        'exactamente a duplicado: la misma direccion, el doble de largo. El producto punto ' +
+        'marca 50 y las longitudes marcan 5 y 10, asi que esos tres valores reaccionan al ' +
+        'duplicar. El coseno no. Marca exactamente 1.0000, con un angulo de 0.00 grados. ' +
+        'Ese es todo el trabajo de dividir entre las dos longitudes: tira las longitudes y ' +
+        'se queda solo con la direccion. **La longitud no es el significado. La direccion ' +
+        'si lo es.**\n\n' +
+        'La misma medida corre en 384 dimensiones dentro de un modelo de embeddings real. ' +
+        'Dos oraciones sobre Bakersfield y el condado de Kern dan **0.833**. La oracion del ' +
+        'gato y la del gatito dan **0.612**, y no comparten ninguna palabra de contenido. ' +
+        'Una oracion sobre la bolsa de valores frente a otra sobre la fotosintesis da ' +
+        '**-0.017**, asi que el coseno puede salir negativo cuando dos textos no tienen ' +
+        'nada que ver.\n\n' +
+        '**Prueba esto.** Arrastra la punta de b a lo largo de la recta por la que a ya ' +
+        'apunta, mas lejos del origen y luego de regreso hacia el, y observa como el ' +
+        '**coseno se queda clavado en 1.0000** y el angulo en 0.00 mientras el producto ' +
+        'punto y la razon de longitudes cambian libremente. Desde el teclado, b empieza ' +
+        'seleccionada: presiona la flecha derecha tres veces y luego la flecha arriba ' +
+        'cuatro veces. Tres a la derecha y cuatro hacia arriba es la forma de a misma, asi ' +
+        'que b cae de nuevo sobre la misma recta y el coseno no se mueve. Luego presiona ' +
+        '**b = (4, 3)** y **b = (-4, 3)**. Ahora las dos flechas miden 5 y lo unico que ' +
+        'cambio fue la direccion, y el coseno baja a 0.9600 y despues a 0.0000 en angulo ' +
+        'recto. La longitud cambio sin mover el coseno; la direccion movio el coseno sin ' +
+        'que cambiara ninguna longitud.'
+  }
+});
+</script>
+</body>
+</html>

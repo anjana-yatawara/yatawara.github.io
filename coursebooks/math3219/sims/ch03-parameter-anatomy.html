@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Where half a billion numbers live</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Qwen2.5-0.5B-Instruct, 494,032,768 parameters. Component counts and the
+   shares 27.56 / 21.17 / 3.90 / 0.56 percent, and the storage figures
+   1.976 / 0.988 / 0.494 / 0.247 GB, are the measured table in
+   _research/00-lab-verified-findings.md section 4
+   (lab/we3_params_quant.py -> lab/out/we3_params_quant.json). */
+var TOTAL   = 494032768;
+var EMBED_N = 136134656;
+
+/* Module names are the model's own identifiers, so they read the same in
+   both languages. */
+function code(s) { return { en: s, es: s }; }
+
+var PARTS = [
+  { label: code('embed_tokens'),     value: EMBED_N,   group: 'embed', accent: 2 },
+  { label: code('mlp.gate_proj'),    value: 104595456, group: 'mlp' },
+  { label: code('mlp.up_proj'),      value: 104595456, group: 'mlp' },
+  { label: code('mlp.down_proj'),    value: 104595456, group: 'mlp' },
+  { label: code('self_attn.q_proj'), value: 19289088,  group: 'attn' },
+  { label: code('self_attn.o_proj'), value: 19267584,  group: 'attn' },
+  { label: code('self_attn.k_proj'), value: 2755584,   group: 'attn' },
+  { label: code('self_attn.v_proj'), value: 2755584,   group: 'attn' }
+];
+
+/* Bytes per stored weight at each rung of the ladder, and the name the
+   findings give that rung. "4 bits" is left unabbreviated so it reads in
+   English and Spanish alike. */
+var BYTES  = [4, 2, 1, 0.5];
+var FORMAT = ['FP32', 'FP16', 'INT8', '4 bits'];
+
+function rung(p) {
+  var i = Math.round(p.step === undefined ? 0 : p.step);
+  return Math.max(0, Math.min(BYTES.length - 1, i));
+}
+
+function groupShare(items, g) {
+  var s = 0;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].group === g) { s += items[i].value; }
+  }
+  return (100 * s / TOTAL).toFixed(1) + '%';
+}
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'Where half a billion numbers live',
+    es: 'Donde viven quinientos millones de numeros'
+  },
+  items: PARTS,
+  transform: function (items) {
+    return items.map(function (d) {
+      return { label: d.label, value: d.value / TOTAL, accent: d.accent };
+    });
+  },
+  sort: 'desc',
+  yFormat: 'percent',
+  valueDigits: 2,
+  yLabel: {
+    en: 'share of all 494,032,768 parameters',
+    es: 'fraccion de los 494,032,768 parametros'
+  },
+  xLabel: {
+    en: 'component inside Qwen2.5-0.5B-Instruct',
+    es: 'componente dentro de Qwen2.5-0.5B-Instruct'
+  },
+  ariaLabel: {
+    en: 'Bar chart of the share of parameters held by each component of Qwen2.5-0.5B-Instruct',
+    es: 'Grafica de barras de la fraccion de parametros que tiene cada componente de Qwen2.5-0.5B-Instruct'
+  },
+  annotations: [
+    { id: 'embed', label: { en: 'Word table', es: 'Tabla de palabras' },
+      compute: function (items) { return groupShare(items, 'embed'); } },
+    { id: 'mlp', label: { en: 'MLP blocks', es: 'Bloques MLP' },
+      compute: function (items) { return groupShare(items, 'mlp'); } },
+    { id: 'attn', label: { en: 'All attention', es: 'Toda la atencion' },
+      compute: function (items) { return groupShare(items, 'attn'); } }
+  ],
+  params: [
+    { id: 'step',
+      label: { en: 'Storage step: 0 = FP32, 1 = FP16, 2 = INT8, 3 = 4 bits',
+               es: 'Paso de guardado: 0 = FP32, 1 = FP16, 2 = INT8, 3 = 4 bits' },
+      min: 0, max: 3, step: 1, value: 0, digits: 0 }
+  ],
+  readouts: [
+    { id: 'fmt', label: { en: 'Storage format', es: 'Formato' },
+      compute: function (items, p) { return FORMAT[rung(p)]; } },
+    { id: 'bpw', label: { en: 'Bytes per weight', es: 'Bytes por peso' },
+      accent: 2, digits: 2,
+      compute: function (items, p) { return BYTES[rung(p)]; } },
+    { id: 'disk', label: { en: 'Model on disk', es: 'Modelo en disco' },
+      accent: 1,
+      compute: function (items, p) {
+        return (TOTAL * BYTES[rung(p)] / 1e9).toFixed(3) + ' GB';
+      } },
+    { id: 'tbl', label: { en: 'Word table alone', es: 'Solo esa tabla' },
+      compute: function (items, p) {
+        return (EMBED_N * BYTES[rung(p)] / 1e6).toFixed(1) + ' MB';
+      } }
+  ],
+  caption: {
+    en: 'Every bar is one kind of part inside Qwen2.5-0.5B-Instruct, and its height is the ' +
+        'share of the model\u2019s 494,032,768 numbers that sits there. The names are the ' +
+        'model\u2019s own. **embed_tokens** is the lookup table that turns each of the ' +
+        '151,936 tokens into a list of 896 numbers, the three **mlp** parts are the wide ' +
+        'layers that do most of the arithmetic, and the four **self_attn** parts are ' +
+        'attention, the mechanism everyone writes about.\n\n' +
+        '**Try this.** Add the four self_attn bars in your head: 3.90 + 3.90 + 0.56 + 0.56, ' +
+        'which is 8.92 percent. Attention, the famous part, is under a tenth of this model, ' +
+        'while a single lookup table for words is over a quarter of it. Now drag the slider ' +
+        'from 0 to 3 and watch the bars: **not one of them moves**. Storing each number in ' +
+        'fewer bits does not relocate a single parameter, it only shrinks the box each one ' +
+        'sits in, so the whole model drops from 1.976 GB to 0.247 GB while the shape of this ' +
+        'chart stays exactly the same.',
+    es: 'Cada barra es un tipo de pieza dentro de Qwen2.5-0.5B-Instruct, y su altura es la ' +
+        'fraccion de los 494,032,768 numeros del modelo que esta ahi. Los nombres son los del ' +
+        'propio modelo. **embed_tokens** es la tabla de consulta que convierte cada uno de los ' +
+        '151,936 tokens en una lista de 896 numeros, las tres piezas **mlp** son las capas ' +
+        'anchas que hacen casi toda la aritmetica, y las cuatro piezas **self_attn** son la ' +
+        'atencion, el mecanismo del que todos hablan.\n\n' +
+        '**Prueba esto.** Suma de cabeza las cuatro barras self_attn: 3.90 + 3.90 + 0.56 + ' +
+        '0.56, que da 8.92 por ciento. La atencion, la parte famosa, es menos de una decima ' +
+        'parte de este modelo, mientras que una sola tabla de consulta de palabras es mas de ' +
+        'una cuarta parte. Ahora mueve el deslizador de 0 a 3 y observa las barras: ' +
+        '**ninguna se mueve**. Guardar cada numero con menos bits no cambia de lugar ni un ' +
+        'solo parametro, solo encoge la caja donde cabe cada uno, asi que el modelo entero ' +
+        'baja de 1.976 GB a 0.247 GB mientras la forma de esta grafica queda igual.'
+  }
+});
+</script>
+</body>
+</html>

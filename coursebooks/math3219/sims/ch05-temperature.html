@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Temperature, and what it does not do</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Real measurements, not a demo curve.
+   Source: lab/out/we2_softmax.json and _research/00-lab-verified-findings.md
+   section 2. Model Qwen/Qwen2.5-0.5B-Instruct, 494,032,768 parameters,
+   vocabulary 151,936. Prompt "The capital of France is".
+
+   TWO KINDS OF NUMBER LIVE ON THIS PAGE AND THEY MUST NEVER BE MIXED UP.
+
+   1. THE EIGHT LOGITS BELOW ARE MEASURED. They are top_k[i].logit, the raw
+      next-token scores. The bars are computed live from them by the
+      temperature softmax, and the bars are therefore a distribution over
+      THESE EIGHT TOKENS ONLY, rescaled so the eight add to 100%.
+
+   2. THE READOUTS MARKED "measured" ARE THE FULL 151,936-TOKEN DISTRIBUTION.
+      They are softmax_by_temperature[...][0] for ' Paris', plus the entropy
+      and 90%-mass counts from findings section 2. They CANNOT be recomputed
+      from eight bars, because the other 151,928 tokens carry real mass. So
+      they are hard coded, and they exist only at the five temperatures the
+      lab actually ran: T = 0.25, 0.50, 1.00, 1.50 and 2.00. At any other
+      temperature the readouts print "--" rather than a guess.
+
+   The two disagree, and the disagreement is the lesson. At T = 0.25 the
+   eight bars put ' Paris' at 96.809% and the measured full-vocabulary answer
+   is 96.799%. At T = 1.00 the eight bars say 41.938% and the measured answer
+   is 30.219%. Say which one you mean. */
+
+var TOP8 = [
+  { label: "' Paris'",   logit: 17.217288970947266 },
+  { label: "' ______'",  logit: 16.31963539123535 },
+  { label: "':\n'",      logit: 15.695456504821777 },
+  { label: "':\n\n'",    logit: 15.571094512939453 },
+  { label: "' __'",      logit: 15.386895179748535 },
+  { label: "' ____'",    logit: 15.303556442260742 },
+  { label: "' located'", logit: 15.277209281921387 },
+  { label: "' the'",     logit: 15.04823112487793 }
+];
+
+/* The five temperatures the lab measured over the whole vocabulary.
+   paris  = softmax_by_temperature[T][0] in lab/out/we2_softmax.json
+   bits   = entropy of the full distribution, findings section 2
+   mass90 = how many tokens it takes to reach 90% of the probability */
+var ANCHORS = [
+  { T: 0.25, paris: 0.9679881930351257,   bits: 0.237,  mass90: '1 token' },
+  { T: 0.50, paris: 0.7342968583106995,   bits: 1.568,  mass90: '4 tokens' },
+  { T: 1.00, paris: 0.3021884262561798,   bits: 4.450,  mass90: '25 tokens' },
+  { T: 1.50, paris: 0.09949363768100739,  bits: 9.031,  mass90: '4,612 tokens' },
+  { T: 2.00, paris: 0.024472510442137718, bits: 13.367, mass90: '41,274 tokens' }
+];
+
+/* Return the measured row for this slider position, or null if the lab never
+   ran this temperature. A slider step of 0.05 lands exactly on all five, but
+   the comparison is made with a tolerance so no browser rounding can knock a
+   measured value off the screen. */
+function measuredRow(temperature) {
+  var i;
+  for (i = 0; i < ANCHORS.length; i++) {
+    if (Math.abs(temperature - ANCHORS[i].T) < 0.001) { return ANCHORS[i]; }
+  }
+  return null;
+}
+
+/* The temperature softmax over the eight visible logits.
+   Step 1, divide every logit by the temperature.
+   Step 2, raise e to each of those.
+   Step 3, divide each result by the total.
+   The largest logit is subtracted first. That changes nothing in the answer,
+   because the same factor cancels top and bottom, and it keeps e to a large
+   power from overflowing at a small temperature. */
+function eightBarShares(temperature) {
+  var largest = TOP8[0].logit;
+  var i;
+  for (i = 0; i < TOP8.length; i++) {
+    if (TOP8[i].logit > largest) { largest = TOP8[i].logit; }
+  }
+  var raised = [];
+  for (i = 0; i < TOP8.length; i++) {
+    raised.push(Math.exp((TOP8[i].logit - largest) / temperature));
+  }
+  var total = 0;
+  for (i = 0; i < raised.length; i++) { total = total + raised[i]; }
+  var shares = [];
+  for (i = 0; i < raised.length; i++) { shares.push(raised[i] / total); }
+  return shares;
+}
+
+function isSpanish() { return document.documentElement.lang === 'es'; }
+
+Sim.mount({
+  type: 'bars',
+  title: {
+    en: 'Temperature flattens or sharpens. It never changes the order.',
+    es: 'La temperatura aplana o afila. Nunca cambia el orden.'
+  },
+  items: TOP8,
+  /* No sort. The eight sit in the model's own rank order, and leaving them
+     alone is what lets you see that the order never moves. */
+  params: [
+    { id: 'T',
+      label: { en: 'Temperature T  (divide every score by this before anything else)',
+               es: 'Temperatura T  (divide cada puntaje entre esto antes que nada)' },
+      min: 0.1, max: 2.5, step: 0.05, value: 1, digits: 2 }
+  ],
+  transform: function (items, p) {
+    var shares = eightBarShares(p.T);
+    var out = [], i;
+    for (i = 0; i < items.length; i++) {
+      out.push({
+        label: items[i].label,
+        value: shares[i],
+        accent: i === 1 ? 2 : 1
+      });
+    }
+    return out;
+  },
+  yFormat: 'percent',
+  valueDigits: 1,
+  yMin: 0,
+  yMax: 1,
+  yLabel: { en: 'share of these eight tokens', es: 'parte de estos ocho tokens' },
+  xLabel: {
+    en: 'the eight highest scoring next tokens, rescaled to add to 100%',
+    es: 'los ocho tokens siguientes con mayor puntaje, reescalados para sumar 100%'
+  },
+  ariaLabel: {
+    en: 'Bar chart of the eight highest scoring next tokens after the prompt The capital of France is, rescaled by temperature',
+    es: 'Grafica de barras de los ocho tokens siguientes con mayor puntaje despues de la frase The capital of France is, reescalados por la temperatura'
+  },
+  annotations: [
+    { compute: function (items, p) {
+        var row = measuredRow(p.T);
+        var atOne = Math.abs(p.T - 1) < 0.001;
+        if (row && atOne) {
+          return isSpanish()
+            ? 'T = 1.00: dividir entre 1 no cambia nada, asi que esto es la softmax normal. Medido sobre los 151,936 tokens: P(\' Paris\') = 30.219%, entropia 4.450 bits, y el 90% de la probabilidad cabe en 25 tokens.'
+            : 'T = 1.00: dividing by 1 changes nothing, so this is plain softmax. Measured over all 151,936 tokens: P(\' Paris\') = 30.219%, entropy 4.450 bits, and 90% of the probability fits in 25 tokens.';
+        }
+        if (row) {
+          return (isSpanish()
+            ? 'T = ' + row.T.toFixed(2) + ' es una de las cinco temperaturas que el laboratorio midio. Sobre los 151,936 tokens: P(\' Paris\') = '
+            : 'T = ' + row.T.toFixed(2) + ' is one of the five temperatures the lab measured. Over all 151,936 tokens: P(\' Paris\') = ')
+            + (row.paris * 100).toFixed(3) + '%'
+            + (isSpanish() ? ', entropia ' : ', entropy ') + row.bits.toFixed(3)
+            + ' bits'
+            + (isSpanish() ? ', y el 90% de la probabilidad cabe en ' : ', and 90% of the probability fits in ')
+            + row.mass90 + '.';
+        }
+        return isSpanish()
+          ? 'El laboratorio midio el vocabulario completo solo en T = 0.25, 0.50, 1.00, 1.50 y 2.00. Las barras de abajo se calculan aqui mismo a partir de los ocho puntajes medidos.'
+          : 'The lab measured the full vocabulary at T = 0.25, 0.50, 1.00, 1.50 and 2.00 only. The bars below are computed on this page from the eight measured scores.';
+      } }
+  ],
+  readouts: [
+    /* Four readouts, not five. The stat label is one line with no wrapping,
+       so a fifth cell squeezes "Tokens for 90%, measured" until it truncates,
+       and a truncated label is a defect. The probability of ' ______' lives
+       in the chapter 4 sim, where it is the lesson. */
+    { id: 'bar1', accent: 1, format: 'percent', digits: 3,
+      label: { en: "P(' Paris'), these 8 bars", es: "P(' Paris'), estas 8 barras" },
+      compute: function (items, p) { return eightBarShares(p.T)[0]; } },
+
+    { id: 'full', accent: 1,
+      label: { en: "P(' Paris'), measured", es: "P(' Paris'), medido" },
+      compute: function (items, p) {
+        var row = measuredRow(p.T);
+        if (!row) { return '--'; }
+        return (row.paris * 100).toFixed(3) + '%';
+      } },
+
+    { id: 'entropy',
+      label: { en: 'Entropy, measured', es: 'Entropia, medida' },
+      compute: function (items, p) {
+        var row = measuredRow(p.T);
+        if (!row) { return '--'; }
+        return row.bits.toFixed(3) + ' bits';
+      } },
+
+    { id: 'mass90', accent: 2,
+      label: { en: 'Tokens for 90%, measured', es: 'Tokens para 90%, medido' },
+      compute: function (items, p) {
+        var row = measuredRow(p.T);
+        if (!row) { return '--'; }
+        return row.mass90;
+      } }
+  ],
+  caption: {
+    en: 'Here is what temperature is, in one sentence with no symbols. **Before the ' +
+        'model turns its scores into probabilities, every score is divided by the same ' +
+        'number, and that number is called the temperature.** The scores are the eight ' +
+        'measured logits printed above the bars in chapter 4. The dividing happens ' +
+        'first. Then e is raised to each divided score, and then each result is divided ' +
+        'by the total, which is the softmax step you already know.\n\n' +
+        'Move the slider and watch three things. **At T = 1 nothing happens.** Dividing ' +
+        'every score by 1 leaves every score exactly where it was, so temperature 1 is ' +
+        'plain softmax and is the setting most systems ship with. **Below 1 the picture ' +
+        'sharpens.** Dividing by 0.25 multiplies every gap between scores by four, and ' +
+        'a bigger gap becomes a much bigger gap once e is raised to it. At T = 0.1 the ' +
+        'first bar is almost the whole chart. **Above 1 the picture flattens.** ' +
+        'Dividing by 2 halves every gap, the bars come down toward each other, and the ' +
+        'model becomes less sure of anything.\n\n' +
+        '**Now the sentence this chapter exists to kill: "temperature makes the model ' +
+        'more creative" is wrong.** Slide from 0.1 to 2.5 and look at the left-hand bar. ' +
+        'It is \' Paris\' at every single setting. It has to be. Dividing every score by ' +
+        'the same positive number cannot change which score is largest, in the same way ' +
+        'that halving the height of everyone in a room cannot change who is tallest. ' +
+        '**Temperature ' +
+        'cannot reorder the tokens and it cannot add a token that was not already on the ' +
+        'list.** All it does is move probability between options the model had already ' +
+        'scored. What you call creativity comes from the sampling step that follows, ' +
+        'where a token is drawn at random according to these probabilities. A flatter ' +
+        'set of bars gives the unlikely options a bigger share of the draw. That is a ' +
+        'different claim, it is a true one, and it is worth saying out loud with the ' +
+        'right words.\n\n' +
+        '**Which numbers here are which.** The bars are computed on this page, live, ' +
+        'from the eight measured scores, and they are rescaled so the eight add up to ' +
+        '100%. They are a distribution over these eight tokens and nothing more. The ' +
+        'three readouts marked **measured** come from the lab run over the whole ' +
+        '**151,936**-token vocabulary, and they appear only at the five temperatures the ' +
+        'lab actually ran: 0.25, 0.50, 1.00, 1.50 and 2.00. At every other setting they ' +
+        'read "--", because this page will not print a number nobody computed.\n\n' +
+        '**The two disagree, and that is the last lesson.** Put the slider on 0.25. The ' +
+        'eight bars give \' Paris\' 96.809% and the measured full vocabulary gives ' +
+        '96.799%. They nearly match, because at that temperature one token holds almost ' +
+        'everything and the missing tokens hold almost nothing. Now put the slider on ' +
+        '1.00. The eight bars say 41.938% and the measured answer says **30.219%**. The ' +
+        'gap is the 151,928 tokens you cannot see. Then read the last readout as you ' +
+        'step through the five measured settings: at T = 0.25 a single token carries 90% ' +
+        'of the probability, and at T = 2.00 it takes **41,274** of them. That is the ' +
+        'whole of temperature in one pair of numbers.',
+    es: 'Esto es la temperatura, en una frase y sin simbolos. **Antes de que el modelo ' +
+        'convierta sus puntajes en probabilidades, cada puntaje se divide entre el mismo ' +
+        'numero, y ese numero se llama temperatura.** Los puntajes son los ocho logits ' +
+        'medidos que aparecen sobre las barras en el capitulo 4. La division va primero. ' +
+        'Despues se eleva e a cada puntaje dividido, y luego cada resultado se divide ' +
+        'entre el total, que es el paso de la softmax que ya conoces.\n\n' +
+        'Mueve el deslizador y fijate en tres cosas. **En T = 1 no pasa nada.** Dividir ' +
+        'cada puntaje entre 1 deja cada puntaje justo donde estaba, asi que temperatura ' +
+        '1 es la softmax normal y es el valor con el que salen casi todos los sistemas. ' +
+        '**Por debajo de 1 la imagen se afila.** Dividir entre 0.25 multiplica por ' +
+        'cuatro cada diferencia entre puntajes, y una diferencia mayor se vuelve mucho ' +
+        'mayor cuando se eleva e a ella. En T = 0.1 la primera barra es casi toda la ' +
+        'grafica. **Por arriba de 1 la imagen se aplana.** Dividir entre 2 reduce a la ' +
+        'mitad cada diferencia, las barras se acercan entre si, y el modelo queda menos ' +
+        'seguro de todo.\n\n' +
+        '**Ahora la frase que este capitulo existe para tumbar: "la temperatura hace al ' +
+        'modelo mas creativo" es falsa.** Desliza de 0.1 a 2.5 y mira la barra de la ' +
+        'izquierda. Es \' Paris\' en cada posicion. Tiene que serlo. Dividir todos los ' +
+        'puntajes entre el mismo numero positivo no puede cambiar cual puntaje es el ' +
+        'mayor, igual que reducir a la mitad la estatura de todos no puede cambiar quien ' +
+        'es el mas alto. **La temperatura no puede reordenar los tokens y no puede ' +
+        'agregar un token que no estuviera ya en la lista.** Lo unico que hace es mover ' +
+        'probabilidad entre opciones que el modelo ya habia puntuado. Lo que llamas ' +
+        'creatividad viene del paso siguiente, el muestreo, donde se saca un token al ' +
+        'azar segun estas probabilidades. Un conjunto de barras mas plano le da a las ' +
+        'opciones poco probables una parte mayor del sorteo. Esa es otra afirmacion, es ' +
+        'verdadera, y vale la pena decirla con las palabras correctas.\n\n' +
+        '**Cuales numeros son cuales.** Las barras se calculan aqui mismo, en vivo, a ' +
+        'partir de los ocho puntajes medidos, y estan reescaladas para que las ocho ' +
+        'sumen 100%. Son una distribucion sobre estos ocho tokens y nada mas. Los tres ' +
+        'valores marcados **medido** vienen de la corrida de laboratorio sobre el ' +
+        'vocabulario completo de **151,936** tokens, y aparecen solo en las cinco ' +
+        'temperaturas que el laboratorio realmente corrio: 0.25, 0.50, 1.00, 1.50 y ' +
+        '2.00. En cualquier otra posicion dicen "--", porque esta pagina no va a ' +
+        'imprimir un numero que nadie calculo.\n\n' +
+        '**Los dos no coinciden, y esa es la ultima leccion.** Pon el deslizador en ' +
+        '0.25. Las ocho barras le dan a \' Paris\' 96.809% y el vocabulario completo ' +
+        'medido da 96.799%. Casi coinciden, porque a esa temperatura un solo token se ' +
+        'lleva casi todo y los tokens que faltan casi no tienen nada. Ahora pon el ' +
+        'deslizador en 1.00. Las ocho barras dicen 41.938% y la medicion dice ' +
+        '**30.219%**. La diferencia son los 151,928 tokens que no puedes ver. Luego lee ' +
+        'el ultimo valor mientras recorres las cinco posiciones medidas: en T = 0.25 un ' +
+        'solo token carga el 90% de la probabilidad, y en T = 2.00 hacen falta ' +
+        '**41,274**. Ahi esta toda la temperatura en un par de numeros.'
+  }
+});
+</script>
+</body>
+</html>

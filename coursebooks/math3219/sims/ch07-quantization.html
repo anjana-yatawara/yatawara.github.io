@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why outliers ruin everything</title>
+<link rel="stylesheet" href="_engine.css">
+</head>
+<body>
+<div id="sim"></div>
+<script src="_engine.js"></script>
+<script>
+/* Every number here is measured. Sources: _research/00-lab-verified-findings.md
+   section 5, lab/out/we3b_quant.json and lab/out/we3_params_quant.json.
+   The matrix is Qwen2.5-0.5B-Instruct layers[0].self_attn.q_proj.weight,
+   896 x 896, sd 0.06674, max |w| 1.2265625, median |w| 0.02698.
+
+   TYPICAL    = the median-magnitude weight, -0.02697754.
+   PER_TENSOR = 1.2265625, the largest magnitude in the whole tensor. At 4 bits
+     the engine's gap is 1.2265625 / 7 = 0.17522321428571427, exactly the
+     "scale" recorded for 4 bits in we3_params_quant.json (8, 6, 3 and 2 bits
+     match too), and the snapped value comes out at 0.00000000 as measured.
+   BLOCK_32   = 0.07568359375, the largest magnitude in the 32-weight block that
+     holds this weight. This is the one number below that is not printed in the
+     findings file: it was read back out of the model safetensors file, and it
+     is the unique block maximum that reproduces all three published blockwise
+     results for this weight at once (8-bit -0.02681702, 4-bit -0.02162388,
+     2-bit 0.00000000).
+
+   The slider grid is deliberate: min 0.05029296875 with step 2^-11 puts both
+   0.07568359375 and 1.2265625 exactly on a stop, so the two presets land on
+   the measured scales rather than near them. */
+var TYPICAL    = -0.02697754;
+var PER_TENSOR = 1.2265625;
+var BLOCK_32   = 0.07568359375;
+
+/* The engine's compute() callback is not handed the language, so read the lang
+   attribute that Sim.mount() has already set on <html>. */
+function say(pair) {
+  return pair[document.documentElement.getAttribute('lang') === 'es' ? 'es' : 'en'];
+}
+
+Sim.mount({
+  type: 'quantize',
+  title: {
+    en: 'Why outliers ruin everything',
+    es: 'Por que un valor extremo lo arruina todo'
+  },
+  value: TYPICAL,
+  fullAriaLabel: {
+    en: 'Whole scale, from minus the scale maximum to plus the scale maximum',
+    es: 'Escala completa, de menos el maximo de la escala a mas el maximo'
+  },
+  zoomAriaLabel: {
+    en: 'Zoom on the typical weight',
+    es: 'Acercamiento al peso tipico'
+  },
+  params: [
+    { id: 'bits', label: { en: 'Bits per number', es: 'Bits por numero' },
+      min: 2, max: 8, step: 1, value: 4, digits: 0 },
+    { id: 'scaleMax',
+      label: { en: 'Scale maximum (set by the biggest weight sharing this scale)',
+               es: 'Maximo de la escala (lo fija el peso mas grande que la comparte)' },
+      min: 0.05029296875, max: 1.25, step: 0.00048828125,
+      value: BLOCK_32, digits: 4 }
+  ],
+  readouts: [
+    { id: 'levels',  label: { en: 'Levels (2^bits)',    es: 'Niveles (2^bits)' } },
+    { id: 'step',    label: { en: 'Gap between levels', es: 'Paso entre niveles' },
+      digits: 6 },
+    { id: 'snapped', label: { en: 'Snapped value',      es: 'Valor redondeado' },
+      accent: 1, digits: 8 },
+    { id: 'err',     label: { en: 'Rounding error',     es: 'Error de redondeo' },
+      accent: 2, digits: 8 },
+    { id: 'zero',    label: { en: 'Collapsed to zero?', es: 'Colapso a cero?' },
+      compute: function (q) {
+        return q.snapped === 0
+          ? say({ en: 'Yes, exactly 0', es: 'Si, exactamente 0' })
+          : say({ en: 'No, still nonzero', es: 'No, sigue distinto de cero' });
+      } }
+  ],
+  presets: [
+    { label: { en: 'One scale for the whole tensor (1.2266)',
+               es: 'Una escala para todo el tensor (1.2266)' },
+      set: { bits: 4, scaleMax: PER_TENSOR } },
+    { label: { en: 'One scale per 32 weights (0.0757)',
+               es: 'Una escala por cada 32 pesos (0.0757)' },
+      set: { bits: 4, scaleMax: BLOCK_32 } }
+  ],
+  caption: {
+    en: 'Both number lines carry the same single weight, taken from a real attention ' +
+        'matrix inside Qwen2.5-0.5B-Instruct: **-0.02697754**, the median-magnitude ' +
+        'weight in that matrix, a completely ordinary number. The tick marks are the ' +
+        'only values the chosen bit width can store. **Bits** sets how many tick marks ' +
+        'there are. **Scale maximum** sets how far apart they are spread, and in a real ' +
+        'quantizer nobody chooses it: it is handed to you by the largest weight in ' +
+        'whatever group of weights shares one scale. In this matrix the largest ' +
+        'magnitude is **1.2266** while half the weights sit below **0.02698**, a ratio ' +
+        'of about 45 to 1.\n\n' +
+        '**Try this.** Leave bits at 4 and drag the scale maximum down to 0.05, then ' +
+        'slowly back up to 1.2266. Watch the snapped value. Long before you reach the ' +
+        'top, the nearest tick mark stops being a neighbour of the true weight and ' +
+        'becomes zero, the collapsed-to-zero readout flips, and it never comes back. ' +
+        'The weight did not change and not one bit was taken away. A single distant ' +
+        'outlier somewhere else in the same tensor set the scale, and an ordinary ' +
+        'weight was deleted. That is the measured result: over the whole matrix, 4 bits ' +
+        'with one scale per tensor gives a mean error of **46.6%** of the SD of the ' +
+        'weights and turns this weight into exactly **0.00000000**. Now press **One ' +
+        'scale per 32 weights**, which uses the biggest weight in the block of 32 that ' +
+        'this weight belongs to (**0.0757**) instead. The same 4 bits now give a mean ' +
+        'error of **7.2%** and keep the weight at **-0.02162388**. Nothing was added to ' +
+        'the model. The levels were simply put where the weights actually live.',
+    es: 'Las dos rectas numericas llevan el mismo peso, tomado de una matriz de atencion ' +
+        'real dentro de Qwen2.5-0.5B-Instruct: **-0.02697754**, el peso de magnitud ' +
+        'mediana de esa matriz, un numero completamente ordinario. Las marcas son los ' +
+        'unicos valores que el ancho de bits elegido puede guardar. **Bits** fija ' +
+        'cuantas marcas hay. **Maximo de la escala** fija que tan separadas estan, y en ' +
+        'un cuantizador real nadie lo elige: se lo impone el peso mas grande del grupo ' +
+        'de pesos que comparte una sola escala. En esta matriz la magnitud mas grande ' +
+        'es **1.2266** mientras que la mitad de los pesos estan por debajo de ' +
+        '**0.02698**, una razon de casi 45 a 1.\n\n' +
+        '**Prueba esto.** Deja los bits en 4 y baja el maximo de la escala hasta 0.05, ' +
+        'luego subelo despacio hasta 1.2266. Observa el valor redondeado. Mucho antes ' +
+        'de llegar arriba, la marca mas cercana deja de ser vecina del peso real y pasa ' +
+        'a ser cero, el indicador de colapso cambia, y ya no regresa. El peso no cambio ' +
+        'y no se quito ni un solo bit. Un unico valor extremo lejano, en el mismo ' +
+        'tensor, fijo la escala y borro un peso ordinario. Ese es el resultado medido: ' +
+        'en toda la matriz, 4 bits con una sola escala por tensor dan un error medio ' +
+        'del **46.6%** de la DE de los pesos y convierten este peso en exactamente ' +
+        '**0.00000000**. Ahora presiona **Una escala por cada 32 pesos**, que en su ' +
+        'lugar usa el peso mas grande del bloque de 32 al que pertenece este peso ' +
+        '(**0.0757**). Los mismos 4 bits dan ahora un error medio del **7.2%** y ' +
+        'conservan el peso en **-0.02162388**. No se le agrego nada al modelo. Solo se ' +
+        'pusieron los niveles donde los pesos de verdad viven.'
+  }
+});
+</script>
+</body>
+</html>
