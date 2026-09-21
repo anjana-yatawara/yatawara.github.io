@@ -1,1 +1,1 @@
-import{a}from"C:/Program Files/Git/coursebooks/math3219/build/_shared/chunk-BJB4CASA.js";import"C:/Program Files/Git/coursebooks/math3219/build/_shared/chunk-VCINEGR4.js";import"C:/Program Files/Git/coursebooks/math3219/build/_shared/chunk-OZE3FFNP.js";export default a();
+import{a}from"/coursebooks/math3219/build/_shared/chunk-BJB4CASA.js";import"/coursebooks/math3219/build/_shared/chunk-VCINEGR4.js";import"/coursebooks/math3219/build/_shared/chunk-OZE3FFNP.js";export default a();
