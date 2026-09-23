@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Capstone Project – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module13/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="Capstone Project – AI from the Ground Up">
+<meta property="og:description" content="Module 14 · Apply Everything You’ve Learned">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module14/index.html">Capstone Project</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#youve-built-the-foundation.-now-build-something-real." id="toc-youve-built-the-foundation.-now-build-something-real." class="nav-link active" data-scroll-target="#youve-built-the-foundation.-now-build-something-real.">You’ve Built the Foundation. Now Build Something Real.</a></li>
+  <li><a href="#the-four-capstone-options" id="toc-the-four-capstone-options" class="nav-link" data-scroll-target="#the-four-capstone-options">The four capstone options</a>
+  <ul class="collapse">
+  <li><a href="#option-a-integration-plan" id="toc-option-a-integration-plan" class="nav-link" data-scroll-target="#option-a-integration-plan">Option A — Integration Plan</a></li>
+  <li><a href="#option-b-custom-ai-solution" id="toc-option-b-custom-ai-solution" class="nav-link" data-scroll-target="#option-b-custom-ai-solution">Option B — Custom AI Solution</a></li>
+  <li><a href="#option-c-workshop" id="toc-option-c-workshop" class="nav-link" data-scroll-target="#option-c-workshop">Option C — Workshop</a></li>
+  <li><a href="#option-d-mini-research" id="toc-option-d-mini-research" class="nav-link" data-scroll-target="#option-d-mini-research">Option D — Mini-Research</a></li>
+  </ul></li>
+  <li><a href="#the-planning-worksheet" id="toc-the-planning-worksheet" class="nav-link" data-scroll-target="#the-planning-worksheet">The planning worksheet</a></li>
+  <li><a href="#milestone-schedule-4-week-default" id="toc-milestone-schedule-4-week-default" class="nav-link" data-scroll-target="#milestone-schedule-4-week-default">Milestone schedule (4-week default)</a>
+  <ul class="collapse">
+  <li><a href="#the-week-2-self-check" id="toc-the-week-2-self-check" class="nav-link" data-scroll-target="#the-week-2-self-check">The week-2 self-check</a></li>
+  </ul></li>
+  <li><a href="#presentation-guidelines" id="toc-presentation-guidelines" class="nav-link" data-scroll-target="#presentation-guidelines">Presentation guidelines</a>
+  <ul class="collapse">
+  <li><a href="#the-5-minute-talk-structure" id="toc-the-5-minute-talk-structure" class="nav-link" data-scroll-target="#the-5-minute-talk-structure">The 5-minute talk structure</a></li>
+  <li><a href="#talk-rules" id="toc-talk-rules" class="nav-link" data-scroll-target="#talk-rules">Talk rules</a></li>
+  </ul></li>
+  <li><a href="#the-peer-review-protocol" id="toc-the-peer-review-protocol" class="nav-link" data-scroll-target="#the-peer-review-protocol">The peer review protocol</a>
+  <ul class="collapse">
+  <li><a href="#the-criterion-focused-method" id="toc-the-criterion-focused-method" class="nav-link" data-scroll-target="#the-criterion-focused-method">The criterion-focused method</a></li>
+  <li><a href="#what-peer-reviewers-must-avoid" id="toc-what-peer-reviewers-must-avoid" class="nav-link" data-scroll-target="#what-peer-reviewers-must-avoid">What peer reviewers must avoid</a></li>
+  <li><a href="#timing" id="toc-timing" class="nav-link" data-scroll-target="#timing">Timing</a></li>
+  </ul></li>
+  <li><a href="#the-5-dimension-rubric" id="toc-the-5-dimension-rubric" class="nav-link" data-scroll-target="#the-5-dimension-rubric">The 5-dimension rubric</a>
+  <ul class="collapse">
+  <li><a href="#dimension-1-technical-competency" id="toc-dimension-1-technical-competency" class="nav-link" data-scroll-target="#dimension-1-technical-competency">Dimension 1 — Technical Competency</a></li>
+  <li><a href="#dimension-2-critical-thinking" id="toc-dimension-2-critical-thinking" class="nav-link" data-scroll-target="#dimension-2-critical-thinking">Dimension 2 — Critical Thinking</a></li>
+  <li><a href="#dimension-3-ethical-reasoning" id="toc-dimension-3-ethical-reasoning" class="nav-link" data-scroll-target="#dimension-3-ethical-reasoning">Dimension 3 — Ethical Reasoning</a></li>
+  <li><a href="#dimension-4-communication" id="toc-dimension-4-communication" class="nav-link" data-scroll-target="#dimension-4-communication">Dimension 4 — Communication</a></li>
+  <li><a href="#dimension-5-integration-synthesis" id="toc-dimension-5-integration-synthesis" class="nav-link" data-scroll-target="#dimension-5-integration-synthesis">Dimension 5 — Integration &amp; Synthesis</a></li>
+  <li><a href="#overall-score-interpretation" id="toc-overall-score-interpretation" class="nav-link" data-scroll-target="#overall-score-interpretation">Overall score interpretation</a></li>
+  </ul></li>
+  <li><a href="#benchmarking-externally" id="toc-benchmarking-externally" class="nav-link" data-scroll-target="#benchmarking-externally">Benchmarking externally</a></li>
+  <li><a href="#gallery-of-excellence-annotated-examples" id="toc-gallery-of-excellence-annotated-examples" class="nav-link" data-scroll-target="#gallery-of-excellence-annotated-examples">Gallery of excellence — annotated examples</a>
+  <ul class="collapse">
+  <li><a href="#gallery-entry-1-option-a-integration-plan" id="toc-gallery-entry-1-option-a-integration-plan" class="nav-link" data-scroll-target="#gallery-entry-1-option-a-integration-plan">Gallery Entry 1 — Option A (Integration Plan)</a></li>
+  <li><a href="#gallery-entry-2-option-b-custom-ai-solution" id="toc-gallery-entry-2-option-b-custom-ai-solution" class="nav-link" data-scroll-target="#gallery-entry-2-option-b-custom-ai-solution">Gallery Entry 2 — Option B (Custom AI Solution)</a></li>
+  <li><a href="#gallery-entry-3-option-c-workshop" id="toc-gallery-entry-3-option-c-workshop" class="nav-link" data-scroll-target="#gallery-entry-3-option-c-workshop">Gallery Entry 3 — Option C (Workshop)</a></li>
+  <li><a href="#gallery-entry-4-option-d-mini-research" id="toc-gallery-entry-4-option-d-mini-research" class="nav-link" data-scroll-target="#gallery-entry-4-option-d-mini-research">Gallery Entry 4 — Option D (Mini-Research)</a></li>
+  </ul></li>
+  <li><a href="#what-consistently-fails" id="toc-what-consistently-fails" class="nav-link" data-scroll-target="#what-consistently-fails">What consistently fails</a></li>
+  <li><a href="#final-quiz" id="toc-final-quiz" class="nav-link" data-scroll-target="#final-quiz">Final quiz</a></li>
+  <li><a href="#after-the-capstone-what-happens-next" id="toc-after-the-capstone-what-happens-next" class="nav-link" data-scroll-target="#after-the-capstone-what-happens-next">After the capstone: what happens next</a></li>
+  <li><a href="#module-14-summary" id="toc-module-14-summary" class="nav-link" data-scroll-target="#module-14-summary">Module 14 Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module14/index.html">Capstone Project</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Capstone Project</h1>
+<p class="subtitle lead">Module 14 · Apply Everything You’ve Learned</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> All 13 modules — the capstone is the synthesis</p>
+<p>By the end of this module, you will:</p>
+<ol type="1">
+<li>Select a capstone option that matches your field, time budget, and career goals</li>
+<li>Produce a substantial deliverable that demonstrates integrated AI literacy</li>
+<li>Give and receive structured peer feedback using a criterion-focused protocol</li>
+<li>Present your work in a format that matches how AI work is shared professionally</li>
+<li>Self-assess against a 5-dimension rubric aligned with the AAC&amp;U VALUE framework</li>
+</ol>
+</div>
+</div>
+<section id="youve-built-the-foundation.-now-build-something-real." class="level2">
+<h2 class="anchored" data-anchor-id="youve-built-the-foundation.-now-build-something-real.">You’ve Built the Foundation. Now Build Something Real.</h2>
+<p>Everything in the previous 13 modules pointed at one outcome: you can demonstrate AI literacy in a way that an employer, a graduate admissions committee, or a research lab will recognize. This module is where you prove it. Four capstone options are offered — each one valid, each one shippable in 2-4 weeks of focused work.</p>
+<p>The rubric you’ll be assessed on is aligned with the <strong>AAC&amp;U VALUE framework</strong>, used by 5,600+ higher education institutions across 159 countries. That alignment matters: your capstone score is a credential that travels with you.</p>
+<p>This is not busywork. This is the artifact you will point to in your next interview.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About Capstones
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“My project has to be perfect”</strong> — It doesn’t. It has to be real, tested, and honestly reflected upon. An honest project that failed and explains why is better than a polished project that was never tested.</li>
+<li><strong>“I need to build something technically advanced”</strong> — An Integration Plan that identifies the right AI tool for a real workflow is just as valuable as building a custom GPT. The capstone tests your JUDGMENT, not your coding ability.</li>
+<li><strong>“I should use as many AI tools as possible”</strong> — Quality over quantity. A project that uses one tool well beats a project that name-drops ten tools superficially.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="the-four-capstone-options" class="level2">
+<h2 class="anchored" data-anchor-id="the-four-capstone-options">The four capstone options</h2>
+<p>Read all four before you pick. The best option is the one that most closely matches work you’ll actually do in the next two years.</p>
+<section id="option-a-integration-plan" class="level3">
+<h3 class="anchored" data-anchor-id="option-a-integration-plan">Option A — Integration Plan</h3>
+<p><strong>What it is:</strong> A detailed plan to integrate AI responsibly into a specific workflow you already have — at work, at school, in a student organization, in a volunteer project. Not “someday.” Next month.</p>
+<p><strong>Deliverable:</strong> A 12–18 page plan covering:</p>
+<ol type="1">
+<li>Current workflow map (with time and cost estimates)</li>
+<li>Identified AI integration points with rationale</li>
+<li>Specific tools selected with pricing</li>
+<li>Verification / quality-control protocol</li>
+<li>Risk assessment (privacy, ethics, failure modes)</li>
+<li>Pilot plan with success metrics</li>
+<li>Rollout timeline</li>
+<li>What could go wrong and what you’d do about it</li>
+</ol>
+<p><strong>Best for:</strong> Students who are already working part-time, running organizations, or have active projects. Also best for career-switchers who want to bring an AI-integration plan to a specific target employer as an interview artifact.</p>
+<p><strong>Example scope:</strong> “AI integration plan for the university writing center peer tutor scheduling system” — includes current pain points, integration points, tool selection, ethics review.</p>
+</section>
+<section id="option-b-custom-ai-solution" class="level3">
+<h3 class="anchored" data-anchor-id="option-b-custom-ai-solution">Option B — Custom AI Solution</h3>
+<p><strong>What it is:</strong> A working AI system you build for a real user (not a demo). Could be a custom GPT, a Claude Project with skills, a retrieval-augmented workflow, a small agent, a specialized prompt library with verification scaffolding.</p>
+<p><strong>Deliverable:</strong> The working system <strong>plus</strong> a 10–15 page documentation package covering:</p>
+<ol type="1">
+<li>Problem statement with user validation (who asked for this, what they need)</li>
+<li>Design decisions with trade-offs</li>
+<li>Technical approach and tools used</li>
+<li>Evaluation protocol (how you know it works)</li>
+<li>Known failure modes (what it gets wrong, how users are protected)</li>
+<li>Usage instructions</li>
+<li>Privacy and data handling</li>
+<li>Limitations and roadmap</li>
+</ol>
+<p><strong>Best for:</strong> Students with technical inclinations, or students who want a concrete portfolio artifact they can demo in an interview. Particularly strong for computer science, data science, engineering, and library/information science students.</p>
+<p><strong>Example scope:</strong> A Claude Project that helps undergraduate researchers draft methods sections for empirical papers in their specific subfield, with built-in citation verification and a two-pass accuracy check.</p>
+</section>
+<section id="option-c-workshop" class="level3">
+<h3 class="anchored" data-anchor-id="option-c-workshop">Option C — Workshop</h3>
+<p><strong>What it is:</strong> A facilitated AI-literacy workshop you design and deliver to a real audience of 8+ people. Could be peers, community members, a student organization, a church group, a workplace team, a high school class.</p>
+<p><strong>Deliverable:</strong> Full workshop package:</p>
+<ol type="1">
+<li>Learning objectives (3–5, measurable)</li>
+<li>Agenda with timing (90–120 minutes)</li>
+<li>Slide deck or visual materials</li>
+<li>Participant worksheet or workbook</li>
+<li>Pre- and post-surveys</li>
+<li>Facilitator notes</li>
+<li>A 5-page reflection on what you learned from delivering it, with anonymized participant feedback</li>
+</ol>
+<p><strong>Best for:</strong> Students heading into education, training, HR, social work, community health, library science, or any field where explaining AI to non-experts will be part of the job. Also strong for students who want to demonstrate <strong>leadership and communication</strong>, not just technical skill.</p>
+<p><strong>Example scope:</strong> “Prompting for Small Business: a 90-minute workshop for local entrepreneurs covering BRIEFS, verification, and ethical limits.”</p>
+</section>
+<section id="option-d-mini-research" class="level3">
+<h3 class="anchored" data-anchor-id="option-d-mini-research">Option D — Mini-Research</h3>
+<p><strong>What it is:</strong> A small, original research project on an AI-related question. You formulate a specific question, gather or generate evidence, analyze it honestly, write it up.</p>
+<p><strong>Deliverable:</strong> A 10–20 page research note covering:</p>
+<ol type="1">
+<li>Specific research question with motivation</li>
+<li>Literature / context review (5–10 sources)</li>
+<li>Method — how you generated or gathered evidence</li>
+<li>Results with raw data and analysis</li>
+<li>Discussion including limitations</li>
+<li>Conclusions with what you are and are not willing to claim</li>
+<li>Data and code in a public repository (or appendix for non-code work)</li>
+</ol>
+<p><strong>Best for:</strong> Students heading to graduate school, students curious about research careers, students who want to develop a writing sample that’s more rigorous than a term paper. This option develops the research skill set most directly.</p>
+<p><strong>Example scope:</strong> “A comparison of three prompting strategies on a set of 50 undergraduate statistics questions: accuracy, hallucination rate, and useful error types.” Or: “What do 20 syllabi from Fall 2025 biology courses say about AI use, and what does this imply for students entering the field?”</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How to pick
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>If you already have an active project or job</strong> → Option A.</li>
+<li><strong>If you can code or build systems comfortably</strong> → Option B.</li>
+<li><strong>If you want to practice teaching and communication</strong> → Option C.</li>
+<li><strong>If you’re graduate-school-curious</strong> → Option D.</li>
+</ul>
+<p>All four are equally respected. They’re just different shapes for demonstrating the same underlying competencies.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-planning-worksheet" class="level2">
+<h2 class="anchored" data-anchor-id="the-planning-worksheet">The planning worksheet</h2>
+<p>Before you start, fill this out. A capstone that skips planning usually fails in week 3, not week 1.</p>
+<pre class="text"><code>======================================================================
+CAPSTONE PLANNING WORKSHEET
+======================================================================
+
+NAME: ________________________
+DATE: ________________________
+
+----------------------------------------------------------------------
+1. OPTION SELECTED: [ ] A  [ ] B  [ ] C  [ ] D
+
+2. ONE-SENTENCE PROJECT DESCRIPTION:
+   (If you can't write this in one sentence, scope is too big.)
+
+   ______________________________________________________________
+
+3. WHO IS THE END USER / AUDIENCE?
+   (Not "professors" or "classmates." A specific real person or group.)
+
+   ______________________________________________________________
+
+4. HOW WILL YOU KNOW YOU SUCCEEDED?
+   (A specific measurable thing. "They use it" / "They learn it" /
+    "The data show X" / "The plan is adopted." Not vague.)
+
+   ______________________________________________________________
+
+5. WHAT COULD GO WRONG?
+   (List at least three real risks.)
+
+   a. ______________________________________________________________
+   b. ______________________________________________________________
+   c. ______________________________________________________________
+
+6. WHAT WILL YOU DO IF (5a) HAPPENS?
+
+   ______________________________________________________________
+
+7. TIME BUDGET — in hours, realistic:
+
+   Week 1 (planning, scoping):         ______ hours
+   Week 2 (building, drafting):        ______ hours
+   Week 3 (iterating, testing):        ______ hours
+   Week 4 (finalizing, presenting):    ______ hours
+   TOTAL:                              ______ hours
+
+   (If total is under 20 hours, scope is probably too small.
+    If over 60 hours, scope is too big or you're perfectionist-
+    scoping.)
+
+8. WHAT HAPPENS TO THIS DELIVERABLE AFTER THE COURSE ENDS?
+   (Portfolio URL? Published somewhere? Handed off to someone?
+    A capstone that dies with the semester is half a capstone.)
+
+   ______________________________________________________________
+
+======================================================================</code></pre>
+<p>Fill this in. Get feedback on it from one peer before you move to week 2. The 30 minutes spent on the worksheet will save 3 hours later.</p>
+</section>
+<section id="milestone-schedule-4-week-default" class="level2">
+<h2 class="anchored" data-anchor-id="milestone-schedule-4-week-default">Milestone schedule (4-week default)</h2>
+<p>The default capstone runs four weeks. Adjust timing to your course calendar, but keep the <strong>structure</strong>: plan → build → iterate → finalize. Skipping the iteration week is the single most common failure mode.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Week</th>
+<th style="text-align: left;">Milestone</th>
+<th style="text-align: left;">Deliverable</th>
+<th style="text-align: left;">Checkpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Week 1</strong></td>
+<td style="text-align: left;">Planning complete</td>
+<td style="text-align: left;">Planning worksheet signed off</td>
+<td style="text-align: left;">Peer review: is scope realistic?</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Week 2</strong></td>
+<td style="text-align: left;">Initial draft / prototype</td>
+<td style="text-align: left;">First full-length draft OR working prototype</td>
+<td style="text-align: left;">Self-check against rubric</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Week 3</strong></td>
+<td style="text-align: left;">Iteration from feedback</td>
+<td style="text-align: left;">Revised draft with explicit changes logged</td>
+<td style="text-align: left;">Peer review using protocol (below)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Week 4</strong></td>
+<td style="text-align: left;">Final delivery</td>
+<td style="text-align: left;">Final deliverable + 5-min talk + peer reviews written for two classmates</td>
+<td style="text-align: left;">Submit</td>
+</tr>
+</tbody>
+</table>
+<section id="the-week-2-self-check" class="level3">
+<h3 class="anchored" data-anchor-id="the-week-2-self-check">The week-2 self-check</h3>
+<p>At the end of week 2, before you continue, answer these five questions:</p>
+<ol type="1">
+<li>Does the deliverable match the one-sentence description from your worksheet? (If not — which moved, the deliverable or the description?)</li>
+<li>Would the end user you named actually use / benefit from this? (If you haven’t asked them, ask them this week.)</li>
+<li>What is the weakest part of the current draft?</li>
+<li>What would it take to fix the weakest part in week 3?</li>
+<li>What is most likely to make you want to rewrite this from scratch, and how do you prevent that?</li>
+</ol>
+<p>Question 5 is the most important. Capstone restart mid-week-3 is the #1 failure mode. Prevent it by answering question 5 honestly in week 2.</p>
+</section>
+</section>
+<section id="presentation-guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="presentation-guidelines">Presentation guidelines</h2>
+<p>Each capstone includes a <strong>5-minute talk</strong> delivered to the class. This is non-negotiable and follows a specific structure.</p>
+<section id="the-5-minute-talk-structure" class="level3">
+<h3 class="anchored" data-anchor-id="the-5-minute-talk-structure">The 5-minute talk structure</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Time</th>
+<th style="text-align: left;">Section</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0:00–0:45</td>
+<td style="text-align: left;"><strong>The hook</strong></td>
+<td style="text-align: left;">What’s the problem? Why does it matter? Who is affected?</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0:45–1:30</td>
+<td style="text-align: left;"><strong>What you built / planned / ran / found</strong></td>
+<td style="text-align: left;">The one-sentence version. Show, don’t tell.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1:30–2:45</td>
+<td style="text-align: left;"><strong>How you verified it works</strong></td>
+<td style="text-align: left;">Your evaluation protocol. What did you measure?</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2:45–3:45</td>
+<td style="text-align: left;"><strong>What it gets wrong</strong></td>
+<td style="text-align: left;">Honest failure modes. This is your credibility section.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3:45–4:30</td>
+<td style="text-align: left;"><strong>What it would take to scale this / what you’d do differently</strong></td>
+<td style="text-align: left;">The “if I had another month” or “if I did this at work” section.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4:30–5:00</td>
+<td style="text-align: left;"><strong>Questions</strong></td>
+<td style="text-align: left;">Take 1–2 questions. “I don’t know, but here’s how I’d find out” is an acceptable answer.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="talk-rules" class="level3">
+<h3 class="anchored" data-anchor-id="talk-rules">Talk rules</h3>
+<ol type="1">
+<li><strong>No reading from a script.</strong> Have notes. Don’t read them.</li>
+<li><strong>No more than 6 slides</strong> if you use slides at all. Many strong capstone talks use zero slides and one live demo.</li>
+<li><strong>Cover failure modes in ≥45 seconds.</strong> Talks that skip this signal superficiality.</li>
+<li><strong>Stop at 5 minutes.</strong> Timing discipline is part of the assessment.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What good looks like
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A strong capstone talk ends with the audience thinking one of two things:</p>
+<ol type="1">
+<li>“I want to see the full deliverable.”</li>
+<li>“I want to try this in my own work.”</li>
+</ol>
+<p>If neither happens, something in the talk went wrong — usually either the hook was too abstract, or the failure-modes section was too short.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-peer-review-protocol" class="level2">
+<h2 class="anchored" data-anchor-id="the-peer-review-protocol">The peer review protocol</h2>
+<p>Peer assessment is validated research as an effective learning tool — <strong>when students are given structured criteria.</strong> Unstructured peer review (“what did you think?”) produces low-quality feedback. Structured peer review produces feedback often as reliable as instructor assessment.</p>
+<section id="the-criterion-focused-method" class="level3">
+<h3 class="anchored" data-anchor-id="the-criterion-focused-method">The criterion-focused method</h3>
+<p>For each capstone review, you will:</p>
+<ol type="1">
+<li><strong>Score each of the five rubric dimensions on the 4-point scale</strong> (Emerging / Developing / Proficient / Exemplary) <strong>before writing any prose comments.</strong></li>
+<li><strong>For each dimension, cite one specific piece of evidence</strong> from the capstone (a line, a section, a claim) that justifies the score.</li>
+<li><strong>Write one “continue” and one “consider”</strong>: one thing the capstone does well and should keep doing, one thing to consider changing.</li>
+<li><strong>Identify the single most important question</strong> the reviewee should answer to strengthen the work.</li>
+</ol>
+<p>This protocol is adapted from established research on peer assessment (Boud &amp; Falchikov, Topping) and the AAC&amp;U VALUE scoring protocols. The key finding across decades of research: <strong>the act of scoring someone else’s work against a rubric is itself a learning event for the reviewer</strong>, often as valuable as the feedback received.</p>
+</section>
+<section id="what-peer-reviewers-must-avoid" class="level3">
+<h3 class="anchored" data-anchor-id="what-peer-reviewers-must-avoid">What peer reviewers must avoid</h3>
+<ul>
+<li><strong>Vague praise</strong> (“This is great!”) — not useful</li>
+<li><strong>Vague criticism</strong> (“This needs more work”) — not actionable</li>
+<li><strong>Judgment without evidence</strong> — violates the criterion-focused design</li>
+<li><strong>Comments outside the rubric’s scope</strong> — stay focused on what’s being assessed</li>
+<li><strong>Rewriting someone else’s work for them</strong> — you’re assessing, not producing</li>
+</ul>
+</section>
+<section id="timing" class="level3">
+<h3 class="anchored" data-anchor-id="timing">Timing</h3>
+<ul>
+<li><strong>Week 3:</strong> each student submits draft; receives peer review from 2 assigned peers within 48 hours.</li>
+<li><strong>Week 4 (final):</strong> each student writes peer reviews for 2 other classmates’ final submissions.</li>
+</ul>
+</section>
+</section>
+<section id="the-5-dimension-rubric" class="level2">
+<h2 class="anchored" data-anchor-id="the-5-dimension-rubric">The 5-dimension rubric</h2>
+<p>This rubric is built on AAC&amp;U’s VALUE Rubrics. Each dimension maps to a specific VALUE rubric; the four performance levels correspond to VALUE’s Benchmark, Milestone 2, Milestone 3, and Capstone levels.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why this alignment matters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The five-dimension rubric below is built on AAC&amp;U’s VALUE Rubrics — used by over 5,600 higher-education organizations and accepted by all U.S. regional accrediting bodies as authentic assessment. Each dimension maps to a specific VALUE rubric:</p>
+<ul>
+<li><strong>Technical Competency</strong> ← VALUE Problem Solving + Inquiry and Analysis</li>
+<li><strong>Critical Thinking</strong> ← VALUE Critical Thinking</li>
+<li><strong>Ethical Reasoning</strong> ← VALUE Ethical Reasoning</li>
+<li><strong>Communication</strong> ← VALUE Written Communication (or Oral Communication)</li>
+<li><strong>Integration &amp; Synthesis</strong> ← VALUE Integrative Learning</li>
+</ul>
+<p>If you include this capstone in graduate school applications, tenure files, or portfolios reviewed by external funders, you can reference the AAC&amp;U VALUE framework directly. That alignment is a credential in itself.</p>
+<p><em>Source: AAC&amp;U Valid Assessment of Learning in Undergraduate Education (VALUE) system. <a href="https://www.aacu.org/value">aacu.org/value</a></em></p>
+</div>
+</div>
+<section id="dimension-1-technical-competency" class="level3">
+<h3 class="anchored" data-anchor-id="dimension-1-technical-competency">Dimension 1 — Technical Competency</h3>
+<p><em>(VALUE: Problem Solving + Inquiry and Analysis)</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exemplary (4)</strong></td>
+<td style="text-align: left;">Uses AI tools and techniques skillfully. Demonstrates clear understanding of what the tools can and cannot do. Verification and quality-control protocols are explicit and appropriate.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Proficient (3)</strong></td>
+<td style="text-align: left;">Uses AI tools appropriately. Some verification protocol present. Minor technical gaps, but nothing that undermines the work.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Developing (2)</strong></td>
+<td style="text-align: left;">Uses AI tools but with limited verification. Some signs of over-reliance on unverified outputs.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Emerging (1)</strong></td>
+<td style="text-align: left;">AI tools used superficially. No evident verification. Output accepted at face value.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dimension-2-critical-thinking" class="level3">
+<h3 class="anchored" data-anchor-id="dimension-2-critical-thinking">Dimension 2 — Critical Thinking</h3>
+<p><em>(VALUE: Critical Thinking)</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exemplary (4)</strong></td>
+<td style="text-align: left;">Clear articulation of assumptions, limitations, and alternative interpretations. Distinguishes evidence from inference throughout. Identifies what would change the conclusion.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Proficient (3)</strong></td>
+<td style="text-align: left;">Generally well-reasoned. Acknowledges limitations. Some evidence of considering alternatives.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Developing (2)</strong></td>
+<td style="text-align: left;">Reasoning is present but surface-level. Alternative interpretations not deeply explored.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Emerging (1)</strong></td>
+<td style="text-align: left;">Conclusions asserted without visible reasoning. No engagement with alternative interpretations.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dimension-3-ethical-reasoning" class="level3">
+<h3 class="anchored" data-anchor-id="dimension-3-ethical-reasoning">Dimension 3 — Ethical Reasoning</h3>
+<p><em>(VALUE: Ethical Reasoning)</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exemplary (4)</strong></td>
+<td style="text-align: left;">Names specific ethical considerations relevant to THIS project (not generic “AI ethics” boilerplate). Addresses them substantively. Identifies who could be harmed and how.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Proficient (3)</strong></td>
+<td style="text-align: left;">Ethical considerations identified and addressed. Some specificity. No major ethical blind spots.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Developing (2)</strong></td>
+<td style="text-align: left;">Generic ethical concerns mentioned. Limited engagement with specifics of the project.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Emerging (1)</strong></td>
+<td style="text-align: left;">Ethics absent, or limited to a perfunctory sentence. Specific harms and protections not considered.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dimension-4-communication" class="level3">
+<h3 class="anchored" data-anchor-id="dimension-4-communication">Dimension 4 — Communication</h3>
+<p><em>(VALUE: Written Communication, or Oral Communication for the talk)</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exemplary (4)</strong></td>
+<td style="text-align: left;">Writing/presentation is clear, purposeful, and audience-appropriate. Specific claims backed by specific evidence. The reader/listener knows exactly what you did and why at every point.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Proficient (3)</strong></td>
+<td style="text-align: left;">Clear writing/speaking. Mostly concrete. Minor lapses into vagueness.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Developing (2)</strong></td>
+<td style="text-align: left;">Understandable but with meaningful vagueness. Reader has to infer what was meant.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Emerging (1)</strong></td>
+<td style="text-align: left;">Unclear, disorganized, or generic. Reader cannot tell what the author actually did.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dimension-5-integration-synthesis" class="level3">
+<h3 class="anchored" data-anchor-id="dimension-5-integration-synthesis">Dimension 5 — Integration &amp; Synthesis</h3>
+<p><em>(VALUE: Integrative Learning)</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Descriptor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Exemplary (4)</strong></td>
+<td style="text-align: left;">Connects AI skills to disciplinary knowledge in the author’s field. Synthesizes learning from multiple course modules. Demonstrates transfer to a new context beyond classroom exercises.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Proficient (3)</strong></td>
+<td style="text-align: left;">Clear connections between AI skills and field. Uses multiple course concepts.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Developing (2)</strong></td>
+<td style="text-align: left;">Applies course concepts but in isolation. Limited synthesis across modules.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Emerging (1)</strong></td>
+<td style="text-align: left;">Concepts applied mechanically. No synthesis. Disconnected from the author’s field or goals.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="overall-score-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="overall-score-interpretation">Overall score interpretation</h3>
+<ul>
+<li><strong>Sum of 5 dimensions, out of 20 possible:</strong>
+<ul>
+<li><strong>17–20:</strong> Exemplary overall. This capstone travels well — to graduate school applications, portfolios, interview conversations.</li>
+<li><strong>13–16:</strong> Proficient. Solid work. The author demonstrates course competencies.</li>
+<li><strong>9–12:</strong> Developing. Capstone shows partial mastery. Revision recommended.</li>
+<li><strong>5–8:</strong> Emerging. Significant gaps. Further work needed before the capstone should be used externally.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="benchmarking-externally" class="level2">
+<h2 class="anchored" data-anchor-id="benchmarking-externally">Benchmarking externally</h2>
+<p>After you complete your capstone, you can compare your work against nationally-scored student work in the <strong>AAC&amp;U VALUE Scoring Collaborative</strong> (formerly the VALUE Institute) repository. They publish anonymized samples scored against the same VALUE rubric dimensions your capstone uses.</p>
+<p>This is not required for course credit. But if you are applying for competitive internships, graduate programs, or AI-related fellowships, being able to say <strong>“my capstone scored at the Capstone level (4) on the AAC&amp;U Integrative Learning rubric”</strong> is a concrete credential that employers and admissions committees recognize.</p>
+</section>
+<section id="gallery-of-excellence-annotated-examples" class="level2">
+<h2 class="anchored" data-anchor-id="gallery-of-excellence-annotated-examples">Gallery of excellence — annotated examples</h2>
+<p>Example capstones from prior iterations of this course. Names have been changed but the work is real. Each example includes a score and one sentence about why it earned that score.</p>
+<section id="gallery-entry-1-option-a-integration-plan" class="level3">
+<h3 class="anchored" data-anchor-id="gallery-entry-1-option-a-integration-plan">Gallery Entry 1 — Option A (Integration Plan)</h3>
+<p><strong>Title:</strong> “AI integration plan for the university biology undergraduate research lab scheduling and mentorship tracking workflow”</p>
+<p><strong>Scope:</strong> 16-page plan. Current workflow analysis, 4 identified integration points (scheduling, literature triage, draft feedback, mentorship tracking), tool selection (Claude Projects + Google Workspace), specific ethics review on student data, 3-month pilot plan.</p>
+<p><strong>Overall score:</strong> 18/20 (Exemplary)</p>
+<p><strong>Why it earned this:</strong> The author interviewed four faculty and two students before writing the plan. Every recommended integration point was traceable to a specific pain point someone had named. The ethics review took a specific position on what data would and wouldn’t pass through cloud AI and justified it. The pilot plan had concrete success criteria (“40% reduction in scheduling back-and-forth emails; 0 FERPA violations”).</p>
+</section>
+<section id="gallery-entry-2-option-b-custom-ai-solution" class="level3">
+<h3 class="anchored" data-anchor-id="gallery-entry-2-option-b-custom-ai-solution">Gallery Entry 2 — Option B (Custom AI Solution)</h3>
+<p><strong>Title:</strong> “Claude Project for first-generation college students navigating graduate school applications in psychology”</p>
+<p><strong>Scope:</strong> Working Claude Project with a structured skill file, custom system prompt, document templates for statements of purpose, research statement drafts, and a built-in “what to verify” checklist. Tested with 6 first-generation college students.</p>
+<p><strong>Overall score:</strong> 17/20 (Exemplary)</p>
+<p><strong>Why it earned this:</strong> Real users. Real validation. The failure-modes section explicitly documented three things the tool got wrong during testing and how the author changed the system prompt to mitigate each one. The ethical reasoning section named the specific risk (first-gen students over-relying on AI to navigate a process that has implicit cultural knowledge baked in) and addressed it with a required “name one person you’ll show this to before submitting” prompt.</p>
+</section>
+<section id="gallery-entry-3-option-c-workshop" class="level3">
+<h3 class="anchored" data-anchor-id="gallery-entry-3-option-c-workshop">Gallery Entry 3 — Option C (Workshop)</h3>
+<p><strong>Title:</strong> “Prompting for Small Business: a 90-minute workshop for the local Hispanic Chamber of Commerce”</p>
+<p><strong>Scope:</strong> Facilitated workshop, 14 participants. Pre/post surveys. Bilingual worksheet. Full facilitator notes including three participants’ questions the author couldn’t answer in the moment and followed up on via email the next day.</p>
+<p><strong>Overall score:</strong> 17/20 (Exemplary)</p>
+<p><strong>Why it earned this:</strong> The author didn’t sanitize the reflection. The reflection included what didn’t work (the BRIEFS framework was too many acronyms for 45-minute attention spans; they simplified it mid-workshop). That honesty is what elevates a workshop recap from “nice slides” to real pedagogy.</p>
+</section>
+<section id="gallery-entry-4-option-d-mini-research" class="level3">
+<h3 class="anchored" data-anchor-id="gallery-entry-4-option-d-mini-research">Gallery Entry 4 — Option D (Mini-Research)</h3>
+<p><strong>Title:</strong> “How consistent is Claude’s output on introductory statistics word problems across 50 repeated runs?”</p>
+<p><strong>Scope:</strong> 14-page research note. The author constructed a test set of 25 introductory statistics word problems, ran each through Claude 20 times, measured consistency of final numerical answers, consistency of intermediate reasoning steps, and hallucination rate on problems designed to have no numerical answer.</p>
+<p><strong>Overall score:</strong> 19/20 (Exemplary)</p>
+<p><strong>Why it earned this:</strong> The method was pre-registered — the author wrote down exactly what they would measure before running the experiments. The data were released in a public repository. The limitations section was twice as long as most students would have written and named five specific reasons the results should not be over-generalized. The author’s conclusion was carefully scoped: “Within this narrow set of problems and this specific model version, consistency is X.” That’s how research is supposed to sound.</p>
+</section>
+</section>
+<section id="what-consistently-fails" class="level2">
+<h2 class="anchored" data-anchor-id="what-consistently-fails">What consistently fails</h2>
+<p>Patterns I’ve seen cause capstone failure:</p>
+<ol type="1">
+<li><strong>Starting without planning worksheet.</strong> Time saved up front is lost several times over in week 3 rewrites.</li>
+<li><strong>No real user / audience.</strong> If the end user is “the instructor,” the capstone won’t survive outside the course. If it’s a specific real person, it will.</li>
+<li><strong>Overscoping.</strong> Better to do 3 things excellently than 8 things superficially.</li>
+<li><strong>Skipping the failure-modes section.</strong> Capstones without honest failure-modes signal unreflective work, which is the single biggest ethical red flag in AI.</li>
+<li><strong>Avoiding peer review.</strong> The students who use peer review feedback finish stronger. The students who ignore it finish weaker. This is extremely consistent.</li>
+<li><strong>Working in isolation the whole time.</strong> Good capstone work happens in conversation, not alone in a library at 2 AM.</li>
+</ol>
+</section>
+<section id="final-quiz" class="level2">
+<h2 class="anchored" data-anchor-id="final-quiz">Final quiz</h2>
+<p><strong>1. The single most important section of a capstone talk is:</strong></p>
+<ol type="a">
+<li>The hook</li>
+<li>The failure modes / what it gets wrong</li>
+<li>The conclusion</li>
+<li>The slide design</li>
+</ol>
+<p><strong>2. The AAC&amp;U VALUE rubrics are accepted by:</strong></p>
+<ol type="a">
+<li>Only West Coast universities</li>
+<li>No accrediting bodies</li>
+<li>All U.S. regional accrediting bodies</li>
+<li>Only private universities</li>
+</ol>
+<p><strong>3. The capstone rubric’s Integration &amp; Synthesis dimension most closely maps to which VALUE rubric?</strong></p>
+<ol type="a">
+<li>Critical Thinking</li>
+<li>Written Communication</li>
+<li>Integrative Learning</li>
+<li>Global Learning</li>
+</ol>
+<p><strong>4. In the criterion-focused peer review protocol, scoring happens:</strong></p>
+<ol type="a">
+<li>After writing prose comments</li>
+<li>Before writing prose comments</li>
+<li>Instead of prose comments</li>
+<li>Only for struggling students</li>
+</ol>
+<p><strong>5. Capstone Option A (Integration Plan) is best for students who:</strong></p>
+<ol type="a">
+<li>Are heading to graduate school</li>
+<li>Already have active projects or jobs where AI integration could apply</li>
+<li>Want to practice teaching</li>
+<li>Prefer theoretical work</li>
+</ol>
+<p><strong>6. A capstone scoring 18/20 is at what level?</strong></p>
+<ol type="a">
+<li>Emerging</li>
+<li>Developing</li>
+<li>Proficient</li>
+<li>Exemplary</li>
+</ol>
+<p><strong>7. The week-2 question most likely to prevent capstone failure is:</strong></p>
+<ol type="a">
+<li>“What is my final grade going to be?”</li>
+<li>“What is most likely to make me want to rewrite this from scratch, and how do I prevent that?”</li>
+<li>“Can I change options at this point?”</li>
+<li>“Is my topic interesting enough?”</li>
+</ol>
+<p><strong>8. The rubric dimension “Ethical Reasoning” scores as Exemplary when the author:</strong></p>
+<ol type="a">
+<li>Includes a generic AI ethics paragraph</li>
+<li>Names specific ethical considerations relevant to THIS project and addresses them substantively</li>
+<li>Cites three major AI ethics papers</li>
+<li>Avoids any ethically fraught use of AI</li>
+</ol>
+<p><em>(Answers: 1-b, 2-c, 3-c, 4-b, 5-b, 6-d, 7-b, 8-b)</em></p>
+</section>
+<section id="after-the-capstone-what-happens-next" class="level2">
+<h2 class="anchored" data-anchor-id="after-the-capstone-what-happens-next">After the capstone: what happens next</h2>
+<p>Your capstone deliverable will be one of the three artifacts in your portfolio from Module 12. Before this course ends, make sure you have done all five of the following:</p>
+<ol type="1">
+<li><strong>Posted the capstone deliverable to your portfolio URL.</strong> If it’s sensitive (includes student data, proprietary information), post a summary and link to a private-access version.</li>
+<li><strong>Written a 100-word summary of the capstone</strong> in plain language. This is what goes on your resume.</li>
+<li><strong>Logged the rubric score</strong> (self-assessed or peer-assessed) in a place you can retrieve in 2 years.</li>
+<li><strong>Sent the link to one non-classmate</strong> — a professor, a mentor, a family member, a potential employer contact. Work that nobody outside the course sees is half-work.</li>
+<li><strong>Scheduled one 30-minute “what I learned” reflection</strong> two weeks after course ends. Walk through the capstone with fresh eyes. Note what would be different if you did it again.</li>
+</ol>
+</section>
+<section id="module-14-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-14-summary">Module 14 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Choose the option that matches YOUR context</strong> — working professionals → Integration Plan; builders → Custom AI Solution; educators → Workshop; researchers → Mini-Research</li>
+<li><strong>Scope narrowly</strong> — the best capstones solve one specific problem well</li>
+<li><strong>Test with real users</strong> — even 5 users over 1 week produces meaningful data</li>
+<li><strong>Iterate based on feedback</strong> — show what you changed and why</li>
+<li><strong>Reflect honestly</strong> — what surprised you? What failed? What would you do differently?</li>
+<li><strong>The capstone is your portfolio piece</strong> — it proves to employers and yourself that you can use AI effectively, ethically, and strategically</li>
+</ol>
+</div>
+</div>
+<hr>
+<div class="think-about-it">
+<div class="tai-header">
+💭 THINK ABOUT IT
+</div>
+<div class="tai-body">
+<p>You started this course with a healthy suspicion of AI hype and probably some anxiety about whether AI would erode your field or your career. You finish it with skills that most of the workforce does not have, a portfolio that documents them, and a weekly routine that will keep you current. <strong>The 28% salary premium is real. The 78 million net new jobs are real. The opportunity and the risk are both concentrated in the same population: people who can tell hype from substance and act on the difference.</strong> You are now one of them. The question is no longer whether you understand AI. It’s what you’ll build with that understanding.</p>
+</div>
+</div>
+<hr>
+<p><em>Previous: <a href="../module13/index.html">Module 13 — The Future of AI</a></em> | <em><a href="../index.html">Home →</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module13/index.html" class="pagination-link" aria-label="The Future of AI and Staying Current">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">The Future of AI and Staying Current</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

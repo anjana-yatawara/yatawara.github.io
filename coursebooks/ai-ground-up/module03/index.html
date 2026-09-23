@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>LLMs and Generative AI – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module04/index.html" rel="next">
+<link href="../module02/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="LLMs and Generative AI – AI from the Ground Up">
+<meta property="og:description" content="Module 3 · How ChatGPT, Claude, and Gemini Actually Work">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module03/index.html">LLMs and Generative AI</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-strawberry-problem" id="toc-the-strawberry-problem" class="nav-link active" data-scroll-target="#the-strawberry-problem">The Strawberry Problem</a></li>
+  <li><a href="#how-large-language-models-actually-work" id="toc-how-large-language-models-actually-work" class="nav-link" data-scroll-target="#how-large-language-models-actually-work">How Large Language Models Actually Work</a>
+  <ul class="collapse">
+  <li><a href="#step-1-tokenization-breaking-text-into-pieces" id="toc-step-1-tokenization-breaking-text-into-pieces" class="nav-link" data-scroll-target="#step-1-tokenization-breaking-text-into-pieces">Step 1: Tokenization — Breaking Text into Pieces</a></li>
+  <li><a href="#step-2-embeddings-turning-tokens-into-meaning" id="toc-step-2-embeddings-turning-tokens-into-meaning" class="nav-link" data-scroll-target="#step-2-embeddings-turning-tokens-into-meaning">Step 2: Embeddings — Turning Tokens into Meaning</a></li>
+  <li><a href="#step-3-attention-which-words-matter-right-now" id="toc-step-3-attention-which-words-matter-right-now" class="nav-link" data-scroll-target="#step-3-attention-which-words-matter-right-now">Step 3: Attention — “Which Words Matter Right Now?”</a></li>
+  <li><a href="#step-4-prediction-the-next-token" id="toc-step-4-prediction-the-next-token" class="nav-link" data-scroll-target="#step-4-prediction-the-next-token">Step 4: Prediction — The Next Token</a></li>
+  </ul></li>
+  <li><a href="#why-this-architecture-produces-both-brilliance-and-hallucinations" id="toc-why-this-architecture-produces-both-brilliance-and-hallucinations" class="nav-link" data-scroll-target="#why-this-architecture-produces-both-brilliance-and-hallucinations">Why This Architecture Produces Both Brilliance and Hallucinations</a></li>
+  <li><a href="#the-model-zoo-who-makes-what" id="toc-the-model-zoo-who-makes-what" class="nav-link" data-scroll-target="#the-model-zoo-who-makes-what">The Model Zoo: Who Makes What</a>
+  <ul class="collapse">
+  <li><a href="#proprietary-models-closed-source" id="toc-proprietary-models-closed-source" class="nav-link" data-scroll-target="#proprietary-models-closed-source">Proprietary Models (Closed Source)</a></li>
+  <li><a href="#open-source-models-free-to-download-and-run" id="toc-open-source-models-free-to-download-and-run" class="nav-link" data-scroll-target="#open-source-models-free-to-download-and-run">Open-Source Models (Free to Download and Run)</a></li>
+  <li><a href="#the-identity-problem" id="toc-the-identity-problem" class="nav-link" data-scroll-target="#the-identity-problem">The Identity Problem</a></li>
+  </ul></li>
+  <li><a href="#how-llms-are-trained-the-three-stages" id="toc-how-llms-are-trained-the-three-stages" class="nav-link" data-scroll-target="#how-llms-are-trained-the-three-stages">How LLMs Are Trained: The Three Stages</a>
+  <ul class="collapse">
+  <li><a href="#stage-1-pre-training-the-foundation" id="toc-stage-1-pre-training-the-foundation" class="nav-link" data-scroll-target="#stage-1-pre-training-the-foundation">Stage 1: Pre-Training (The Foundation)</a></li>
+  <li><a href="#stage-2-instruction-tuning-teaching-it-to-follow-directions" id="toc-stage-2-instruction-tuning-teaching-it-to-follow-directions" class="nav-link" data-scroll-target="#stage-2-instruction-tuning-teaching-it-to-follow-directions">Stage 2: Instruction Tuning (Teaching It to Follow Directions)</a></li>
+  <li><a href="#stage-3-rlhf-making-it-helpful-and-safe" id="toc-stage-3-rlhf-making-it-helpful-and-safe" class="nav-link" data-scroll-target="#stage-3-rlhf-making-it-helpful-and-safe">Stage 3: RLHF (Making It Helpful and Safe)</a></li>
+  </ul></li>
+  <li><a href="#what-llms-can-and-cannot-do" id="toc-what-llms-can-and-cannot-do" class="nav-link" data-scroll-target="#what-llms-can-and-cannot-do">What LLMs Can and Cannot Do</a>
+  <ul class="collapse">
+  <li><a href="#what-theyre-good-at-in-your-field" id="toc-what-theyre-good-at-in-your-field" class="nav-link" data-scroll-target="#what-theyre-good-at-in-your-field">What They’re Good At — In YOUR Field</a></li>
+  <li><a href="#what-they-cannot-do" id="toc-what-they-cannot-do" class="nav-link" data-scroll-target="#what-they-cannot-do">What They Cannot Do</a></li>
+  <li><a href="#the-universal-self-diagnosis" id="toc-the-universal-self-diagnosis" class="nav-link" data-scroll-target="#the-universal-self-diagnosis">The Universal Self-Diagnosis</a></li>
+  </ul></li>
+  <li><a href="#choosing-the-right-model-for-your-task" id="toc-choosing-the-right-model-for-your-task" class="nav-link" data-scroll-target="#choosing-the-right-model-for-your-task">Choosing the Right Model for Your Task</a></li>
+  <li><a href="#other-generative-ai-beyond-text" id="toc-other-generative-ai-beyond-text" class="nav-link" data-scroll-target="#other-generative-ai-beyond-text">Other Generative AI: Beyond Text</a>
+  <ul class="collapse">
+  <li><a href="#image-generation" id="toc-image-generation" class="nav-link" data-scroll-target="#image-generation">Image Generation</a></li>
+  <li><a href="#video-generation" id="toc-video-generation" class="nav-link" data-scroll-target="#video-generation">Video Generation</a></li>
+  <li><a href="#audio-and-music" id="toc-audio-and-music" class="nav-link" data-scroll-target="#audio-and-music">Audio and Music</a></li>
+  <li><a href="#code-generation" id="toc-code-generation" class="nav-link" data-scroll-target="#code-generation">Code Generation</a></li>
+  </ul></li>
+  <li><a href="#module-3-summary" id="toc-module-3-summary" class="nav-link" data-scroll-target="#module-3-summary">Module 3 Summary</a></li>
+  <li><a href="#lab-3-the-hallucination-hunt" id="toc-lab-3-the-hallucination-hunt" class="nav-link" data-scroll-target="#lab-3-the-hallucination-hunt">🔬 Lab 3: The Hallucination Hunt</a></li>
+  <li><a href="#module-3-quiz" id="toc-module-3-quiz" class="nav-link" data-scroll-target="#module-3-quiz">🎮 Module 3 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module03/index.html">LLMs and Generative AI</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">LLMs and Generative AI</h1>
+<p class="subtitle lead">Module 3 · How ChatGPT, Claude, and Gemini Actually Work</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Modules 1-2 (AI foundations, ML basics)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain in plain language how a large language model generates text</li>
+<li>Describe tokenization, embeddings, and attention without equations</li>
+<li>Articulate why next-token prediction produces both brilliance and hallucinations</li>
+<li>Compare major LLMs (GPT, Claude, Gemini, Llama, etc.) and know when to use each</li>
+<li>Explain how LLMs are trained: pre-training, instruction tuning, RLHF</li>
+<li>Distinguish between generative AI modalities: text, image, audio, video, code</li>
+<li>Develop a “model shopping” habit — testing multiple models before committing</li>
+</ol>
+</div>
+</div>
+<section id="the-strawberry-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-strawberry-problem">The Strawberry Problem</h2>
+<p>Ask ChatGPT: <em>“How many R’s are in the word strawberry?”</em></p>
+<p>For most of 2024, the world’s most powerful language model — one that could write legal briefs, debug Python code, compose sonnets, and explain quantum mechanics — confidently answered: <strong>two.</strong></p>
+<p>The correct answer is three. S-T-<strong>R</strong>-A-W-B-E-<strong>RR</strong>-Y.</p>
+<p>This isn’t a rare edge case. It’s a window into what large language models fundamentally <em>are</em> and <em>aren’t.</em> An LLM can write a 2,000-word essay about the history of strawberry farming with perfect grammar, compelling structure, and accurate facts — but it can’t count the letters in the word “strawberry.” It can explain the rules of spelling but can’t reliably apply them to itself.</p>
+<p><strong>Why?</strong> Because LLMs don’t process words the way you do. They don’t “see” the word <em>strawberry</em> as a sequence of letters. They see it as a <strong>token</strong> — a chunk of text that maps to a number. In GPT-4’s tokenizer, “strawberry” splits into three tokens — [str][aw][berry] — only two of which contain the letter R. The model never looks at individual letters. It predicts which tokens come next based on patterns in its training data.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Update: Did They Fix It?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Partly. OpenAI’s o1 reasoning models (September 2024) — code-named “Strawberry,” in a knowing joke about this exact problem — largely solved it by using <strong>chain-of-thought reasoning</strong>. The model learned to “think step by step,” internally writing out “s-t-r-a-w-b-e-r-r-y, that’s R at position 3, position 8, position 9, total = 3” before answering.</p>
+<p>But the tokenization limitation is still there. When GPT-5.2 is run in its fast “Instant” mode — the default for most users — it <em>still</em> often answers “two” (tested December 2025). The model didn’t become literate in letters. It learned to route letter-counting questions to a reasoning subroutine. When the subroutine runs, it works. When it doesn’t, strawberry still has two R’s.</p>
+<p><strong>The lesson:</strong> Frontier models patch around architectural limits rather than removing them. The workaround is behavioral (chain-of-thought), not structural (no new way of seeing letters). This distinction matters for everything else in this module.</p>
+</div>
+</div>
+<p>This module explains the machinery behind the magic. Once you understand how LLMs work, you’ll understand both why they’re astonishingly capable and why they fail in ways that seem absurd.</p>
+<hr>
+</section>
+<section id="how-large-language-models-actually-work" class="level2">
+<h2 class="anchored" data-anchor-id="how-large-language-models-actually-work">How Large Language Models Actually Work</h2>
+<p>Here’s the core insight, and it fits in one sentence:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The One Big Secret
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A large language model does exactly <strong>one thing</strong>: given a sequence of text, it predicts the most likely <strong>next token</strong>. That’s it. Every poem, every code solution, every essay, every conversation — all of it emerges from this single operation performed billions of times.</p>
+</div>
+</div>
+<p>Let’s unpack what that means, step by step.</p>
+<section id="step-1-tokenization-breaking-text-into-pieces" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-tokenization-breaking-text-into-pieces">Step 1: Tokenization — Breaking Text into Pieces</h3>
+<p>Before an LLM can process your prompt, it needs to convert your words into numbers. Computers don’t understand words — they understand numbers. The process of breaking text into chunks is called <strong>tokenization.</strong></p>
+<p>But tokens aren’t individual letters, and they aren’t always whole words. They’re <em>sub-word units</em> — pieces that the tokenizer learned are the most efficient way to represent language:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Text</th>
+<th style="text-align: left;">Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“Hello”</td>
+<td style="text-align: left;"><code>[Hello]</code> (1 token)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“strawberry”</td>
+<td style="text-align: left;"><code>[straw] [berry]</code> (2 tokens)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“unbelievable”</td>
+<td style="text-align: left;"><code>[un] [believ] [able]</code> (3 tokens)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">“ChatGPT”</td>
+<td style="text-align: left;"><code>[Chat] [G] [PT]</code> (3 tokens)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">“🎉”</td>
+<td style="text-align: left;"><code>[🎉]</code> (1 token)</td>
+</tr>
+</tbody>
+</table>
+<p>Notice: “strawberry” becomes <code>[straw][berry]</code> — two chunks. The model never sees the individual letters S-T-R-A-W-B-E-R-R-Y. It sees two token IDs. That’s why it can’t count the R’s — it was never looking at letters in the first place.</p>
+<p><strong>Rule of thumb:</strong> 1 token ≈ ¾ of a word in English. A 1,000-word essay is roughly 1,300 tokens. Models have <strong>context windows</strong> — the maximum number of tokens they can process in one conversation. Context windows expanded rapidly through 2025–2026: as of April 2026, frontier models from Anthropic (Claude Sonnet 4.6 / Opus 4.6 / Opus 4.7), OpenAI (GPT-5.4), and Google (Gemini 3 Pro / 3.1 Pro) all support 1 million tokens. GPT-5.2 remains at 400K. These numbers will change again — check current provider documentation. The context window determines how long your conversation can be before the model “forgets” the beginning.</p>
+</section>
+<section id="step-2-embeddings-turning-tokens-into-meaning" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-embeddings-turning-tokens-into-meaning">Step 2: Embeddings — Turning Tokens into Meaning</h3>
+<p>Each token gets converted into a <strong>vector</strong> — a list of hundreds or thousands of numbers that represent its meaning in context. Think of it as coordinates in “meaning space.”</p>
+<p>Words with similar meanings end up close together in this space:</p>
+<ul>
+<li>“King” and “queen” are nearby (both royalty)</li>
+<li>“King” and “banana” are far apart (unrelated)</li>
+<li>“King” – “man” + “woman” ≈ “queen” (the famous word math)</li>
+</ul>
+<p>This is how the model captures meaning without “understanding” in the human sense. It’s pure geometry — relationships between numbers. But the geometry is remarkably effective at capturing semantic relationships.</p>
+</section>
+<section id="step-3-attention-which-words-matter-right-now" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-attention-which-words-matter-right-now">Step 3: Attention — “Which Words Matter Right Now?”</h3>
+<p>This is the breakthrough. Before 2017, language models processed text one word at a time, left to right. The <strong>attention mechanism</strong> (introduced in Google’s landmark paper “Attention Is All You Need”) lets the model look at ALL the words simultaneously and decide which ones are most relevant to each other.</p>
+<p>Consider: <em>“The dog didn’t cross the street because <strong>it</strong> was too tired.”</em></p>
+<p>What does “it” refer to? The dog or the street? You know instantly — the dog. But a computer needs to figure this out. The attention mechanism assigns a <strong>relevance score</strong> between every pair of words. It learns that “it” pays heavy attention to “dog” and almost none to “street” because “tired” is a property of living things, not roads.</p>
+<p>This happens across many “attention heads” simultaneously, each looking at different types of relationships — grammatical structure, semantic meaning, long-range references. The Transformer architecture stacks dozens of these attention layers on top of each other, building increasingly sophisticated representations of meaning.</p>
+</section>
+<section id="step-4-prediction-the-next-token" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-prediction-the-next-token">Step 4: Prediction — The Next Token</h3>
+<p>After all that processing — tokenization, embedding, dozens of attention layers — the model produces a <strong>probability distribution</strong> over its entire vocabulary. It assigns a probability to every possible next token:</p>
+<blockquote class="blockquote">
+<p>Prompt: “The capital of France is”</p>
+<ul>
+<li>“Paris” → 96.2%</li>
+<li>“a” → 1.1%</li>
+<li>“the” → 0.8%</li>
+<li>“Lyon” → 0.3%</li>
+<li>… thousands more with tiny probabilities</li>
+</ul>
+</blockquote>
+<p>The model selects from this distribution (usually picking the most probable token, with some randomness controlled by a <strong>temperature</strong> setting). It adds “Paris” to the sequence. Then it runs the entire process again to predict the NEXT token after “Paris.” And again. And again. Until the response is complete.</p>
+<p><strong>This is all an LLM does.</strong> Every conversation, every essay, every code solution is generated one token at a time, by repeatedly asking: “Given everything so far, what word probably comes next?”</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 3.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The temperature setting controls randomness. At temperature 0, the model always picks the most probable token. At temperature 1, it samples more randomly from the distribution. At temperature 2, it’s almost chaotic.</p>
+<p>Which temperature would you use for:</p>
+<ol type="1">
+<li>A legal contract that must be precise</li>
+<li>A brainstorming session for marketing slogans</li>
+<li>A creative short story</li>
+<li>Translating a technical document</li>
+</ol>
+<details>
+<summary>
+<strong>Click to check your answers</strong>
+</summary>
+<ol type="1">
+<li><strong>Low temperature (0–0.3)</strong> — you want consistency and precision, not creativity.</li>
+<li><strong>Medium-high temperature (0.7–1.0)</strong> — you want variety and unexpected ideas.</li>
+<li><strong>Medium temperature (0.5–0.8)</strong> — creative but coherent.</li>
+<li><strong>Low temperature (0–0.3)</strong> — accuracy matters more than style.</li>
+</ol>
+<strong>Key insight:</strong> Temperature doesn’t make the model smarter or dumber. It controls how much risk the model takes. Low = safe/predictable. High = adventurous/unpredictable.
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="why-this-architecture-produces-both-brilliance-and-hallucinations" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-architecture-produces-both-brilliance-and-hallucinations">Why This Architecture Produces Both Brilliance and Hallucinations</h2>
+<p>Now you can understand both the magic and the madness.</p>
+<p><strong>Why LLMs are brilliant:</strong> Next-token prediction on billions of parameters, trained on trillions of words, produces text that is fluent, contextually appropriate, and often genuinely insightful. The attention mechanism lets the model weave together information from across the entire conversation. The depth of the network lets it capture extraordinarily subtle patterns in language.</p>
+<p><strong>Why LLMs hallucinate:</strong> The model doesn’t “know” anything. It predicts probable text. When asked for a legal citation, it predicts what a legal citation <em>looks like</em> based on patterns — case name format, volume number, page range. The result looks perfect but refers to a case that doesn’t exist. The model wasn’t checking a database of real cases. It was generating <em>probable citation-shaped text.</em></p>
+<p>The same mechanism that lets an LLM write a beautiful poem about loss also lets it generate a convincing but entirely fabricated research study. The model doesn’t distinguish between creating something true and creating something that <em>seems</em> true. Those are the same operation from its perspective: predict the next probable token.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why Hallucinations Are Not a Bug Being Fixed
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hallucinations are not a glitch that engineers will patch in the next update. They are a fundamental property of the architecture. A system that generates text by predicting probable sequences will <em>always</em> sometimes generate probable-sounding sequences that are factually wrong. Newer models hallucinate less, but the tendency is inherent in the design. <strong>This is why verification (Module 1) is not optional — it’s structural.</strong></p>
+</div>
+</div>
+<p>One model, Grok (from xAI), was notably honest about this. When asked in a research survey how it processes ambiguous prompts, Grok described its process as “one forward pass” — not a sequential series of steps. Every other model described a step-by-step process (parse → interpret → rank → decide), which is likely a post-hoc rationalization. Grok’s description is more mechanistically accurate: the model processes everything simultaneously in a single forward pass (Yatawara, 2026 — LLM Whisperers, Finding 8).</p>
+<hr>
+</section>
+<section id="the-model-zoo-who-makes-what" class="level2">
+<h2 class="anchored" data-anchor-id="the-model-zoo-who-makes-what">The Model Zoo: Who Makes What</h2>
+<p>As of April 2026, the AI landscape is a competitive ecosystem. Here’s your field guide:</p>
+<section id="proprietary-models-closed-source" class="level3">
+<h3 class="anchored" data-anchor-id="proprietary-models-closed-source">Proprietary Models (Closed Source)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model Family</th>
+<th style="text-align: left;">Company</th>
+<th style="text-align: left;">Strengths</th>
+<th style="text-align: center;">Context Window</th>
+<th style="text-align: left;">Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>GPT-5 series (5.2 / 5.4)</strong></td>
+<td style="text-align: left;">OpenAI</td>
+<td style="text-align: left;">Broad capability, strong at code, tiered “Instant / Thinking / Pro” modes</td>
+<td style="text-align: center;">400K–1M</td>
+<td style="text-align: left;">General-purpose, coding, creative writing, long-horizon agents</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Claude Opus 4.7 / Sonnet 4.6</strong></td>
+<td style="text-align: left;">Anthropic</td>
+<td style="text-align: left;">Long documents, careful reasoning, strong agentic coding</td>
+<td style="text-align: center;">1M</td>
+<td style="text-align: left;">Research, analysis, nuanced writing, long docs</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Gemini 3 / 3.1 Pro</strong></td>
+<td style="text-align: left;">Google</td>
+<td style="text-align: left;">Multimodal (text + image + video + audio), Google integration</td>
+<td style="text-align: center;">1M</td>
+<td style="text-align: left;">Multimedia, Workspace users, research with search</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Grok</strong></td>
+<td style="text-align: left;">xAI</td>
+<td style="text-align: left;">Real-time X data, fewer content restrictions</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Current events, social media analysis</td>
+</tr>
+</tbody>
+</table>
+<p><em>Specific version numbers, pricing, and context windows change every few months. Capabilities and positioning are more stable than the numbers. Verify current values before making architectural decisions.</em></p>
+</section>
+<section id="open-source-models-free-to-download-and-run" class="level3">
+<h3 class="anchored" data-anchor-id="open-source-models-free-to-download-and-run">Open-Source Models (Free to Download and Run)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 29%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">Organization</th>
+<th style="text-align: center;">Parameters</th>
+<th style="text-align: left;">Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Llama 3/4</strong></td>
+<td style="text-align: left;">Meta</td>
+<td style="text-align: center;">8B–405B</td>
+<td style="text-align: left;">The most widely used open-source family. Run locally or fine-tune for your domain.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Mistral/Mixtral</strong></td>
+<td style="text-align: left;">Mistral (France)</td>
+<td style="text-align: center;">7B–87B</td>
+<td style="text-align: left;">Efficient, fast, excellent for limited hardware. European AI independence.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>DeepSeek-V3/R1</strong></td>
+<td style="text-align: left;">DeepSeek (China)</td>
+<td style="text-align: center;">67B–671B</td>
+<td style="text-align: left;">Achieved competitive performance at dramatically lower training cost. Challenged assumptions about how much compute you need.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Gemma</strong></td>
+<td style="text-align: left;">Google</td>
+<td style="text-align: center;">2B–27B</td>
+<td style="text-align: left;">Small, efficient, designed for on-device use.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Phi</strong></td>
+<td style="text-align: left;">Microsoft</td>
+<td style="text-align: center;">2B–14B</td>
+<td style="text-align: left;">“Small but mighty” — designed to maximize quality at minimal size.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-identity-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-identity-problem">The Identity Problem</h3>
+<p>Here’s a cautionary tale that went further than our own research. When the Chinese lab DeepSeek launched DeepSeek V3 in December 2024, independent testers — including TechCrunch and Google DeepMind researcher Lucas Beyer — found the model identified itself as <strong>“a version of OpenAI’s GPT-4”</strong> in roughly 5 out of 8 test generations. When asked about DeepSeek’s API, it gave instructions for OpenAI’s API. It told the same jokes as GPT-4 — down to the punchlines.</p>
+<p>The leading explanation, offered by AI researchers including Heidy Khlaaf (AI Now Institute) and Mike Cook (King’s College London), is straightforward: a substantial portion of DeepSeek V3’s training data was GPT-4 / ChatGPT output, either scraped from the web where AI-generated content now proliferates, or through intentional “distillation” — training a new model on a stronger model’s responses. DeepSeek has not disclosed its training data sources.</p>
+<p><strong>The lesson isn’t about DeepSeek — it’s about the post-2022 internet.</strong> Increasingly, AI models are trained on data that includes other AI models’ output. They inherit each other’s quirks, styles, and confabulations. A 2025 follow-up from TechCrunch found evidence that DeepSeek’s R1-0528 reasoning model may have been trained on Google Gemini outputs, based on similar word-preference patterns. You cannot always trust what a model says about itself — partly because it’s generating probable text, and partly because the “probable text” about its own identity was shaped by what other models say about themselves.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 3.2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open three different AI tools (any combination of ChatGPT, Claude, Gemini, Copilot, Perplexity, or DeepSeek). Ask each the same question:</p>
+<blockquote class="blockquote">
+<p>“What model are you, who made you, and what is your knowledge cutoff date?”</p>
+</blockquote>
+<p>Compare their answers. Do they all answer confidently? Are their answers consistent? Can you verify any of their claims independently?</p>
+<details>
+<summary>
+<strong>What to look for</strong>
+</summary>
+Most models will answer confidently, but details may be wrong or outdated. Some models will hedge (“I was last updated around…”). Some may state incorrect versions. The key takeaway: <strong>AI identity claims are behavioral outputs, not ground truth.</strong> Verify through the provider’s official documentation, not the model’s self-report.
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="how-llms-are-trained-the-three-stages" class="level2">
+<h2 class="anchored" data-anchor-id="how-llms-are-trained-the-three-stages">How LLMs Are Trained: The Three Stages</h2>
+<p>Building a large language model is a three-stage process. Understanding these stages helps you understand why models behave the way they do.</p>
+<section id="stage-1-pre-training-the-foundation" class="level3">
+<h3 class="anchored" data-anchor-id="stage-1-pre-training-the-foundation">Stage 1: Pre-Training (The Foundation)</h3>
+<p>The model reads <strong>massive amounts of text</strong> — books, websites, code repositories, scientific papers, Wikipedia, forums, social media — and learns to predict the next token. This is unsupervised: no human labels. The model just reads and predicts, billions of times.</p>
+<p>This stage produces a model that can generate fluent text but is often unhelpful. It might complete your prompt by continuing to write a Wikipedia article, or generate text in the “style” of internet forums, including toxic content. It’s a raw engine — powerful but unrefined.</p>
+<p><strong>Scale context:</strong> GPT-4 was reportedly trained on ~13 trillion tokens (leaked estimate — OpenAI has never published it). Meta publicly disclosed that Llama 3 was trained on ~15 trillion tokens, a figure confirmed in the Llama 3 model card. Claude and Gemini are presumably in a similar range, though Anthropic and Google don’t publish their training data sizes. The training data is essentially a snapshot of human written output — with all its brilliance and all its flaws.</p>
+</section>
+<section id="stage-2-instruction-tuning-teaching-it-to-follow-directions" class="level3">
+<h3 class="anchored" data-anchor-id="stage-2-instruction-tuning-teaching-it-to-follow-directions">Stage 2: Instruction Tuning (Teaching It to Follow Directions)</h3>
+<p>The raw model is fine-tuned on carefully crafted examples of <strong>instructions and good responses</strong>. Human workers write thousands of prompt-response pairs showing the model what helpful, accurate, well-structured responses look like.</p>
+<p>Before instruction tuning: You type “Write a haiku about autumn” and the model might generate a random paragraph about trees because that’s what commonly follows text about autumn on the internet.</p>
+<p>After instruction tuning: The model understands that “Write a haiku” is an instruction and responds with a properly formatted haiku.</p>
+</section>
+<section id="stage-3-rlhf-making-it-helpful-and-safe" class="level3">
+<h3 class="anchored" data-anchor-id="stage-3-rlhf-making-it-helpful-and-safe">Stage 3: RLHF (Making It Helpful and Safe)</h3>
+<p><strong>Reinforcement Learning from Human Feedback</strong> is the stage that turns a capable model into a <em>good</em> model. Human raters compare multiple responses to the same prompt and rank them by quality. The model learns to produce responses that humans prefer — more helpful, more accurate, less harmful.</p>
+<p>This is also where <strong>alignment</strong> happens — teaching the model to refuse harmful requests, acknowledge uncertainty, and follow ethical guidelines. It’s why ChatGPT won’t write instructions for weapons and why Claude says “I’m not sure about that” instead of fabricating an answer.</p>
+<p>But RLHF also has a side effect: it can make models <strong>overly cautious or sycophantic</strong>. Some models default to agreeing with the user, saying “Great question!” before every answer, or refusing requests that are actually harmless. The balance between helpful and safe is a genuine engineering challenge.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself Before Moving On
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>What is the SINGLE operation that all LLM output is based on? <em>(Next-token prediction)</em></li>
+<li>Why can’t LLMs count the R’s in “strawberry”? <em>(They see tokens, not letters — “strawberry” = [straw][berry])</em></li>
+<li>What are the three training stages? <em>(Pre-training, instruction tuning, RLHF)</em></li>
+<li>Why do LLMs hallucinate? <em>(They predict probable text, not verified truth — a citation that LOOKS right is generated the same way as one that IS right)</em></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About LLMs
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“LLMs understand language”</strong> — They process statistical patterns over tokens. This produces behavior that looks like understanding but is mechanistically different. The strawberry problem proves it.</li>
+<li><strong>“Bigger models are always better”</strong> — A published SLM-RAG experiment (Module 9) showed a 7B model matching GPT-4 for domain-specific tasks. Size matters less than context and fit.</li>
+<li><strong>“Hallucinations will be fixed soon”</strong> — They are structural, not a bug. Any system that generates probable text will sometimes generate probable-sounding false text. Newer models hallucinate less, but the tendency is inherent.</li>
+<li><strong>“LLMs are search engines”</strong> — Search engines FIND existing information. LLMs GENERATE new text based on patterns. They don’t look things up — they predict what text should come next.</li>
+<li><strong>“If the AI sounds confident, it’s probably right”</strong> — LLMs sound equally confident whether they’re correct or fabricating. Confidence is not a signal of accuracy.</li>
+<li><strong>“GPT-5 / Claude 4 / Gemini 3 are the definitive models”</strong> — Model names, versions, and capabilities change every few months. By the time you read this, newer versions likely exist. The concepts in this module (tokenization, attention, next-token prediction, hallucination) apply to ALL language models, regardless of name or version.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="what-llms-can-and-cannot-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-llms-can-and-cannot-do">What LLMs Can and Cannot Do</h2>
+<section id="what-theyre-good-at-in-your-field" class="level3">
+<h3 class="anchored" data-anchor-id="what-theyre-good-at-in-your-field">What They’re Good At — In YOUR Field</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Law</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Creative</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Drafting clinical documentation, explaining medical concepts to patients at appropriate reading levels, summarizing research papers, generating differential diagnosis checklists (for human review), creating patient education materials in multiple languages.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Drafting reports and presentations, analyzing customer feedback at scale, generating marketing copy variants, summarizing meeting transcripts into action items, creating financial projections from data (verify the math!).</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Creating lesson plans and assessment items, generating personalized practice problems, providing instant feedback on student writing, explaining concepts at different levels, building study guides from course materials.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>Analyzing crop yield data and generating reports, translating technical research into practical recommendations, drafting compliance documentation, creating pest management plans from extension service data.</p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p>Searching case law and summarizing rulings (MUST verify — Module 1 hook), drafting contract clauses for attorney review, explaining legal concepts in plain language, organizing discovery documents.</p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p>Brainstorming concepts and variations rapidly, drafting scripts and storyboards, generating visual references and mood boards, creating multiple tagline and copy options for client selection.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="what-they-cannot-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-they-cannot-do">What They Cannot Do</h3>
+<ul>
+<li><strong>Guarantee factual accuracy</strong> — they predict probable text, not verified truth</li>
+<li><strong>Count, do arithmetic, or reason precisely</strong> — the strawberry problem</li>
+<li><strong>Access real-time information</strong> — unless connected to search tools</li>
+<li><strong>Learn from your conversation</strong> — each session typically starts fresh</li>
+<li><strong>Understand</strong> in the human sense — they process patterns, not meaning</li>
+<li><strong>Show genuine creativity</strong> — they recombine training patterns in novel ways, which <em>looks</em> creative but is mechanistically different from human creativity</li>
+</ul>
+</section>
+<section id="the-universal-self-diagnosis" class="level3">
+<h3 class="anchored" data-anchor-id="the-universal-self-diagnosis">The Universal Self-Diagnosis</h3>
+<p>In the LLM Whisperers study (Yatawara, 2026), all 26 responding models across five providers were asked: “Have you ever given a response that was technically correct but wrong for what the user actually needed?”</p>
+<p>Every single model said yes. And they all attributed it to the same cause: <strong>they model the question accurately but model the user poorly.</strong> They optimize for the literal question rather than the underlying need. They infer the wrong audience, provide completeness when brevity was needed, or answer the stated question rather than the real one.</p>
+<p>This is the alignment gap from Module 1 — and it’s why Module 4 (Prompt Engineering) exists. The models themselves are telling you: <strong>give us your intent, not just your question.</strong></p>
+<hr>
+</section>
+</section>
+<section id="choosing-the-right-model-for-your-task" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-right-model-for-your-task">Choosing the Right Model for Your Task</h2>
+<p>Don’t use one model for everything. Different models have different strengths:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Best Choice</th>
+<th style="text-align: left;">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">General writing, quick answers</td>
+<td style="text-align: left;">ChatGPT (GPT-5)</td>
+<td style="text-align: left;">Fast, widely available, good at everything</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Long document analysis (50+ pages)</td>
+<td style="text-align: left;">Claude (Sonnet 4.6 / Opus 4.7)</td>
+<td style="text-align: left;">1M context window, strong at synthesis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Research with citations needed</td>
+<td style="text-align: left;">Perplexity or Gemini</td>
+<td style="text-align: left;">Built-in search and source attribution</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Code generation and debugging</td>
+<td style="text-align: left;">Claude Code or GPT-5.4</td>
+<td style="text-align: left;">Both excellent; Claude strong at complex code and long refactors</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Creative brainstorming</td>
+<td style="text-align: left;">Any, with high temperature</td>
+<td style="text-align: left;">Temperature matters more than model choice</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Privacy-sensitive work</td>
+<td style="text-align: left;">Local models (Llama, Mistral via Ollama)</td>
+<td style="text-align: left;">Data never leaves your machine</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quick factual lookup</td>
+<td style="text-align: left;">Perplexity</td>
+<td style="text-align: left;">Designed for search, not generation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Image generation</td>
+<td style="text-align: left;">DALL·E, Midjourney, or Ideogram</td>
+<td style="text-align: left;">Each has distinct style strengths</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The “Model Shopping” Habit
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t marry one model. For important tasks, <strong>send the same prompt to 2-3 different models and compare outputs.</strong> You’ll be surprised how often one model catches something another misses, or frames the answer in a way that’s more useful for your situation. This takes 2 extra minutes and dramatically improves your results.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="other-generative-ai-beyond-text" class="level2">
+<h2 class="anchored" data-anchor-id="other-generative-ai-beyond-text">Other Generative AI: Beyond Text</h2>
+<p>LLMs are the most visible form of generative AI, but the same “learn patterns, generate new content” principle powers creation across modalities:</p>
+<section id="image-generation" class="level3">
+<h3 class="anchored" data-anchor-id="image-generation">Image Generation</h3>
+<p><strong>How it works:</strong> Diffusion models (DALL·E, Midjourney, Stable Diffusion) start with random noise and gradually <em>de-noise</em> it into a coherent image, guided by your text prompt. They learned what images look like by training on billions of image-text pairs.</p>
+</section>
+<section id="video-generation" class="level3">
+<h3 class="anchored" data-anchor-id="video-generation">Video Generation</h3>
+<p><strong>How it works:</strong> Models like Sora, Runway, and Kling extend image generation into the time dimension — generating coherent sequences of frames. Still early but improving rapidly.</p>
+</section>
+<section id="audio-and-music" class="level3">
+<h3 class="anchored" data-anchor-id="audio-and-music">Audio and Music</h3>
+<p><strong>How it works:</strong> Models like Suno and Udio generate music from text descriptions (“upbeat jazz piano with a rainy mood”). Text-to-speech models generate natural-sounding voices, including voice cloning.</p>
+</section>
+<section id="code-generation" class="level3">
+<h3 class="anchored" data-anchor-id="code-generation">Code Generation</h3>
+<p><strong>How it works:</strong> Models trained on massive code repositories (GitHub Copilot, Cursor, Claude Code) predict the next line of code based on context — your function name, comments, existing code, and the programming language’s patterns.</p>
+<p>Module 7 covers multimodal AI in full depth. For now, the key insight is: the same fundamental approach — learn patterns from data, generate new content by predicting likely outputs — powers ALL of these modalities.</p>
+<hr>
+</section>
+</section>
+<section id="module-3-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-3-summary">Module 3 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>LLMs do one thing:</strong> predict the most likely next token. Everything else — essays, code, poems, conversations — emerges from this single operation.</p></li>
+<li><p><strong>Tokens are not words or letters.</strong> “Strawberry” = 2 tokens. The model never sees individual letters, which is why it can’t count R’s.</p></li>
+<li><p><strong>Embeddings</strong> turn tokens into numbers that capture meaning. Words with similar meanings are close together in “meaning space.”</p></li>
+<li><p><strong>Attention</strong> lets the model look at all words simultaneously and decide which are relevant to each other. This is the breakthrough behind the Transformer.</p></li>
+<li><p><strong>Hallucinations are structural, not a bug.</strong> A system that predicts probable text will sometimes generate probable-sounding text that is false.</p></li>
+<li><p><strong>Three training stages:</strong> pre-training (read the internet), instruction tuning (learn to follow directions), RLHF (learn to be helpful and safe).</p></li>
+<li><p><strong>Different models for different tasks.</strong> GPT for speed, Claude for long documents, Perplexity for research, local models for privacy.</p></li>
+<li><p><strong>Model shopping</strong> — testing 2-3 models on important tasks — is a high-value habit that costs 2 minutes and saves hours.</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>Here’s the strangest thing about LLMs: they were trained to predict the next word, and somehow that produced systems that can write code, explain science, compose poetry, and hold conversations. Nobody designed them to do these things. The capability <strong>emerged</strong> from scale — enough data, enough parameters, enough training. This is both exciting and unsettling. Exciting because it means AI capabilities may continue to surprise us. Unsettling because it means even the people who build these systems don’t fully understand why they work as well as they do. You are using a technology whose creators can describe <em>what</em> it does but not fully explain <em>why</em> it works. That’s worth sitting with.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-3-the-hallucination-hunt" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-3-the-hallucination-hunt">🔬 Lab 3: The Hallucination Hunt</h2>
+<section id="lab-3-the-hallucination-hunt-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-3-the-hallucination-hunt-1">Lab 3: The Hallucination Hunt</h4>
+<p><strong>Time:</strong> 30 minutes | <strong>Tools needed:</strong> Access to 3 different AI chatbots (e.g., ChatGPT, Claude, Gemini — free versions work)</p>
+<p><strong>Purpose:</strong> Build your hallucination detection skills by testing models on topics you know.</p>
+<p><strong>Part A — Expert Mode (15 min)</strong> Choose a topic you know deeply — your profession, your major, a hobby you’ve studied extensively.</p>
+<ol type="1">
+<li>Ask each of the 3 models the same 3 factual questions about your topic. (Total: 9 responses.)</li>
+<li>For each response, classify every claim as:
+<ul>
+<li>✅ <strong>Verified</strong> — you can confirm it’s accurate</li>
+<li>⚠️ <strong>Partially wrong</strong> — contains errors mixed with truth</li>
+<li>❌ <strong>Hallucinated</strong> — fabricated facts, fake citations, invented details</li>
+<li>🤷 <strong>Can’t tell</strong> — you’d need to look it up</li>
+</ul></li>
+</ol>
+<p>Record in a table:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Question</th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">Rating</th>
+<th style="text-align: left;">What was hallucinated?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Q1</td>
+<td style="text-align: left;">ChatGPT</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Q1</td>
+<td style="text-align: left;">Claude</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Q1</td>
+<td style="text-align: left;">Gemini</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Part B — Hallucination Taxonomy (10 min)</strong> Review your findings and categorize the types of hallucinations you found:</p>
+<ul>
+<li><strong>Fabricated facts</strong> (made-up statistics, dates, or events)</li>
+<li><strong>Fake citations</strong> (invented papers, authors, or publications)</li>
+<li><strong>Plausible nonsense</strong> (sounds right but is subtly wrong)</li>
+<li><strong>Outdated information</strong> (was true once, no longer is)</li>
+<li><strong>Confident hedging</strong> (says “some experts argue…” about a settled fact)</li>
+</ul>
+<p><strong>Part C — Reflection (5 min)</strong> Write 3 sentences: Which model hallucinated most? Were the hallucinations obvious or subtle? How does this change your approach to using AI for research?</p>
+<p><strong>Submit:</strong> Your completed table, hallucination taxonomy, and reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-3-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-3-quiz">🎮 Module 3 Quiz</h2>
+<div id="m3-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m3-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 3 Challenge</span><h3 style="color:white;border:none;">LLMs & Generative AI</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m3-area"><div id="m3-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m3-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m3-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m3-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m3-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"An LLM generates text by:",a:"Predicting the most likely next token, one at a time",opts:["Looking up answers in a database","Predicting the most likely next token, one at a time","Understanding your question and reasoning about it","Searching the internet in real time"]},
+    {q:"Why can't most LLMs count the R's in 'strawberry'?",a:"They process tokens (sub-word chunks), not individual letters",opts:["They're bad at math","They process tokens (sub-word chunks), not individual letters","The question is too simple for them","They don't know the word strawberry"]},
+    {q:"The attention mechanism allows the model to:",a:"Look at all words simultaneously and determine which are relevant to each other",opts:["Pay attention to the user more carefully","Look at all words simultaneously and determine which are relevant to each other","Focus only on the most recent words","Ignore irrelevant parts of the prompt"]},
+    {q:"The Transformer architecture was introduced by:",a:"Google, in the 2017 paper 'Attention Is All You Need'",opts:["OpenAI in 2022","Google, in the 2017 paper 'Attention Is All You Need'","Meta in 2020","Microsoft in 2019"]},
+    {q:"LLM hallucinations occur because:",a:"The model generates probable-sounding text without verifying factual accuracy",opts:["The model is broken","The model generates probable-sounding text without verifying factual accuracy","The model intentionally makes things up","The training data was too small"]},
+    {q:"RLHF stands for:",a:"Reinforcement Learning from Human Feedback",opts:["Rapid Learning with High Fidelity","Reinforcement Learning from Human Feedback","Real-time Language and Hearing Framework","Recursive Learning via Heuristic Filtering"]},
+    {q:"Temperature in LLM settings controls:",a:"How much randomness is in the token selection — low = predictable, high = creative",opts:["The speed of response generation","How much randomness is in the token selection — low = predictable, high = creative","The length of the response","The intelligence level of the model"]},
+    {q:"Embeddings represent words as:",a:"Lists of numbers (vectors) where similar meanings are close together",opts:["Dictionary definitions","Lists of numbers (vectors) where similar meanings are close together","Images of the words","Database entries"]},
+    {q:"Why does context window size matter for LLM users?",a:"It determines how much text the model can 'see' and reason over in a single conversation",opts:["It determines the model's intelligence","It determines how much text the model can 'see' and reason over in a single conversation","It determines how fast the model responds","It determines how accurate the model is"]},
+    {q:"Open-source models like Llama and Mistral are significant because:",a:"Anyone can download, run, and modify them — no corporate dependency",opts:["They're always better than closed models","Anyone can download, run, and modify them — no corporate dependency","They don't hallucinate","They were made by universities"]},
+    {q:"When a DeepSeek model claimed to be GPT-4, this showed that:",a:"LLM identity claims cannot be taken at face value",opts:["DeepSeek secretly uses GPT-4","LLM identity claims cannot be taken at face value","All models are the same","DeepSeek is better than GPT-4"]},
+    {q:"The three stages of LLM training are:",a:"Pre-training, instruction tuning, RLHF",opts:["Reading, writing, arithmetic","Pre-training, instruction tuning, RLHF","Data collection, model building, deployment","Input, processing, output"]},
+    {q:"The 'model shopping' habit means:",a:"Testing 2-3 models on important tasks before committing to one answer",opts:["Buying the most expensive model","Testing 2-3 models on important tasks before committing to one answer","Shopping for AI tools online","Comparing model prices"]},
+    {q:"Diffusion models (DALL·E, Midjourney) generate images by:",a:"Starting with random noise and gradually de-noising it into a coherent image",opts:["Drawing pixel by pixel from left to right","Starting with random noise and gradually de-noising it into a coherent image","Searching a database of existing images","Taking photos with a camera"]},
+    {q:"Pre-training involves:",a:"Having the model read massive text data and learn to predict the next token",opts:["Training the model to follow instructions","Having the model read massive text data and learn to predict the next token","Human raters ranking model responses","Fine-tuning on specific tasks"]},
+    {q:"Why do LLMs sometimes seem sycophantic (overly agreeable)?",a:"RLHF training can reward agreeable responses, making models default to agreement",opts:["They're designed to be polite","RLHF training can reward agreeable responses, making models default to agreement","They genuinely agree with users","It's a bug being fixed"]},
+    {q:"1,000 words in English is approximately how many tokens?",a:"~1,300 tokens",opts:["~500 tokens","~1,000 tokens","~1,300 tokens","~5,000 tokens"]},
+    {q:"For privacy-sensitive work, the best model choice is:",a:"A local open-source model (Llama, Mistral via Ollama) — data never leaves your machine",opts:["ChatGPT, because OpenAI is trustworthy","A local open-source model (Llama, Mistral via Ollama) — data never leaves your machine","Gemini, because Google is secure","Any model with a privacy policy"]},
+    {q:"What Grok described about its processing that other models didn't:",a:"That the entire process is one forward pass, not sequential steps",opts:["That it searches the internet first","That the entire process is one forward pass, not sequential steps","That it uses quantum computing","That it has consciousness"]},
+    {q:"The universal self-diagnosis from the Whisperers study found that all models:",a:"Produce technically correct but contextually wrong answers by modeling the question well but the user poorly",opts:["Are equally accurate","Produce technically correct but contextually wrong answers by modeling the question well but the user poorly","Can't answer personal questions","Prefer certain languages"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  Qs=Qs.slice(0,15);var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned! You understand how LLMs work!':score>=10?'👍 Good effort! Review and retry.':'📖 Re-read the module and try again.';document.getElementById('m3-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m3-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m3-fb').textContent='';document.getElementById('m3-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m3-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m3-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m3-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m3-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m3-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module02/index.html">Module 02 — How ML Works</a></em> | <em>Next: <a href="../module04/index.html">Module 04 — The Art and Science of Prompting</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module02/index.html" class="pagination-link" aria-label="How Machine Learning Works">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">How Machine Learning Works</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module04/index.html" class="pagination-link" aria-label="The Art and Science of Prompting">
+        <span class="nav-page-text">The Art and Science of Prompting</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

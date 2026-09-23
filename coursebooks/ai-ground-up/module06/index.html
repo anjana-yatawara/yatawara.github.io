@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI for Everyday Productivity – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module07/index.html" rel="next">
+<link href="../module05/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="AI for Everyday Productivity – AI from the Ground Up">
+<meta property="og:description" content="Module 6 · Write, Organize, Create, Automate">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module06/index.html">AI for Everyday Productivity</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#two-tuesdays" id="toc-two-tuesdays" class="nav-link active" data-scroll-target="#two-tuesdays">Two Tuesdays</a>
+  <ul class="collapse">
+  <li><a href="#two-tuesdays-in-your-field" id="toc-two-tuesdays-in-your-field" class="nav-link" data-scroll-target="#two-tuesdays-in-your-field">Two Tuesdays — In YOUR Field</a></li>
+  <li><a href="#sarah-is-fictional.-the-underlying-numbers-are-real." id="toc-sarah-is-fictional.-the-underlying-numbers-are-real." class="nav-link" data-scroll-target="#sarah-is-fictional.-the-underlying-numbers-are-real.">Sarah is fictional. The underlying numbers are real.</a></li>
+  </ul></li>
+  <li><a href="#before-we-start-how-to-evaluate-an-ai-tool" id="toc-before-we-start-how-to-evaluate-an-ai-tool" class="nav-link" data-scroll-target="#before-we-start-how-to-evaluate-an-ai-tool">Before We Start: How to Evaluate an AI Tool</a></li>
+  <li><a href="#ai-for-writing-and-communication" id="toc-ai-for-writing-and-communication" class="nav-link" data-scroll-target="#ai-for-writing-and-communication">AI for Writing and Communication</a>
+  <ul class="collapse">
+  <li><a href="#the-wrong-way-ai-as-ghostwriter" id="toc-the-wrong-way-ai-as-ghostwriter" class="nav-link" data-scroll-target="#the-wrong-way-ai-as-ghostwriter">The Wrong Way: AI as Ghostwriter</a></li>
+  <li><a href="#the-right-way-ai-as-critic-coach-and-collaborator" id="toc-the-right-way-ai-as-critic-coach-and-collaborator" class="nav-link" data-scroll-target="#the-right-way-ai-as-critic-coach-and-collaborator">The Right Way: AI as Critic, Coach, and Collaborator</a></li>
+  <li><a href="#the-coach-approach-ai-helps-you-improve-the-process-of-writing" id="toc-the-coach-approach-ai-helps-you-improve-the-process-of-writing" class="nav-link" data-scroll-target="#the-coach-approach-ai-helps-you-improve-the-process-of-writing">The Coach Approach — AI helps you improve the PROCESS of writing:</a></li>
+  <li><a href="#ready-to-use-writing-prompts" id="toc-ready-to-use-writing-prompts" class="nav-link" data-scroll-target="#ready-to-use-writing-prompts">Ready-to-Use Writing Prompts</a></li>
+  </ul></li>
+  <li><a href="#ai-for-organization-and-planning" id="toc-ai-for-organization-and-planning" class="nav-link" data-scroll-target="#ai-for-organization-and-planning">AI for Organization and Planning</a>
+  <ul class="collapse">
+  <li><a href="#meeting-notes-action-items-in-60-seconds" id="toc-meeting-notes-action-items-in-60-seconds" class="nav-link" data-scroll-target="#meeting-notes-action-items-in-60-seconds">Meeting Notes → Action Items (in 60 seconds)</a></li>
+  <li><a href="#project-planning" id="toc-project-planning" class="nav-link" data-scroll-target="#project-planning">Project Planning</a></li>
+  <li><a href="#study-planning-from-ba-1028" id="toc-study-planning-from-ba-1028" class="nav-link" data-scroll-target="#study-planning-from-ba-1028">Study Planning (from BA 1028)</a></li>
+  <li><a href="#budget-planning-from-ba-1028" id="toc-budget-planning-from-ba-1028" class="nav-link" data-scroll-target="#budget-planning-from-ba-1028">Budget Planning (from BA 1028)</a></li>
+  </ul></li>
+  <li><a href="#ai-for-creative-work" id="toc-ai-for-creative-work" class="nav-link" data-scroll-target="#ai-for-creative-work">AI for Creative Work</a>
+  <ul class="collapse">
+  <li><a href="#the-brand-sprint-from-idea-to-identity-in-30-minutes" id="toc-the-brand-sprint-from-idea-to-identity-in-30-minutes" class="nav-link" data-scroll-target="#the-brand-sprint-from-idea-to-identity-in-30-minutes">The Brand Sprint: From Idea to Identity in 30 Minutes</a></li>
+  <li><a href="#presentation-design" id="toc-presentation-design" class="nav-link" data-scroll-target="#presentation-design">Presentation Design</a></li>
+  <li><a href="#social-media-content" id="toc-social-media-content" class="nav-link" data-scroll-target="#social-media-content">Social Media Content</a></li>
+  <li><a href="#brainstorming-from-ba-1028" id="toc-brainstorming-from-ba-1028" class="nav-link" data-scroll-target="#brainstorming-from-ba-1028">Brainstorming (from BA 1028)</a></li>
+  </ul></li>
+  <li><a href="#vibe-coding-building-tools-without-programming" id="toc-vibe-coding-building-tools-without-programming" class="nav-link" data-scroll-target="#vibe-coding-building-tools-without-programming">Vibe Coding: Building Tools Without Programming</a>
+  <ul class="collapse">
+  <li><a href="#what-you-can-build" id="toc-what-you-can-build" class="nav-link" data-scroll-target="#what-you-can-build">What You Can Build</a></li>
+  <li><a href="#how-it-works" id="toc-how-it-works" class="nav-link" data-scroll-target="#how-it-works">How It Works</a></li>
+  </ul></li>
+  <li><a href="#building-your-prompt-library" id="toc-building-your-prompt-library" class="nav-link" data-scroll-target="#building-your-prompt-library">Building Your Prompt Library</a>
+  <ul class="collapse">
+  <li><a href="#how-to-build-your-library" id="toc-how-to-build-your-library" class="nav-link" data-scroll-target="#how-to-build-your-library">How to Build Your Library</a></li>
+  <li><a href="#prompt-library-starter-kit" id="toc-prompt-library-starter-kit" class="nav-link" data-scroll-target="#prompt-library-starter-kit">Prompt Library Starter Kit</a></li>
+  </ul></li>
+  <li><a href="#module-6-summary" id="toc-module-6-summary" class="nav-link" data-scroll-target="#module-6-summary">Module 6 Summary</a></li>
+  <li><a href="#lab-6-the-workflow-transformation" id="toc-lab-6-the-workflow-transformation" class="nav-link" data-scroll-target="#lab-6-the-workflow-transformation">🔬 Lab 6: The Workflow Transformation</a></li>
+  <li><a href="#module-6-quiz" id="toc-module-6-quiz" class="nav-link" data-scroll-target="#module-6-quiz">🎮 Module 6 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module06/index.html">AI for Everyday Productivity</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">AI for Everyday Productivity</h1>
+<p class="subtitle lead">Module 6 · Write, Organize, Create, Automate</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Modules 4-5 (prompting + research skills)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Use AI to draft, edit, and refine professional writing in minutes</li>
+<li>Apply the “Critic, not Ghostwriter” approach to improve your own work with AI</li>
+<li>Build a personal prompt library for tasks you do repeatedly</li>
+<li>Use AI for organization: meeting notes, project plans, schedules, budgets</li>
+<li>Use AI for creative work: brand design, presentations, social media content</li>
+<li>Build simple tools and apps with natural language (“vibe coding”)</li>
+<li>Evaluate AI tools before committing — the 5-question test</li>
+</ol>
+</div>
+</div>
+<section id="two-tuesdays" class="level2">
+<h2 class="anchored" data-anchor-id="two-tuesdays">Two Tuesdays</h2>
+<p><strong>Tuesday without AI:</strong></p>
+<p>Sarah, a program coordinator at a community nonprofit, arrives at 8:30 AM. She spends 45 minutes drafting a grant progress report, rewriting the executive summary three times. She spends 30 minutes composing emails to four partner organizations, each needing a slightly different tone. After lunch, she takes an hour to create slides for Thursday’s board meeting, struggling with formatting. She spends 40 minutes manually organizing meeting notes from last week into action items. At 4 PM she realizes she still hasn’t started the donor thank-you letters. She stays until 6:15.</p>
+<p><strong>Tuesday with AI:</strong></p>
+<p>Sarah arrives at 8:30 AM. She pastes her quarterly data into Claude and uses a BRIEFS-structured prompt to generate a draft progress report in 4 minutes. She edits for accuracy and voice — done in 20 minutes total. She drafts all four emails using a prompt template she built last month, adjusting each in 2 minutes — 15 minutes total. After lunch, she uploads her notes to ChatGPT and asks for a slide outline with speaker notes — she refines it into a polished deck in 30 minutes. She pastes last week’s meeting transcript into NotebookLM and extracts action items in 3 minutes. At 3 PM she generates personalized donor thank-you letters using a template prompt that pulls from her donor database. She leaves at 4:45 with everything done, including 30 minutes she spent learning a new AI tool she’d been curious about.</p>
+<p><strong>Same job. Same person. Same competence.</strong> The difference isn’t talent or work ethic — it’s workflow design. Sarah didn’t become smarter. She became <strong>AI-augmented.</strong></p>
+<section id="two-tuesdays-in-your-field" class="level3">
+<h3 class="anchored" data-anchor-id="two-tuesdays-in-your-field">Two Tuesdays — In YOUR Field</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Small Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Government</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>Without AI:</strong> A clinic manager spends 45 minutes writing follow-up care instructions for 8 discharged patients, each with different conditions. She spends 30 minutes on insurance pre-authorization paperwork. She manually reviews patient satisfaction surveys for monthly report.</p>
+<p><strong>With AI:</strong> She uses a BRIEFS-structured template to generate personalized care instructions in 2 minutes each (16 min total, then reviews for accuracy). Pre-auth paperwork is drafted by AI from structured inputs (10 min). Patient surveys are analyzed by AI with themes extracted (5 min). She leaves an hour early — and spends 20 minutes of that reading about a new clinical AI tool.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><strong>Without AI:</strong> A teacher spends 90 minutes creating a quiz for Chapter 7, writing 20 questions from scratch. She spends 40 minutes writing report card comments for 28 students. She spends 30 minutes formatting a lesson plan for an observation.</p>
+<p><strong>With AI:</strong> She prompts Claude with Chapter 7 learning objectives and gets 30 draft questions in 5 minutes, selects and refines 20 (25 min total). Report card comments are drafted from her grade book notes (15 min to generate + review). Lesson plan is reformatted with AI to match the observation template (10 min). Saved: 110 minutes.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><strong>Without AI:</strong> A bakery owner spends an hour writing this week’s social media posts (7 posts). She spends 45 minutes updating her website menu descriptions. She spends 30 minutes responding to customer review replies.</p>
+<p><strong>With AI:</strong> Social media posts drafted with a prompt template she built once (15 min to generate + customize). Menu descriptions updated from a master ingredients list (10 min). Review responses generated with appropriate tone for each (15 min). Saved: 95 minutes. She uses them to experiment with a new recipe.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p><strong>Without AI:</strong> A county program coordinator spends 2 hours compiling data from 4 departments into a board report. She drafts 6 email summaries to different stakeholders. She writes a policy FAQ update.</p>
+<p><strong>With AI:</strong> Board report compiled using AI to merge and summarize data sources (45 min with verification). Email summaries generated from the same report, tone-adjusted per stakeholder (20 min). FAQ update drafted by AI referencing the latest policy documents (15 min). Saved: 100 minutes.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sarah-is-fictional.-the-underlying-numbers-are-real." class="level3">
+<h3 class="anchored" data-anchor-id="sarah-is-fictional.-the-underlying-numbers-are-real.">Sarah is fictional. The underlying numbers are real.</h3>
+<p>In 2023, researchers from Harvard Business School, Wharton, MIT, and Warwick partnered with Boston Consulting Group to run a preregistered randomized controlled trial on AI’s effect on knowledge work. They recruited <strong>758 BCG consultants</strong> and randomly assigned them to complete 18 realistic consulting tasks either with or without GPT-4 access (Dell’Acqua et al., 2023; peer-reviewed version, Dell’Acqua et al., 2025, <em>Organization Science</em>).</p>
+<p>For tasks <strong>inside the capability frontier of the AI</strong> — drafting, ideating, structuring arguments, analyzing interview notes — the AI-assisted group completed <strong>12.2% more tasks</strong>, completed them <strong>25.1% faster</strong>, and produced work rated <strong>40% higher in quality</strong> by independent graders. Consultants whose baseline performance was <em>below</em> the group average improved <strong>43%</strong> — the authors called this the “performance equalizer” effect.</p>
+<p>But the study also included one task that was <strong>designed to fall outside</strong> the AI’s capability frontier. On that task, consultants using AI were <strong>19 percentage points <em>less</em> likely</strong> to produce the correct answer. The AI confidently produced plausible but wrong output, and consultants who deferred to it got worse results than they would have on their own.</p>
+<p>The authors coined the term “<strong>jagged technological frontier</strong>” — AI capabilities are uneven and the edges aren’t obvious. Two tasks that look identical in difficulty can sit on opposite sides of what the AI actually does well.</p>
+<p>Sarah’s Tuesday works because her tasks sit inside the frontier. The rest of this module teaches you how to tell the difference.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI Productivity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI saves time automatically”</strong> — It saves time when you INVEST time designing the right workflow. A bad prompt wastes more time than no prompt.</li>
+<li><strong>“AI writes better than me”</strong> — AI writes FASTER than you. Whether it writes better depends on the prompt, the task, and how much you edit. The Critic, not Ghostwriter approach preserves YOUR quality.</li>
+<li><strong>“Prompt libraries are cheating”</strong> — They’re efficiency. A surgeon doesn’t reinvent the checklist for each operation. You don’t reinvent the prompt for each email.</li>
+<li><strong>“Vibe coding = real software engineering”</strong> — It’s great for prototypes and personal tools. For anything involving security, reliability, or scale, you need a real developer.</li>
+<li><strong>“If I use AI for everything, I’ll forget how to do things myself”</strong> — This is the cognitive offloading trap from Module 1. Use AI to handle mechanical tasks. Keep the judgment and creativity muscles exercised.</li>
+</ul>
+</div>
+</div>
+<p>This module gives you Sarah’s toolkit.</p>
+<hr>
+</section>
+</section>
+<section id="before-we-start-how-to-evaluate-an-ai-tool" class="level2">
+<h2 class="anchored" data-anchor-id="before-we-start-how-to-evaluate-an-ai-tool">Before We Start: How to Evaluate an AI Tool</h2>
+<p>New AI tools launch every week. Most aren’t worth your time. Before committing to any tool, run it through the <strong>5-Question Test:</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The 5-Question Test for AI Tools
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Does it solve a problem I actually have?</strong> (Not a cool demo — a real friction point in my workflow)</li>
+<li><strong>Is it better than what I’m already doing?</strong> (Including the time to learn it)</li>
+<li><strong>Where does my data go?</strong> (Cloud? Local? Shared with third parties? Used for training?)</li>
+<li><strong>What does it cost — really?</strong> (Free tier limitations? Subscription creep? Hidden usage fees?)</li>
+<li><strong>Will it still exist in 6 months?</strong> (Is the company funded? Does it have real users? Or is it a demo?)</li>
+</ol>
+<p>If any answer makes you uneasy, keep looking. The best AI tool is the one you’ll actually use consistently — not the one with the most features.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="ai-for-writing-and-communication" class="level2">
+<h2 class="anchored" data-anchor-id="ai-for-writing-and-communication">AI for Writing and Communication</h2>
+<p>Writing is the #1 use case for generative AI. But there’s a right way and a wrong way.</p>
+<section id="the-wrong-way-ai-as-ghostwriter" class="level3">
+<h3 class="anchored" data-anchor-id="the-wrong-way-ai-as-ghostwriter">The Wrong Way: AI as Ghostwriter</h3>
+<blockquote class="blockquote">
+<p>“Write a report about our Q3 fundraising results.”</p>
+</blockquote>
+<p>The AI produces a generic report with placeholder language. You spend 30 minutes editing it to sound like you, fixing inaccuracies, adding actual numbers. You would have been faster writing from scratch.</p>
+</section>
+<section id="the-right-way-ai-as-critic-coach-and-collaborator" class="level3">
+<h3 class="anchored" data-anchor-id="the-right-way-ai-as-critic-coach-and-collaborator">The Right Way: AI as Critic, Coach, and Collaborator</h3>
+<p><strong>The Critic Approach</strong> — write YOUR draft first, then use AI to improve it:</p>
+<blockquote class="blockquote">
+<p>“You are my critical peer reviewer. Do not rewrite my text. Diagnose and explain.</p>
+<p>Evaluate my draft using this rubric: 1. Purpose and audience fit 2. Executive summary clarity (under 120 words?) 3. Argument structure and flow 4. Evidence quality and citation needs 5. Actionable recommendations 6. Professional tone and formatting</p>
+<p>For each item, give: a 2-3 sentence diagnosis, one high-impact fix, and one example sentence starter I can use.</p>
+<p>At the end, list 3 sources or data points I should locate to strengthen the argument. Do not fabricate citations.”</p>
+</blockquote>
+<p>This prompt — adapted from a real university classroom exercise — keeps YOUR voice in the writing while using AI to identify weaknesses you’d miss. The AI reviews; you revise. The output is genuinely yours, genuinely improved.</p>
+</section>
+<section id="the-coach-approach-ai-helps-you-improve-the-process-of-writing" class="level3">
+<h3 class="anchored" data-anchor-id="the-coach-approach-ai-helps-you-improve-the-process-of-writing">The Coach Approach — AI helps you improve the PROCESS of writing:</h3>
+<blockquote class="blockquote">
+<p>“I need to write a professional email to a professor requesting a deadline extension. I tend to over-explain and sound apologetic. Coach me: what should I include, what should I leave out, and what tone should I aim for? Don’t write the email — help me write it better.”</p>
+</blockquote>
+</section>
+<section id="ready-to-use-writing-prompts" class="level3">
+<h3 class="anchored" data-anchor-id="ready-to-use-writing-prompts">Ready-to-Use Writing Prompts</h3>
+<p><strong>Professional Email Coach:</strong> &gt; “Rewrite this draft email for clarity and tone. Keep it under 120 words. Include 2 subject line options and a polite ask with a specific time window. [Paste email]”</p>
+<p><strong>Executive Summary Check:</strong> &gt; “Evaluate my executive summary. Is it a standalone 120-word overview with purpose, scope, key findings, and recommendations? Give a pass/fail and a 5-bullet rewrite plan.”</p>
+<p><strong>Tone Adjustment:</strong> &gt; “Rewrite this paragraph for [audience]. Current tone: [casual/formal/technical]. Desired tone: [casual/formal/technical]. Preserve all factual content.”</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 6.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Take something you’ve written recently — an email, a report section, a proposal paragraph. Paste it into an AI chatbot with the Critic prompt above. Compare the AI’s feedback to your own assessment. Did it catch something you missed? Did it miss something you knew was weak?</p>
+<details>
+<summary>
+<strong>What most people discover</strong>
+</summary>
+AI is excellent at catching structural issues (missing transitions, unclear topic sentences, inconsistent tone) and formatting problems. It’s weaker at judging whether your argument is <em>convincing</em> to your specific audience — that requires context the AI doesn’t have unless you provide it (BRIEFS!). The best workflow: AI catches the structural stuff so you can focus on the persuasive and strategic dimensions.
+</details>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: Writing with AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which approach produces better results — and why?</p>
+<ol type="A">
+<li>“Write a report about our Q3 results.”</li>
+<li>Writing your own draft, then asking AI: “Review my draft using this rubric: [6 criteria]. Diagnose, don’t rewrite.”</li>
+</ol>
+<p><em>(Answer: B — the Critic approach. You keep your voice, your knowledge, and your ownership. AI catches structural issues you’d miss. The output is genuinely yours, genuinely improved.)</em></p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-for-organization-and-planning" class="level2">
+<h2 class="anchored" data-anchor-id="ai-for-organization-and-planning">AI for Organization and Planning</h2>
+<section id="meeting-notes-action-items-in-60-seconds" class="level3">
+<h3 class="anchored" data-anchor-id="meeting-notes-action-items-in-60-seconds">Meeting Notes → Action Items (in 60 seconds)</h3>
+<p>If your meetings generate notes or transcripts, AI can extract structure instantly:</p>
+<blockquote class="blockquote">
+<p>“Here are notes from our team meeting. Extract: (1) decisions made, (2) action items with owner and deadline, (3) open questions that need follow-up, (4) topics deferred to next meeting. Format as a table.”</p>
+</blockquote>
+</section>
+<section id="project-planning" class="level3">
+<h3 class="anchored" data-anchor-id="project-planning">Project Planning</h3>
+<blockquote class="blockquote">
+<p>“I’m planning [event/project]. Timeline: [X weeks]. Team size: [N people]. Budget: [amount]. Generate a week-by-week project plan with milestones, task assignments, and a risk register with 5 likely risks and mitigation strategies.”</p>
+</blockquote>
+</section>
+<section id="study-planning-from-ba-1028" class="level3">
+<h3 class="anchored" data-anchor-id="study-planning-from-ba-1028">Study Planning (from BA 1028)</h3>
+<blockquote class="blockquote">
+<p>“I’m a first-year business major. I need to learn [topic], and my exam is in 10 days. Coach me with spaced practice. Build a 7-session plan with daily micro-tasks under 25 minutes, retrieval practice questions, and 3 mini-quizzes. At each step, ask me to produce an answer before revealing hints. Use a Socratic style.”</p>
+</blockquote>
+</section>
+<section id="budget-planning-from-ba-1028" class="level3">
+<h3 class="anchored" data-anchor-id="budget-planning-from-ba-1028">Budget Planning (from BA 1028)</h3>
+<blockquote class="blockquote">
+<p>“I have take-home income of $X per month and fixed costs of [list]. Build a student budget using a 50-30-20 baseline, a debt snowball if needed, and a 3-month emergency fund plan. Output a simple monthly table and a weekly checklist of actions. Ask me 5 follow-ups to personalize it.”</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="ai-for-creative-work" class="level2">
+<h2 class="anchored" data-anchor-id="ai-for-creative-work">AI for Creative Work</h2>
+<section id="the-brand-sprint-from-idea-to-identity-in-30-minutes" class="level3">
+<h3 class="anchored" data-anchor-id="the-brand-sprint-from-idea-to-identity-in-30-minutes">The Brand Sprint: From Idea to Identity in 30 Minutes</h3>
+<p>This workflow, tested with university business students, takes a raw business idea and turns it into a brand brief with positioning, visual identity, and logo concepts — all AI-assisted.</p>
+<p><strong>The prompt (from BA 1028):</strong></p>
+<blockquote class="blockquote">
+<p>“Act as a brand strategist. Interview me with 8 questions to define the brand: target customer, value proposition, tone, 3 brand adjectives, competitor set, promise, and constraints (colors or symbols to avoid). Then propose: - A one-sentence positioning statement - A tagline with 3 variants - A mini brand kit: 3-color palette with hex codes, a heading font + body font, and a simple logo usage note - 3 logo concept directions written as prompts I can use in an image generation tool”</p>
+</blockquote>
+<p><strong>What this produced for students:</strong> A team creating a lemonade stand on campus got: positioning statement (“For students on the go, Roadrunner Lemonade serves fresh-squeezed, real-fruit lemonade that delivers a bright pick-me-up between classes”), three taglines (“Fresh squeeze, bright day” / “Sip sunny” / “Brighten your break”), a color palette (Sunshine Yellow #F6C700, Citrus Orange #FF8A00, Cool Blue #1F7A99), font pairing (Montserrat SemiBold + Lato Regular), and three image-generation prompts for different logo concepts.</p>
+<p><strong>30 minutes.</strong> From “we want a lemonade stand” to a complete brand identity. No design experience required.</p>
+</section>
+<section id="presentation-design" class="level3">
+<h3 class="anchored" data-anchor-id="presentation-design">Presentation Design</h3>
+<blockquote class="blockquote">
+<p>“I need to present [topic] to [audience] in [N] minutes. Create an outline with: slide titles, 2-3 bullet points per slide, speaker notes for each slide, and suggestions for one visual per slide. Aim for [N] slides maximum.”</p>
+</blockquote>
+</section>
+<section id="social-media-content" class="level3">
+<h3 class="anchored" data-anchor-id="social-media-content">Social Media Content</h3>
+<blockquote class="blockquote">
+<p>“I run a [type of business] targeting [audience]. Generate 5 social media post ideas for [platform]. Each should include: a hook (first line), body text under 100 words, 3 relevant hashtags, and a call to action. Tone: [professional/playful/informative].”</p>
+</blockquote>
+</section>
+<section id="brainstorming-from-ba-1028" class="level3">
+<h3 class="anchored" data-anchor-id="brainstorming-from-ba-1028">Brainstorming (from BA 1028)</h3>
+<blockquote class="blockquote">
+<p>“Act as a structured idea generator. Step 1: Ask me what context I’m brainstorming for (business, class project, event, or personal). Step 2: Generate 10 creative ideas across a variety of directions. Step 3: Group those ideas into 3 clusters or themes. Step 4: For each cluster, expand one idea into a 3-step action plan I could start on tomorrow. Always remind me that these are starting points and I should adapt or combine them.”</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="vibe-coding-building-tools-without-programming" class="level2">
+<h2 class="anchored" data-anchor-id="vibe-coding-building-tools-without-programming">Vibe Coding: Building Tools Without Programming</h2>
+<p>One of the most surprising AI capabilities: you can <strong>build functional apps, dashboards, and tools by describing what you want in plain English.</strong> No programming experience required.</p>
+<section id="what-you-can-build" class="level3">
+<h3 class="anchored" data-anchor-id="what-you-can-build">What You Can Build</h3>
+<ul>
+<li>A simple calculator or converter for your specific domain</li>
+<li>An interactive quiz or assessment for your students/team</li>
+<li>A budget tracker or project dashboard</li>
+<li>A data visualization from a spreadsheet</li>
+<li>A simple website or landing page</li>
+<li>A form that collects and organizes responses</li>
+</ul>
+</section>
+<section id="how-it-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-it-works">How It Works</h3>
+<p>Tools like Claude Artifacts, ChatGPT Canvas, Replit Agent, and v0 by Vercel let you describe what you want and the AI generates working code. You iterate by describing changes in natural language:</p>
+<blockquote class="blockquote">
+<p>“Build me a simple web tool where I can paste a paragraph of text and it shows me: word count, sentence count, average sentence length, and reading level. Make it look clean with a blue and white color scheme.”</p>
+</blockquote>
+<p>The AI produces a working tool. You test it. You say:</p>
+<blockquote class="blockquote">
+<p>“Add a button that copies the results to my clipboard. Also add a section that suggests how to simplify sentences that are over 25 words.”</p>
+</blockquote>
+<p>The AI updates the tool. No code written by you — just natural language descriptions of what you want.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Vibe Coding Limits
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>AI-generated code works great for simple, personal tools. It gets unreliable for complex applications, anything involving security (login systems, payment processing), or anything that needs to work perfectly every time (medical, legal, financial). <strong>Build toys and tools, not products.</strong> For anything serious, involve a real developer.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="building-your-prompt-library" class="level2">
+<h2 class="anchored" data-anchor-id="building-your-prompt-library">Building Your Prompt Library</h2>
+<p>The highest-leverage productivity habit isn’t learning new AI tools — it’s <strong>saving the prompts that work.</strong></p>
+<section id="how-to-build-your-library" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-build-your-library">How to Build Your Library</h3>
+<ol type="1">
+<li><strong>Start with tasks you do weekly.</strong> Email drafts, meeting notes, report sections, data formatting.</li>
+<li><strong>Write and test prompts for each task.</strong> Use BRIEFS to structure them. Iterate until the output consistently meets your needs.</li>
+<li><strong>Save them somewhere accessible.</strong> A Google Doc, a Notion page, a text file on your desktop, a Notes app folder.</li>
+<li><strong>Include the template AND an example.</strong> Future-you will forget what each prompt does without an example output.</li>
+<li><strong>Update quarterly.</strong> AI tools change. Prompts that worked 6 months ago may need refinement.</li>
+</ol>
+</section>
+<section id="prompt-library-starter-kit" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-library-starter-kit">Prompt Library Starter Kit</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Prompt Template</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Weekly report</strong></td>
+<td style="text-align: left;">“Summarize the following accomplishments, challenges, and next steps into a [X]-word weekly update for [audience]. Tone: [professional/casual]. Format: bullet points under 3 headers.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Email reply</strong></td>
+<td style="text-align: left;">“Draft a reply to this email. Context: [your situation]. Tone: [friendly/firm/neutral]. Length: under [N] words. Include: [specific ask or next step].”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Meeting prep</strong></td>
+<td style="text-align: left;">“Given this agenda and these background documents, prepare: 3 questions I should ask, 2 points I should raise, and 1 potential concern to address.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Data summary</strong></td>
+<td style="text-align: left;">“Analyze this data and provide: key trends, notable outliers, and 3 actionable takeaways for [audience]. Include one recommended visualization.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Content draft</strong></td>
+<td style="text-align: left;">“Write a [type] about [topic] for [audience]. Tone: [X]. Length: [N] words. Include: [key points]. Avoid: [what not to include].”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="module-6-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-6-summary">Module 6 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>AI doesn’t save time automatically.</strong> It saves time when you invest time designing the right workflow. The 30 minutes you spend crafting a prompt library saves hours over a semester.</p></li>
+<li><p><strong>Critic, not Ghostwriter.</strong> Write your draft first, then use AI to review it. This keeps your voice, your ideas, and your ownership — while catching structural issues you’d miss.</p></li>
+<li><p><strong>Ready-to-use prompts</strong> exist for email coaching, executive summary checks, tone adjustment, meeting notes extraction, project planning, study planning, budgeting, brand sprints, presentations, and brainstorming.</p></li>
+<li><p><strong>The Brand Sprint workflow</strong> turns a raw business idea into a brand identity (positioning, tagline, colors, fonts, logo concepts) in 30 minutes. Tested with real university students.</p></li>
+<li><p><strong>Vibe coding</strong> lets you build simple tools by describing what you want in plain English. Great for personal tools, dangerous for anything that needs to be secure or reliable.</p></li>
+<li><p><strong>Build a prompt library.</strong> Save the prompts that work. Include templates AND examples. Update quarterly.</p></li>
+<li><p><strong>The 5-Question Test</strong> before adopting any new AI tool: Does it solve a real problem? Is it better than my current approach? Where does my data go? What does it really cost? Will it still exist in 6 months?</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>The productivity gains from AI are real — but they create a new question: <strong>what do you do with the time you save?</strong> Sarah left work at 4:45 instead of 6:15. She could use that 90 minutes to do more work (productivity trap), scroll social media (wasted potential), or learn something new, mentor a colleague, or think strategically about her organization’s future (growth). AI is a tool that gives you back time. What you do with that time is the real decision. The most AI-augmented professionals don’t just work faster — they <strong>think deeper</strong> because they’ve freed up the space to do so.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-6-the-workflow-transformation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-6-the-workflow-transformation">🔬 Lab 6: The Workflow Transformation</h2>
+<section id="lab-6-the-workflow-transformation-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-6-the-workflow-transformation-1">Lab 6: The Workflow Transformation</h4>
+<p><strong>Time:</strong> 60 minutes | <strong>Tools needed:</strong> Any AI chatbot + your actual work materials</p>
+<p><strong>Purpose:</strong> Transform one real workflow from your actual job, studies, or personal life.</p>
+<p><strong>Part A — Map Your Current Workflow (10 min)</strong> 1. Pick one task you do at least weekly that takes 30+ minutes. 2. Write out every step you currently do, in order. 3. Estimate the time each step takes. 4. Identify which steps are mechanical (formatting, organizing, drafting) vs intellectual (analyzing, deciding, judging).</p>
+<p><strong>Part B — Design the AI-Augmented Version (15 min)</strong> 5. For each mechanical step, write a prompt that could handle it (use BRIEFS). 6. For each intellectual step, write a prompt that could SUPPORT it (not replace it). 7. Identify which steps should remain fully human (judgment calls, relationship management, ethical decisions).</p>
+<p><strong>Part C — Test It Live (25 min)</strong> 8. Do the task using your AI-augmented workflow. Time each step. 9. Compare the output quality to what you’d normally produce.</p>
+<p><strong>Part D — Reflection (10 min)</strong> 10. Fill in this table and write 3-4 sentences reflecting on the experience:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: center;">Before (min)</th>
+<th style="text-align: center;">After (min)</th>
+<th style="text-align: center;">Quality: Better/Same/Worse</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Step 1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Step 2</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">…</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Total</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Submit:</strong> Your workflow maps (before/after), the prompts you used, the timing comparison, and your reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-6-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-6-quiz">🎮 Module 6 Quiz</h2>
+<div id="m6-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m6-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 6 Challenge</span><h3 style="color:white;border:none;">Everyday Productivity</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m6-area"><div id="m6-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m6-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m6-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m6-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m6-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"The 'Critic, not Ghostwriter' approach means:",a:"Write your draft first, then use AI to review and improve it",opts:["Let AI write everything and just put your name on it","Write your draft first, then use AI to review and improve it","Only use AI to criticize other people's writing","Never use AI for writing"]},
+    {q:"The 5-Question Test for AI tools does NOT include:",a:"Does it use the newest AI model?",opts:["Does it solve a problem I actually have?","Where does my data go?","Does it use the newest AI model?","Will it still exist in 6 months?"]},
+    {q:"Sarah's 'Tuesday with AI' example shows that AI productivity gains come from:",a:"Workflow design — using the right tool for the right task at the right time",opts:["Being smarter than other workers","Workflow design — using the right tool for the right task at the right time","Working longer hours with AI assistance","Replacing all human judgment with AI"]},
+    {q:"The Brand Sprint workflow produced what for students?",a:"A complete brand identity: positioning, taglines, colors, fonts, and logo concepts in 30 minutes",opts:["A finished product ready to sell","A complete brand identity: positioning, taglines, colors, fonts, and logo concepts in 30 minutes","A business loan approval","A marketing degree"]},
+    {q:"Vibe coding is best described as:",a:"Building apps and tools by describing what you want in plain English, without writing code",opts:["Coding while listening to music","Building apps and tools by describing what you want in plain English, without writing code","A programming language","Debugging code with good vibes"]},
+    {q:"The highest-leverage AI productivity habit is:",a:"Building and maintaining a personal prompt library for recurring tasks",opts:["Buying the most expensive AI subscription","Building and maintaining a personal prompt library for recurring tasks","Using AI for every single task","Memorizing prompt engineering techniques"]},
+    {q:"When should vibe coding NOT be used?",a:"For anything involving security, payments, or that needs to work perfectly every time",opts:["For personal tools and calculators","For anything involving security, payments, or that needs to work perfectly every time","For creative projects","For building prototypes"]},
+    {q:"The 'Coach Approach' to AI writing means:",a:"AI helps you improve your writing PROCESS — what to include, what tone to use — without writing for you",opts:["AI coaches you on your career","AI helps you improve your writing PROCESS — what to include, what tone to use — without writing for you","Using AI to write coaching emails","Having a human coach review AI output"]},
+    {q:"A good prompt library should include:",a:"The template AND an example output for each prompt",opts:["Only the prompts, nothing else","The template AND an example output for each prompt","Every prompt you've ever used","Screenshots of every AI response"]},
+    {q:"The meeting notes prompt extracts these categories:",a:"Decisions made, action items with owners, open questions, and deferred topics",opts:["Names of attendees only","Decisions made, action items with owners, open questions, and deferred topics","A verbatim transcript","A summary paragraph"]},
+    {q:"What is the real question AI productivity raises?",a:"What do you do with the time you save?",opts:["How do I save even more time?","What do you do with the time you save?","Which AI tool is fastest?","How do I replace my coworkers?"]},
+    {q:"How often should you update your prompt library?",a:"Quarterly — AI tools change and prompts may need refinement",opts:["Never — good prompts last forever","Quarterly — AI tools change and prompts may need refinement","Daily","Only when a prompt fails completely"]},
+    {q:"The Roadrunner Lemonade brand example demonstrated:",a:"That AI can take a vague business idea and produce professional brand assets with the right prompt",opts:["That AI can run a lemonade business","That AI can take a vague business idea and produce professional brand assets with the right prompt","That lemonade is profitable","That AI replaces graphic designers"]},
+    {q:"In an AI-augmented workflow, which steps should remain fully human?",a:"Judgment calls, relationship management, and ethical decisions",opts:["None — AI handles everything","Judgment calls, relationship management, and ethical decisions","Only the easy steps","Only the creative steps"]},
+    {q:"The best way to use AI for email writing is:",a:"Draft your key points, then use AI to refine tone, clarity, and structure",opts:["Ask AI to write every email from scratch","Draft your key points, then use AI to refine tone, clarity, and structure","Never use AI for professional emails","Copy-paste AI emails without reading them"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned! You\'re ready to transform your workflow!':score>=10?'👍 Almost! Review and retry.':'📖 Re-read the module and build your prompt library!';document.getElementById('m6-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m6-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m6-fb').textContent='';document.getElementById('m6-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m6-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m6-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m6-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m6-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m6-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module05/index.html">Module 05 — AI for Research</a></em> | <em>Next: <a href="../module07/index.html">Module 07 — Multimodal AI</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module05/index.html" class="pagination-link" aria-label="AI for Research and Analysis">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AI for Research and Analysis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module07/index.html" class="pagination-link" aria-label="Multimodal AI — Creating Beyond Text">
+        <span class="nav-page-text">Multimodal AI — Creating Beyond Text</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

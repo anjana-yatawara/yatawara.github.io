@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI and Your Career – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module13/index.html" rel="next">
+<link href="../module11/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="AI and Your Career – AI from the Ground Up">
+<meta property="og:description" content="Module 12 · Portfolio, Certifications, and the AI-Augmented Professional">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module12/index.html">AI and Your Career</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-28-premium" id="toc-the-28-premium" class="nav-link active" data-scroll-target="#the-28-premium">The 28% Premium</a></li>
+  <li><a href="#where-is-ai-actually-growing-by-field" id="toc-where-is-ai-actually-growing-by-field" class="nav-link" data-scroll-target="#where-is-ai-actually-growing-by-field">Where is AI actually growing, by field?</a></li>
+  <li><a href="#building-your-ai-portfolio" id="toc-building-your-ai-portfolio" class="nav-link" data-scroll-target="#building-your-ai-portfolio">Building your AI portfolio</a>
+  <ul class="collapse">
+  <li><a href="#what-counts-as-an-artifact" id="toc-what-counts-as-an-artifact" class="nav-link" data-scroll-target="#what-counts-as-an-artifact">What counts as an artifact?</a></li>
+  <li><a href="#where-to-host-it" id="toc-where-to-host-it" class="nav-link" data-scroll-target="#where-to-host-it">Where to host it</a></li>
+  </ul></li>
+  <li><a href="#resume-and-linkedin-language" id="toc-resume-and-linkedin-language" class="nav-link" data-scroll-target="#resume-and-linkedin-language">Resume and LinkedIn language</a>
+  <ul class="collapse">
+  <li><a href="#before-after" id="toc-before-after" class="nav-link" data-scroll-target="#before-after">Before / After</a></li>
+  <li><a href="#linkedin-headline-three-working-templates" id="toc-linkedin-headline-three-working-templates" class="nav-link" data-scroll-target="#linkedin-headline-three-working-templates">LinkedIn headline — three working templates</a></li>
+  </ul></li>
+  <li><a href="#interview-preparation-three-scripts-you-can-adapt" id="toc-interview-preparation-three-scripts-you-can-adapt" class="nav-link" data-scroll-target="#interview-preparation-three-scripts-you-can-adapt">Interview preparation — three scripts you can adapt</a>
+  <ul class="collapse">
+  <li><a href="#script-1-do-you-use-ai" id="toc-script-1-do-you-use-ai" class="nav-link" data-scroll-target="#script-1-do-you-use-ai">Script 1 — “Do you use AI?”</a></li>
+  <li><a href="#script-2-how-do-you-handle-ai-hallucinations-errors" id="toc-script-2-how-do-you-handle-ai-hallucinations-errors" class="nav-link" data-scroll-target="#script-2-how-do-you-handle-ai-hallucinations-errors">Script 2 — “How do you handle AI hallucinations / errors?”</a></li>
+  <li><a href="#script-3-do-you-have-professional-experience-with-ai-when-you-dont" id="toc-script-3-do-you-have-professional-experience-with-ai-when-you-dont" class="nav-link" data-scroll-target="#script-3-do-you-have-professional-experience-with-ai-when-you-dont">Script 3 — “Do you have professional experience with AI?” (when you don’t)</a></li>
+  </ul></li>
+  <li><a href="#internship-and-job-search-kit" id="toc-internship-and-job-search-kit" class="nav-link" data-scroll-target="#internship-and-job-search-kit">Internship and job search kit</a>
+  <ul class="collapse">
+  <li><a href="#where-to-look-in-2026" id="toc-where-to-look-in-2026" class="nav-link" data-scroll-target="#where-to-look-in-2026">Where to look in 2026</a></li>
+  <li><a href="#application-volume" id="toc-application-volume" class="nav-link" data-scroll-target="#application-volume">Application volume</a></li>
+  </ul></li>
+  <li><a href="#certifications-ranked-and-cost-aware" id="toc-certifications-ranked-and-cost-aware" class="nav-link" data-scroll-target="#certifications-ranked-and-cost-aware">Certifications — ranked and cost-aware</a>
+  <ul class="collapse">
+  <li><a href="#what-ai-skills-look-like-in-your-field" id="toc-what-ai-skills-look-like-in-your-field" class="nav-link" data-scroll-target="#what-ai-skills-look-like-in-your-field">What AI Skills Look Like in YOUR Field</a></li>
+  <li><a href="#tier-1-foundational-low-cost-broad-recognition" id="toc-tier-1-foundational-low-cost-broad-recognition" class="nav-link" data-scroll-target="#tier-1-foundational-low-cost-broad-recognition">Tier 1 — Foundational, low-cost, broad recognition</a></li>
+  <li><a href="#tier-2-associate-level-technical-depth-expected" id="toc-tier-2-associate-level-technical-depth-expected" class="nav-link" data-scroll-target="#tier-2-associate-level-technical-depth-expected">Tier 2 — Associate level, technical depth expected</a></li>
+  <li><a href="#tier-3-professional-requires-real-hands-on-experience" id="toc-tier-3-professional-requires-real-hands-on-experience" class="nav-link" data-scroll-target="#tier-3-professional-requires-real-hands-on-experience">Tier 3 — Professional, requires real hands-on experience</a></li>
+  </ul></li>
+  <li><a href="#learning-communities-where-to-stay-current" id="toc-learning-communities-where-to-stay-current" class="nav-link" data-scroll-target="#learning-communities-where-to-stay-current">Learning communities — where to stay current</a>
+  <ul class="collapse">
+  <li><a href="#high-signal-low-noise" id="toc-high-signal-low-noise" class="nav-link" data-scroll-target="#high-signal-low-noise">High signal, low noise</a></li>
+  <li><a href="#subreddits-worth-checking-weekly" id="toc-subreddits-worth-checking-weekly" class="nav-link" data-scroll-target="#subreddits-worth-checking-weekly">Subreddits worth checking weekly</a></li>
+  <li><a href="#discord-community" id="toc-discord-community" class="nav-link" data-scroll-target="#discord-community">Discord / community</a></li>
+  <li><a href="#the-30-minute-weekly-routine" id="toc-the-30-minute-weekly-routine" class="nav-link" data-scroll-target="#the-30-minute-weekly-routine">The 30-minute weekly routine</a></li>
+  </ul></li>
+  <li><a href="#if-you-are-the-first-in-your-family-to-navigate-this" id="toc-if-you-are-the-first-in-your-family-to-navigate-this" class="nav-link" data-scroll-target="#if-you-are-the-first-in-your-family-to-navigate-this">If you are the first in your family to navigate this</a>
+  <ul class="collapse">
+  <li><a href="#gap-1-missing-permission-to-apply" id="toc-gap-1-missing-permission-to-apply" class="nav-link" data-scroll-target="#gap-1-missing-permission-to-apply">Gap 1 — Missing permission to apply</a></li>
+  <li><a href="#gap-2-missing-a-portfolio-url" id="toc-gap-2-missing-a-portfolio-url" class="nav-link" data-scroll-target="#gap-2-missing-a-portfolio-url">Gap 2 — Missing a portfolio URL</a></li>
+  <li><a href="#gap-3-missing-the-specific-number-habit" id="toc-gap-3-missing-the-specific-number-habit" class="nav-link" data-scroll-target="#gap-3-missing-the-specific-number-habit">Gap 3 — Missing the specific-number habit</a></li>
+  </ul></li>
+  <li><a href="#lab-12.1-the-60-minute-portfolio" id="toc-lab-12.1-the-60-minute-portfolio" class="nav-link" data-scroll-target="#lab-12.1-the-60-minute-portfolio">Lab 12.1 — The 60-minute portfolio</a></li>
+  <li><a href="#exercise-12.2-the-resume-rewrite" id="toc-exercise-12.2-the-resume-rewrite" class="nav-link" data-scroll-target="#exercise-12.2-the-resume-rewrite">Exercise 12.2 — The resume rewrite</a></li>
+  <li><a href="#quiz" id="toc-quiz" class="nav-link" data-scroll-target="#quiz">Quiz</a></li>
+  <li><a href="#module-12-summary" id="toc-module-12-summary" class="nav-link" data-scroll-target="#module-12-summary">Module 12 Summary</a></li>
+  <li><a href="#lab-12-build-your-ai-portfolio" id="toc-lab-12-build-your-ai-portfolio" class="nav-link" data-scroll-target="#lab-12-build-your-ai-portfolio">🔬 Lab 12: Build Your AI Portfolio</a></li>
+  <li><a href="#module-12-quiz" id="toc-module-12-quiz" class="nav-link" data-scroll-target="#module-12-quiz">🎮 Module 12 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module12/index.html">AI and Your Career</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">AI and Your Career</h1>
+<p class="subtitle lead">Module 12 · Portfolio, Certifications, and the AI-Augmented Professional</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools and job market conditions evolve rapidly — underlying career strategies remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> All modules — career skills synthesize everything</p>
+<p>By the end of this module, you will be able to:</p>
+<ol type="1">
+<li>Locate your field on the AI-adoption curve and know what that implies for your career strategy</li>
+<li>Assemble a portfolio that demonstrates AI competency to employers (three artifacts from this course)</li>
+<li>Write resume and LinkedIn language that distinguishes “used ChatGPT” from “deployed AI effectively”</li>
+<li>Navigate interview questions about AI use with three specific scripts</li>
+<li>Pick the right certification for your goal (and know which to skip)</li>
+<li>Find learning communities that will keep you current after this course ends</li>
+<li><em>If you are a first-generation college student:</em> apply three specific tactics that close the portfolio gap most first-gen students face</li>
+</ol>
+</div>
+</div>
+<section id="the-28-premium" class="level2">
+<h2 class="anchored" data-anchor-id="the-28-premium">The 28% Premium</h2>
+<p>Jobs that mention at least one AI skill advertise salaries <strong>28% higher</strong> than comparable jobs that don’t — about <strong>$17,800 more per year</strong>. Jobs that require two or more AI skills jump to a <strong>43% premium</strong>. These numbers come from Lightcast’s July 2025 analysis of <strong>1.3 billion job postings</strong>. And here’s the part nobody tells you: <strong>51% of AI job postings are now outside IT and Computer Science.</strong> The premium is not being paid to coders. It’s being paid to marketing managers, HR leads, finance analysts, educators, customer-service professionals, and researchers who can demonstrate they know how to work <em>with</em> AI.</p>
+<p>You are not learning AI to become a tech worker. You are learning AI to become better-paid in whatever field you already want to be in.</p>
+<p><em>Source: Lightcast, <a href="https://lightcast.io/resources/research/beyond-the-buzz-developing-the-ai-skills-employers-actually-need">Beyond the Buzz</a>, July 2025.</em></p>
+<p>The numbers are stark, and they come from the labor market, not from speculation:</p>
+<ul>
+<li><strong>28% salary premium</strong> for postings mentioning at least one AI skill versus comparable postings without (Lightcast, July 2025)</li>
+<li><strong>43% premium</strong> for postings requiring two or more AI skills — returns compound</li>
+<li><strong>51% of AI job postings are now outside IT and Computer Science</strong>, up from 39% in 2019</li>
+<li><strong>800% growth</strong> in generative AI postings in non-IT roles since ChatGPT launched in late 2022</li>
+<li><strong>86% of employers</strong> expect AI and information processing to transform their business by 2030 (World Economic Forum, <em>Future of Jobs Report 2025</em>)</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The compounding-skills insight
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Lightcast data shows something important: <strong>the premium is not linear.</strong> Going from 0 → 1 AI skills earns a 28% premium. Going from 1 → 2 earns an additional 15 percentage points. This is why a portfolio that shows prompting + retrieval + evaluation beats a resume that says “familiar with ChatGPT.” One skill gets you in the door. Two skills change the compensation conversation.</p>
+<p>Everything you’ve built in this course — BRIEFS prompting, SMARTS reasoning, ethical evaluation, custom GPT construction, retrieval-augmented workflows — represents multiple skills. The question is whether you can demonstrate them.</p>
+</div>
+</div>
+</section>
+<section id="where-is-ai-actually-growing-by-field" class="level2">
+<h2 class="anchored" data-anchor-id="where-is-ai-actually-growing-by-field">Where is AI actually growing, by field?</h2>
+<p>Lightcast tracks the share of job postings in each career area that request AI skills. Here is the 2024 snapshot, ordered by current adoption:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Career area</th>
+<th style="text-align: right;">Share of postings mentioning AI (2024)</th>
+<th style="text-align: left;">Growth since 2016</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Information Technology and Computer Science</td>
+<td style="text-align: right;">14.00%</td>
+<td style="text-align: left;">3.2×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Marketing and Public Relations</td>
+<td style="text-align: right;">8.11%</td>
+<td style="text-align: left;">3.6×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Science and Research</td>
+<td style="text-align: right;">6.16%</td>
+<td style="text-align: left;">2.3×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Social Analysis and Planning</td>
+<td style="text-align: right;">4.01%</td>
+<td style="text-align: left;">2.0×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Engineering</td>
+<td style="text-align: right;">3.80%</td>
+<td style="text-align: left;">2.1×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Design, Media, and Writing</td>
+<td style="text-align: right;">3.06%</td>
+<td style="text-align: left;">3.2×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Military</td>
+<td style="text-align: right;">2.18%</td>
+<td style="text-align: left;">4.1×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Human Resources</td>
+<td style="text-align: right;">2.00%</td>
+<td style="text-align: left;">2.5×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Performing Arts</td>
+<td style="text-align: right;">1.65%</td>
+<td style="text-align: left;">3.3×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Business Management and Operations</td>
+<td style="text-align: right;">1.40%</td>
+<td style="text-align: left;">2.6×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Education and Training</td>
+<td style="text-align: right;">1.34%</td>
+<td style="text-align: left;">1.9×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Finance</td>
+<td style="text-align: right;">1.33%</td>
+<td style="text-align: left;">3.0×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Customer and Client Support</td>
+<td style="text-align: right;">1.04%</td>
+<td style="text-align: left;">2.3×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Law, Compliance, and Public Safety</td>
+<td style="text-align: right;">0.95%</td>
+<td style="text-align: left;">2.6×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sales</td>
+<td style="text-align: right;">0.76%</td>
+<td style="text-align: left;">3.8×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Healthcare</td>
+<td style="text-align: right;">0.37%</td>
+<td style="text-align: left;">2.6×</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: Lightcast, Beyond the Buzz, 2025.</em></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How to read this table for your own career
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Top third (IT, Marketing, Science, Engineering, Design):</strong> AI fluency is becoming table stakes. Not having it is a liability. Your job is to be visibly better than average at it.</p>
+<p><strong>Middle third (HR, Business Ops, Education, Finance, Performing Arts, Military):</strong> Early-adopter advantage still exists. Share is under 5% but growing 2-4× per five years. Being the AI person on a team with no AI people is a career-defining position right now.</p>
+<p><strong>Bottom third (Healthcare, Customer Support, Sales, Law, Manufacturing):</strong> The current share looks small, but Lightcast shows the AI premium when listed is <em>largest</em> in these fields — Customer Support, Sales, and Manufacturing have the highest AI salary bumps of any career area. Qualified candidates are rare. You can be one.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI and Careers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI is only relevant for tech careers”</strong> — 51% of AI job postings are now outside IT and Computer Science. The fastest growth is in Customer Support, Sales, and Manufacturing.</li>
+<li><strong>“I need to learn to code to benefit from AI”</strong> — You don’t. BRIEFS prompting, verification workflows, custom GPT design, and ethical reasoning are the skills employers pay the 28% premium for.</li>
+<li><strong>“One AI certification will set me apart”</strong> — It won’t. The premium compounds with skills: 28% for one skill, 43% for two or more. Build a portfolio that shows range.</li>
+<li><strong>“AI will replace my job”</strong> — The WEF <em>Future of Jobs Report 2025</em> projects 78 million net new jobs by 2030. AI changes roles; it rarely eliminates them entirely. The risk isn’t AI. It’s people who use AI replacing people who don’t.</li>
+<li><strong>“I should wait until AI stabilizes”</strong> — It won’t stabilize. The professionals who benefit most are those who started experimenting early, made mistakes, and built judgment. That process starts now.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+<section id="building-your-ai-portfolio" class="level2">
+<h2 class="anchored" data-anchor-id="building-your-ai-portfolio">Building your AI portfolio</h2>
+<p>Portfolios close deals. Certifications open doors. Don’t confuse the two.</p>
+<p>A good AI portfolio is <strong>three artifacts hosted at a URL you control</strong>, each with a short write-up that answers:</p>
+<ol type="1">
+<li>What problem did this solve?</li>
+<li>What AI tools / techniques did I use?</li>
+<li>What was the measurable result?</li>
+<li>What did the AI do <em>poorly</em> that I had to catch?</li>
+</ol>
+<p>That last question is the one most students skip. It’s also the one that separates a tool user from a tool critic. Employers value critics.</p>
+<section id="what-counts-as-an-artifact" class="level3">
+<h3 class="anchored" data-anchor-id="what-counts-as-an-artifact">What counts as an artifact?</h3>
+<ul>
+<li>A custom GPT or Claude Project you built for a specific task, with documentation showing how you tested it (Lab 8 from this course).</li>
+<li>A before/after case study of a workflow — “I reduced [task] from [time] to [time] using [technique].”</li>
+<li>A written evaluation of an AI tool you used in another class — including what it got wrong.</li>
+<li>A research note or analysis where you used retrieval-augmented prompting responsibly (with citations and verification).</li>
+<li>A public reflection on an AI ethics question you worked through — not generic, but tied to a specific case you encountered.</li>
+</ul>
+</section>
+<section id="where-to-host-it" class="level3">
+<h3 class="anchored" data-anchor-id="where-to-host-it">Where to host it</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Platform</th>
+<th style="text-align: left;">Cost</th>
+<th style="text-align: left;">Best for</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>GitHub Pages</strong></td>
+<td style="text-align: left;">Free</td>
+<td style="text-align: left;">Technical students, developer tracks</td>
+<td style="text-align: left;">Hosts HTML, Markdown, Quarto sites. Free custom domain support.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Notion public page</strong></td>
+<td style="text-align: left;">Free</td>
+<td style="text-align: left;">Non-technical portfolios, case studies</td>
+<td style="text-align: left;">Easy drag-and-drop. Good for narrative portfolios.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google Sites</strong></td>
+<td style="text-align: left;">Free</td>
+<td style="text-align: left;">Simplest option</td>
+<td style="text-align: left;">No customization, but zero learning curve.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Quarto + GitHub Pages</strong></td>
+<td style="text-align: left;">Free</td>
+<td style="text-align: left;">Academic-style portfolios</td>
+<td style="text-align: left;">What yatawara.com is built on. Overkill for most students.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Personal domain (Namecheap, Cloudflare)</strong></td>
+<td style="text-align: left;">$10-15/yr</td>
+<td style="text-align: left;">Serious job hunters</td>
+<td style="text-align: left;">Signals commitment. <code>yourname.com</code> is worth the investment.</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The 20-minute version
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you do nothing else this week: create a single-page Notion site. Title it “[Your Name] — AI Projects.” List the three strongest artifacts from this course. For each one, write three sentences: what it is, what I used, what I learned. Share the URL with one professor or mentor this week.</p>
+<p>This is a portfolio. You can improve it later. You cannot improve what doesn’t exist.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="resume-and-linkedin-language" class="level2">
+<h2 class="anchored" data-anchor-id="resume-and-linkedin-language">Resume and LinkedIn language</h2>
+<p>The biggest mistake in AI-related resume language is vagueness. Employers read hundreds of resumes claiming “familiar with ChatGPT.” They read very few with specifics.</p>
+<section id="before-after" class="level3">
+<h3 class="anchored" data-anchor-id="before-after">Before / After</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Weak</th>
+<th style="text-align: left;">Strong</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Familiar with AI tools and ChatGPT</td>
+<td style="text-align: left;">Used structured prompting (BRIEFS framework) to reduce weekly report preparation from 6 hours to 90 minutes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Experience with generative AI</td>
+<td style="text-align: left;">Built a custom Claude Project for [specific task] that cut [specific metric] by [amount], with documented verification protocol</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AI and ML knowledge</td>
+<td style="text-align: left;">Applied retrieval-augmented prompting to [specific project], producing [specific deliverable] with citation-verified sources</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Used AI for writing</td>
+<td style="text-align: left;">Used AI-assisted drafting with a two-pass verification checklist, catching [N] factual errors before publication</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="linkedin-headline-three-working-templates" class="level3">
+<h3 class="anchored" data-anchor-id="linkedin-headline-three-working-templates">LinkedIn headline — three working templates</h3>
+<pre class="text"><code>Template 1 — student with AI skills:
+"[Field] student at [Your University] | AI-augmented [specific capability] | Portfolio: [url]"
+
+Template 2 — career switcher:
+"[Current role] exploring AI applications in [target field] | Built [specific project] | Open to [specific opportunity]"
+
+Template 3 — recent grad:
+"[Degree] graduate specializing in AI-integrated [field] | Delivered [specific result] | Seeking [specific role type]"</code></pre>
+<p>Notice the pattern: <strong>specific noun, specific result, specific URL.</strong> Three concrete things beat ten vague claims every time.</p>
+</section>
+</section>
+<section id="interview-preparation-three-scripts-you-can-adapt" class="level2">
+<h2 class="anchored" data-anchor-id="interview-preparation-three-scripts-you-can-adapt">Interview preparation — three scripts you can adapt</h2>
+<p>Interviewers ask about AI in three predictable ways. Have a script for each.</p>
+<section id="script-1-do-you-use-ai" class="level3">
+<h3 class="anchored" data-anchor-id="script-1-do-you-use-ai">Script 1 — “Do you use AI?”</h3>
+<blockquote class="blockquote">
+<p>“Yes, and I’d be happy to walk you through how. For [specific task], I use [specific tool] with [specific technique]. The most important thing I’ve learned is what it does <em>poorly</em> — [specific failure mode I’ve observed in my own work] — so I always [specific verification step]. Would it help if I showed you a sample?”</p>
+</blockquote>
+<p>The structure: <strong>yes → specific use → specific failure I caught → specific verification.</strong> This single answer signals that you’re not a tool user who got lucky. You’re a tool critic who earned results.</p>
+</section>
+<section id="script-2-how-do-you-handle-ai-hallucinations-errors" class="level3">
+<h3 class="anchored" data-anchor-id="script-2-how-do-you-handle-ai-hallucinations-errors">Script 2 — “How do you handle AI hallucinations / errors?”</h3>
+<blockquote class="blockquote">
+<p>“I treat AI output as a draft, not an answer. My workflow has three steps: generate with a structured prompt, verify any factual claim against a second source, and run a sanity check on anything quantitative. In [specific project], this process caught [specific error type] that would have [specific consequence]. The verification step is usually what distinguishes useful AI work from embarrassing AI work.”</p>
+</blockquote>
+</section>
+<section id="script-3-do-you-have-professional-experience-with-ai-when-you-dont" class="level3">
+<h3 class="anchored" data-anchor-id="script-3-do-you-have-professional-experience-with-ai-when-you-dont">Script 3 — “Do you have professional experience with AI?” (when you don’t)</h3>
+<blockquote class="blockquote">
+<p>“I don’t have a traditional internship, but I do have a portfolio of AI-integrated work from coursework. Specifically, I built [project name], which [what it does]. I learned [specific lesson] from that project — particularly about when AI is helpful versus when it’s actually slower than doing the task manually. Can I walk you through the write-up?”</p>
+</blockquote>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What to never say in an interview
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>“I just use AI for everything.” <em>(Signals no judgment about when it’s appropriate.)</em></li>
+<li>“AI is going to replace [role].” <em>(Signals that you don’t understand the actual augmentation/automation distinction.)</em></li>
+<li>“I use ChatGPT to write my [deliverable].” <em>(Signals that you might submit AI-generated work without verification.)</em></li>
+<li>“I don’t really know how it works under the hood, I just use it.” <em>(Signals that you’ll be helpless when the tool breaks or changes.)</em></li>
+</ul>
+<p>What to say instead is always the same pattern: specific use + specific verification + specific limit.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="internship-and-job-search-kit" class="level2">
+<h2 class="anchored" data-anchor-id="internship-and-job-search-kit">Internship and job search kit</h2>
+<section id="where-to-look-in-2026" class="level3">
+<h3 class="anchored" data-anchor-id="where-to-look-in-2026">Where to look in 2026</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">Platforms</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Aggregators</td>
+<td style="text-align: left;">LinkedIn Jobs, Indeed, Handshake (for students)</td>
+<td style="text-align: left;">Filter for “AI” in job description, not title</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AI-specific</td>
+<td style="text-align: left;"><a href="https://aijobs.net">AI Jobs Board</a>, <a href="https://builtin.com">Built In</a>, <a href="https://wellfound.com">WellFound (AngelList)</a></td>
+<td style="text-align: left;">Startups often list AI skills explicitly</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Research / grant-funded</td>
+<td style="text-align: left;">Your campus career center, NSF REU programs, Handshake</td>
+<td style="text-align: left;">Paid research is underused by first-gen students</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remote / freelance</td>
+<td style="text-align: left;">Upwork (AI-specific filter), Toptal</td>
+<td style="text-align: left;">Builds portfolio if no formal internship available</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Government</td>
+<td style="text-align: left;">USAJobs, California state jobs</td>
+<td style="text-align: left;">Federal jobs increasingly list AI literacy requirements</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="application-volume" class="level3">
+<h3 class="anchored" data-anchor-id="application-volume">Application volume</h3>
+<p>The WEF <em>Future of Jobs Report 2025</em> reported that 41% of employers plan to reduce staff where AI can automate tasks. That sounds scary, but the same report projected a <strong>net increase of 78 million jobs by 2030</strong> — with <strong>170 million new roles created</strong> and <strong>92 million displaced</strong>. The market is still growing; it’s just shifting.</p>
+<p>Apply like the market is shifting: <strong>widely, with specificity.</strong> A good baseline for an undergraduate is 30-50 applications across 4-6 weeks, with a resume version tailored to each of 3-5 job categories. Not each individual job — each <em>category</em>.</p>
+</section>
+</section>
+<section id="certifications-ranked-and-cost-aware" class="level2">
+<h2 class="anchored" data-anchor-id="certifications-ranked-and-cost-aware">Certifications — ranked and cost-aware</h2>
+<section id="what-ai-skills-look-like-in-your-field" class="level3">
+<h3 class="anchored" data-anchor-id="what-ai-skills-look-like-in-your-field">What AI Skills Look Like in YOUR Field</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Government</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>The premium goes to clinicians who can design AI-assisted workflows (discharge summaries, patient triage, clinical documentation) while maintaining HIPAA compliance. Key skills: custom GPT design with constrained system prompts, RAG for clinical guidelines, verification protocols.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Instructors who can build AI-integrated syllabi, design custom tutoring GPTs, and write transparent AI use policies are in demand. The ELEVATE model — structured AI tutoring with measurable outcomes — is the template.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Marketing, finance, and operations roles increasingly list AI as a required or preferred skill. The premium is highest for professionals who can demonstrate workflow transformation: “I reduced report generation from 3 hours to 45 minutes using structured AI prompting.”</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>Precision agriculture, supply chain optimization, and grant writing are the three areas where AI skills translate directly to higher-paying roles. The key: domain expertise + AI fluency beats either one alone.</p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p>Grant writers, policy analysts, and program coordinators with AI skills are scarce and valued. The ability to work within data sovereignty constraints (local models, HIPAA/FERPA compliance) is the differentiator.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 12.1 — The 20-Minute Portfolio Sprint
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Right now — not later — do the following:</p>
+<ol type="1">
+<li><strong>List 3 artifacts</strong> from this course you could show an employer (lab deliverables, quiz results, prompt collections, custom GPTs you’ve designed)</li>
+<li><strong>For each artifact</strong>, write one sentence: “This demonstrates my ability to [specific skill]”</li>
+<li><strong>Pick a hosting platform</strong> (GitHub, Google Sites, Notion, or LinkedIn Featured section)</li>
+<li><strong>Draft your LinkedIn headline</strong> using one of the three templates from this module</li>
+<li><strong>Set a 48-hour deadline</strong> to publish at least one artifact</li>
+</ol>
+<p>The portfolio doesn’t need to be perfect. It needs to exist. A published draft beats an imagined masterpiece.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: Career AI Skills
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>What’s the salary premium for workers with two or more AI skills? <em>(43% — returns compound as you add skills)</em></li>
+<li>What percentage of AI job postings are now outside IT/CS? <em>(51%, up from 39% in 2019)</em></li>
+<li>Name three things that count as portfolio artifacts from this course. <em>(Lab deliverables, custom GPT designs, prompt collections, quiz results, capstone project)</em></li>
+<li>What’s wrong with saying “proficient in ChatGPT” on a resume? <em>(Too vague. Say what you DID with it: “Designed a custom GPT that reduced onboarding time by 40%”)</em></li>
+</ol>
+</div>
+</div>
+<p>Here is the landscape as of April 2026, ranked by what actually helps students.</p>
+</section>
+<section id="tier-1-foundational-low-cost-broad-recognition" class="level3">
+<h3 class="anchored" data-anchor-id="tier-1-foundational-low-cost-broad-recognition">Tier 1 — Foundational, low-cost, broad recognition</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Certification</th>
+<th style="text-align: right;">Cost</th>
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google AI Professional Certificate</strong> (Coursera/Google Skills, Feb 2026)</td>
+<td style="text-align: right;"><strong>Free</strong></td>
+<td style="text-align: left;">~40 hrs</td>
+<td style="text-align: left;">Strongest price-to-value in 2026. Launched specifically as a free employer-recognized credential.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Anthropic Academy</strong> (free courses on prompting, Claude)</td>
+<td style="text-align: right;">Free</td>
+<td style="text-align: left;">2–5 hrs each</td>
+<td style="text-align: left;">Prompt engineering fundamentals, aligns with this course</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>DeepLearning.AI “Generative AI for Everyone”</strong></td>
+<td style="text-align: right;">Free audit / $49 cert</td>
+<td style="text-align: left;">~10 hrs</td>
+<td style="text-align: left;">Conceptual foundation, non-technical</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Microsoft AI-900</strong> (Azure AI Fundamentals)</td>
+<td style="text-align: right;">$99</td>
+<td style="text-align: left;">30–40 hrs</td>
+<td style="text-align: left;">Widely recognized entry credential</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>AWS AI Practitioner (AIF-C01)</strong></td>
+<td style="text-align: right;">$100</td>
+<td style="text-align: left;">30–40 hrs</td>
+<td style="text-align: left;">Non-technical, widely recognized</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Google Cloud Generative AI Leader</strong></td>
+<td style="text-align: right;">$99</td>
+<td style="text-align: left;">20–30 hrs</td>
+<td style="text-align: left;">Non-technical business leaders; first-of-kind in 2025</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tier-2-associate-level-technical-depth-expected" class="level3">
+<h3 class="anchored" data-anchor-id="tier-2-associate-level-technical-depth-expected">Tier 2 — Associate level, technical depth expected</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Certification</th>
+<th style="text-align: right;">Cost</th>
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>AWS Machine Learning Associate (MLA-C01)</strong></td>
+<td style="text-align: right;">$150</td>
+<td style="text-align: left;">80–120 hrs</td>
+<td style="text-align: left;">Data/analytics professionals</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Microsoft Azure AI Engineer (AI-102)</strong></td>
+<td style="text-align: right;">$165</td>
+<td style="text-align: left;">80–120 hrs</td>
+<td style="text-align: left;">Developers working in Azure</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tier-3-professional-requires-real-hands-on-experience" class="level3">
+<h3 class="anchored" data-anchor-id="tier-3-professional-requires-real-hands-on-experience">Tier 3 — Professional, requires real hands-on experience</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Certification</th>
+<th style="text-align: right;">Cost</th>
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google Cloud Professional ML Engineer</strong></td>
+<td style="text-align: right;">$200</td>
+<td style="text-align: left;">150+ hrs</td>
+<td style="text-align: left;">Practicing ML engineers</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Oracle OCI Generative AI Professional</strong></td>
+<td style="text-align: right;">$95</td>
+<td style="text-align: left;">80–100 hrs</td>
+<td style="text-align: left;">Oracle-shop candidates</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+My honest recommendation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Start with the free Google AI Professional Certificate</strong> (launched February 2026). It is the strongest free offering on the market.</li>
+<li><strong>Build your portfolio</strong> using Labs 8, 10, and 11 from this course as your starting artifacts.</li>
+<li><strong>Only then, if and only if your target job lists a specific certification</strong>, pay for exactly one Tier-1 cert matching the target employer’s cloud provider.</li>
+<li><strong>Do not collect certifications.</strong> Three weak certs signal less than one cert plus one well-documented portfolio project.</li>
+</ol>
+<p>The ordering matters. Students who pursue certifications before building a portfolio end up with a credential wallet and no story to tell. Employers want stories. <em>Specifically</em>, they want the story where you caught the AI being wrong.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="learning-communities-where-to-stay-current" class="level2">
+<h2 class="anchored" data-anchor-id="learning-communities-where-to-stay-current">Learning communities — where to stay current</h2>
+<p>After this course ends, AI literacy is a moving target. The field changes monthly. Here is where to stay current without drowning:</p>
+<section id="high-signal-low-noise" class="level3">
+<h3 class="anchored" data-anchor-id="high-signal-low-noise">High signal, low noise</h3>
+<ul>
+<li><strong><a href="https://simonwillison.net">Simon Willison’s blog</a></strong> — daily-ish writing from a practitioner, extremely concrete, almost zero hype. If you read one thing, read this.</li>
+<li><strong><a href="https://www.anthropic.com/research">Anthropic’s research blog</a></strong> — primary source, Economic Index reports, concrete technical explanations.</li>
+<li><strong><a href="https://www.pragmaticengineer.com">The Pragmatic Engineer newsletter</a></strong> — engineer-focused, covers agent deployment, coding tools.</li>
+<li><strong><a href="https://huggingface.co/blog">Hugging Face blog</a></strong> — technical but accessible, open-source focus.</li>
+</ul>
+</section>
+<section id="subreddits-worth-checking-weekly" class="level3">
+<h3 class="anchored" data-anchor-id="subreddits-worth-checking-weekly">Subreddits worth checking weekly</h3>
+<ul>
+<li><strong>r/LocalLLaMA</strong> — small language models, on-device AI, highly technical but welcoming.</li>
+<li><strong>r/MachineLearning</strong> — research-focused, conference papers.</li>
+<li><strong>r/ChatGPTPro, r/ClaudeAI</strong> — practitioner-focused, prompting techniques, workflow sharing.</li>
+</ul>
+</section>
+<section id="discord-community" class="level3">
+<h3 class="anchored" data-anchor-id="discord-community">Discord / community</h3>
+<ul>
+<li><strong>Anthropic Discord, Hugging Face Discord, OpenAI Developer Forum</strong> — practitioner communities with mod-enforced signal/noise ratios.</li>
+<li><strong>LinkedIn AI groups</strong> — generally low-signal, but useful for spotting people in your target field.</li>
+</ul>
+</section>
+<section id="the-30-minute-weekly-routine" class="level3">
+<h3 class="anchored" data-anchor-id="the-30-minute-weekly-routine">The 30-minute weekly routine</h3>
+<p>The biggest cause of AI knowledge decay is <strong>irregular consumption</strong>. Pick one 30-minute slot per week. Every week. Forever.</p>
+<pre class="text"><code>Weekly AI maintenance routine (30 minutes):
+
+  Minutes 0-10:  Read Simon Willison's latest posts (last week's)
+  Minutes 10-20: Read ONE Anthropic, OpenAI, or Google blog post
+                 (whichever your main tool is from)
+  Minutes 20-30: Try ONE new thing in your actual workflow
+                 (a new prompting technique, a tool feature,
+                 a small experiment — must be hands-on)
+
+Do this 50 weeks a year. That's 25 hours of deliberate AI
+practice annually. Most AI workers do less.</code></pre>
+</section>
+</section>
+<section id="if-you-are-the-first-in-your-family-to-navigate-this" class="level2">
+<h2 class="anchored" data-anchor-id="if-you-are-the-first-in-your-family-to-navigate-this">If you are the first in your family to navigate this</h2>
+<p>Three-quarters of the AI salary premium is available to people who don’t have a parent who works in tech. But first-generation students consistently face three gaps that are solvable within weeks:</p>
+<section id="gap-1-missing-permission-to-apply" class="level3">
+<h3 class="anchored" data-anchor-id="gap-1-missing-permission-to-apply">Gap 1 — Missing permission to apply</h3>
+<p>A consistent finding across first-gen career research: students with equivalent skills <em>underapply</em> to roles they’re qualified for. If a job lists AI skills and you have 60% of them, apply anyway. The 28% premium is waiting for people who show up.</p>
+<p>Job postings are wishlists, not requirements. Employers hire the best candidate who applies, not the best candidate who exists.</p>
+</section>
+<section id="gap-2-missing-a-portfolio-url" class="level3">
+<h3 class="anchored" data-anchor-id="gap-2-missing-a-portfolio-url">Gap 2 — Missing a portfolio URL</h3>
+<p>Parents with professional networks give their kids portfolio feedback in passing — “put this on your LinkedIn,” “you should start a blog.” First-gen students often don’t get this steady push.</p>
+<p>Fix this week: <strong>create the URL.</strong> Notion, GitHub Pages, Google Sites — pick one. Post three artifacts. Send the link to a professor or mentor. The first version will be embarrassing. Ship it anyway. You can improve what exists.</p>
+</section>
+<section id="gap-3-missing-the-specific-number-habit" class="level3">
+<h3 class="anchored" data-anchor-id="gap-3-missing-the-specific-number-habit">Gap 3 — Missing the specific-number habit</h3>
+<p>Employers remember numbers. “I reduced the report from 6 hours to 90 minutes” is sticky. “I improved efficiency” is invisible.</p>
+<p>Before your next interview, write down three numbers about AI work you’ve done. Even if you have to measure them on coursework projects. Even if the numbers are small. Specific beats general every time.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The reading that changed my own trajectory
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Being the first in your family to navigate knowledge work is not a deficit to explain. It is a perspective that is rare in rooms where AI decisions are being made. The fastest-growing use of AI in 2026 is in domains where deployment consequences affect communities — healthcare access, financial inclusion, education equity, environmental justice. These domains need people who know what it’s like to be on the receiving end of a misdeployed system.</p>
+<p>The skill is not hiding your background. The skill is translating it into a perspective that no one else in the room has.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="lab-12.1-the-60-minute-portfolio" class="level2">
+<h2 class="anchored" data-anchor-id="lab-12.1-the-60-minute-portfolio">Lab 12.1 — The 60-minute portfolio</h2>
+<p><strong>Goal:</strong> At the end of 60 minutes, you will have a public URL with three AI-portfolio artifacts from this course, each with a short write-up.</p>
+<p><strong>Time budget:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 55%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Minutes</th>
+<th style="text-align: left;">Task</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0-5</td>
+<td style="text-align: left;">Create a free Notion page titled “[Your Name] — AI Portfolio”</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5-15</td>
+<td style="text-align: left;">Write a 3-sentence about-me section: who you are, your field, what kind of role you want</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15-25</td>
+<td style="text-align: left;">Add Artifact 1 (e.g., your Lab 8 custom GPT): what it does, what you learned, what it got wrong</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">25-35</td>
+<td style="text-align: left;">Add Artifact 2 (e.g., Lab 10 retrieval project) with the same structure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">35-45</td>
+<td style="text-align: left;">Add Artifact 3 (your BRIEFS/SMARTS case study) with the same structure</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">45-55</td>
+<td style="text-align: left;">Add “What I learned about AI’s limits” section with two specific examples</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">55-60</td>
+<td style="text-align: left;">Make page public, copy URL, share with one peer from this course for feedback</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Deliverable:</strong> One URL. That’s it. You will iterate later. Shipping beats perfecting.</p>
+</section>
+<section id="exercise-12.2-the-resume-rewrite" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-12.2-the-resume-rewrite">Exercise 12.2 — The resume rewrite</h2>
+<p>Pull out your current resume. Find one bullet point related to any skill you’ve used in this course.</p>
+<p>Rewrite it three times:</p>
+<ol type="1">
+<li><strong>Weak version:</strong> as if you are vaguely familiar with AI (“Used AI tools for research”).</li>
+<li><strong>Medium version:</strong> with one specific noun (“Used ChatGPT to generate drafts for weekly reports”).</li>
+<li><strong>Strong version:</strong> specific tool + specific technique + specific measurable result (“Used Claude with structured BRIEFS prompting to reduce weekly report preparation from 6 hours to 90 minutes, with a two-pass verification protocol”).</li>
+</ol>
+<p>Which of the three is closest to what’s actually on your resume now? Rewrite that bullet in the strong format before you submit this exercise.</p>
+</section>
+<section id="quiz" class="level2">
+<h2 class="anchored" data-anchor-id="quiz">Quiz</h2>
+<p><strong>1. The Lightcast report found an AI salary premium of:</strong></p>
+<ol type="a">
+<li>12%</li>
+<li>28%</li>
+<li>43%</li>
+<li>72%</li>
+</ol>
+<p><strong>2. In 2024, what percentage of AI job postings were <em>outside</em> IT and Computer Science?</strong></p>
+<ol type="a">
+<li>15%</li>
+<li>32%</li>
+<li>51%</li>
+<li>78%</li>
+</ol>
+<p><strong>3. The jump from 1 AI skill to 2+ AI skills on a job posting adds how much to the salary premium?</strong></p>
+<ol type="a">
+<li>No additional premium</li>
+<li>About 15 percentage points, bringing the total to 43%</li>
+<li>Exactly double the 1-skill premium</li>
+<li>The premium decreases when more skills are required</li>
+</ol>
+<p><strong>4. According to the WEF <em>Future of Jobs Report 2025</em>, the net change in global jobs by 2030 is projected to be:</strong></p>
+<ol type="a">
+<li>Net loss of 50 million jobs</li>
+<li>Flat, with displacement offset by new roles</li>
+<li>Net gain of 78 million jobs</li>
+<li>Net gain of 300+ million jobs</li>
+</ol>
+<p><strong>5. Which of the following is the strongest resume bullet?</strong></p>
+<ol type="a">
+<li>“Proficient in ChatGPT and Claude”</li>
+<li>“Used AI tools to improve productivity”</li>
+<li>“Experienced with generative AI for content creation”</li>
+<li>“Built a custom Claude Project for monthly reporting that cut preparation time from 6 hours to 90 minutes, with a documented verification checklist that caught 4 factual errors before publication”</li>
+</ol>
+<p><strong>6. The single best free AI certification for most students in 2026 is:</strong></p>
+<ol type="a">
+<li>AWS Machine Learning Specialty ($300)</li>
+<li>Google Cloud Professional ML Engineer ($200)</li>
+<li>Google AI Professional Certificate (free, launched Feb 2026)</li>
+<li>Microsoft AI-900 ($99)</li>
+</ol>
+<p><strong>7. In an interview, when asked “Do you use AI?”, the strongest answer pattern is:</strong></p>
+<ol type="a">
+<li>“Yes, I use it for everything.”</li>
+<li>“Yes → specific use → specific failure I caught → specific verification step.”</li>
+<li>“No, I prefer to do my own work.”</li>
+<li>“It depends on the task, but mostly yes.”</li>
+</ol>
+<p><strong>8. The Lightcast data shows which three career areas have the <em>largest</em> AI salary premium (when AI skills are listed)?</strong></p>
+<ol type="a">
+<li>IT, Engineering, Finance</li>
+<li>Marketing, Design, Science</li>
+<li>Customer Support, Sales, Manufacturing</li>
+<li>Healthcare, Law, Education</li>
+</ol>
+<p><em>(Answers: 1-b, 2-c, 3-b, 4-c, 5-d, 6-c, 7-b, 8-c)</em></p>
+<hr>
+</section>
+<section id="module-12-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-12-summary">Module 12 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>The 28% premium is real</strong> — and compounds to 43% with two or more AI skills (Lightcast, 1.3B job postings)</li>
+<li><strong>51% of AI jobs are outside tech</strong> — the premium is being paid in every field</li>
+<li><strong>Portfolio &gt; resume claims</strong> — show artifacts, not assertions</li>
+<li><strong>Resume language matters</strong> — “Designed a custom GPT” beats “familiar with AI”</li>
+<li><strong>Certifications compound</strong> — free foundations first, then invest in credentials that match your goal</li>
+<li><strong>The biggest career risk isn’t AI</strong> — it’s not developing the judgment to use it well</li>
+</ol>
+</div>
+</div>
+<hr>
+<div class="think-about-it">
+<div class="tai-header">
+💭 THINK ABOUT IT
+</div>
+<div class="tai-body">
+<p>The Lightcast data says the AI salary premium is 28%. But here’s what the data can’t tell you: <strong>what kind of AI user will you be?</strong> There’s a difference between someone who uses AI to avoid thinking and someone who uses AI to think better. The first type gets faster. The second type gets smarter. Employers can tell the difference in about 10 minutes. Which one are you building toward — and how would you prove it to a skeptic?</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-12-build-your-ai-portfolio" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-12-build-your-ai-portfolio">🔬 Lab 12: Build Your AI Portfolio</h2>
+<section id="lab-12-build-your-ai-portfolio-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-12-build-your-ai-portfolio-1">Lab 12: Build Your AI Portfolio</h4>
+<p><strong>Time:</strong> 60 minutes | <strong>Tools needed:</strong> GitHub/Notion/Google Sites + your course artifacts</p>
+<p><strong>Purpose:</strong> Create a live, linkable AI portfolio that demonstrates your skills to employers.</p>
+<p><strong>Part A — Select and Organize (15 min):</strong> Choose 3-5 artifacts from this course. For each, write a 2-sentence description: what you built and what skill it demonstrates.</p>
+<p><strong>Part B — Publish (25 min):</strong> Upload artifacts to your chosen platform. Write a brief intro page: your name, your field, your AI philosophy (1 paragraph).</p>
+<p><strong>Part C — LinkedIn Update (10 min):</strong> Update your LinkedIn headline using one of the three templates. Add the portfolio link to your Featured section.</p>
+<p><strong>Part D — Reflection (10 min):</strong> What was the hardest artifact to describe? Why? What would you add to this portfolio after the capstone?</p>
+</section>
+<hr>
+</section>
+<section id="module-12-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-12-quiz">🎮 Module 12 Quiz</h2>
+<div id="m12-game">
+
+</div>
+<script>
+(function(){
+var el=document.getElementById('m12-game');
+el.innerHTML='<div class="game-section"><span class="game-badge">Module 12 Challenge</span><h3 style="color:white;border:none;">Career AI Skills Check</h3><p>8 questions · Earn your badge at 80%</p><div class="game-container" id="m12-area"><div id="m12-q" style="font-size:1.05rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m12-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m12-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m12-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m12-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+var Qs=[
+{q:"What salary premium do workers with at least one AI skill command?",a:"28% (~$17,800/year)",opts:["12% (~$8,000/year)","28% (~$17,800/year)","45% (~$30,000/year)","55% (~$40,000/year)"]},
+{q:"What happens to the premium when a worker has two or more AI skills?",a:"It jumps to 43% — returns compound",opts:["It stays at 28%","It jumps to 43% — returns compound","It drops because specialization narrows the market","It depends entirely on the field"]},
+{q:"What percentage of AI job postings are now outside IT and Computer Science?",a:"51% — up from 39% in 2019",opts:["23% — AI is still mainly a tech field","51% — up from 39% in 2019","74% — AI is everywhere","89% — almost no AI jobs are in tech"]},
+{q:"Which three career areas show the largest AI salary premium?",a:"Customer Support, Sales, and Manufacturing",opts:["IT, Engineering, Finance","Customer Support, Sales, and Manufacturing","Marketing, Design, Science","Healthcare, Law, Education"]},
+{q:"What makes a strong AI portfolio artifact?",a:"A specific deliverable with a description of what skill it demonstrates",opts:["A certificate of completion","Screenshots of ChatGPT conversations","A specific deliverable with a description of what skill it demonstrates","A list of AI tools you've used"]},
+{q:"Which LinkedIn headline approach is most effective?",a:"[Role] | [Specific AI capability] | [Proof point]",opts:["AI Enthusiast | Passionate about technology","[Role] | [Specific AI capability] | [Proof point]","ChatGPT Power User | 500+ hours of AI experience","Aspiring AI Professional | Open to opportunities"]},
+{q:"What should you say when an interviewer asks 'Do you use AI?'",a:"Yes — describe a specific workflow, the verification step, and the outcome",opts:["No — it might seem like you can't do the work yourself","Yes — I use ChatGPT for everything","Yes — describe a specific workflow, the verification step, and the outcome","I'm learning — can you tell me about your AI policy?"]},
+{q:"What is the most important certification strategy?",a:"Start free (Google AI Essentials), then invest in credentials matching your specific career goal",opts:["Get the most expensive one first","Start free (Google AI Essentials), then invest in credentials matching your specific career goal","Skip certifications — they don't matter","Get every certification available"]}
+];
+for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+var idx=0,score=0,answered=false;
+function show(){
+if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=7?'🏆 Badge Earned! Your career AI skills are solid.':score>=5?'👍 Almost there — review the Lightcast data.':'📖 Re-read Module 12 before updating your portfolio.';document.getElementById('m12-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+answered=false;var q=Qs[idx];document.getElementById('m12-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m12-fb').textContent='';document.getElementById('m12-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m12-sc').textContent='Score: '+score+' / '+idx;
+var btns=document.getElementById('m12-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.85rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m12-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m12-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m12-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+}
+show();
+})();
+</script>
+<hr>
+<p><em>Previous: <a href="../module11/index.html">Module 11 — AI Across Disciplines</a></em> | <em>Next: <a href="../module13/index.html">Module 13 — The Future of AI</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module11/index.html" class="pagination-link" aria-label="AI Across Disciplines">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AI Across Disciplines</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module13/index.html" class="pagination-link" aria-label="The Future of AI and Staying Current">
+        <span class="nav-page-text">The Future of AI and Staying Current</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

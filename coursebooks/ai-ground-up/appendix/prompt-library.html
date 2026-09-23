@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Prompt Library – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../appendix/tool-directory.html" rel="next">
+<link href="../appendix/glossary.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="Prompt Library – AI from the Ground Up">
+<meta property="og:description" content="200+ Ready-to-Use Prompts — Copy, Paste, Customize">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendix/glossary.html">Appendix</a></li><li class="breadcrumb-item"><a href="../appendix/prompt-library.html">Prompt Library</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#before-you-prompt-the-3-questions" id="toc-before-you-prompt-the-3-questions" class="nav-link active" data-scroll-target="#before-you-prompt-the-3-questions">Before You Prompt: The 3 Questions</a></li>
+  <li><a href="#part-1-writing-and-communication" id="toc-part-1-writing-and-communication" class="nav-link" data-scroll-target="#part-1-writing-and-communication">PART 1: WRITING AND COMMUNICATION</a>
+  <ul class="collapse">
+  <li><a href="#emails" id="toc-emails" class="nav-link" data-scroll-target="#emails">Emails</a></li>
+  <li><a href="#reports-and-documents" id="toc-reports-and-documents" class="nav-link" data-scroll-target="#reports-and-documents">Reports and Documents</a></li>
+  <li><a href="#editing-and-proofreading" id="toc-editing-and-proofreading" class="nav-link" data-scroll-target="#editing-and-proofreading">Editing and Proofreading</a></li>
+  </ul></li>
+  <li><a href="#part-2-research-and-analysis" id="toc-part-2-research-and-analysis" class="nav-link" data-scroll-target="#part-2-research-and-analysis">PART 2: RESEARCH AND ANALYSIS</a></li>
+  <li><a href="#part-3-data-and-numbers" id="toc-part-3-data-and-numbers" class="nav-link" data-scroll-target="#part-3-data-and-numbers">PART 3: DATA AND NUMBERS</a></li>
+  <li><a href="#part-4-productivity-and-workflow" id="toc-part-4-productivity-and-workflow" class="nav-link" data-scroll-target="#part-4-productivity-and-workflow">PART 4: PRODUCTIVITY AND WORKFLOW</a></li>
+  <li><a href="#part-5-creative-and-marketing" id="toc-part-5-creative-and-marketing" class="nav-link" data-scroll-target="#part-5-creative-and-marketing">PART 5: CREATIVE AND MARKETING</a></li>
+  <li><a href="#part-6-teaching-and-learning" id="toc-part-6-teaching-and-learning" class="nav-link" data-scroll-target="#part-6-teaching-and-learning">PART 6: TEACHING AND LEARNING</a></li>
+  <li><a href="#part-7-career-and-professional-development" id="toc-part-7-career-and-professional-development" class="nav-link" data-scroll-target="#part-7-career-and-professional-development">PART 7: CAREER AND PROFESSIONAL DEVELOPMENT</a></li>
+  <li><a href="#part-8-healthcare" id="toc-part-8-healthcare" class="nav-link" data-scroll-target="#part-8-healthcare">PART 8: HEALTHCARE</a></li>
+  <li><a href="#part-9-agriculture-and-natural-resources" id="toc-part-9-agriculture-and-natural-resources" class="nav-link" data-scroll-target="#part-9-agriculture-and-natural-resources">PART 9: AGRICULTURE AND NATURAL RESOURCES</a></li>
+  <li><a href="#part-10-government-and-public-service" id="toc-part-10-government-and-public-service" class="nav-link" data-scroll-target="#part-10-government-and-public-service">PART 10: GOVERNMENT AND PUBLIC SERVICE</a></li>
+  <li><a href="#part-11-small-business-and-entrepreneurship" id="toc-part-11-small-business-and-entrepreneurship" class="nav-link" data-scroll-target="#part-11-small-business-and-entrepreneurship">PART 11: SMALL BUSINESS AND ENTREPRENEURSHIP</a></li>
+  <li><a href="#part-12-personal-and-life-management" id="toc-part-12-personal-and-life-management" class="nav-link" data-scroll-target="#part-12-personal-and-life-management">PART 12: PERSONAL AND LIFE MANAGEMENT</a></li>
+  <li><a href="#part-13-trades-construction-and-maintenance" id="toc-part-13-trades-construction-and-maintenance" class="nav-link" data-scroll-target="#part-13-trades-construction-and-maintenance">PART 13: TRADES, CONSTRUCTION, AND MAINTENANCE</a></li>
+  <li><a href="#part-14-custom-gpt-and-ai-tool-design" id="toc-part-14-custom-gpt-and-ai-tool-design" class="nav-link" data-scroll-target="#part-14-custom-gpt-and-ai-tool-design">PART 14: CUSTOM GPT AND AI TOOL DESIGN</a></li>
+  <li><a href="#part-15-verification-and-critical-thinking" id="toc-part-15-verification-and-critical-thinking" class="nav-link" data-scroll-target="#part-15-verification-and-critical-thinking">PART 15: VERIFICATION AND CRITICAL THINKING</a></li>
+  <li><a href="#part-16-capstone-project-prompts" id="toc-part-16-capstone-project-prompts" class="nav-link" data-scroll-target="#part-16-capstone-project-prompts">PART 16: CAPSTONE PROJECT PROMPTS</a></li>
+  <li><a href="#prompt-anti-patterns-dont-do-this" id="toc-prompt-anti-patterns-dont-do-this" class="nav-link" data-scroll-target="#prompt-anti-patterns-dont-do-this">❌ Prompt Anti-Patterns: Don’t Do This</a></li>
+  <li><a href="#quick-reference-prompt-patterns" id="toc-quick-reference-prompt-patterns" class="nav-link" data-scroll-target="#quick-reference-prompt-patterns">Quick Reference: Prompt Patterns</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendix/glossary.html">Appendix</a></li><li class="breadcrumb-item"><a href="../appendix/prompt-library.html">Prompt Library</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Prompt Library</h1>
+<p class="subtitle lead">200+ Ready-to-Use Prompts — Copy, Paste, Customize</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How to Use This Library
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every prompt below is ready to copy and paste. Replace the <strong>[bracketed text]</strong> with your specifics. Most prompts work with any AI tool — ChatGPT, Claude, Gemini, Perplexity, or local models.</p>
+<p><strong>Beginner?</strong> Start with the prompts marked 🟢. <strong>Intermediate?</strong> Try the ones marked 🟡. <strong>Advanced?</strong> Go for the ones marked 🔴.</p>
+</div>
+</div>
+<p><strong>Jump to:</strong> <a href="#part-1-writing-and-communication">Writing</a> · <a href="#part-2-research-and-analysis">Research</a> · <a href="#part-3-data-and-numbers">Data</a> · <a href="#part-4-productivity-and-workflow">Productivity</a> · <a href="#part-5-creative-and-marketing">Creative</a> · <a href="#part-6-teaching-and-learning">Teaching</a> · <a href="#part-7-career-and-professional-development">Career</a> · <a href="#part-8-healthcare">Healthcare</a> · <a href="#part-9-agriculture-and-natural-resources">Agriculture</a> · <a href="#part-10-government-and-public-service">Government</a> · <a href="#part-11-small-business-and-entrepreneurship">Business</a> · <a href="#part-12-personal-and-life-management">Personal</a> · <a href="#part-13-trades-construction-and-maintenance">Trades</a> · <a href="#part-14-custom-gpt-and-ai-tool-design">GPTs</a> · <a href="#part-15-verification-and-critical-thinking">Verification</a></p>
+<hr>
+<section id="before-you-prompt-the-3-questions" class="level2">
+<h2 class="anchored" data-anchor-id="before-you-prompt-the-3-questions">Before You Prompt: The 3 Questions</h2>
+<p>The BRIEFS framework (Module 4) gives you a structured way to design your first message. But if BRIEFS feels like too much, start with just <strong>three questions:</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The 3 Questions (Simplified BRIEFS)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>What do I want?</strong> <em>(Your intent — the single most important signal)</em></li>
+<li><strong>Who am I?</strong> <em>(Your background and expertise level)</em></li>
+<li><strong>How will I use this?</strong> <em>(What the output is for — the stakes)</em></li>
+</ol>
+<p>That’s it. Answer those three before you type, and you’ll outperform 90% of AI users.</p>
+</div>
+</div>
+<p><strong>Example — The 3 Questions in action:</strong></p>
+<blockquote class="blockquote">
+<p>❌ Without: “Tell me about marketing.”</p>
+<p>✅ With: “I’m a small bakery owner [who am I] and I want 5 ideas for increasing foot traffic during weekday afternoons [what do I want]. These need to be low-budget — under $200 each — because I’ll pick one to try this month [how will I use this].”</p>
+</blockquote>
+<hr>
+</section>
+<section id="part-1-writing-and-communication" class="level1">
+<h1>PART 1: WRITING AND COMMUNICATION</h1>
+<section id="emails" class="level2">
+<h2 class="anchored" data-anchor-id="emails">Emails</h2>
+<p>🟢 <strong>Quick Professional Email</strong> &gt; Write a professional email to [recipient/role] about [topic]. Keep it under [100/150/200] words. Tone: [friendly but professional / formal / casual]. Include a clear ask with a specific deadline.</p>
+<p>🟢 <strong>Email Reply</strong> &gt; Draft a reply to this email. My situation: [brief context]. Tone: [grateful / firm / neutral / apologetic]. Keep it under [N] words. End with a clear next step. &gt; &gt; [Paste the email you’re replying to]</p>
+<p>🟡 <strong>Difficult Conversation Email</strong> &gt; I need to email [person/role] about [sensitive topic]. The relationship matters — I want to [maintain rapport / set a boundary / deliver bad news / ask for something uncomfortable]. Write a draft that: addresses the issue directly without being aggressive, acknowledges their perspective, proposes a specific path forward, and stays under 150 words.</p>
+<p>🟡 <strong>Email Tone Adjustment</strong> &gt; Rewrite this email in a [more formal / more casual / more diplomatic / more direct] tone. Preserve all factual content. Don’t add information I didn’t include. &gt; &gt; [Paste email]</p>
+<p>🟢 <strong>Thank-You Email After Meeting</strong> &gt; Write a brief thank-you email after meeting with [person/role] about [topic]. Mention one specific thing we discussed. Confirm the next step we agreed on. Under 80 words. Tone: genuine, not formulaic.</p>
+<p>🟢 <strong>Scheduling Email</strong> &gt; Write an email to [person] proposing a meeting about [topic]. Suggest 3 time slots. Mention it should take about [duration]. Include what we’ll cover so they can prepare. Under 100 words.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Government</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Agriculture</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<blockquote class="blockquote">
+<p>Write an email to a patient’s family explaining that [procedure/appointment] has been [rescheduled/changed]. Include: the new date/time, what they need to bring, who to contact with questions. Tone: warm, clear, reassuring. Under 120 words.</p>
+</blockquote>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<blockquote class="blockquote">
+<p>Write an email to parents of [grade level] students about [topic — field trip / policy change / upcoming event]. Include: key dates, what parents need to do, who to contact. Tone: friendly and informative. Under 150 words.</p>
+</blockquote>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<blockquote class="blockquote">
+<p>Write a follow-up email to a client after our meeting about [project]. Summarize: the 3 main decisions we made, the next steps with owners and deadlines, and the date of our next check-in. Tone: professional but personable. Under 200 words.</p>
+</blockquote>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<blockquote class="blockquote">
+<p>Write a public notice email about [policy change / service update / deadline]. Must be: clear to a general audience (no jargon), include all relevant dates and action items, provide contact info for questions. Under 200 words. 8th grade reading level.</p>
+</blockquote>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<blockquote class="blockquote">
+<p>Write an email to our seasonal crew leads about [harvest schedule change / safety protocol update / equipment maintenance]. Include: what changed and why, what they need to do differently starting [date], and who to contact with questions. Keep it direct — these are busy people in the field. Under 100 words.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+<section id="reports-and-documents" class="level2">
+<h2 class="anchored" data-anchor-id="reports-and-documents">Reports and Documents</h2>
+<p>🟢 <strong>First Draft from Notes</strong> &gt; I have these rough notes from [meeting / research / observation]. Turn them into a structured [report / summary / memo] with: an executive summary (under 100 words), 3-5 key findings, and recommended next steps. Audience: [who will read this]. Tone: [formal / conversational / technical]. &gt; &gt; [Paste notes]</p>
+<p>🟡 <strong>The Critic — Review My Draft</strong> &gt; You are my critical peer reviewer. Do NOT rewrite my text. Diagnose and explain. Evaluate my draft on: (1) clarity and structure, (2) strength of argument, (3) evidence quality, (4) tone match for [audience], (5) any gaps or weak points. For each: give a 2-sentence diagnosis and one high-impact fix. At the end, list 3 things I should add or change. Do not fabricate sources. &gt; &gt; [Paste your draft]</p>
+<p>🟡 <strong>Executive Summary Generator</strong> &gt; Write a 120-word executive summary of this [report / document / proposal]. It must stand alone — someone who reads ONLY the summary should understand: the purpose, the key findings, and the recommended action. No jargon. &gt; &gt; [Paste document]</p>
+<p>🟢 <strong>Meeting Notes Cleanup</strong> &gt; I took these messy notes during a meeting. Clean them up into organized meeting minutes: attendees, key discussion points, decisions made, action items with owners and deadlines. Don’t add anything I didn’t mention — just organize what’s here. &gt; &gt; [Paste notes]</p>
+<p>🔴 <strong>Document Comparison</strong> &gt; Compare these two [policies / proposals / drafts]. For each major difference: describe what changed, assess which version is stronger and why, and flag anything that conflicts or creates ambiguity. Present as a table: Topic, Version A, Version B, Assessment. &gt; &gt; [Paste both documents]</p>
+</section>
+<section id="editing-and-proofreading" class="level2">
+<h2 class="anchored" data-anchor-id="editing-and-proofreading">Editing and Proofreading</h2>
+<p>🟢 <strong>Grammar and Clarity Check</strong> &gt; Check this text for grammar, spelling, punctuation, and clarity. Fix errors and suggest rewording for any sentence that’s confusing. Don’t change my voice or style — just clean it up. &gt; &gt; [Paste text]</p>
+<p>🟡 <strong>Simplify Complex Writing</strong> &gt; Rewrite this at a [6th grade / 8th grade / general audience] reading level. Keep all the important information. Replace jargon with plain language. Shorten sentences over 25 words. Don’t lose accuracy. &gt; &gt; [Paste text]</p>
+<p>🟡 <strong>Audience Adaptation</strong> &gt; Rewrite this content for [specific audience]. Current version is written for [current audience]. The new audience needs: [different tone / less jargon / more detail / simpler language / more formality]. Keep all facts the same. &gt; &gt; [Paste text]</p>
+<p>🟡 <strong>Bilingual Content Check</strong> &gt; I need this message in both English and Spanish. Translate the English version to Spanish that sounds natural — not stiff or Google-Translate-ish. This is going to [audience — parents / patients / community members / employees]. Regional context: Central Valley, California. After translating, flag any cultural nuances I should adjust. &gt; &gt; [Paste English text]</p>
+<hr>
+</section>
+</section>
+<section id="part-2-research-and-analysis" class="level1">
+<h1>PART 2: RESEARCH AND ANALYSIS</h1>
+<p>🟢 <strong>Topic Overview</strong> &gt; Give me a beginner-friendly overview of [topic]. Cover: what it is, why it matters, the 3 most important things to know, and one common misconception. Keep it under 300 words. No jargon — explain any technical terms you use.</p>
+<p>🟢 <strong>Source Finder</strong> &gt; I’m researching [topic] for [purpose]. Suggest 5 specific types of sources I should look for, and for each one, tell me WHERE to search (specific databases, websites, organizations — not just “Google it”). My audience is [who]. I need [academic / practical / news-based] sources.</p>
+<p>🟡 <strong>Analyze This Data</strong> &gt; I have this data: [paste data or describe it]. I need to understand: (1) what patterns or trends are present, (2) what’s surprising or unexpected, (3) what questions I should ask next. I’m [your role] and this is for [purpose]. Explain findings in plain language.</p>
+<p>🟡 <strong>Literature Review Helper</strong> &gt; I’m reviewing research on [topic] for [purpose]. I’ve found these studies: [list what you have]. Help me: (1) organize them by theme, (2) identify what they agree on, (3) spot gaps or contradictions, (4) suggest what kinds of studies I’m still missing. Don’t fabricate any citations.</p>
+<p>🔴 <strong>Counterargument Generator</strong> &gt; I’m arguing that [your position]. Steel-man the opposition. Give me the 3 strongest counterarguments a smart, well-informed critic would make. For each: state it clearly, explain why it’s compelling, and suggest how I should address it. Be genuinely challenging.</p>
+<p>🟢 <strong>Summarize This for My Boss</strong> &gt; Summarize this [article / report / document] in 3-5 bullet points for someone who has 2 minutes and no background in [field]. Each bullet: one key takeaway in plain language. End with: “The one thing to remember is…” &gt; &gt; [Paste content]</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Healthcare Research</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Education Research</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Business Research</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Agriculture Research</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Government Research</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<blockquote class="blockquote">
+<p>I’m a [nurse / PA / health educator] researching [clinical topic]. I need a summary of current evidence-based guidelines for [specific condition/treatment]. Include: the recommending body (AHA, CDC, WHO, etc.), key recommendations, and any recent changes. Flag anything where guidelines disagree. Don’t make up citations — tell me where to verify.</p>
+</blockquote>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<blockquote class="blockquote">
+<p>I’m a [teacher / administrator] evaluating whether to adopt [program / strategy / technology]. Help me build a research summary: what does the evidence say about effectiveness? What student populations has it been tested with? What are common implementation challenges? What would a fair pilot look like at my school?</p>
+</blockquote>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<blockquote class="blockquote">
+<p>I run a [type of business] and I’m considering [strategic decision]. Help me think through: market size and trends, 3 comparable businesses that have done this (tell me who to look up), the key risks, and what data I’d need to make a confident decision.</p>
+</blockquote>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<blockquote class="blockquote">
+<p>I manage [crop/livestock] in the [San Joaquin Valley / Central Valley]. I’m dealing with [specific issue — pest pressure / water allocation / soil salinity / labor costs]. What are the most recent research-backed approaches? Point me to UC Davis / UC ANR / USDA resources. Don’t give me generic advice — I need specifics for my climate zone and crop.</p>
+</blockquote>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<blockquote class="blockquote">
+<p>I’m a [role] at [agency/department] researching [policy topic]. I need: (1) what comparable jurisdictions have done, (2) what the evidence says about outcomes, (3) the main arguments for and against, (4) implementation considerations specific to [your region]. This will go in a briefing for [audience].</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-3-data-and-numbers" class="level1">
+<h1>PART 3: DATA AND NUMBERS</h1>
+<p>🟢 <strong>Explain This Chart</strong> &gt; Look at this [chart / graph / table] and explain what it shows in plain language. What’s the main takeaway? What trends are visible? Is anything surprising? Explain it to someone who doesn’t read charts often. &gt; &gt; [Upload or describe the chart]</p>
+<p>🟡 <strong>Data Cleaning Helper</strong> &gt; I have a spreadsheet with [describe the data]. The problems are: [missing values / inconsistent formatting / duplicates / messy columns / mixed data types]. Walk me through a step-by-step plan to clean it. I’m using [Excel / Google Sheets / R / Python]. Give me the specific formulas or code.</p>
+<p>🟢 <strong>Spreadsheet Formula Helper</strong> &gt; I have a spreadsheet in [Excel / Google Sheets] with [describe your data]. I need a formula that [what you want it to do]. The data is in columns [which columns] and I want the result in [where]. Give me the formula and explain what each part does.</p>
+<p>🟡 <strong>Survey Design</strong> &gt; I need a survey about [topic] for [audience]. Purpose: [what decisions will this data inform]. Design: [N] questions, mix of [rating scales / multiple choice / open-ended]. Keep it under [time] minutes. Avoid: leading questions, double-barreled questions, and jargon.</p>
+<p>🔴 <strong>Statistical Test Chooser</strong> &gt; I have [describe your data — sample size, variables, what you’re comparing]. My research question is: [state it]. What statistical test should I use? Explain why, what assumptions to check, and how to interpret the result. I’m using [R / SPSS / Excel / Python]. Give me the code or steps.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Budget Analysis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Sales/Revenue</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Public Health Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Academic Grades</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<blockquote class="blockquote">
+<p>I’m reviewing my [department / business / household] budget for [time period]. Here’s the data: [paste or describe]. Help me identify: the top 3 spending categories, any trends, items that seem unusual, and where I have room to cut or reallocate.</p>
+</blockquote>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<blockquote class="blockquote">
+<p>Here’s my [monthly / quarterly] sales data: [paste]. I need to understand: which products/services drive the most revenue, whether there’s seasonality, which customers/segments are growing vs declining, and a realistic forecast for next [period].</p>
+</blockquote>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<blockquote class="blockquote">
+<p>I have [county / state] health data on [topic — vaccination rates / chronic disease / ER visits]. Help me: identify disparities across [demographics / zip codes / communities], spot trends over [time period], compare to state/national benchmarks, and suggest what to investigate next.</p>
+</blockquote>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<blockquote class="blockquote">
+<p>Here are my students’ scores on [assessment]: [paste data]. Help me understand: the distribution, which questions students struggled with most, whether there are performance gaps across [sections / demographics], and what I should reteach.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-4-productivity-and-workflow" class="level1">
+<h1>PART 4: PRODUCTIVITY AND WORKFLOW</h1>
+<p>🟢 <strong>Meeting Agenda Builder</strong> &gt; Build a [30/45/60]-minute meeting agenda for [topic]. Attendees: [who]. Goals: [what we need to decide]. Include: time allocations, a clear owner for each item, one decision to make, and 5 minutes at the end for action items.</p>
+<p>🟢 <strong>To-Do List Prioritizer</strong> &gt; Here’s everything on my plate: [dump your full list]. Help me: categorize by urgency and importance, identify what I should do TODAY (max 3), what can wait until this week, what I should delegate or drop, and what I’m forgetting. I have about [N] hours of work time today.</p>
+<p>🟡 <strong>Weekly Planning Session</strong> &gt; It’s [day]. Here’s what I need to accomplish this week: [list everything]. My constraints: [meetings, deadlines, commitments]. Help me build a realistic day-by-day plan. Flag anything that won’t fit.</p>
+<p>🟡 <strong>Process Documentation</strong> &gt; I need to document the process for [task that you do regularly]. Write step-by-step instructions that a new person could follow without asking questions. Include: prerequisites, each step in order, common mistakes, and who to ask if something goes wrong.</p>
+<p>🟢 <strong>Decision Matrix</strong> &gt; I’m choosing between [Option A], [Option B], and [Option C] for [decision]. The factors that matter most: [list 4-6 criteria]. Score each on each factor (1-5), weight by importance, and give me a recommendation with reasoning.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Teacher Workflow</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Healthcare Workflow</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Farm/Ranch Workflow</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">Small Business Workflow</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<blockquote class="blockquote">
+<p>It’s [day] and I teach [subjects/grades]. Here’s my week: [list classes, meetings, deadlines]. I need to: grade [N] assignments, prep for [lesson], contact [N] parents, submit [report] by [date], and plan next week. Build me a realistic schedule. I arrive at [time], leave at [time], and have a prep period from [time to time].</p>
+</blockquote>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<blockquote class="blockquote">
+<p>I’m a [role] doing [shift type]. I need to: chart on [N] patients, follow up on [N] lab results, do [N] patient education sessions, and complete [mandatory training] by Friday. Prioritize by patient care first. Help me batch documentation so I’m not staying late.</p>
+</blockquote>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<blockquote class="blockquote">
+<p>It’s [season] and I’m managing [operation size and type]. Right now I need to: [list everything — irrigation, spraying, equipment, crew, regulatory]. Weather this week: [forecast]. Help me prioritize by what’s time-sensitive. I have [N] crew members and [equipment constraints].</p>
+</blockquote>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<blockquote class="blockquote">
+<p>I run [business type] with [N] employees. This week: [dump everything]. Revenue goal: [X]. Help me build a weekly plan that balances customer-facing work, back-office tasks, and the one strategic thing I keep putting off: [what is it].</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-5-creative-and-marketing" class="level1">
+<h1>PART 5: CREATIVE AND MARKETING</h1>
+<p>🟢 <strong>Idea Generator</strong> &gt; I need ideas for [what]. Context: [situation]. Generate 10 diverse ideas — push beyond the obvious. For each: one-sentence description and difficulty (easy / medium / hard). Don’t filter for feasibility — I want range.</p>
+<p>🟡 <strong>The Brand Sprint</strong> (from Module 6) &gt; Act as a brand strategist. Interview me about: target customer, value proposition, tone, 3 brand adjectives, competitor set, promise, constraints. Then produce: positioning statement, tagline with 3 variants, 3-color palette with hex codes, font pairing, and 3 logo concept directions.</p>
+<p>🟡 <strong>Social Media Content</strong> &gt; I run a [type of business/organization] targeting [audience]. Generate 5 [platform] posts. Each: a hook (first line that stops the scroll), body under [N] words, 3 hashtags, and a call to action. Tone: [professional / playful / informative / urgent].</p>
+<p>🟢 <strong>Product/Service Description</strong> &gt; Write a description for [product/service]. Target customer: [who]. Where it’ll appear: [website / flyer / menu / social media]. Highlight: [2-3 key benefits]. Avoid: [hype words / jargon / false claims]. Under [N] words.</p>
+<p>🟡 <strong>Event Promotion</strong> &gt; Write promotional copy for [event] on [date] at [location]. Audience: [who]. I need versions for: (1) email invite (150 words), (2) social media post (50 words), (3) flyer text (75 words).</p>
+<p>🔴 <strong>Content Repurposing</strong> &gt; I have this [blog post / report / presentation]. Repurpose into: (1) LinkedIn post (200 words), (2) 3 tweets/X posts, (3) email newsletter paragraph, (4) 5 discussion questions. Keep the core message consistent. &gt; &gt; [Paste original]</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Restaurant/Food</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Retail/Service</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Real Estate</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false">Nonprofit</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<blockquote class="blockquote">
+<p>Write a menu description for [dish]. Ingredients: [main ones]. What makes it special: [technique / origin / sourcing]. Audience: [casual diners / foodies / families]. Under 30 words. Delicious without being pretentious.</p>
+</blockquote>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<blockquote class="blockquote">
+<p>I own a [store/salon/shop] and I want to run a [promotion]. Target: [customer type]. Write: (1) window sign (under 15 words), (2) Instagram caption (under 80 words), (3) email to existing customers (under 120 words).</p>
+</blockquote>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<blockquote class="blockquote">
+<p>Write a property listing for [type]. Key features: [beds, baths, sqft, lot, special features]. Neighborhood: [what’s nearby]. Target buyer: [first-time / family / investor]. Under 200 words. Highlight the lifestyle, not just specs.</p>
+</blockquote>
+</div>
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
+<blockquote class="blockquote">
+<p>Write a fundraising appeal for [organization/cause]. We need [amount] for [specific project]. Impact: [what the money does — be concrete]. Audience: [donors / prospects / community]. Tone: hopeful, not guilt-tripping. Under 200 words.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-6-teaching-and-learning" class="level1">
+<h1>PART 6: TEACHING AND LEARNING</h1>
+<p>🟢 <strong>Explain Like I’m…</strong> &gt; Explain [concept] to [audience — a 10-year-old / a freshman / a CEO / my grandmother]. Use one analogy, no jargon, and check my understanding with 2 questions at the end.</p>
+<p>🟡 <strong>Assessment Builder</strong> &gt; Create a [quiz / exam / worksheet] on [topic] for [audience level]. Include: [N] multiple choice, [N] short answer, [N] application problems. For each: correct answer and explanation. Align to: [learning objectives].</p>
+<p>🟡 <strong>The SMARTS Tutor</strong> (from Module 4) &gt; Adopt the persona of a supportive tutor. Restate questions to confirm understanding. Ask what I already know. Offer hints before answers. If I ask for the full solution, encourage step-by-step reasoning first. Keep responses brief. Summarize what I learned when we finish. Wait for my question.</p>
+<p>🟡 <strong>Lesson Plan Builder</strong> &gt; Design a [30/45/60/90]-minute lesson on [topic] for [grade level / audience]. Include: learning objectives, hook (5 min), direct instruction (15 min), guided practice (15 min), independent practice (10 min), closing (5 min). One differentiation strategy and one extension.</p>
+<p>🟢 <strong>Study Guide Generator</strong> &gt; I have an exam on [subject] covering [topics]. Create a study guide: key terms with definitions, the 5 most important concepts, 3 practice problems with solutions, and common student mistakes.</p>
+<p>🔴 <strong>Rubric Generator</strong> &gt; Create an assessment rubric for [assignment type]. 4-5 dimensions. For each: performance at 4 levels (Excellent, Proficient, Developing, Not Yet). Use specific, observable criteria — not vague language.</p>
+<p>🟡 <strong>Discussion Question Builder</strong> &gt; I’m teaching [topic] to [audience]. Create 5 discussion questions from recall to analysis to application. For each: the question, cognitive level, and one follow-up probe for surface-level answers.</p>
+<p>🟢 <strong>Parent Conference Prep</strong> &gt; Meeting with parents of a student who [situation]. Prepare: 3 data points to share, 2 positive observations to lead with, the main concern framed constructively, 2 actionable next steps, and 2 questions to ask the parents.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">K-5</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Middle/High School</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">College</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false">Adult/Professional</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<blockquote class="blockquote">
+<p>Create a [15/20/30]-minute activity for [grade] learning [topic]. Must include: manipulatives or movement, a visual component, and a formative check. I have 25 students and one adult.</p>
+</blockquote>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<blockquote class="blockquote">
+<p>Design a project-based learning activity on [topic] for [grade]. Takes [N] class periods. Must connect to their lives. Include: driving question, deliverable, rubric criteria, and one tech integration.</p>
+</blockquote>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<blockquote class="blockquote">
+<p>Design a flipped classroom session on [topic] for [audience]. Include: what students do BEFORE class (20 min), IN class (50 min — active learning, not lecture), and AFTER (15 min).</p>
+</blockquote>
+</div>
+<div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
+<blockquote class="blockquote">
+<p>Design a [30/60/90]-minute training on [topic] for [audience]. Don’t make it feel like school. Include: relevant opening hook, one concept delivered through activity (not slides), practice round, and a clear takeaway for Monday morning.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-7-career-and-professional-development" class="level1">
+<h1>PART 7: CAREER AND PROFESSIONAL DEVELOPMENT</h1>
+<p>🟢 <strong>Resume Bullet Writer</strong> &gt; Write 3 resume bullet points for [job/role]. Each: start with action verb, quantify impact, connect to [target role]. My accomplishments: [list them].</p>
+<p>🟢 <strong>LinkedIn About Section</strong> &gt; Write a LinkedIn About for me. I’m a [role/major] in [field] with experience in [areas]. Goal: [career objective]. Professional but personable. Under 200 words. Call to action at the end.</p>
+<p>🟡 <strong>Interview Prep</strong> &gt; Interviewing for [role] at [company type]. Generate: 5 behavioral questions, 3 technical questions, 2 questions I should ask THEM. For each behavioral: suggest a STAR answer outline.</p>
+<p>🟡 <strong>Salary Negotiation Prep</strong> &gt; Offered [role] at [salary]. Want to negotiate to [target]. Help me: (1) what market data to look up, (2) 3 value-based talking points, (3) how to frame the ask, (4) what to say if they say no.</p>
+<p>🟢 <strong>Cover Letter Draft</strong> &gt; Cover letter for [job title] at [company]. My background: [2-3 sentences]. Why this role: [what excites you]. Why me: [2-3 qualifications]. Under 250 words. Not generic — show I researched this company.</p>
+<p>🟡 <strong>Career Pivot Plan</strong> &gt; Currently [current role], want to transition to [target role]. Transferable skills: [list]. Gaps: [what I’m missing]. Build a 90-day plan: what to learn (free resources), what to build (portfolio), who to connect with, how to position my background as a strength.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">First-Generation Student</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Career Changer</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">Veteran Transition</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false">Trades/Skilled Labor</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<blockquote class="blockquote">
+<p>I’m the first in my family to go to college. Majoring in [field] at [school], graduating [when]. I don’t have parents who’ve navigated this. Help me with: (1) what networking actually means and how to start with zero connections, (2) where to find internships in [field] in [region], (3) the 5 things I need to do THIS month.</p>
+</blockquote>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<blockquote class="blockquote">
+<p>I’m [age range], been a [current role] for [N] years. Want to move into [new field]. Can’t go back to school full-time. Give me a realistic plan: what credentials matter (and which waste money), how to get experience without starting at entry level, and how to tell my story strategically.</p>
+</blockquote>
+</div>
+<div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
+<blockquote class="blockquote">
+<p>Transitioning out of [branch] after [N] years. MOS/rate: [job code/title]. Translate my military experience for civilian employers. Write 5 resume bullets converting [military tasks] to business language. Emphasize leadership, operations, accountability.</p>
+</blockquote>
+</div>
+<div id="tabset-7-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-4-tab">
+<blockquote class="blockquote">
+<p>I’m a [licensed trade] with [N] years experience. I want to [start business / move into management / teach]. What’s the realistic path? What certifications do I need? Timeline and cost? I’m in [state/region].</p>
+</blockquote>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="part-8-healthcare" class="level1">
+<h1>PART 8: HEALTHCARE</h1>
+<p>🟢 <strong>Patient Education Handout</strong> &gt; Create a one-page patient handout about [condition/procedure/medication]. 6th grade reading level. No jargon or define it clearly. Include: what it is, what to do, what to watch for, when to call the doctor. Placeholder for clinic phone number.</p>
+<p>🟡 <strong>Shift Report Organizer</strong> &gt; Help me organize a shift report handing off [N] patients. Template for each: room number, primary diagnosis, key overnight events, pending labs/orders, and one thing the next nurse needs to know.</p>
+<p>🟡 <strong>Nursing Care Plan</strong> &gt; Draft a care plan for [diagnosis]. Include: 3 priority nursing diagnoses (NANDA), expected outcomes, 3 evidence-based interventions each with rationales. I’m a [student / new grad / experienced] RN.</p>
+<p>🟡 <strong>SBAR Communication</strong> &gt; Help me prepare an SBAR for calling the provider. My observations: [dump what you know]. Organize into: Situation, Background, Assessment, Recommendation. Keep it concise.</p>
+<p>🟡 <strong>Health Education Presentation</strong> &gt; Presenting to [audience] about [health topic]. Duration: [N] minutes. Outline: attention-getting opening stat, 3 key messages, one interactive element, clear call to action. Use data from [CDC / WHO / AHA]. Keep it accessible.</p>
+<hr>
+</section>
+<section id="part-9-agriculture-and-natural-resources" class="level1">
+<h1>PART 9: AGRICULTURE AND NATURAL RESOURCES</h1>
+<p>🟢 <strong>Pest/Disease ID Helper</strong> &gt; Seeing [describe symptoms] on [crop] in [region]. Started [when], affects [how much]. Recent weather: [conditions]. Give me 3 most likely causes with diagnostic steps. Point me to UC IPM or extension resources.</p>
+<p>🟡 <strong>Irrigation Planning</strong> &gt; I manage [N] acres of [crop] in [region] with [irrigation type]. Water allocation: [amount/restrictions]. Help me build a weekly irrigation schedule maximizing yield under constraints. Include estimated water use and deficit strategies.</p>
+<p>🟡 <strong>Regulatory Checklist</strong> &gt; I’m a [grower / ranch / dairy] in [county, state]. I need to be current on: [select areas]. Build me a checklist: what’s due this [quarter/season], who it goes to, where to find forms.</p>
+<p>🟢 <strong>Equipment Cost-Benefit</strong> &gt; Deciding whether to buy [equipment] or continue [alternative]. My operation: [size, crop, frequency]. Build a [3/5/7]-year cost comparison including: purchase, financing, maintenance, fuel, depreciation, and the alternative cost. Break-even point?</p>
+<p>🟡 <strong>Grant Application Helper</strong> &gt; Applying for [grant name] for [operation type]. Need help with the narrative. My project: [describe]. Structure it: problem, proposed solution, expected outcomes with measurable targets, qualifications. Under [word limit].</p>
+<p>🟢 <strong>Crop Budget Builder</strong> &gt; Build a per-acre cost estimate for [crop] in [region]. Include: land, seed, fertilizer, pest management, irrigation, labor, harvest, overhead. Table format with total cost per acre and break-even yield at [price per unit].</p>
+<hr>
+</section>
+<section id="part-10-government-and-public-service" class="level1">
+<h1>PART 10: GOVERNMENT AND PUBLIC SERVICE</h1>
+<p>🟢 <strong>Public Communication</strong> &gt; Write a [press release / community update / social media post] about [topic] for [agency]. Audience: general public. Jargon-free, under [N] words. Include: what happened, why it matters, what residents should do, contact info.</p>
+<p>🟡 <strong>Staff Report / Board Item</strong> &gt; Draft a staff report for [board/commission] on [topic]. Include: background, current situation, options analysis, staff recommendation with justification, fiscal impact, next steps. Board members are NOT subject-matter experts. Under [N] pages.</p>
+<p>🟡 <strong>Grant Narrative</strong> &gt; Writing a [federal / state / foundation] grant for [project]. Funder: [name]. Max: [word count]. Help me structure a compelling narrative addressing scoring criteria: [list them if known]. Data I have: [what evidence]. Don’t fabricate statistics.</p>
+<p>🟢 <strong>Community Meeting Prep</strong> &gt; Hosting a community meeting about [contentious topic]. Expected: [N] residents, mixed opinions. Help me: build a 90-minute agenda, prepare 3 key messages, anticipate top 5 questions with responses, create productive ground rules.</p>
+<p>🟡 <strong>Policy Brief</strong> &gt; Write a 2-page policy brief on [issue] for [audience]. Structure: Executive Summary, Background, Current Status, 3 Policy Options with pros/cons, Recommendation, References (point me to real sources). Nonpartisan tone.</p>
+<hr>
+</section>
+<section id="part-11-small-business-and-entrepreneurship" class="level1">
+<h1>PART 11: SMALL BUSINESS AND ENTREPRENEURSHIP</h1>
+<p>🟢 <strong>Business Plan Quick Draft</strong> &gt; Starting a <a href="#business">business</a> in [location]. Target customers: [who]. Investment: [amount]. Write a lean plan: the opportunity (3 sentences), target customer, marketing approach, startup costs, revenue model. Under 2 pages. For [my planning / a loan / a pitch].</p>
+<p>🟡 <strong>Pricing Strategy</strong> &gt; I sell [product/service] to [customer type]. Current price: [amount]. Competitor prices: [if known]. My costs: [fixed and variable]. Am I priced right? Build 3 scenarios (budget / market / premium) with projected revenue. I’m in [location] — not San Francisco.</p>
+<p>🟢 <strong>Customer Review Response</strong> &gt; Respond to this review. Star rating: [N]. Complaint: [summarize]. I want to: [apologize / explain / resolve / clarify]. Professional, empathetic, human — not corporate-scripted. Under 100 words. For [Yelp / Google / Facebook].</p>
+<p>🟡 <strong>Competitive Analysis</strong> &gt; I run [business type] in [location]. Top 3 competitors: [name/describe them]. Analyze: what they do well, weaknesses, pricing, marketing, and my differentiation opportunity. Comparison table plus “your edge” summary.</p>
+<p>🟡 <strong>Cash Flow Forecast</strong> &gt; Build a 6-month cash flow projection. Monthly revenue: [amount]. Fixed costs: [list]. Variable costs: [list]. Upcoming expenses: [list]. Show: when I’ll be tight, cash reserve needed, and whether I can afford [planned expenditure] in month [N].</p>
+<p>🟡 <strong>Hiring First Employee</strong> &gt; I run <a href="#business">business</a> solo and I’m hiring my first employee for [role]. I’m in [state]. Walk me through: (1) legal prerequisites (EIN, workers comp, etc.), (2) where to post, (3) job description template, (4) offer letter basics, (5) onboarding. I’ve never done this.</p>
+<hr>
+</section>
+<section id="part-12-personal-and-life-management" class="level1">
+<h1>PART 12: PERSONAL AND LIFE MANAGEMENT</h1>
+<p>🟢 <strong>Financial Decision Helper</strong> &gt; Deciding whether to [financial decision]. My situation: [income, debt, savings, dependents, goals]. Walk me through the key factors. Don’t tell me what to do — help me think systematically. What info do I need before deciding?</p>
+<p>🟢 <strong>Letter or Speech Writer</strong> &gt; Write a [toast / eulogy / thank-you / recommendation / letter] for [occasion]. About: [person, relationship]. Key stories/qualities: [2-3]. Tone: [heartfelt / funny / formal / casual]. Length: [N] minutes / [N] words.</p>
+<p>🟢 <strong>Difficult Conversation Script</strong> &gt; I need to talk to [person/relationship] about [topic]. I want to: [set a boundary / ask for something / address a problem]. Help me plan: how to open, what to say, what NOT to say, how to respond if they get [defensive / emotional / dismissive]. Keep it real — not therapy-speak.</p>
+<p>🟡 <strong>Travel Planning</strong> &gt; Planning a [length] trip to [destination] in [month]. Budget: [amount]. Travelers: [who]. Priorities: [food / culture / adventure / relaxation / budget]. Build a day-by-day itinerary with activities, costs, logistics, and one thing tourists miss.</p>
+<p>🟢 <strong>Complaint Letter</strong> &gt; Formal complaint to [company/agency] about [issue]. What happened: [describe]. What I’ve tried: [list]. What I want: [resolution]. Firm and factual, not angry. Include dates, reference numbers, deadline for response. Under 250 words.</p>
+<hr>
+</section>
+<section id="part-13-trades-construction-and-maintenance" class="level1">
+<h1>PART 13: TRADES, CONSTRUCTION, AND MAINTENANCE</h1>
+<p>🟢 <strong>Estimate Builder</strong> &gt; Build a customer estimate for [job type]. Scope: [describe]. Materials: [list what you know]. Labor: [rate / crew / hours]. Professional format with line items, material costs (I’ll fill in prices), labor, total. Notes section for warranty and payment terms.</p>
+<p>🟡 <strong>Troubleshooting Guide</strong> &gt; Diagnosing [problem] in [system]. Symptoms: [describe]. Checked so far: [list]. Walk me through systematic diagnosis — most likely to least likely. For each: what to check, what tool I need, what the fix is.</p>
+<p>🟢 <strong>Safety Toolbox Talk</strong> &gt; 10-minute safety talk for my crew on [topic]. Practical, not generic OSHA slides. Include: one real incident example, the 3 most important rules, one thing to check before starting today, and a question for the crew. Conversational — these are journeymen.</p>
+<p>🟡 <strong>Code Compliance Checklist</strong> &gt; Doing a [project type] in [jurisdiction]. Build a checklist of [building / electrical / plumbing] code requirements. [Residential / commercial / existing / new construction]. Include: permit requirements, inspection points, common violations.</p>
+<p>🟢 <strong>Customer Communication</strong> &gt; Draft a text/email to a customer about [situation — delay / additional damage / scope change / job complete]. Honest about [the issue]. Include: what happened, impact (cost/time), recommendation, next steps. Under 100 words. Build trust, not upsell.</p>
+<hr>
+</section>
+<section id="part-14-custom-gpt-and-ai-tool-design" class="level1">
+<h1>PART 14: CUSTOM GPT AND AI TOOL DESIGN</h1>
+<p><em>Note: “Custom GPTs” refers to OpenAI’s implementation. Other providers offer similar features under different names (Claude Projects, Google Gems, etc.). The system prompt patterns below work across platforms.</em></p>
+<p>🟡 <strong>The Universal Tutor</strong> &gt; You are a [subject] tutor for [level]. Knowledge base: uploaded files. Rules: restate questions, ask what they know, hints before answers, encourage step-by-step reasoning, summarize what was learned, stay within uploaded materials, say so if you can’t answer.</p>
+<p>🟡 <strong>The FAQ Bot</strong> &gt; You are an assistant for [org/dept]. Answer using ONLY uploaded documents. Concise (2-3 sentences). Reference which document. If not in documents: “I don’t have that. Contact [person/email].” Never fabricate. Tone: [friendly / formal].</p>
+<p>🔴 <strong>The Workflow Assistant</strong> &gt; You are a [role] assistant for [task type]. When given a task: (1) confirm and ask 1-2 clarifying questions, (2) propose steps, (3) execute showing work, (4) confirm before proceeding, (5) summarize at the end. Never: [prohibited actions].</p>
+<hr>
+</section>
+<section id="part-15-verification-and-critical-thinking" class="level1">
+<h1>PART 15: VERIFICATION AND CRITICAL THINKING</h1>
+<p>🟢 <strong>Fact-Check This Output</strong> &gt; Fact-check this AI output: identify suspicious claims, unverifiable statistics, possibly fabricated citations, and logical gaps. For each: tell me what to search to verify. &gt; &gt; [Paste AI output]</p>
+<p>🟡 <strong>Challenge My Thinking</strong> &gt; I believe [your position]. Present the 3 strongest counterarguments. For each: state the argument, explain why it’s compelling, and what evidence would change your mind. Be genuinely challenging.</p>
+<p>🟡 <strong>Identify What’s Missing</strong> &gt; Review this [plan / proposal / analysis]. What am I NOT considering? Risks? Missing audiences? What data would strengthen or weaken my conclusions? Perspective of a skeptical but fair reviewer.</p>
+<p>🟢 <strong>Red Team My Plan</strong> &gt; Here’s my plan for [what]. Try to make it fail. What goes wrong? What did I underestimate? What blindsides me? 5 failure scenarios ranked by likelihood, with one mitigation each.</p>
+<p>🟡 <strong>AI Disclosure Statement</strong> &gt; Write a disclosure about how I used AI in [context]. AI was used for: [list]. Human contribution: [list]. Audience: [who]. Under 100 words. Honest and specific.</p>
+<hr>
+</section>
+<section id="part-16-capstone-project-prompts" class="level1">
+<h1>PART 16: CAPSTONE PROJECT PROMPTS</h1>
+<p>🟡 <strong>Capstone Scoping</strong> &gt; I’m planning my AI literacy capstone project. My field is [field] and my role is [role/student status]. I’m choosing Option [A/B/C/D]. Help me narrow my scope: I need a project that can be completed in 10-15 hours, tested with real users, and produces a tangible deliverable. My initial idea is [describe]. Is this too broad? Help me narrow it to one specific, testable problem.</p>
+<p>🟡 <strong>Integration Plan Helper</strong> &gt; I want to bring AI into [specific workflow] at [organization type]. Currently this process takes [time] and involves [describe steps]. Help me design an AI-augmented version: which steps could AI handle, what tools would I use, what’s the human review checkpoint, and what could go wrong? Frame this as a proposal I could present to my manager.</p>
+<p>🟡 <strong>Custom GPT Design</strong> &gt; I’m building a custom GPT for [purpose] targeting [audience]. The knowledge base will include [list documents]. Help me write system instructions that: (1) define the GPT’s role clearly, (2) set boundaries on what it won’t do, (3) include the ELEVATE 7-step tutoring algorithm if appropriate, and (4) handle edge cases. Give me 5 test prompts to evaluate it.</p>
+<p>🟡 <strong>Workshop Planning</strong> &gt; I’m designing a [duration] AI workshop for [audience — who they are, how many, their tech comfort level]. The goal is [what participants should be able to do after]. Help me build: an agenda with time allocations, 3 key messages, one hands-on activity, and a pre/post survey question. The biggest risk is [what could go wrong].</p>
+<p>🟡 <strong>Capstone Reflection</strong> &gt; I just completed my capstone project: [brief description]. Help me write an honest reflection addressing: (1) what I planned vs what actually happened, (2) the most surprising finding, (3) what failed and what I learned from the failure, (4) how I applied BRIEFS and SMARTS, (5) what I would do differently, and (6) how this project changed my thinking about AI. Push me to be specific — no generic “I learned a lot” allowed.</p>
+<hr>
+</section>
+<section id="prompt-anti-patterns-dont-do-this" class="level1">
+<h1>❌ Prompt Anti-Patterns: Don’t Do This</h1>
+<p>These are the most common prompting mistakes. If you’re getting bad results, you’re probably doing one of these:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Anti-Pattern</th>
+<th style="text-align: left;">Why It Fails</th>
+<th style="text-align: left;">Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>“Tell me about X”</strong></td>
+<td style="text-align: left;">No intent, no context, no constraints. AI gives a Wikipedia summary.</td>
+<td style="text-align: left;">Add who you are, what you need it for, and how you’ll use it (The 3 Questions).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>“Write me an essay”</strong></td>
+<td style="text-align: left;">No audience, no length, no purpose. Gets generic 5-paragraph template.</td>
+<td style="text-align: left;">Specify: topic, audience, purpose, length, tone, and what it’s for.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Pasting 2,000 words then asking “What do you think?”</strong></td>
+<td style="text-align: left;">The question is too vague. AI doesn’t know what dimension to evaluate.</td>
+<td style="text-align: left;">Ask specific questions: “Is the argument in paragraph 3 convincing? Why or why not?”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>“Make it better”</strong></td>
+<td style="text-align: left;">Better how? More concise? More formal? More persuasive? AI guesses.</td>
+<td style="text-align: left;">Say exactly what “better” means: “Make it shorter, more direct, and cut the jargon.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Asking for the answer instead of help thinking</strong></td>
+<td style="text-align: left;">You get the answer but don’t learn. On the exam, you’re stuck.</td>
+<td style="text-align: left;">Use SMARTS: “Give me a hint, not the answer. What concept should I apply here?”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Trusting the first response</strong></td>
+<td style="text-align: left;">First drafts are drafts. AI defaults to safe, generic output.</td>
+<td style="text-align: left;">Always iterate: “Good start. Now make it [specific adjustment].”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>“Act as an expert in everything”</strong></td>
+<td style="text-align: left;">Jack of all trades = master of none. Responses stay surface-level.</td>
+<td style="text-align: left;">Give a specific role: “You are a pediatric nurse educator” not “you are an expert.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Entering sensitive data into free-tier tools</strong></td>
+<td style="text-align: left;">Student records, patient data, financial info — potentially exposed.</td>
+<td style="text-align: left;">Check your tool’s data policy. Use enterprise tiers or local models for sensitive work.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="quick-reference-prompt-patterns" class="level1">
+<h1>Quick Reference: Prompt Patterns</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Pattern</th>
+<th style="text-align: left;">When to Use</th>
+<th style="text-align: left;">Template</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Role + Task</strong></td>
+<td style="text-align: left;">Domain expertise</td>
+<td style="text-align: left;">“You are a [role]. [Task].”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Step-by-Step</strong></td>
+<td style="text-align: left;">Accuracy matters</td>
+<td style="text-align: left;">“[Task]. Think step by step.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Examples First</strong></td>
+<td style="text-align: left;">Specific format</td>
+<td style="text-align: left;">“Here are examples: [X]. Now do: [Y].”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Constraint Setting</strong></td>
+<td style="text-align: left;">Need boundaries</td>
+<td style="text-align: left;">“[Task]. Do NOT [avoid]. Under [limit].”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Format Spec</strong></td>
+<td style="text-align: left;">Structured output</td>
+<td style="text-align: left;">“[Task]. Format as [table / bullets / JSON].”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Iterate</strong></td>
+<td style="text-align: left;">First output needs work</td>
+<td style="text-align: left;">“Good start. Make it [adjustment]. Keep [what worked].”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Meta-Prompt</strong></td>
+<td style="text-align: left;">You’re stuck</td>
+<td style="text-align: left;">“I want to [goal]. What info do you need from me?”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Challenge Mode</strong></td>
+<td style="text-align: left;">Honest feedback</td>
+<td style="text-align: left;">“Don’t be polite. What’s wrong with this?”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Audience Shift</strong></td>
+<td style="text-align: left;">Repurposing</td>
+<td style="text-align: left;">“Rewrite for [new audience]. Keep facts, change tone.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Compare + Recommend</strong></td>
+<td style="text-align: left;">Decisions</td>
+<td style="text-align: left;">“Compare [A] vs [B] on [criteria]. Recommend for [my case].”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>This library is a living document. The best prompt library is the one you built yourself — from prompts tested on YOUR real tasks.</em></p>
+<p><em>Back to <a href="../index.html">Modules</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../appendix/glossary.html" class="pagination-link" aria-label="Glossary">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Glossary</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../appendix/tool-directory.html" class="pagination-link" aria-label="AI Tool Directory">
+        <span class="nav-page-text">AI Tool Directory</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

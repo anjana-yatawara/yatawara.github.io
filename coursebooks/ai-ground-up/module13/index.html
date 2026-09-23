@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The Future of AI and Staying Current – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module14/index.html" rel="next">
+<link href="../module12/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="The Future of AI and Staying Current – AI from the Ground Up">
+<meta property="og:description" content="Module 13 · Where AI Is Heading and How to Keep Up">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module13/index.html">The Future of AI and Staying Current</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-only-prediction-thats-always-right" id="toc-the-only-prediction-thats-always-right" class="nav-link active" data-scroll-target="#the-only-prediction-thats-always-right">The Only Prediction That’s Always Right</a></li>
+  <li><a href="#trend-1-agents-no-longer-near-term-now-production-infrastructure" id="toc-trend-1-agents-no-longer-near-term-now-production-infrastructure" class="nav-link" data-scroll-target="#trend-1-agents-no-longer-near-term-now-production-infrastructure">Trend 1 — Agents: no longer near-term, now production infrastructure</a>
+  <ul class="collapse">
+  <li><a href="#what-changed-in-the-last-12-months" id="toc-what-changed-in-the-last-12-months" class="nav-link" data-scroll-target="#what-changed-in-the-last-12-months">What changed in the last 12 months</a></li>
+  <li><a href="#the-actual-bottleneck-in-2026" id="toc-the-actual-bottleneck-in-2026" class="nav-link" data-scroll-target="#the-actual-bottleneck-in-2026">The actual bottleneck in 2026</a></li>
+  <li><a href="#the-vendor-lock-in-question-you-cant-ignore" id="toc-the-vendor-lock-in-question-you-cant-ignore" class="nav-link" data-scroll-target="#the-vendor-lock-in-question-you-cant-ignore">The vendor lock-in question you can’t ignore</a></li>
+  </ul></li>
+  <li><a href="#trend-2-multimodal-text-alone-is-no-longer-enough" id="toc-trend-2-multimodal-text-alone-is-no-longer-enough" class="nav-link" data-scroll-target="#trend-2-multimodal-text-alone-is-no-longer-enough">Trend 2 — Multimodal: text alone is no longer enough</a>
+  <ul class="collapse">
+  <li><a href="#the-current-state-april-2026" id="toc-the-current-state-april-2026" class="nav-link" data-scroll-target="#the-current-state-april-2026">The current state (April 2026)</a></li>
+  <li><a href="#what-happened-to-sora" id="toc-what-happened-to-sora" class="nav-link" data-scroll-target="#what-happened-to-sora">What happened to Sora?</a></li>
+  <li><a href="#why-this-matters-for-non-specialists" id="toc-why-this-matters-for-non-specialists" class="nav-link" data-scroll-target="#why-this-matters-for-non-specialists">Why this matters for non-specialists</a></li>
+  </ul></li>
+  <li><a href="#trend-3-small-models-specific-cheap-and-on-your-phone" id="toc-trend-3-small-models-specific-cheap-and-on-your-phone" class="nav-link" data-scroll-target="#trend-3-small-models-specific-cheap-and-on-your-phone">Trend 3 — Small models: specific, cheap, and on your phone</a>
+  <ul class="collapse">
+  <li><a href="#the-three-tier-landscape" id="toc-the-three-tier-landscape" class="nav-link" data-scroll-target="#the-three-tier-landscape">The three-tier landscape</a></li>
+  <li><a href="#what-2026-benchmarks-actually-show" id="toc-what-2026-benchmarks-actually-show" class="nav-link" data-scroll-target="#what-2026-benchmarks-actually-show">What 2026 benchmarks actually show</a></li>
+  <li><a href="#the-hybrid-architecture-pattern-that-works-in-2026" id="toc-the-hybrid-architecture-pattern-that-works-in-2026" class="nav-link" data-scroll-target="#the-hybrid-architecture-pattern-that-works-in-2026">The hybrid architecture pattern that works in 2026</a></li>
+  </ul></li>
+  <li><a href="#trend-4-regulation-the-eu-ai-act-is-live-and-august-2026-is-the-real-deadline" id="toc-trend-4-regulation-the-eu-ai-act-is-live-and-august-2026-is-the-real-deadline" class="nav-link" data-scroll-target="#trend-4-regulation-the-eu-ai-act-is-live-and-august-2026-is-the-real-deadline">Trend 4 — Regulation: the EU AI Act is live, and August 2026 is the real deadline</a>
+  <ul class="collapse">
+  <li><a href="#current-status-april-2026" id="toc-current-status-april-2026" class="nav-link" data-scroll-target="#current-status-april-2026">Current status (April 2026)</a></li>
+  <li><a href="#why-article-4-matters-for-you-specifically" id="toc-why-article-4-matters-for-you-specifically" class="nav-link" data-scroll-target="#why-article-4-matters-for-you-specifically">Why Article 4 matters for you specifically</a></li>
+  <li><a href="#italy-went-first" id="toc-italy-went-first" class="nav-link" data-scroll-target="#italy-went-first">Italy went first</a></li>
+  <li><a href="#outside-the-eu" id="toc-outside-the-eu" class="nav-link" data-scroll-target="#outside-the-eu">Outside the EU</a></li>
+  </ul></li>
+  <li><a href="#trend-5-embedded-ai-your-phone-is-already-an-inference-server" id="toc-trend-5-embedded-ai-your-phone-is-already-an-inference-server" class="nav-link" data-scroll-target="#trend-5-embedded-ai-your-phone-is-already-an-inference-server">Trend 5 — Embedded AI: your phone is already an inference server</a>
+  <ul class="collapse">
+  <li><a href="#the-2026-landscape" id="toc-the-2026-landscape" class="nav-link" data-scroll-target="#the-2026-landscape">The 2026 landscape</a></li>
+  <li><a href="#why-this-is-the-most-important-long-run-trend" id="toc-why-this-is-the-most-important-long-run-trend" class="nav-link" data-scroll-target="#why-this-is-the-most-important-long-run-trend">Why this is the most important long-run trend</a></li>
+  </ul></li>
+  <li><a href="#augment-vs.-automate-whats-actually-happening" id="toc-augment-vs.-automate-whats-actually-happening" class="nav-link" data-scroll-target="#augment-vs.-automate-whats-actually-happening">Augment vs.&nbsp;automate — what’s actually happening</a>
+  <ul class="collapse">
+  <li><a href="#key-findings-across-the-five-reports" id="toc-key-findings-across-the-five-reports" class="nav-link" data-scroll-target="#key-findings-across-the-five-reports">Key findings across the five reports</a></li>
+  <li><a href="#what-the-data-says-in-plain-english" id="toc-what-the-data-says-in-plain-english" class="nav-link" data-scroll-target="#what-the-data-says-in-plain-english">What the data says, in plain English</a></li>
+  <li><a href="#the-practical-framing" id="toc-the-practical-framing" class="nav-link" data-scroll-target="#the-practical-framing">The practical framing</a></li>
+  </ul></li>
+  <li><a href="#hype-vs.-substance-a-framework-you-can-actually-use" id="toc-hype-vs.-substance-a-framework-you-can-actually-use" class="nav-link" data-scroll-target="#hype-vs.-substance-a-framework-you-can-actually-use">Hype vs.&nbsp;substance: a framework you can actually use</a>
+  <ul class="collapse">
+  <li><a href="#the-hype-substance-framework" id="toc-the-hype-substance-framework" class="nav-link" data-scroll-target="#the-hype-substance-framework">The HYPE × SUBSTANCE framework</a></li>
+  <li><a href="#the-mit-nanda-stress-test" id="toc-the-mit-nanda-stress-test" class="nav-link" data-scroll-target="#the-mit-nanda-stress-test">The MIT NANDA stress test</a></li>
+  </ul></li>
+  <li><a href="#the-30-minute-weekly-learning-routine" id="toc-the-30-minute-weekly-learning-routine" class="nav-link" data-scroll-target="#the-30-minute-weekly-learning-routine">The 30-minute weekly learning routine</a>
+  <ul class="collapse">
+  <li><a href="#what-to-deliberately-skip" id="toc-what-to-deliberately-skip" class="nav-link" data-scroll-target="#what-to-deliberately-skip">What to deliberately skip</a></li>
+  </ul></li>
+  <li><a href="#lab-13.1-the-hypesubstance-analysis" id="toc-lab-13.1-the-hypesubstance-analysis" class="nav-link" data-scroll-target="#lab-13.1-the-hypesubstance-analysis">Lab 13.1 — The hype/substance analysis</a></li>
+  <li><a href="#lab-13.2-your-first-on-device-ai" id="toc-lab-13.2-your-first-on-device-ai" class="nav-link" data-scroll-target="#lab-13.2-your-first-on-device-ai">Lab 13.2 — Your first on-device AI</a></li>
+  <li><a href="#exercise-13.3-future-of-your-job-analysis" id="toc-exercise-13.3-future-of-your-job-analysis" class="nav-link" data-scroll-target="#exercise-13.3-future-of-your-job-analysis">Exercise 13.3 — Future-of-your-job analysis</a></li>
+  <li><a href="#quiz" id="toc-quiz" class="nav-link" data-scroll-target="#quiz">Quiz</a></li>
+  <li><a href="#module-13-summary" id="toc-module-13-summary" class="nav-link" data-scroll-target="#module-13-summary">Module 13 Summary</a></li>
+  <li><a href="#lab-13-design-your-30-day-ai-challenge" id="toc-lab-13-design-your-30-day-ai-challenge" class="nav-link" data-scroll-target="#lab-13-design-your-30-day-ai-challenge">🔬 Lab 13: Design Your 30-Day AI Challenge</a></li>
+  <li><a href="#coming-up-in-module-14" id="toc-coming-up-in-module-14" class="nav-link" data-scroll-target="#coming-up-in-module-14">Coming up in Module 14</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module12/index.html">PART V: FUTURE</a></li><li class="breadcrumb-item"><a href="../module13/index.html">The Future of AI and Staying Current</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">The Future of AI and Staying Current</h1>
+<p class="subtitle lead">Module 13 · Where AI Is Heading and How to Keep Up</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI trends evolve rapidly — the frameworks for evaluating them remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Modules 1-12 (the full course foundation)</p>
+<p>By the end of this module, you will be able to:</p>
+<ol type="1">
+<li>Describe the current state of five AI trends: agents, multimodal, small models, regulation, and embedded AI</li>
+<li>Apply the “hype vs.&nbsp;substance” framework to any new AI claim you encounter</li>
+<li>Explain the difference between <em>augmentation</em> and <em>automation</em> using real usage data, not speculation</li>
+<li>Maintain a 30-minute weekly routine that keeps your AI literacy current after this course ends</li>
+<li>Recognize when to ignore AI news entirely (more often than you’d think)</li>
+</ol>
+</div>
+</div>
+<section id="the-only-prediction-thats-always-right" class="level2">
+<h2 class="anchored" data-anchor-id="the-only-prediction-thats-always-right">The Only Prediction That’s Always Right</h2>
+<p>Every prediction about AI’s future is wrong. The 2015 prediction that radiologists would be obsolete by 2020 was wrong. The 2022 prediction that ChatGPT was a passing fad was wrong. The 2023 prediction that image-generation would displace illustrators within a year was wrong. The 2024 prediction that AGI was imminent was wrong. The 2025 prediction that 95% of enterprise AI pilots would succeed was — documented by MIT — wrong by a factor of roughly 20.</p>
+<p>So this module isn’t about prediction. It’s about learning to <strong>read current signals well enough that when the next prediction fails, you’re the one who saw it coming.</strong></p>
+<p>The test of AI literacy isn’t whether you know what will happen next. It’s whether you can tell the difference between a hype cycle and a structural shift while they’re both happening in front of you.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI’s Future
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AGI is around the corner”</strong> — Major labs describe their work as “paths toward AGI,” but there is no scientific consensus on whether current architectures can get there, and no agreed-upon test for when it would be achieved.</li>
+<li><strong>“AI will replace most jobs within 5 years”</strong> — The WEF projects 78 million <em>net new</em> jobs by 2030. AI changes roles; it rarely eliminates them entirely. The pattern is augmentation, not replacement.</li>
+<li><strong>“The best strategy is to wait and see”</strong> — By the time a technology stabilizes, the early adopters have already captured the premium. The EU AI Act’s August 2026 deadline isn’t waiting for anyone.</li>
+<li><strong>“If I read enough AI news, I’ll stay current”</strong> — Most AI news is noise. A 30-minute weekly routine with curated sources beats 5 hours of scrolling Twitter/X. Signal over volume.</li>
+<li><strong>“Open-source models will always lag behind proprietary ones”</strong> — DeepSeek-R1 and Llama 4 have closed the gap dramatically. The three-tier landscape (frontier/mid-tier/edge) is more useful than the open-vs-closed binary.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="trend-1-agents-no-longer-near-term-now-production-infrastructure" class="level2">
+<h2 class="anchored" data-anchor-id="trend-1-agents-no-longer-near-term-now-production-infrastructure">Trend 1 — Agents: no longer near-term, now production infrastructure</h2>
+<p>When this course launched in 2024, “AI agents” was a marketing term attached to demos. As of April 2026, agents are production infrastructure that companies pay for.</p>
+<section id="what-changed-in-the-last-12-months" class="level3">
+<h3 class="anchored" data-anchor-id="what-changed-in-the-last-12-months">What changed in the last 12 months</h3>
+<ul>
+<li><strong>OpenAI Operator</strong> (early 2025) was the first mainstream agentic consumer product. It’s now integrated into Codex with specialized GPT-5.4 Mini and Nano submodels for multi-model agent architecture.</li>
+<li><strong>Anthropic Claude Managed Agents</strong> launched in public beta April 8, 2026 — twelve days before this module was last updated. Production customers at launch: Notion, Rakuten, Asana. Already using underlying agent infrastructure: Netflix, Spotify, KPMG, L’Oréal, Salesforce. Pricing: Claude model usage plus <strong>$0.08/agent runtime hour</strong>.</li>
+<li><strong>Claude Code</strong> passed <strong>$2.5B annualized run-rate revenue</strong> by early 2026, doubling since the start of 2026.</li>
+<li><strong>Anthropic’s total annualized revenue:</strong> $14B as of February 2026, up more than 10× in three years.</li>
+<li><strong>91% of enterprises</strong> use AI coding agents in production (Arcade.dev <em>State of AI Agents 2026</em>).</li>
+<li><strong>Microsoft Copilot Studio</strong> leads enterprise agent orchestration at <strong>38.6% market share</strong> (VentureBeat, Q1 2026), with OpenAI at 25.7%.</li>
+</ul>
+</section>
+<section id="the-actual-bottleneck-in-2026" class="level3">
+<h3 class="anchored" data-anchor-id="the-actual-bottleneck-in-2026">The actual bottleneck in 2026</h3>
+<p>Twelve months ago, the question was “can agents do this task?” In 2026, the question is “can we plug this agent into our systems?”</p>
+<p><strong>46% of enterprises</strong> cite <strong>integration with existing systems</strong> — CRMs, ticketing tools, internal APIs, data platforms — as their primary challenge, <strong>not model capability</strong> (State of AI Agents 2026). The models are ready. The plumbing isn’t.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What this means for your career
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The skills that matter for agent-era work are not “prompt engineering” narrowly. They are:</p>
+<ol type="1">
+<li><strong>Tool design</strong> — knowing which tasks to hand to agents vs.&nbsp;which to keep human-in-the-loop.</li>
+<li><strong>Integration thinking</strong> — understanding data flows between systems.</li>
+<li><strong>Observability</strong> — watching what agents actually do, not what they claim to have done.</li>
+<li><strong>Governance</strong> — defining what agents are and aren’t allowed to do.</li>
+<li><strong>Evaluation</strong> — deciding whether an agent’s output is good enough before it ships.</li>
+</ol>
+<p>If you want one capability that will still be valuable five years from now, it’s <strong>evaluation</strong>. Models change every six months. Evaluation skill compounds.</p>
+</div>
+</div>
+</section>
+<section id="the-vendor-lock-in-question-you-cant-ignore" class="level3">
+<h3 class="anchored" data-anchor-id="the-vendor-lock-in-question-you-cant-ignore">The vendor lock-in question you can’t ignore</h3>
+<p>Both Anthropic’s Claude Managed Agents and Microsoft’s Copilot Studio are “platforms” that make agents easier to deploy at the cost of locking you into one vendor’s ecosystem. <strong>OpenClaw</strong>, an open-source agent framework launched in November 2025, hit 100,000+ GitHub stars by January 2026 — before Anthropic restricted its subscription access in April 2026, affecting 135,000+ running instances.</p>
+<p>This tension — managed convenience vs.&nbsp;open-source control — is the single most important architectural decision enterprises are making in 2026. There is no universally correct answer. The right answer depends on your organization’s risk tolerance, skills, and regulatory environment. What <em>is</em> clear: <strong>lock-in risk is now a standard interview question for technical roles</strong>.</p>
+</section>
+</section>
+<section id="trend-2-multimodal-text-alone-is-no-longer-enough" class="level2">
+<h2 class="anchored" data-anchor-id="trend-2-multimodal-text-alone-is-no-longer-enough">Trend 2 — Multimodal: text alone is no longer enough</h2>
+<p>A year ago, most AI products were text-in/text-out. In 2026, the leading models routinely handle text, images, audio, video, code, and PDFs in a single request. The architectural pattern has shifted.</p>
+<section id="the-current-state-april-2026" class="level3">
+<h3 class="anchored" data-anchor-id="the-current-state-april-2026">The current state (April 2026)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Modality</th>
+<th style="text-align: left;">Leading models</th>
+<th style="text-align: left;">Current capability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Text + long context</strong></td>
+<td style="text-align: left;">Claude Opus 4.7 (1M+ tokens), GPT-5.4 Pro (1M+), Gemini 3.1 Pro (1M+ multimodal)</td>
+<td style="text-align: left;">Entire books, codebases, meeting transcripts — in one context</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Image generation</strong></td>
+<td style="text-align: left;">Nano Banana Pro (Google), GPT Image 1.5 (OpenAI), Midjourney, Flux 2.0, Ideogram</td>
+<td style="text-align: left;">Near-photographic quality, character consistency across multiple images</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Image input/analysis</strong></td>
+<td style="text-align: left;">Claude (built-in), Gemini, GPT-5.4</td>
+<td style="text-align: left;">Reads charts, diagrams, screenshots, handwriting. No separate OCR needed.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Video generation</strong></td>
+<td style="text-align: left;">Veo 3.1 (Google), Kling 3.0 (Kuaishou), Seedance 2.0 (ByteDance), Runway Gen-4.5</td>
+<td style="text-align: left;">Native 4K, up to 25 seconds per clip, synchronized audio, character consistency</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Speech / audio</strong></td>
+<td style="text-align: left;">OpenAI Advanced Voice, Google Gemini Live, Apple Live Translation</td>
+<td style="text-align: left;">Near-real-time translation, voice cloning (with safeguards), conversational flow</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-happened-to-sora" class="level3">
+<h3 class="anchored" data-anchor-id="what-happened-to-sora">What happened to Sora?</h3>
+<p>OpenAI’s Sora launched as a standalone app in late 2025 and briefly topped the App Store. In <strong>March 2026, OpenAI shut down the Sora app and API</strong>, citing unsustainable compute costs, and folded the technology back into ChatGPT integrations. The episode is a case study in AI hype-cycle dynamics: extreme attention, unsustainable unit economics, sudden retreat. <strong>Veo 3.1</strong> (Google, January 2026) is now the leading standalone text-to-video model for general use, with <strong>Kling 3.0</strong> and <strong>Seedance 2.0</strong> competing aggressively from China.</p>
+</section>
+<section id="why-this-matters-for-non-specialists" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-matters-for-non-specialists">Why this matters for non-specialists</h3>
+<p>If your field touches any of the following, multimodal AI is already useful to you:</p>
+<ul>
+<li><strong>Marketing and communications:</strong> video generation has cut production time by 70% for many teams; AI-generated or AI-assisted video is projected to be ~75% of marketing video content by end of 2026.</li>
+<li><strong>Education:</strong> slide decks, worksheet diagrams, video explainers can now be generated from a single well-structured prompt (with verification).</li>
+<li><strong>Research:</strong> Gemini 3.1 Pro reads PDFs, charts, and code repositories in a single query. For literature reviews, the effective workflow is now “feed 30 papers in, ask structured questions out.”</li>
+<li><strong>Healthcare and science:</strong> multimodal models can analyze image + text together — medical image plus patient history, chart plus metadata.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The multimodal verification problem is harder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Text hallucinations are bad. Visual and audio hallucinations are worse — because they’re more convincing. A fabricated quote is easier to spot than a fabricated video. The verification skills you learned in Module 7 (fact-checking AI outputs) apply <strong>more strongly</strong> to multimodal content, not less.</p>
+<p>The rule: if a video or image could plausibly be AI-generated, treat it as AI-generated until you have evidence otherwise. This is now a media literacy skill, not just an AI skill.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="trend-3-small-models-specific-cheap-and-on-your-phone" class="level2">
+<h2 class="anchored" data-anchor-id="trend-3-small-models-specific-cheap-and-on-your-phone">Trend 3 — Small models: specific, cheap, and on your phone</h2>
+<p>In 2024, if you wanted useful AI, you ran a frontier model via API. In 2026, that’s one of three deployment options — and often not the best one.</p>
+<section id="the-three-tier-landscape" class="level3">
+<h3 class="anchored" data-anchor-id="the-three-tier-landscape">The three-tier landscape</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tier</th>
+<th style="text-align: left;">Parameter range</th>
+<th style="text-align: left;">Deployment</th>
+<th style="text-align: left;">2026 examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>On-device</strong> (phones, IoT)</td>
+<td style="text-align: left;">Under 4B</td>
+<td style="text-align: left;">Smartphones, edge devices</td>
+<td style="text-align: left;">Gemma 4 E2B/E4B, Phi-4-mini (3.8B), Qwen 3.5 0.8B, Apple Foundation Model (~3B), Gemini Nano</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Edge servers / laptops</strong></td>
+<td style="text-align: left;">4B–9B</td>
+<td style="text-align: left;">Local workstations, small servers</td>
+<td style="text-align: left;">Qwen 3.5 9B, Phi-4 (14B), Gemma 3 12B, Llama 3.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cloud / frontier</strong></td>
+<td style="text-align: left;">70B+</td>
+<td style="text-align: left;">Cloud APIs</td>
+<td style="text-align: left;">Claude Opus 4.7, GPT-5.4 Pro, Gemini 3.1 Pro</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-2026-benchmarks-actually-show" class="level3">
+<h3 class="anchored" data-anchor-id="what-2026-benchmarks-actually-show">What 2026 benchmarks actually show</h3>
+<ul>
+<li>Microsoft’s <strong>Phi-4 (14B)</strong> surpasses many 70B-class models on math, reasoning, and code generation. <strong>Training data quality now beats raw parameter count.</strong></li>
+<li><strong>Qwen 3.5 9B</strong> scores 82.5 on MMLU-Pro and 81.7 on GPQA Diamond — comparable to frontier models from 18 months ago.</li>
+<li><strong>Gemma 3 4B IT</strong> hits 71.3% on HumanEval and 89.2% on GSM8K with four billion parameters.</li>
+<li><strong>Samsung, Google, and Motorola</strong> 2026 flagship phones support on-device inference for models up to ~4B parameters.</li>
+<li><strong>API pricing dropped 40–70%</strong> across major providers in 2026, but <strong>on-device SLM deployment still delivers 70–90% cost reduction</strong> for high-volume predictable workloads.</li>
+</ul>
+</section>
+<section id="the-hybrid-architecture-pattern-that-works-in-2026" class="level3">
+<h3 class="anchored" data-anchor-id="the-hybrid-architecture-pattern-that-works-in-2026">The hybrid architecture pattern that works in 2026</h3>
+<ol type="1">
+<li>Route high-volume predictable tasks (classification, extraction, summarization) to <strong>local SLMs</strong>.</li>
+<li>Route complex, novel reasoning to <strong>cloud frontier models</strong>.</li>
+<li>Capture 80–90% of the cost savings while maintaining frontier capability when needed.</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why this matters for your field
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If your organization handles <strong>sensitive data</strong> — health records, student records, financial data, legal documents — you are no longer forced to choose between “use cloud AI and accept compliance risk” or “don’t use AI.” A local 4–9B model running on a single workstation can handle 70-90% of routine tasks <strong>without the data leaving your building</strong>. This is the single largest unlock for AI adoption in regulated industries.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="trend-4-regulation-the-eu-ai-act-is-live-and-august-2026-is-the-real-deadline" class="level2">
+<h2 class="anchored" data-anchor-id="trend-4-regulation-the-eu-ai-act-is-live-and-august-2026-is-the-real-deadline">Trend 4 — Regulation: the EU AI Act is live, and August 2026 is the real deadline</h2>
+<p>Regulation is the trend most likely to affect your career directly, because the <strong>AI literacy obligation is already binding</strong> and the main enforcement date is months away.</p>
+<section id="current-status-april-2026" class="level3">
+<h3 class="anchored" data-anchor-id="current-status-april-2026">Current status (April 2026)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Date</th>
+<th style="text-align: left;">Status</th>
+<th style="text-align: left;">What’s in force</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Feb 2, 2025</td>
+<td style="text-align: left;"><strong>In force</strong></td>
+<td style="text-align: left;">Prohibited AI practices banned. <strong>Article 4 AI literacy obligation is active</strong> — organizations using AI must ensure staff have sufficient AI literacy.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 2, 2025</td>
+<td style="text-align: left;"><strong>In force</strong></td>
+<td style="text-align: left;">Governance infrastructure live. <strong>Fines active</strong>: up to €35M or 7% of global turnover for prohibited practices; €15M / 3% for other violations; €7.5M / 1% for misleading authorities. Obligations for new GPAI models apply.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Aug 2, 2026</strong></td>
+<td style="text-align: left;"><strong>Approaching — 3.5 months from this module</strong></td>
+<td style="text-align: left;">Main compliance date. Most remaining provisions, including rules for high-risk AI systems (Annex III), become applicable. Enforcement begins at EU and national level. Every Member State must have at least one AI regulatory sandbox.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aug 2, 2027</td>
+<td style="text-align: left;">Future</td>
+<td style="text-align: left;">Rules for high-risk AI embedded in regulated products (toys, medical devices, etc.) apply.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-article-4-matters-for-you-specifically" class="level3">
+<h3 class="anchored" data-anchor-id="why-article-4-matters-for-you-specifically">Why Article 4 matters for you specifically</h3>
+<p>The EU AI Act’s Article 4 — already in force — legally requires organizations deploying AI in the EU to ensure their staff have sufficient AI literacy. Companies operating in the EU are actively hiring people who can run AI literacy training. That’s this course, taught by someone with this course on their resume.</p>
+</section>
+<section id="italy-went-first" class="level3">
+<h3 class="anchored" data-anchor-id="italy-went-first">Italy went first</h3>
+<p>Italy’s <em>Legge 132/2025</em> (October 2025) became the first EU member state AI framework law with criminal penalties. Fines up to €774,685 plus disqualification from public contracts. A new criminal offense for AI-generated or altered content (e.g., deepfakes) carrying 1–5 years imprisonment. Additional EU member states are expected to follow by the August 2026 main deadline.</p>
+</section>
+<section id="outside-the-eu" class="level3">
+<h3 class="anchored" data-anchor-id="outside-the-eu">Outside the EU</h3>
+<p>The U.S. approach remains patchwork at the federal level. State-level action is leading:</p>
+<ul>
+<li><strong>Colorado’s AI Act</strong> (effective February 2026) — consumer protection focus</li>
+<li><strong>California SB 1047 derivatives</strong> — frontier model disclosure requirements</li>
+<li><strong>Texas TRAIGA</strong> — workplace AI use disclosure</li>
+<li><strong>Federal: NIST AI Risk Management Framework</strong> (voluntary) — de facto standard for federal contractors</li>
+</ul>
+<p>The global direction of travel is clear: AI governance is now a mainstream legal and compliance specialization. The job category “AI compliance officer” barely existed in 2022. It’s a standard Fortune 500 role in 2026.</p>
+</section>
+</section>
+<section id="trend-5-embedded-ai-your-phone-is-already-an-inference-server" class="level2">
+<h2 class="anchored" data-anchor-id="trend-5-embedded-ai-your-phone-is-already-an-inference-server">Trend 5 — Embedded AI: your phone is already an inference server</h2>
+<p>The least-discussed trend is the most structurally important: AI is becoming invisible. It’s being built into devices and products where you don’t see it — and that’s where most of the actual impact happens.</p>
+<section id="the-2026-landscape" class="level3">
+<h3 class="anchored" data-anchor-id="the-2026-landscape">The 2026 landscape</h3>
+<ul>
+<li><strong>Apple Intelligence</strong> (iPhone 15 Pro+, iPhone 16/17, iPad M1+, Mac Apple Silicon) runs on-device inference for a ~3B parameter foundation model with task-specific adapters.</li>
+<li><strong>Apple-Google Gemini partnership</strong> (January 2026): Apple will incorporate Google’s Gemini models into Apple Foundation Models, with on-device distillation for Siri and on-device features. Apple is distilling smaller task-specific models from the full Gemini model with “complete access” to Gemini’s internal reasoning.</li>
+<li><strong>Gemini Nano</strong> runs on Android 16 via the AICore system service on Pixel 8/9 series, Samsung Galaxy S24+, and any Snapdragon 8 Gen 3+ device. It handles summarization, smart replies, rewriting, and translation <strong>without cloud round-trips</strong>.</li>
+<li><strong>Cars</strong> increasingly ship with on-device AI for natural-language commands, driver monitoring, and predictive maintenance.</li>
+<li><strong>Smart home devices</strong> (Amazon Echo, Google Nest) ship with on-device speech recognition — no more “wake word then cloud.”</li>
+<li><strong>Healthcare devices, hearing aids, wearables</strong> — on-device AI is invading product categories that never had internet connectivity.</li>
+</ul>
+</section>
+<section id="why-this-is-the-most-important-long-run-trend" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-the-most-important-long-run-trend">Why this is the most important long-run trend</h3>
+<p>When AI is embedded in a device, three things happen:</p>
+<ol type="1">
+<li><strong>Privacy is preserved by default.</strong> Data doesn’t leave the device.</li>
+<li><strong>Latency drops to zero.</strong> No network round-trip means AI feels instant.</li>
+<li><strong>AI literacy stops being optional.</strong> Every product your organization ships will eventually have AI in it, whether or not your team asked for it.</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The implication for your career
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you work in product, design, marketing, legal, compliance, or customer service — and your product or service has any digital component — assume AI is coming to it within 2–4 years whether or not it’s planned. Planning for “AI-adjacent” work in your role is no longer career-specific advice. It’s universal advice.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="augment-vs.-automate-whats-actually-happening" class="level2">
+<h2 class="anchored" data-anchor-id="augment-vs.-automate-whats-actually-happening">Augment vs.&nbsp;automate — what’s actually happening</h2>
+<p>The best data on AI’s real effect on work comes from the <strong>Anthropic Economic Index</strong>, which analyzes anonymized Claude usage against the U.S. Department of Labor’s O*NET database of 900+ occupations. Five iterations have been published (February 2025 through March 2026).</p>
+<section id="key-findings-across-the-five-reports" class="level3">
+<h3 class="anchored" data-anchor-id="key-findings-across-the-five-reports">Key findings across the five reports</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Finding</th>
+<th style="text-align: left;">Data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Augmentation (AI collaborates with human)</td>
+<td style="text-align: left;">~57% (V1) → ~52–57% (stable)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Automation (AI replaces human on task)</td>
+<td style="text-align: left;">~43% (V1) → ~43–48% (stable)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Occupations with AI in ≥25% of tasks</td>
+<td style="text-align: left;">36% (V1) → <strong>49%</strong> (March 2026)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Occupations with AI in ≥75% of tasks</td>
+<td style="text-align: left;">4%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Directively automated tasks (API/business users)</td>
+<td style="text-align: left;"><strong>27% (early 2025) → 39% (late 2025)</strong></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-the-data-says-in-plain-english" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-data-says-in-plain-english">What the data says, in plain English</h3>
+<ul>
+<li>The augmentation/automation ratio is <strong>roughly stable around 55/45.</strong> This is not a hockey stick toward automation. Augmentation is the larger category.</li>
+<li>BUT there is a meaningful divergence: <strong>API/business users automate more than consumer users do</strong>, and the gap is widening. Enterprise automation grew from 27% to 39% in nine months.</li>
+<li><strong>Mid-to-high wage occupations</strong> use AI most (computer programmers, data scientists, writers, educators).</li>
+<li><strong>The lowest-paid and highest-paid</strong> occupations use AI the least. The middle of the wage distribution is where most action is.</li>
+</ul>
+</section>
+<section id="the-practical-framing" class="level3">
+<h3 class="anchored" data-anchor-id="the-practical-framing">The practical framing</h3>
+<p>If you’re in a mid-wage knowledge-work role, AI will augment most of your tasks and automate some. The question is not “will AI take my job?” — the data says augmentation dominates. The question is:</p>
+<blockquote class="blockquote">
+<p>“Which of my tasks will be augmented first, and what new tasks will I take on with the time AI saves?”</p>
+</blockquote>
+<p>That is a question you can actually answer for your own job this week. It is also the exact question your future employer will ask in an interview.</p>
+</section>
+</section>
+<section id="hype-vs.-substance-a-framework-you-can-actually-use" class="level2">
+<h2 class="anchored" data-anchor-id="hype-vs.-substance-a-framework-you-can-actually-use">Hype vs.&nbsp;substance: a framework you can actually use</h2>
+<p>Here is the test I apply to every AI claim I see. Four questions. If you can answer all four with specifics, it’s probably substance. If you can’t, it’s probably hype.</p>
+<section id="the-hype-substance-framework" class="level3">
+<h3 class="anchored" data-anchor-id="the-hype-substance-framework">The HYPE × SUBSTANCE framework</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Question</th>
+<th style="text-align: left;">What a substance claim sounds like</th>
+<th style="text-align: left;">What a hype claim sounds like</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>1. Who is paying for this?</strong></td>
+<td style="text-align: left;">“Enterprise customer X paid $Y to deploy this in Q3 2025.”</td>
+<td style="text-align: left;">“AI is transforming business.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2. What specifically changed?</strong></td>
+<td style="text-align: left;">“Error rate dropped from 8% to 1.5% on Benchmark X.”</td>
+<td style="text-align: left;">“AI is getting much better.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>3. Who measured it, independently?</strong></td>
+<td style="text-align: left;">“Paper Z, peer-reviewed, replicated by Lab Q.”</td>
+<td style="text-align: left;">“According to the company that built it…”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>4. What did it get wrong?</strong></td>
+<td style="text-align: left;">“Failure mode: hallucinates dates for events after 2023.”</td>
+<td style="text-align: left;">“This is a breakthrough.”</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-mit-nanda-stress-test" class="level3">
+<h3 class="anchored" data-anchor-id="the-mit-nanda-stress-test">The MIT NANDA stress test</h3>
+<p>Apply the framework to this claim: <em>“Generative AI is transforming enterprise business.”</em></p>
+<p><strong>Who is paying?</strong> Enterprises — <strong>$30–40 billion invested</strong> (MIT NANDA). <strong>What changed?</strong> <strong>95% of pilots show zero measurable P&amp;L impact.</strong> Only 5% achieve rapid revenue acceleration. <strong>Who measured it?</strong> MIT’s NANDA initiative — 300+ initiative reviews, 52 interviews, 153 survey responses (July 2025). <strong>What’s going wrong?</strong> The “learning gap” — integration and organizational adaptation, not model quality. Purchased/partnered solutions succeed 67% of the time; internal builds succeed 33% of the time.</p>
+<p><strong>Conclusion:</strong> The claim is hype in the aggregate, substance at the margins. <em>The 5% that succeed are real.</em> They’re just not 95% of the market. This is the difference between “AI is transforming enterprise” (hype) and “AI transformation is concentrated in 5% of enterprises, characterized by back-office automation deployed through external vendor partnerships” (substance).</p>
+<p>This is the level of specificity you want to be able to produce about any AI trend you care about.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The practical interview skill
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The employers who will pay the 28% salary premium from Module 12 are not the 95% that are stuck. They’re the 5% who figured out how to deploy AI to move actual numbers. <strong>That distinction</strong> — the difference between “we’re piloting AI” and “we deployed AI and it saved us $X” — is the single most important signal you can learn to detect in a job interview.</p>
+<p>If an interviewer can tell you specifically what their AI deployment did, you’re probably talking to a company in the 5%. If they speak in generalities, you may be looking at 95%.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="the-30-minute-weekly-learning-routine" class="level2">
+<h2 class="anchored" data-anchor-id="the-30-minute-weekly-learning-routine">The 30-minute weekly learning routine</h2>
+<p>AI literacy decays. The field changes monthly. The only defense is a ritual.</p>
+<pre class="text"><code>Weekly AI maintenance (30 minutes — same time every week, forever):
+
+  Minutes 0–10:   READ
+                  Simon Willison's blog (simonwillison.net)
+                  — daily posts from a working practitioner,
+                  concrete, almost zero hype
+
+  Minutes 10–20:  PRIMARY SOURCE
+                  One post from Anthropic Research,
+                  OpenAI Blog, or Google AI Blog —
+                  whichever provider your main tool is from.
+                  Read the original. Not the summary.
+
+  Minutes 20–30:  HANDS-ON
+                  Try ONE new thing in your actual workflow.
+                  A new prompting technique, a tool feature,
+                  a small experiment. Must be hands-on.
+                  Write down one sentence about what you learned.
+
+Do this 50 weeks a year. That's 25 hours of deliberate AI
+practice annually. Most AI workers do less.</code></pre>
+<section id="what-to-deliberately-skip" class="level3">
+<h3 class="anchored" data-anchor-id="what-to-deliberately-skip">What to deliberately skip</h3>
+<p>You will save hours per week by skipping:</p>
+<ul>
+<li><strong>Twitter/X AI threads.</strong> High noise, low signal. The best stuff filters through Simon Willison or Hacker News within 48 hours anyway.</li>
+<li><strong>LinkedIn thought leadership posts.</strong> The ratio of “AI is changing everything” posts to actual information is roughly 100:1.</li>
+<li><strong>AI newsletter subscriptions beyond two.</strong> Pick two. Any more and they’ll pile up and you’ll read none.</li>
+<li><strong>Model benchmark leaderboard drama.</strong> Benchmarks change monthly. If you care about benchmarks, check them once a quarter, not once a week.</li>
+<li><strong>AGI timeline debates.</strong> Unfalsifiable, ages badly, and has zero effect on what you should do Monday morning.</li>
+</ul>
+</section>
+</section>
+<section id="lab-13.1-the-hypesubstance-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="lab-13.1-the-hypesubstance-analysis">Lab 13.1 — The hype/substance analysis</h2>
+<p>Pick an AI-related claim you’ve seen in the last week. Could be a headline, LinkedIn post, marketing email, news article — anything.</p>
+<p>Run it through the four-question framework:</p>
+<ol type="1">
+<li>Who is paying for this?</li>
+<li>What specifically changed?</li>
+<li>Who measured it, independently?</li>
+<li>What did it get wrong?</li>
+</ol>
+<p><strong>For each question, write either:</strong></p>
+<ul>
+<li>A specific fact with a source, OR</li>
+<li>“I cannot determine this from the claim as presented.”</li>
+</ul>
+<p><strong>Deliverable:</strong> A one-page analysis with your verdict (Hype / Mostly Hype / Mostly Substance / Substance) and one sentence explaining what would change your verdict.</p>
+<p>The goal is not to be cynical about AI. The goal is to build the reflex to <strong>ask the four questions automatically</strong> before you form an opinion on any new AI claim.</p>
+</section>
+<section id="lab-13.2-your-first-on-device-ai" class="level2">
+<h2 class="anchored" data-anchor-id="lab-13.2-your-first-on-device-ai">Lab 13.2 — Your first on-device AI</h2>
+<p>If you have an iPhone 15 Pro or newer, or a Pixel 8 or newer, or a Galaxy S24 or newer, your phone already has a multi-billion-parameter language model running on-device.</p>
+<p><strong>Task:</strong> Find one built-in AI feature on your phone that runs on-device (not cloud). Use it for one real task this week. Write a 200-word reflection covering:</p>
+<ol type="1">
+<li>What feature you used.</li>
+<li>What it did well.</li>
+<li>What it did poorly.</li>
+<li>How you would know, without reading documentation, whether it runs on-device or in the cloud.</li>
+</ol>
+<p>(Hint for item 4: airplane mode. If the feature works in airplane mode, it’s on-device.)</p>
+</section>
+<section id="exercise-13.3-future-of-your-job-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-13.3-future-of-your-job-analysis">Exercise 13.3 — Future-of-your-job analysis</h2>
+<p>Pick a job title you might realistically hold in 5 years. (Not a fantasy role. A realistic next step.)</p>
+<p>Using the Anthropic Economic Index data and the Lightcast career-area data from Module 12:</p>
+<ol type="1">
+<li><strong>Adoption stage:</strong> What percentage of postings for this role mention AI skills today? (Use Module 12’s table.)</li>
+<li><strong>Augmentation estimate:</strong> Based on the 57/43 augmentation/automation split and what you know about the role, which of its tasks are most likely to be augmented first?</li>
+<li><strong>Automation risk:</strong> Which tasks, if any, look like candidates for full automation?</li>
+<li><strong>New tasks:</strong> With the time saved, what higher-value tasks would the role shift toward?</li>
+<li><strong>Your move:</strong> Given the above, what specific skill should you develop in the next 12 months?</li>
+</ol>
+<p><strong>Deliverable:</strong> A one-page memo written to your future self.</p>
+</section>
+<section id="quiz" class="level2">
+<h2 class="anchored" data-anchor-id="quiz">Quiz</h2>
+<p><strong>1. As of April 2026, the Anthropic Economic Index finds that the augmentation/automation ratio across Claude usage is approximately:</strong></p>
+<ol type="a">
+<li>90% augmentation / 10% automation</li>
+<li>57% augmentation / 43% automation, roughly stable</li>
+<li>25% augmentation / 75% automation</li>
+<li>Shifting rapidly toward automation</li>
+</ol>
+<p><strong>2. The MIT NANDA 2025 report found that what percentage of enterprise generative AI pilots deliver measurable P&amp;L impact?</strong></p>
+<ol type="a">
+<li>5%</li>
+<li>25%</li>
+<li>50%</li>
+<li>95%</li>
+</ol>
+<p><strong>3. The EU AI Act’s Article 4 (AI literacy obligation) is currently:</strong></p>
+<ol type="a">
+<li>Not yet in force</li>
+<li>In force since February 2025 and binding on organizations deploying AI in the EU</li>
+<li>In force only for high-risk AI systems</li>
+<li>Applicable only to EU-headquartered companies</li>
+</ol>
+<p><strong>4. The main enforcement date for most remaining EU AI Act provisions is:</strong></p>
+<ol type="a">
+<li>February 2025</li>
+<li>August 2025</li>
+<li><strong>August 2026</strong></li>
+<li>August 2030</li>
+</ol>
+<p><strong>5. Which of the following is NOT a valid application of the hype/substance framework?</strong></p>
+<ol type="a">
+<li>Asking who is paying for the AI deployment</li>
+<li>Asking who measured the outcome independently</li>
+<li>Asking whether the CEO is excited about AI</li>
+<li>Asking what the AI got wrong</li>
+</ol>
+<p><strong>6. The current leading standalone text-to-video models in April 2026 are:</strong></p>
+<ol type="a">
+<li>Sora and Sora Pro</li>
+<li>Veo 3.1, Kling 3.0, and Seedance 2.0</li>
+<li>DALL-E 4 and Midjourney</li>
+<li>Stable Diffusion XL</li>
+</ol>
+<p><strong>7. The best evidence-based recommendation for staying current with AI is:</strong></p>
+<ol type="a">
+<li>Subscribe to 10+ AI newsletters</li>
+<li>Follow AI influencers on LinkedIn and Twitter</li>
+<li>A 30-minute weekly routine with one primary-source reading and one hands-on experiment</li>
+<li>Take a new certification every 6 months</li>
+</ol>
+<p><strong>8. If you work in a mid-wage knowledge-work role, the most useful question to ask about your own future is:</strong></p>
+<ol type="a">
+<li>“Will AI replace my job?”</li>
+<li>“When will AGI arrive?”</li>
+<li>“Which of my tasks will be augmented first, and what new tasks will I take on with the time AI saves?”</li>
+<li>“Should I switch careers now?”</li>
+</ol>
+<p><em>(Answers: 1-b, 2-a, 3-b, 4-c, 5-c, 6-b, 7-c, 8-c)</em></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: AI Futures
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Name the five trends covered in this module. <em>(Agents, multimodal, small models, regulation, embedded AI)</em></li>
+<li>What does the “jagged technological frontier” mean for your work? <em>(AI is uneven — some tasks it handles brilliantly, adjacent tasks it fails at. You need to know the boundary.)</em></li>
+<li>Why is a 30-minute weekly routine better than 5 hours of AI news scrolling? <em>(Signal over noise. Curated sources with specific learning goals beat unfocused consumption.)</em></li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 13.1 — The Hype Detector
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pick any AI headline from the last 7 days. Apply the 5-filter test: (1) Peer-reviewed evidence? (2) Meaningful sample size? (3) Specific model/version? (4) Limitations acknowledged? (5) Does the claim survive restating without “AI”? Write a 3-sentence verdict: hype, substance, or too early to tell.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="module-13-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-13-summary">Module 13 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Every AI prediction is wrong</strong> — build judgment, not certainty</li>
+<li><strong>Five trends matter now:</strong> agents, multimodal, small models, regulation, embedded AI</li>
+<li><strong>Augmentation dominates automation</strong> — AI changes roles, rarely eliminates them</li>
+<li><strong>The hype vs.&nbsp;substance framework</strong> is more valuable than any specific prediction</li>
+<li><strong>30 minutes per week</strong> with curated sources beats hours of unfocused AI news</li>
+</ol>
+</div>
+</div>
+<hr>
+<div class="think-about-it">
+<div class="tai-header">
+💭 THINK ABOUT IT
+</div>
+<div class="tai-body">
+<p>Every generation thinks its technology changes everything. The printing press. The telegraph. Electricity. The internet. They were all right — eventually. But the people who benefited most weren’t the ones who predicted the future correctly. They were the ones who <strong>built useful things with the technology while everyone else was still debating whether it would last.</strong> You now know enough to build. The question is whether you will.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-13-design-your-30-day-ai-challenge" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-13-design-your-30-day-ai-challenge">🔬 Lab 13: Design Your 30-Day AI Challenge</h2>
+<section id="lab-13-design-your-30-day-ai-challenge-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-13-design-your-30-day-ai-challenge-1">Lab 13: Design Your 30-Day AI Challenge</h4>
+<p><strong>Time:</strong> 45 minutes | <strong>Tools needed:</strong> Any AI chatbot + a planning template</p>
+<p><strong>Purpose:</strong> Create a structured 30-day plan to deepen one specific AI skill after this course ends.</p>
+<p><strong>Instructions:</strong> 1. <strong>Pick one skill</strong> from this course to develop further 2. <strong>Design 30 daily tasks</strong> (5-15 minutes each) that build progressively 3. <strong>Include 4 checkpoints</strong> (days 7, 14, 21, 30) with self-evaluation criteria 4. <strong>Define success</strong> — what does mastery look like after 30 days?</p>
+</section>
+<hr>
+</section>
+<section id="coming-up-in-module-14" class="level2">
+<h2 class="anchored" data-anchor-id="coming-up-in-module-14">Coming up in Module 14</h2>
+<p>You’ve built the knowledge. Now you demonstrate it. Module 14 is your capstone.</p>
+<hr>
+<p><em>Previous: <a href="../module12/index.html">Module 12 — AI and Your Career</a></em> | <em>Next: <a href="../module14/index.html">Module 14 — Capstone Project</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module12/index.html" class="pagination-link" aria-label="AI and Your Career">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AI and Your Career</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module14/index.html" class="pagination-link" aria-label="Capstone Project">
+        <span class="nav-page-text">Capstone Project</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

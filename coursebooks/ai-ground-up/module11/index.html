@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI Across Disciplines – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module12/index.html" rel="next">
+<link href="../module10/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="AI Across Disciplines – AI from the Ground Up">
+<meta property="og:description" content="Module 11 · Real-World Applications in Your Field">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module09/index.html">PART IV: DEPTH</a></li><li class="breadcrumb-item"><a href="../module11/index.html">AI Across Disciplines</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#when-the-ai-tutor-outperformed-the-lecture" id="toc-when-the-ai-tutor-outperformed-the-lecture" class="nav-link active" data-scroll-target="#when-the-ai-tutor-outperformed-the-lecture">When the AI Tutor Outperformed the Lecture</a>
+  <ul class="collapse">
+  <li><a href="#the-counterweight-when-the-same-ai-harmed-learning" id="toc-the-counterweight-when-the-same-ai-harmed-learning" class="nav-link" data-scroll-target="#the-counterweight-when-the-same-ai-harmed-learning">The counterweight: when the same AI <em>harmed</em> learning</a></li>
+  <li><a href="#the-two-studies-together" id="toc-the-two-studies-together" class="nav-link" data-scroll-target="#the-two-studies-together">The two studies together</a></li>
+  <li><a href="#the-elevate-data-the-same-pattern-locally-validated" id="toc-the-elevate-data-the-same-pattern-locally-validated" class="nav-link" data-scroll-target="#the-elevate-data-the-same-pattern-locally-validated">The ELEVATE data — the same pattern, locally validated</a></li>
+  </ul></li>
+  <li><a href="#ai-in-education" id="toc-ai-in-education" class="nav-link" data-scroll-target="#ai-in-education">AI in Education</a></li>
+  <li><a href="#ai-in-business-and-entrepreneurship" id="toc-ai-in-business-and-entrepreneurship" class="nav-link" data-scroll-target="#ai-in-business-and-entrepreneurship">AI in Business and Entrepreneurship</a></li>
+  <li><a href="#ai-in-healthcare" id="toc-ai-in-healthcare" class="nav-link" data-scroll-target="#ai-in-healthcare">AI in Healthcare</a></li>
+  <li><a href="#ai-in-agriculture-and-environmental-science" id="toc-ai-in-agriculture-and-environmental-science" class="nav-link" data-scroll-target="#ai-in-agriculture-and-environmental-science">AI in Agriculture and Environmental Science</a></li>
+  <li><a href="#ai-in-government-and-public-service" id="toc-ai-in-government-and-public-service" class="nav-link" data-scroll-target="#ai-in-government-and-public-service">AI in Government and Public Service</a></li>
+  <li><a href="#ai-in-creative-industries" id="toc-ai-in-creative-industries" class="nav-link" data-scroll-target="#ai-in-creative-industries">AI in Creative Industries</a></li>
+  <li><a href="#ai-in-law" id="toc-ai-in-law" class="nav-link" data-scroll-target="#ai-in-law">AI in Law</a></li>
+  <li><a href="#finding-ai-in-your-field" id="toc-finding-ai-in-your-field" class="nav-link" data-scroll-target="#finding-ai-in-your-field">Finding AI in YOUR Field</a></li>
+  <li><a href="#module-11-summary" id="toc-module-11-summary" class="nav-link" data-scroll-target="#module-11-summary">Module 11 Summary</a></li>
+  <li><a href="#lab-11-the-ai-integration-proposal" id="toc-lab-11-the-ai-integration-proposal" class="nav-link" data-scroll-target="#lab-11-the-ai-integration-proposal">🔬 Lab 11: The AI Integration Proposal</a></li>
+  <li><a href="#module-11-quiz" id="toc-module-11-quiz" class="nav-link" data-scroll-target="#module-11-quiz">🎮 Module 11 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module09/index.html">PART IV: DEPTH</a></li><li class="breadcrumb-item"><a href="../module11/index.html">AI Across Disciplines</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">AI Across Disciplines</h1>
+<p class="subtitle lead">Module 11 · Real-World Applications in Your Field</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. The specific tools and vendors change quarterly; the pattern of where AI helps, where it hurts, and what’s irreducibly human does not.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Modules 1–10 — the complete AI literacy foundation.</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Identify 3+ current AI applications specific to <em>your</em> field, with real vendor names and measured outcomes</li>
+<li>Evaluate which AI tools and techniques are most relevant to your discipline</li>
+<li>Design an AI-enhanced workflow for a task you actually do</li>
+<li>Recognize field-specific ethical considerations and regulatory constraints</li>
+<li>Connect BRIEFS, SMARTS, and verification skills to domain-specific applications</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Find Your Field
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This module covers seven disciplines. Start with <em>your</em> field, then skim one or two others for cross-pollination. The universal pattern is the same everywhere — only the examples change.</p>
+<section id="the-1-ai-application-in-each-field-april-2026" class="level3">
+<h3 class="anchored" data-anchor-id="the-1-ai-application-in-each-field-april-2026">The #1 AI application in each field, April 2026</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Government</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Creative</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false">Law</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>AI tutoring with guardrails — <em>constraint is the whole game.</em></strong> Two independent RCTs settled the question in 2024–2025. Kestin et al.&nbsp;at Harvard (<em>Scientific Reports</em> 2025): a constrained physics tutor produced <strong>~2× the learning gain</strong> of instructor-led active learning. Bastani et al.&nbsp;in Turkey (<em>PNAS</em> 2025): unconstrained GPT-4 access during practice left students <strong>17% worse</strong> on a no-AI exam than students who’d never used AI — while a <em>constrained</em> tutor variant preserved learning. Guardrails aren’t optional polish. They are what separates an AI that teaches from an AI that substitutes for thinking.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><strong>AI-assisted brand sprints and market analysis.</strong> In 30 minutes, a small team can produce a positioning statement, tagline variants, a color palette, and logo concepts — work that used to take a design agency a week. Human judgment on what’s good; AI does the volume.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><strong>Ambient clinical documentation.</strong> AI scribes (Abridge, Nuance DAX Copilot, Suki, Freed) listen to the visit, draft the note, and clinicians review and sign. A 2025 JAMA multi-site study reported ~<strong>13.4 fewer minutes in the EHR per day</strong> and ~<strong>16.0 fewer minutes on documentation</strong>, with about <strong>0.49 more visits per week</strong> per clinician. HIPAA-compliance and human sign-off are non-negotiable. Context: the FDA has now authorized <strong>1,300+ AI/ML medical devices</strong>, with <strong>258 cleared in 2025 alone</strong> — 80% in radiology.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p><strong>Precision herbicide application.</strong> John Deere’s See &amp; Spray, developed by Blue River Technology, covered <strong>5 million acres in 2025</strong> and saved farmers <strong>31 million gallons of herbicide mix</strong> — a ~77% reduction vs.&nbsp;broadcast spraying. Paired with Climate FieldView (Bayer, 60M hectares across 23 countries) for zone-by-zone agronomic decisions. Local validation matters: small farms often can’t amortize the hardware.</p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p><strong>Public communication and grant writing.</strong> AI drafts press releases, community updates, policy briefs, and grant narratives at an 8th-grade reading level. Staff review for accuracy and tone. Transparency about AI use in public-facing documents is emerging as the expected norm — even as U.S. federal policy in 2026 is actively trying to preempt state-level AI disclosure rules.</p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p><strong>Content production at scale — with labor protections now bargained.</strong> Image (Midjourney, Firefly, DALL-E 3), video (Sora 2, Runway Gen-4, Veo 3), music (Suno v4, Udio), and copy production are all 5–10× faster. A solo creator can approach agency-quality output. The flip side: SAG-AFTRA ratified a new Interactive Media Agreement in July 2025 after an 11-month strike, securing <strong>consent, compensation, and transparency</strong> protections around AI digital replicas. AI in creative fields is now a negotiated condition of work, not just a tool.</p>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<p><strong>Legal research and document review.</strong> AI drafts contract clauses, summarizes depositions, and identifies precedents. But: verification is mandatory. More than <strong>300 cases of AI-generated legal hallucinations</strong> have been documented since <em>Mata v. Avianca</em>, with at least 200 in 2025 alone. The vetted tools (Westlaw Precision, Lexis+ AI, Harvey, CoCounsel) are substantially safer than raw ChatGPT because they retrieve from curated databases — but the duty to verify is on the attorney, not the vendor.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<section id="when-the-ai-tutor-outperformed-the-lecture" class="level2">
+<h2 class="anchored" data-anchor-id="when-the-ai-tutor-outperformed-the-lecture">When the AI Tutor Outperformed the Lecture</h2>
+<p>In the fall of 2023, Harvard physics lecturer Gregory Kestin ran a study that he titled provocatively: <em>AI Tutoring Outperforms Active Learning</em>. Published in <em>Scientific Reports</em> in 2025, the study enrolled 194 students in Physical Sciences 2, Harvard’s largest physics course. Students were randomized into two groups, each completing two lessons in consecutive weeks — one with an instructor-led <strong>active learning</strong> classroom session (the gold-standard pedagogy that routinely beats traditional lecture), the other with a custom AI tutor at home. The following week, conditions flipped.</p>
+<p>The result: students using the AI tutor showed <strong>roughly double the learning gains</strong> on the post-test compared with the active-learning classroom — and spent <em>less</em> time doing it. They also self-reported higher engagement and motivation.</p>
+<p>The design details that matter:</p>
+<ul>
+<li>The tutor was not raw ChatGPT. It was built on the GPT API with <strong>content-rich, constrained prompts</strong>.</li>
+<li>It was given the <strong>correct solutions</strong> so it wouldn’t hallucinate.</li>
+<li>It was instructed to be <strong>brief</strong> — no more than a few sentences at a time, to avoid cognitive overload.</li>
+<li>It was told to <strong>give away only one step at a time</strong>, and never the full solution in a single message.</li>
+<li>It was aligned with <strong>pedagogical research</strong> on managing cognitive load, encouraging a growth mindset, and providing scaffolded feedback.</li>
+</ul>
+<p>Kestin’s own reading of the result is the one worth learning from: <em>“I don’t think this is an argument for replacing any human interaction. This allows the human interaction to be much richer.”</em> The AI tutor is good at introducing new material, where limited context and minimal judgment are enough. The human instructor is good at everything that requires knowing <em>this specific student</em> — what they already learned, what metaphor will land, what they’re actually stuck on.</p>
+<section id="the-counterweight-when-the-same-ai-harmed-learning" class="level3">
+<h3 class="anchored" data-anchor-id="the-counterweight-when-the-same-ai-harmed-learning">The counterweight: when the same AI <em>harmed</em> learning</h3>
+<p>You should be suspicious of any single study — even a good one. So notice what happened when a different research team asked a similar question and got a very different answer.</p>
+<p>Bastani et al., <em>Generative AI Without Guardrails Can Harm Learning: Evidence from High School Mathematics</em>, published in <strong>PNAS (2025)</strong>. Nearly 1,000 9th–11th grade students at a large Turkish high school, three arms:</p>
+<ul>
+<li><strong>Control</strong> — no AI, textbook and notes only</li>
+<li><strong>GPT Base</strong> — raw ChatGPT-style interface (GPT-4)</li>
+<li><strong>GPT Tutor</strong> — same model, but constrained with teacher-designed prompts that <em>refuse to give direct answers</em> and instead provide hints</li>
+</ul>
+<p>During <strong>practice</strong>, both AI conditions crushed control: GPT Base students scored <strong>48% higher</strong> on practice problems, GPT Tutor students <strong>127% higher</strong>. Classic AI-helps-you result.</p>
+<p>Then they took away AI access and gave a <strong>no-AI exam</strong>.</p>
+<ul>
+<li><strong>GPT Base students scored 17% <em>lower</em> than the control group</strong> — students who had never used AI.</li>
+<li><strong>GPT Tutor students scored roughly the same as control</strong> — no boost, but no harm either.</li>
+</ul>
+<p>The authors’ mechanism is brutal and clean: students used GPT-4 Base as a <strong>crutch</strong>. It handed them answers during practice, so they never did the cognitive work of struggling with the problems. When the scaffold was removed, they had nothing.</p>
+</section>
+<section id="the-two-studies-together" class="level3">
+<h3 class="anchored" data-anchor-id="the-two-studies-together">The two studies together</h3>
+<p>This is why Kestin and Bastani together are the most important result pair in AI education right now:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Kestin (Harvard, 2023 RCT)</strong></th>
+<th style="text-align: left;"><strong>Bastani (Turkey, 2023 RCT)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Subject</strong></td>
+<td style="text-align: left;">Physics (undergrad)</td>
+<td style="text-align: left;">Math (high school)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>AI Tutor variant</strong></td>
+<td style="text-align: left;">Constrained, pedagogical, answer-aware, brief, one step</td>
+<td style="text-align: left;">Constrained, teacher-designed hints, refuses to give answers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Result</strong></td>
+<td style="text-align: left;"><strong>~2× learning gain</strong> vs.&nbsp;active learning</td>
+<td style="text-align: left;"><strong>No harm</strong> vs.&nbsp;no-AI control (protected learning)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>AI Base / unconstrained?</strong></td>
+<td style="text-align: left;">Not tested</td>
+<td style="text-align: left;"><strong>17% worse</strong> on exam than never-using-AI students</td>
+</tr>
+</tbody>
+</table>
+<p>Two independent RCTs, two continents, two subject areas, two age groups. <strong>Same answer.</strong> Constrained, Socratic, guardrail-laden AI tutoring helps or at worst doesn’t harm. Unconstrained ChatGPT-style access <em>hurts</em>. The mechanism is process substitution — if the AI does the thinking during practice, the student doesn’t build the skill.</p>
+<p>This is the single most defensible generalization about AI in education right now. <strong>Constraint is not a nice-to-have. It is the whole game.</strong> Every design choice that made the Kestin tutor work — narrow scope, answer keys to prevent hallucination, brevity, hint-only responses, one-step-at-a-time — is a rule against process substitution. It is the same lesson at the core of the ELEVATE GPTs, ambient medical scribes, and legal-research tools that don’t hallucinate. When AI does your thinking for you, you stop thinking. When AI makes your thinking easier, you think better.</p>
+</section>
+<section id="the-elevate-data-the-same-pattern-locally-validated" class="level3">
+<h3 class="anchored" data-anchor-id="the-elevate-data-the-same-pattern-locally-validated">The ELEVATE data — the same pattern, locally validated</h3>
+<p>Across two semesters of three-wave student surveys in Dr.&nbsp;Yatawara’s statistics courses, the numbers tell a consistent story:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Survey Item (5-point scale)</th>
+<th style="text-align: center;">MATH 2200 (Intro Stats)</th>
+<th style="text-align: center;">MATH 4200 (Math Stats)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">AI tutor enhances learning</td>
+<td style="text-align: center;">4.08 (77% agree)</td>
+<td style="text-align: center;">4.06 (82% agree)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Encourages critical thinking</td>
+<td style="text-align: center;">3.92 (77% agree)</td>
+<td style="text-align: center;">3.76 (77% agree)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Helps recall/apply prior concepts</td>
+<td style="text-align: center;"><strong>4.31 (92% agree)</strong></td>
+<td style="text-align: center;">4.18 (82% agree)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">User-friendly and accessible</td>
+<td style="text-align: center;">4.31 (92% agree)</td>
+<td style="text-align: center;"><strong>4.41 (94% agree)</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Feedback as helpful as instructor</td>
+<td style="text-align: center;">4.08 (85% agree)</td>
+<td style="text-align: center;">3.88 (77% agree)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Supports learning regardless of background</td>
+<td style="text-align: center;">4.31 (92% agree)</td>
+<td style="text-align: center;">4.18 (88% agree)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Source: Yatawara (2025), ELEVATE Project three-wave survey, T3 results.</em></p>
+<p><strong>What students said was most helpful:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Feature</th>
+<th style="text-align: center;">Mentions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">R code help</td>
+<td style="text-align: center;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alignment with class content</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clear explanations</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Step-by-step guidance</td>
+<td style="text-align: center;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Speed/instant feedback</td>
+<td style="text-align: center;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Practice and quizzes</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What barriers they identified:</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Barrier</th>
+<th style="text-align: center;">Mentions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Prompting skill / clarity</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Subject alignment or scope</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Instructor guidance needed</td>
+<td style="text-align: center;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Accessibility / vision</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Language barrier</td>
+<td style="text-align: center;">1</td>
+</tr>
+</tbody>
+</table>
+<p>And in Fall 2025, the controlled experiment in MATH 3200 (Module 8) showed the AI section (mean 72.20) outperforming the traditional section (mean 68.20) on Exam 1, with comparable standard deviations (~21 in both groups).</p>
+<p>These aren’t hypothetical projections. They are measured outcomes, replicated twice — once at Harvard with a major external team, once at a mid-size public university in a local context. AI is transforming disciplines right now.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI in Your Field
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI will replace professionals in my field.”</strong> AI replaces <em>tasks</em>, not jobs. The nurse, teacher, farmer, and lawyer who use AI effectively become <em>more</em> valuable, not obsolete.</li>
+<li><strong>“AI works the same in every field.”</strong> Privacy constraints (HIPAA, FERPA, attorney-client privilege), accuracy requirements, and ethical stakes vary enormously. A chatbot for a bakery’s FAQ has different requirements than one for a hospital’s triage.</li>
+<li><strong>“My field is too specialized for AI.”</strong> RAG (Module 9) grounds any AI in your domain’s documents. Custom GPTs (Module 8) build domain-specific assistants. General AI + your knowledge = specialized AI.</li>
+<li><strong>“The AI applications in my field are too new to trust.”</strong> Some are mature — medical imaging AI has dozens of FDA clearances dating back years. Some are experimental. The SMARTS framework and verification habit (Module 1) help you tell them apart.</li>
+<li><strong>“I should wait until AI is more mature.”</strong> By the time AI is “mature” in your field, your colleagues who started in 2024 will have three years of practical experience. Start with low-stakes applications and build.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-in-education" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-education">AI in Education</h2>
+<p><strong>The landscape.</strong> AI is reshaping every layer of education — K-12 through graduate school, from tutoring to administration.</p>
+<p><strong>Current applications.</strong></p>
+<ul>
+<li><strong>Personalized tutoring</strong> — custom GPTs that adapt to each student’s level and pace (Kestin’s PS2 Pal at Harvard; the ELEVATE GPTs)</li>
+<li><strong>Automated feedback</strong> — instant feedback on writing drafts, code submissions, and problem sets</li>
+<li><strong>Course design</strong> — AI-assisted syllabi, learning objectives, rubrics, and assessment banks</li>
+<li><strong>Administrative efficiency</strong> — syllabus FAQ bots, scheduling assistants, enrollment support</li>
+<li><strong>Accessibility</strong> — real-time captioning, text-to-speech, content translation, reading-level adaptation</li>
+<li><strong>Student support</strong> — early-warning systems that flag at-risk students based on engagement patterns (with the ethical caveats from Module 10)</li>
+</ul>
+<p><strong>Case Study: The ELEVATE Custom GPT Ecosystem.</strong> Dr.&nbsp;Yatawara built and deployed 10+ custom GPTs across multiple courses:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">GPT</th>
+<th style="text-align: left;">Course</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Chapter 1–4 Tutors</td>
+<td style="text-align: left;">MATH 3200</td>
+<td style="text-align: left;">Topic-specific guided learning, each loaded only with that chapter</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Exam Review Bot</td>
+<td style="text-align: left;">MATH 4200</td>
+<td style="text-align: left;">Generates practice problems and walks through solutions step by step</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R Tutor</td>
+<td style="text-align: left;">MATH 2200</td>
+<td style="text-align: left;">Coding help using only course-approved R packages</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Syllabus GPT</td>
+<td style="text-align: left;">MATH 3200</td>
+<td style="text-align: left;">Answers policy questions, eliminates repetitive emails</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DOE Assistant</td>
+<td style="text-align: left;">MATH 2200</td>
+<td style="text-align: left;">Guides students through experimental design</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key insight.</strong> The GPTs succeeded because they were <strong>constrained</strong> — each was loaded with only the relevant course content and instructed to guide, not hand out answers (the 7-step tutoring algorithm from Module 8). This is exactly the same constraint that made Kestin’s PS2 Pal work and the same one Bastani et al.&nbsp;identified as the difference between AI that protects learning and AI that actively undermines it. The MATH 3200 controlled experiment (Module 8) showed the AI section outperforming traditional (mean 72.20 vs.&nbsp;68.20) on Exam 1 — consistent with the Kestin and protected-Bastani pattern.</p>
+<p><strong>Ethical considerations.</strong> Academic integrity policies, equitable access to AI tools, student data privacy (FERPA), and the risk of over-reliance on AI feedback. Detector-based integrity enforcement is especially fraught — see Module 10’s discussion of the 61.3% TOEFL false-positive rate. And now, Bastani et al.’s finding that unguarded AI access during practice can <strong>actively harm</strong> learning is the strongest empirical case yet for transparency requirements over AI use in coursework. An instructor isn’t just enforcing honesty — they’re protecting students from process substitution.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 11.1 (Education)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you’re an educator: choose one assignment from a course you teach. Design a custom GPT for that specific assignment using Module 8’s principles. Write: (a) the system instructions, (b) what files you’d upload, (c) what the GPT should <em>never</em> do.</p>
+<p>If you’re not: think of a course you’ve taken. What would have helped most — a tutoring GPT, an exam-review GPT, or a study-skills GPT? Write the system instructions for one.</p>
+<details>
+<summary>
+<strong>Key design principles to remember</strong>
+</summary>
+<ul>
+<li>Constrain the knowledge base to <em>only</em> the relevant materials</li>
+<li>Instruct it to guide, not answer (hint → nudge → reveal escalation)</li>
+<li>Require students to show their own reasoning before getting help</li>
+<li>Disable web search to keep answers grounded in course content</li>
+<li>Be brief: a few sentences per turn, not a wall of text</li>
+<li>Include a “wrap-up and summarize” instruction so each session ends with learning reinforcement</li>
+</ul>
+</details>
+</div>
+</div>
+<hr>
+</section>
+<section id="ai-in-business-and-entrepreneurship" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-business-and-entrepreneurship">AI in Business and Entrepreneurship</h2>
+<p><strong>The landscape.</strong> From Fortune 500 to solo entrepreneurs, AI is reshaping how business runs.</p>
+<p><strong>Current applications.</strong></p>
+<ul>
+<li><strong>Customer analytics</strong> — segmentation, churn prediction, lifetime value, personalized marketing</li>
+<li><strong>Content generation</strong> — marketing copy, social posts, product descriptions, email campaigns at scale</li>
+<li><strong>Financial analysis</strong> — forecasting, anomaly detection, automated reporting, risk assessment</li>
+<li><strong>Supply chain</strong> — demand prediction, route optimization, inventory management, supplier risk</li>
+<li><strong>Operations</strong> — meeting summarization, project tracking, workflow automation, document processing</li>
+<li><strong>Brand development</strong> — positioning, visual identity, market research, competitive analysis</li>
+</ul>
+<p><strong>Case Study: The Roadrunner Lemonade Brand Sprint.</strong> University business students used the Brand Sprint prompt (Module 6) to take a raw idea — a campus lemonade stand — and produce in 30 minutes a positioning statement, three tagline variants, a 3-color palette with hex codes, a font pairing, and three logo concept prompts ready for image generation.</p>
+<p><strong>What this demonstrates.</strong> A solo entrepreneur in Kern County can produce MVP brand assets that previously required a design agency. AI doesn’t replace the agency for complex brand work — for a national campaign, you still want professionals — but for an MVP, a pitch deck, a first logo, the playing field has genuinely shifted.</p>
+<p><strong>Kern County relevance.</strong> Agriculture-tech, energy, healthcare administration, logistics, and small businesses across the Central Valley can all leverage AI for operations that were previously too expensive to outsource.</p>
+<p><strong>Ethical considerations.</strong> AI marketing content must be truthful (FTC enforcement is active). Customer data for AI analytics requires consent. AI hiring tools carry the Amazon bias risk from Module 2. And: when you generate marketing content with AI, consider the human-authorship requirement if you want copyright protection (Module 10 — <em>Thaler</em> and the Copyright Office’s 2025 Part 2 report).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 11.2 (Business)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pick a real or hypothetical small business in your community. Using BRIEFS, write a prompt that asks AI to generate: (a) 3 marketing campaign ideas for the next quarter, (b) a competitive analysis of the top 3 competitors, and (c) 5 social-media post drafts. Run it. Evaluate: what’s usable immediately, what needs refinement, and what’s factually wrong?</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="ai-in-healthcare" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-healthcare">AI in Healthcare</h2>
+<p><strong>The landscape.</strong> Healthcare AI is both the most promising and the most sensitive domain.</p>
+<p><strong>Current applications.</strong></p>
+<ul>
+<li><strong>Medical imaging</strong> — AI detecting tumors, fractures, and retinal disease. This is the most regulated, best-validated, and longest-running category of AI in medicine. As of the FDA’s December 2025 update, the agency has authorized <strong>over 1,300 AI/ML-enabled medical devices</strong>, up from ~500 at the start of 2023. <strong>258 were cleared in 2025 alone</strong> — more than any year in FDA history. Roughly <strong>80% are radiology</strong>, with cardiology (~98 devices) and neurology growing. The first autonomous AI device was <strong>IDx-DR</strong> (cleared April 2018), which screens for diabetic retinopathy directly from a retinal image in primary-care offices — correctly identifying retinopathy ~90% of the time in its pivotal ~900-patient trial. “Mature” in healthcare AI has a real meaning: it’s FDA-cleared, published, and in daily clinical use.</li>
+<li><strong>Ambient clinical documentation</strong> — Abridge, Nuance DAX Copilot, Suki, Freed, Ambience, DeepScribe, and athenaAmbient (bundled free with athenahealth as of early 2026). The JAMA multi-site study found ~13.4 fewer EHR minutes and ~16.0 fewer documentation minutes per day, plus ~0.49 more visits per week.</li>
+<li><strong>Clinical decision support</strong> — evidence-based treatment recommendations at the point of care, typically through RAG over clinical guidelines</li>
+<li><strong>Drug discovery</strong> — predicting molecular interactions; reducing some discovery pipelines from decades to years</li>
+<li><strong>Patient communication</strong> — chatbots for scheduling, symptom triage, medication reminders</li>
+<li><strong>Population health</strong> — predicting disease outbreaks, identifying at-risk populations</li>
+</ul>
+<p><strong>The FDA pipeline problem.</strong> Of the 1,300+ cleared devices, <strong>97% came through the 510(k) pathway</strong> — meaning they were cleared as “substantially equivalent” to a prior device rather than required to demonstrate independent clinical evidence. Recent audits have found that only ~29% of cleared radiology AI devices reported any clinical testing, only 8% included a human-in-the-loop evaluation, and <strong>fewer than 4% disclosed the race or ethnicity of their validation cohort</strong>. The sheer volume of FDA clearances can look like rigorous validation when it is, in many cases, pattern-matching to earlier devices. Module 10’s Obermeyer lesson applies here: ask what was measured, on whom, before deploying.</p>
+<p><strong>The privacy imperative.</strong> Healthcare AI operates under <strong>HIPAA</strong> (U.S.) or <strong>PIPEDA</strong> (Canada), which strictly govern patient data. This makes Module 9’s infrastructure question existential: cloud AI tools processing PHI need a <strong>Business Associate Agreement (BAA)</strong> and the right contractual protections — or the data stays on premises (the SLM-RAG approach).</p>
+<p><strong>The ambient scribe second-order problem.</strong> Recent research has flagged that ambient scribes don’t just document — they document <em>more completely</em>, which increases billing. A 2024 Texas Oncology study saw documented diagnoses per encounter rise from 3.0 to 4.1. Riverside Health reported an 11% rise in physician wRVUs and a 14% increase in documented HCC diagnoses. Some of that is legitimate (under-documentation is real), but the shift from “burnout reduction” to “revenue engine” in ambient-scribe vendor marketing is real too. Know which story you’re buying.</p>
+<p><strong>Ethical considerations.</strong> Diagnostic AI that performs worse on certain demographics (the dermatology analog of Gender Shades is well-documented). Liability when AI assists a wrong diagnosis — regulators are still working this out. Patient consent for AI involvement in their care. CMS payment coverage lags FDA clearance dramatically: as of late 2025, <strong>only ~10 of 1,300+ cleared AI devices had CMS reimbursement codes</strong>, which means most deployments get paid for out of hospital margins or not at all.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 11.3 (Healthcare)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’re a clinic manager evaluating AI tools. Use the 5-Question Test from Module 6 on a hypothetical “AI Patient Triage Chatbot” for your waiting room: Does it solve a real problem? Is it better than current triage? Where does patient data go? What does it cost? Will the vendor still exist in 18 months? What HIPAA and BAA requirements apply? What happens when it’s wrong?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: Cross-Discipline Patterns
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By now you’ve seen AI in education, business, and healthcare. Notice:</p>
+<ol type="1">
+<li>What’s the <em>same</em> across all three? <em>(AI handles routine/data-heavy work; humans provide judgment; privacy and verification matter; constrained tools outperform unconstrained ones.)</em></li>
+<li>What’s <em>different</em>? <em>(Privacy constraints — FERPA vs.&nbsp;HIPAA vs.&nbsp;consumer data. Accuracy stakes — a wrong exam grade vs.&nbsp;a wrong diagnosis. Deployment context — classroom vs.&nbsp;clinic vs.&nbsp;storefront.)</em></li>
+<li>Which frameworks apply to all three? <em>(BRIEFS for prompting; SMARTS for reasoning; verification for accuracy; the 5-Question Test for tool evaluation.)</em></li>
+</ol>
+<p>This pattern holds for every discipline that follows.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="ai-in-agriculture-and-environmental-science" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-agriculture-and-environmental-science">AI in Agriculture and Environmental Science</h2>
+<p><strong>The landscape.</strong> Kern County sits in one of the most productive agricultural regions on Earth. AI is already here, with specific tools and measured outcomes.</p>
+<p><strong>Current applications — with named tools.</strong></p>
+<ul>
+<li><strong>Precision herbicide application — John Deere’s See &amp; Spray</strong> (developed by Blue River Technology, acquired 2017). Boom-mounted cameras use computer vision to identify individual weeds and spray only them through an ExactApply nozzle system. Real 2025 numbers, not vendor projections: <strong>5 million acres covered, 31 million gallons of herbicide mix saved, ~2 bushels/acre yield bump (up to 4.8 bushels in best cases), ~77% reduction in herbicide use vs.&nbsp;broadcast spraying (up to 90% reduction in cotton)</strong>. Available as factory-install or retrofit kit. This is the most-deployed AI agriculture tool in the world right now.</li>
+<li><strong>Integrated farm-data platforms — Climate FieldView</strong> (Bayer) and <strong>John Deere Operations Center.</strong> FieldView aggregates weather, soil, and yield data across <strong>~60 million hectares in 23 countries</strong>. Operations Center connects equipment telemetry, agronomy prescriptions, and fleet management. The two integrate bidirectionally after a 2018 agreement.</li>
+<li><strong>Autonomous equipment — John Deere 8R autonomous tractor</strong> (launched 2022), uses 6 stereo camera pairs and onboard neural nets for planting, tilling, and harvest. Addresses agricultural labor shortages where feasible.</li>
+<li><strong>Pest and disease detection — Plantix.</strong> Smartphone app used primarily in low-resource settings. Farmer photographs a damaged leaf; AI returns differential diagnoses and treatment guidance in 18+ languages. Has over 20 million downloads, largest adoption in India, Southeast Asia, and Africa.</li>
+<li><strong>Irrigation optimization — CropX</strong> and <strong>Arable.</strong> Soil-moisture sensors plus AI analysis automatically schedule irrigation. CropX reports <strong>25–50% reductions in water use</strong> on participating farms.</li>
+<li><strong>Satellite + yield prediction — Planet Labs</strong> (daily-cadence satellite imagery), IBM Watson Decision Platform for Agriculture, Microsoft Azure FarmBeats, Descartes Labs. Field-level crop health and yield forecasts from space imagery feed commodity markets and insurance pricing.</li>
+<li><strong>Environmental monitoring</strong> — PM2.5 tracking, pollution-source identification, compliance reporting. Dr.&nbsp;Yatawara’s own published research on PM2.5 income-disparity gradients across 48 states uses exactly this type of data pipeline.</li>
+</ul>
+<p><strong>Kern County context.</strong> The Central Valley produces ~25% of America’s food on ~1% of its farmland. It also has significant air-quality challenges due to agriculture, oil production, and geography. AI applications in both agriculture and environmental monitoring are directly relevant to this community.</p>
+<p><strong>Ethical considerations — the data-ownership question is the central one.</strong> Who owns the data a farm sensor collects? In most current contracts, <strong>the platform vendor effectively does.</strong> Farmers receive “better recommendations” in exchange for handing over data that flows into vendor models, commodity analytics, and — critically — recommendations that may favor the vendor’s own seed and chemical products. A Climate FieldView recommendation that nudges toward Bayer seeds is not neutral. Farm data coalitions (AgGateway, OATS Center at Purdue) have argued for farmer-retained data rights, but the default terms of service still run the other way.</p>
+<p><strong>The equity question.</strong> Precision agriculture tools that only pay for themselves at scale widen the gap between corporate and family farms. A See &amp; Spray retrofit kit is a capital investment that a 500-acre family farm can’t easily amortize. Small farmers without the technology aren’t just forgone productivity — they’re out-competed by farms whose inputs cost 30% less. Technology that only works for large operators deepens the equity gap. Validate across farm sizes and practices before claiming broad applicability.</p>
+<hr>
+</section>
+<section id="ai-in-government-and-public-service" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-government-and-public-service">AI in Government and Public Service</h2>
+<p><strong>Current applications.</strong></p>
+<ul>
+<li><strong>Administrative automation</strong> — permits, license renewals, benefit applications at scale</li>
+<li><strong>Citizen services</strong> — chatbots for hours, locations, procedures, eligibility. Federal examples: <strong>GSA’s USA.gov chatbot</strong>, <strong>IRS “Where’s My Refund”</strong> assistants, <strong>SSA claims-status bots</strong></li>
+<li><strong>Policy analysis</strong> — modeling the impact of proposed policies before implementation</li>
+<li><strong>Emergency response</strong> — predictive routing, resource allocation, real-time communication during disasters</li>
+<li><strong>Fraud detection</strong> — pattern-finding in benefits, taxes, procurement. <strong>Treasury’s Bureau of the Fiscal Service</strong> uses AI to flag suspicious federal payments and recovered billions in improper payments in 2024–2025</li>
+</ul>
+<p><strong>The COMPAS lesson (Module 10).</strong> Government AI applications carry the highest stakes and the highest bias risks. COMPAS showed that AI used in criminal justice can systematically discriminate — and the consequences are people’s freedom. Government AI requires the most rigorous fairness testing, transparency, and human oversight of any domain. The EU AI Act’s August 2026 enforcement reflects this: most public-sector uses fall into the “high-risk” category with binding obligations.</p>
+<p><strong>The U.S. federal–state policy tension.</strong> As covered in Module 10, U.S. AI policy is currently in motion. The federal Executive Order 14179 (Jan 2025) pushed deregulation. The July 2025 AI Action Plan continued that direction. A December 11, 2025 executive order explicitly <strong>targets state-level AI regulations for federal preemption</strong> — aimed at Colorado’s AI Act (effective February 2026, the first U.S. state with binding AI disclosure and risk-management rules for “high-risk” automated decisions), California’s SB 1047 successor bills, and similar laws in New York and Illinois.</p>
+<p>The live tension this creates for government AI: a state agency deploying an AI system in 2026 may face simultaneous (a) state-law obligations (algorithmic impact assessments, notice to affected individuals, opt-out rights), (b) NIST AI RMF expectations from federal contracts, (c) EU AI Act compliance if data flows to EU-based vendors, and (d) federal executive-branch pressure <em>against</em> state rules. There is no clean hierarchy. The practical rule remains: <strong>write to the strictest applicable regime</strong>, document everything, and build for human override from day one.</p>
+<p><strong>Practical rule.</strong> For any government deployment that affects rights, liberty, or benefits: mandatory subgroup bias audit, meaningful human override, and transparent documentation of the fairness definition chosen. If you can’t answer the Chouldechova question (“which fairness definition are we optimizing?”), you aren’t ready to deploy.</p>
+<hr>
+</section>
+<section id="ai-in-creative-industries" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-creative-industries">AI in Creative Industries</h2>
+<p><strong>Current applications — with named tools.</strong></p>
+<ul>
+<li><strong>Visual arts</strong> — <strong>Midjourney v7</strong> (still the community favorite for style and aesthetic quality), <strong>DALL-E 3</strong> (inside ChatGPT, best at following detailed instructions), <strong>Stable Diffusion 3.5</strong> and <strong>Flux.1</strong> (open-source, run locally, fine-tunable), <strong>Adobe Firefly</strong> (trained on Adobe Stock only — the “commercially safe” choice where training-data legal risk is being priced in).</li>
+<li><strong>Music</strong> — <strong>Suno v4</strong> and <strong>Udio</strong> (text-to-song generation), Stability’s <strong>Stable Audio</strong> (open-source), <strong>Adobe Podcast</strong> (voice enhancement and editing). Full songs with vocals from a prompt, in 30 seconds.</li>
+<li><strong>Video</strong> — <strong>Sora 2</strong> (OpenAI), <strong>Runway Gen-4</strong>, <strong>Veo 3</strong> (Google), <strong>Kling</strong> (Kuaishou). Current generation produces coherent 30-second shots with consistent characters across cuts.</li>
+<li><strong>Writing</strong> — brainstorming, drafting, editing (but not replacing distinctive creative voice)</li>
+<li><strong>Film/video production</strong> — storyboarding, b-roll generation, post-production effects, voice dubbing, <strong>AI-powered rotoscoping</strong> (Runway)</li>
+<li><strong>Gaming</strong> — procedural content generation, NPC dialogue trees, world-building, AI-generated textures and animations</li>
+</ul>
+<p><strong>The labor story.</strong> Creative work is now also a labor-law story. <strong>SAG-AFTRA’s 11-month video game actors’ strike</strong> ended in July 2025 when the union ratified a new Interactive Media Agreement by 95.04% — securing <strong>consent, compensation, and transparency</strong> requirements for AI digital replicas of performers’ voices and likenesses, alongside a 15.17% pay increase. The 2023 film/TV contracts and California’s <strong>AB 1836 and AB 2602</strong> (September 2024) added state-level protections for performers and their estates. Expect similar language in writers’, illustrators’, and musicians’ contracts going forward.</p>
+<p><strong>The copyright overhang.</strong> Two unresolved legal questions hang over every commercial use of AI creative tools, from Module 10: (1) whether purely AI-generated output is copyrightable — under <em>Thaler</em>, <strong>no</strong>, and cert was denied March 2026. AI-assisted work with meaningful human control <strong>can</strong> be copyrighted. (2) Whether training on copyrighted material without permission is fair use — <strong>unresolved</strong>, with <em>Bartz v. Anthropic</em> settling at <strong>$1.5B</strong> and district courts disagreeing. Adobe Firefly’s “trained only on Adobe Stock and public domain” positioning is explicitly a hedge against this legal risk.</p>
+<p><strong>The replacement debate.</strong> AI won’t replace artists with distinctive creative vision and judgment. It <strong>will</strong> replace artists doing generic, template-based, commodity work — stock illustration, basic social-media imagery, junior-level logo work, formulaic production music. The bottleneck shifts from execution skill (can you draw?) to creative direction (do you know what’s worth making?). Whether that’s a net good or a net bad for the creative economy depends on who you are in it.</p>
+<p><strong>Ethical considerations.</strong> Copyright uncertainty, labor protections now bargained, attribution. If your creative work involves AI, say so. The audience increasingly cares.</p>
+<hr>
+</section>
+<section id="ai-in-law" class="level2">
+<h2 class="anchored" data-anchor-id="ai-in-law">AI in Law</h2>
+<p><strong>Current applications — with named tools.</strong></p>
+<ul>
+<li><strong>Legal research</strong> — <strong>Westlaw Precision with AI</strong> (Thomson Reuters), <strong>Lexis+ AI</strong> (LexisNexis), <strong>Harvey</strong> (BigLaw’s most-adopted vertical tool; used by Allen &amp; Overy, PwC, Ashurst and dozens more), <strong>CoCounsel</strong> (formerly Casetext, now Thomson Reuters). All are RAG-grounded over vetted case-law and treatise databases, which is what makes them materially safer than raw ChatGPT. A properly grounded legal-research AI is dramatically faster than manual Westlaw searching.</li>
+<li><strong>Contract analysis</strong> — <strong>Kira Systems</strong>, <strong>LawGeex</strong>, <strong>LinkSquares</strong> — reviewing 200-page contracts in minutes, flagging unusual terms, extracting renewal dates and risk provisions, checking regulatory compliance</li>
+<li><strong>Document review / eDiscovery</strong> — <strong>Relativity aiR</strong>, <strong>Everlaw AI Assistant</strong>, <strong>DISCO AI</strong>. Processing tens of thousands of documents in discovery. This is where AI has had the largest measurable productivity impact in law — a review that used to take 20 associates four weeks now takes two associates one week.</li>
+<li><strong>Access to justice</strong> — AI-powered legal aid for people who can’t afford attorneys; self-help tools for forms, filings, and basic questions. <strong>DoNotPay</strong> (mixed record), <strong>JusticeText</strong>, state-level legal-help bots</li>
+<li><strong>Predictive analytics</strong> — forecasting case outcomes, estimating settlement values, analyzing judicial behavior</li>
+<li><strong>The wildcard — general-purpose chatbots used by lawyers.</strong> Still widespread, still dangerous, and the source of almost every hallucination sanction. <em>Don’t.</em></li>
+</ul>
+<p><strong>The verification imperative.</strong> The cautionary tale is no longer just <em>Mata v. Avianca</em> (2023, $5,000 sanction, two lawyers and their firm sanctioned for six fabricated case citations). As of August 2025, researchers had documented <strong>more than 300 cases of AI-driven legal hallucinations</strong> in court filings — with at least 200 in 2025 alone. The sanctions have escalated:</p>
+<ul>
+<li><em>Mata v. Avianca</em> (SDNY 2023) — $5,000 sanction</li>
+<li><em>Gauthier v. Goodyear Tire</em> (E.D. Tex. 2024) — $2,000 sanction</li>
+<li><em>Wadsworth v. Walmart</em> (D. Wyo. 2025) — $3,000 sanction + pro hac vice admission revoked; eight of nine cited cases were hallucinations</li>
+<li><em>Mid Central Operating Engineers v. HoosierVac</em> (S.D. Ind. 2025) — $15,000 recommended sanction</li>
+<li><em>Johnson v. Dunn</em> (N.D. Ala. July 2025) — attorneys <strong>disqualified from the case</strong>, opinion sent to bar regulators in every state where the attorneys are licensed</li>
+</ul>
+<p>The American Bar Association issued <strong>Formal Opinion 512 (2024)</strong> on ethical use of generative AI, covering competence, confidentiality, candor to tribunals, and client communication. Many federal courts now require attorneys to certify that AI-generated citations have been independently verified. The vetted tools (Westlaw, Lexis+, Harvey, CoCounsel) are dramatically safer because they retrieve from curated databases rather than generating citations from model memory — but <em>even they can err</em>, and the verification duty is on the attorney, not the vendor.</p>
+<p><strong>The opportunity.</strong> Lawyers who use AI well will replace lawyers who don’t. Firms are hiring for “legal technology” roles that didn’t exist three years ago. The trick is that the competency question has inverted — it’s no longer “can you use AI?” It’s “can you use AI <em>and still catch it when it lies</em>?” That’s the professional skill that pays.</p>
+<hr>
+</section>
+<section id="finding-ai-in-your-field" class="level2">
+<h2 class="anchored" data-anchor-id="finding-ai-in-your-field">Finding AI in YOUR Field</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 11.4 — The Field Audit
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No matter your discipline, answer these 5 questions:</p>
+<ol type="1">
+<li><strong>What are the 3 most time-consuming tasks in your field?</strong> (AI automation candidates.)</li>
+<li><strong>What decisions require the most expertise?</strong> (AI augmentation candidates.)</li>
+<li><strong>What data does your field generate?</strong> (Determines which AI techniques apply — ML, NLP, computer vision, speech.)</li>
+<li><strong>What are the privacy/ethical constraints?</strong> (HIPAA? FERPA? Attorney-client privilege? Export controls? Environmental regulations?)</li>
+<li><strong>Who in your field is already using AI well?</strong> (Find them and read what they’ve written.)</li>
+</ol>
+<details>
+<summary>
+<strong>How to find AI leaders in your field</strong>
+</summary>
+<ul>
+<li>Search your professional association’s website for “AI” or “artificial intelligence”</li>
+<li>Look for AI-dedicated sessions at your field’s major annual conference</li>
+<li>Search LinkedIn for “[your field] + AI” and read what practitioners post</li>
+<li>Check whether your field has an AI-specific journal, working group, or special interest group</li>
+<li>Perplexity search: <em>“latest AI applications in [your field] 2026 peer-reviewed”</em> — and verify the citations you find</li>
+</ul>
+</details>
+</div>
+</div>
+<hr>
+</section>
+<section id="module-11-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-11-summary">Module 11 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>AI is transforming every field</strong> — not someday, now. The Kestin Harvard RCT proved it for physics education; the Bastani PNAS RCT proved the negative case in high-school math; the JAMA study proved ambient scribes save clinicians 30+ minutes/day; See &amp; Spray saved 31M gallons of herbicide mix across 5M acres in 2025; the ELEVATE data proved it locally for statistics. Similar evidence is accumulating everywhere.</p></li>
+<li><p><strong>Constraint is the whole game.</strong> Kestin and Bastani together are the clearest empirical result in AI education right now: <strong>the same model that helps learning when constrained can <em>harm</em> learning when unconstrained.</strong> The same principle explains why ambient scribes work, why Harvey (retrieval-grounded) outperforms raw ChatGPT for legal research, and why the ELEVATE GPTs work — narrow scope, authoritative reference material, refusal to hand out answers. This is the generalizable design principle across every discipline in this module.</p></li>
+<li><p><strong>The pattern across fields is stable.</strong> AI handles routine and data-intensive tasks. Humans provide judgment, context, ethics, and creativity. The best results come from human-AI collaboration — never AI alone.</p></li>
+<li><p><strong>Domain expertise makes AI useful.</strong> A nurse using AI is still a nurse. A teacher using AI is still a teacher. <em>Your</em> knowledge turns a generic AI tool into a domain-specific powerhouse.</p></li>
+<li><p><strong>Field-specific ethics and regulation vary enormously</strong> — HIPAA in healthcare (1,300+ FDA-cleared AI devices but only ~10 reimbursed by CMS), FERPA in education, bargained labor protections in creative industries, ABA Formal Opinion 512 in law, EU AI Act high-risk designations in government. Know your field’s specific constraints.</p></li>
+<li><p><strong>The frameworks from this course are universal.</strong> BRIEFS, SMARTS, verification, the 5-Question Test — they work in every discipline. Only the examples change.</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>The students in the ELEVATE survey said the most helpful feature of the AI tutor was <strong>“helps recall and apply prior concepts” (92% agreement).</strong> Not speed. Not convenience. The ability to connect what they were learning to what they already knew. Kestin’s physics students said something similar — the tutor was most valuable when introducing new material that required bridging what they already knew to something new. That’s what AI does at its best in any discipline: it doesn’t replace your knowledge, it <strong>activates</strong> it. It helps you see connections you might have missed, apply frameworks you learned last semester, bridge the gap between what you know and what you need to figure out. Your expertise is the fuel. AI is the engine. <strong>Neither works without the other.</strong></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-11-the-ai-integration-proposal" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-11-the-ai-integration-proposal">🔬 Lab 11: The AI Integration Proposal</h2>
+<section id="lab-11-ai-integration-proposal-for-your-field" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-11-ai-integration-proposal-for-your-field">Lab 11: AI Integration Proposal for Your Field</h4>
+<p><strong>Time:</strong> 60 minutes | <strong>Tools needed:</strong> AI chatbot + knowledge of your field</p>
+<p>Write a <strong>2-page proposal</strong> for integrating AI into one core process in your specific field/role:</p>
+<ol type="1">
+<li><strong>Current workflow</strong> — How is this task done today? Time, pain points, bottlenecks.</li>
+<li><strong>Proposed AI workflow</strong> — Which tools/techniques? Write the actual prompts you’d use (BRIEFS-structured).</li>
+<li><strong>Tools and costs</strong> — Specific tool names, pricing (verify against April 2026 provider pages), technical requirements.</li>
+<li><strong>Risks</strong> — Bias? Privacy? Over-reliance? Legal/regulatory exposure? What could go wrong?</li>
+<li><strong>Expected benefits</strong> — Time saved, quality improved, access expanded. Use specific numbers — and distinguish measured benefits (like the JAMA study’s 13.4 minutes) from vendor claims.</li>
+<li><strong>Success metrics</strong> — How would you measure whether it worked? Would you publish the result, even if it failed?</li>
+<li><strong>Ethical considerations</strong> — Who benefits? Who might be harmed? What safeguards?</li>
+</ol>
+<p><strong>Submit.</strong> Your 2-page proposal.</p>
+</section>
+<hr>
+</section>
+<section id="module-11-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-11-quiz">🎮 Module 11 Quiz</h2>
+<div id="m11-game">
+
+</div>
+<script>
+(function(){var el=document.getElementById('m11-game');el.innerHTML='<div class="game-section"><span class="game-badge">Module 11 Challenge</span><h3 style="color:white;border:none;">AI Across Disciplines</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m11-area"><div id="m11-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m11-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m11-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m11-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m11-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"Kestin's 2023 Harvard RCT (published in Scientific Reports, 2025) found that a custom AI physics tutor produced:",a:"Roughly double the learning gain of instructor-led active learning, in less time",opts:["Worse outcomes than lecture","Roughly double the learning gain of instructor-led active learning, in less time","The same outcomes as lecture","Only marginal improvement"]},
+    {q:"Bastani et al.'s 2025 PNAS RCT in Turkish high schools found that:",a:"Unconstrained GPT-4 access during practice left students 17% WORSE on a no-AI exam than students who never used AI; a constrained 'Tutor' variant preserved learning",opts:["Unconstrained GPT-4 access during practice left students 17% WORSE on a no-AI exam than students who never used AI; a constrained 'Tutor' variant preserved learning","AI always helps learning","AI never helps learning","AI helps girls but not boys"]},
+    {q:"The Kestin and Bastani RCTs together demonstrate that:",a:"Constraint is the whole game — guarded, Socratic AI helps learning; unconstrained AI substitutes for student thinking and harms it",opts:["AI tutors are always better than human teachers","Constraint is the whole game — guarded, Socratic AI helps learning; unconstrained AI substitutes for student thinking and harms it","AI only works in physics and math","More AI is always better"]},
+    {q:"The ELEVATE survey's highest-rated AI tutor feature (92% agreement) was:",a:"Helps recall and apply prior concepts",opts:["Speed of responses","Helps recall and apply prior concepts","Image generation","Replacing instructor feedback"]},
+    {q:"The Harvard and ELEVATE tutors succeeded primarily because they were:",a:"Constrained — loaded with only relevant content, given correct answers, instructed to guide rather than hand out answers",opts:["Built on the most expensive available models","Constrained — loaded with only relevant content, given correct answers, instructed to guide rather than hand out answers","Connected to the internet for real-time data","Used only by top students"]},
+    {q:"The 2025 JAMA multi-site study on AI ambient scribes reported that clinicians saved about:",a:"13.4 fewer EHR minutes and 16.0 fewer documentation minutes per day",opts:["5 minutes per week","13.4 fewer EHR minutes and 16.0 fewer documentation minutes per day","2 hours per patient","No measurable time savings"]},
+    {q:"AI in healthcare requires special attention to:",a:"HIPAA compliance — patient data privacy is legally mandated and non-negotiable",opts:["Using the fastest model","HIPAA compliance — patient data privacy is legally mandated and non-negotiable","Making AI interfaces look friendly","Replacing all doctors"]},
+    {q:"John Deere's See & Spray (developed by Blue River Technology) achieved in 2025:",a:"5 million acres covered, 31 million gallons of herbicide mix saved, up to 77% reduction in herbicide use vs. broadcast spraying",opts:["1,000 acres covered in a pilot","5 million acres covered, 31 million gallons of herbicide mix saved, up to 77% reduction in herbicide use vs. broadcast spraying","No measurable savings","Only used in Europe"]},
+    {q:"SAG-AFTRA's 11-month video-game actors strike ended in July 2025 with a new contract that secured:",a:"Consent, compensation, and transparency protections around AI digital replicas, plus a 15.17% pay increase",opts:["A ban on AI in video games","Consent, compensation, and transparency protections around AI digital replicas, plus a 15.17% pay increase","Mandatory use of AI for all voice work","Higher pay but no AI protections"]},
+    {q:"The COMPAS lesson for government AI is:",a:"High-stakes government AI can systematically discriminate; rigorous fairness testing, transparency, and human oversight are required",opts:["Government shouldn't use AI","High-stakes government AI can systematically discriminate; rigorous fairness testing, transparency, and human oversight are required","AI in government is always fair","Only federal agencies need to worry"]},
+    {q:"AI in creative industries is most likely to replace:",a:"Artists doing generic, template-based, commodity work — not artists with distinctive creative vision",opts:["All creative professionals","Artists doing generic, template-based, commodity work — not artists with distinctive creative vision","No creative professionals","Only musicians"]},
+    {q:"The Mata v. Avianca lesson for legal AI use is:",a:"AI can fabricate citations, and since 2023 more than 300 cases of AI-generated legal hallucinations have led to sanctions, disqualifications, and bar referrals",opts:["AI is now perfect for legal research","AI can fabricate citations, and since 2023 more than 300 cases of AI-generated legal hallucinations have led to sanctions, disqualifications, and bar referrals","Lawyers don't need AI","AI should replace paralegals entirely"]},
+    {q:"Domain expertise plus AI literacy creates:",a:"A combination neither AI nor a non-expert can match — your knowledge is what makes AI useful",opts:["Redundancy — AI knows everything already","A combination neither AI nor a non-expert can match — your knowledge is what makes AI useful","A way to avoid learning your field","Nothing special"]},
+    {q:"The universal pattern across all disciplines in this module is:",a:"AI handles routine/data-intensive tasks; humans provide judgment, context, ethics, and creativity",opts:["AI replaces all workers","AI handles routine/data-intensive tasks; humans provide judgment, context, ethics, and creativity","AI is equally useful in all fields","Each field needs completely different AI tools"]},
+    {q:"The MATH 3200 controlled experiment showed:",a:"The AI section (mean 72.20) outperformed the traditional section (mean 68.20) on Exam 1",opts:["No difference between sections","The AI section (mean 72.20) outperformed the traditional section (mean 68.20) on Exam 1","The traditional section was much better","AI was only helpful for advanced students"]},
+    {q:"For the Field Audit (Guided Practice 11.4), the 5 questions include:",a:"Most time-consuming tasks, decisions requiring expertise, data generated, privacy constraints, and who's already using AI well",opts:["Budget, timeline, staff, tools, metrics","Most time-consuming tasks, decisions requiring expertise, data generated, privacy constraints, and who's already using AI well","Revenue, costs, profits, growth, competition","Name, date, location, time, purpose"]},
+    {q:"The frameworks from this course (BRIEFS, SMARTS, verification, the 5-Question Test) are:",a:"Universal — they work in every discipline; only the examples change",opts:["Only for statistics courses","Universal — they work in every discipline; only the examples change","Outdated by the time you finish the course","Only useful for prompt engineering"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}Qs=Qs.slice(0,15);var idx=0,score=0,answered=false;
+  function show(){if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned!':score>=10?'👍 Almost!':'📖 Review the module.';document.getElementById('m11-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}answered=false;var q=Qs[idx];document.getElementById('m11-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m11-fb').textContent='';document.getElementById('m11-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m11-sc').textContent='Score: '+score+' / '+idx;var btns=document.getElementById('m11-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m11-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m11-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m11-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});}show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module10/index.html">Module 10 — AI Ethics</a></em> | <em>Next: <a href="../module12/index.html">Module 12 — AI and Your Career</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module10/index.html" class="pagination-link" aria-label="Ethics, Bias, and Responsible Use">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Ethics, Bias, and Responsible Use</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module12/index.html" class="pagination-link" aria-label="AI and Your Career">
+        <span class="nav-page-text">AI and Your Career</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

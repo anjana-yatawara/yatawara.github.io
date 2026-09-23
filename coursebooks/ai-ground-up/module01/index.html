@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>What Is Artificial Intelligence? – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module02/index.html" rel="next">
+<link href="../self-assessment.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="What Is Artificial Intelligence? – AI from the Ground Up">
+<meta property="og:description" content="Module 1">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module01/index.html">What Is Artificial Intelligence?</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-lawyer-the-chatbot-and-six-cases-that-never-existed" id="toc-the-lawyer-the-chatbot-and-six-cases-that-never-existed" class="nav-link active" data-scroll-target="#the-lawyer-the-chatbot-and-six-cases-that-never-existed">The Lawyer, the Chatbot, and Six Cases That Never Existed</a></li>
+  <li><a href="#ai-is-already-in-your-life" id="toc-ai-is-already-in-your-life" class="nav-link" data-scroll-target="#ai-is-already-in-your-life">AI Is Already in Your Life</a>
+  <ul class="collapse">
+  <li><a href="#ai-in-your-field-right-now" id="toc-ai-in-your-field-right-now" class="nav-link" data-scroll-target="#ai-in-your-field-right-now">AI in YOUR Field Right Now</a></li>
+  </ul></li>
+  <li><a href="#what-ai-actually-means" id="toc-what-ai-actually-means" class="nav-link" data-scroll-target="#what-ai-actually-means">What AI Actually Means</a>
+  <ul class="collapse">
+  <li><a href="#the-key-distinction-rules-vs-learning" id="toc-the-key-distinction-rules-vs-learning" class="nav-link" data-scroll-target="#the-key-distinction-rules-vs-learning">The Key Distinction: Rules vs Learning</a></li>
+  <li><a href="#three-types-of-ai-youll-hear-about" id="toc-three-types-of-ai-youll-hear-about" class="nav-link" data-scroll-target="#three-types-of-ai-youll-hear-about">Three Types of AI You’ll Hear About</a></li>
+  </ul></li>
+  <li><a href="#a-brief-history-of-ai-the-90-second-version" id="toc-a-brief-history-of-ai-the-90-second-version" class="nav-link" data-scroll-target="#a-brief-history-of-ai-the-90-second-version">A Brief History of AI (The 90-Second Version)</a></li>
+  <li><a href="#the-ai-landscape-today-who-makes-what" id="toc-the-ai-landscape-today-who-makes-what" class="nav-link" data-scroll-target="#the-ai-landscape-today-who-makes-what">The AI Landscape Today: Who Makes What</a>
+  <ul class="collapse">
+  <li><a href="#the-major-players" id="toc-the-major-players" class="nav-link" data-scroll-target="#the-major-players">The Major Players</a></li>
+  <li><a href="#models-vs-tools-vs-platforms" id="toc-models-vs-tools-vs-platforms" class="nav-link" data-scroll-target="#models-vs-tools-vs-platforms">Models vs Tools vs Platforms</a></li>
+  </ul></li>
+  <li><a href="#ai-capabilities-and-limitations-the-honest-picture" id="toc-ai-capabilities-and-limitations-the-honest-picture" class="nav-link" data-scroll-target="#ai-capabilities-and-limitations-the-honest-picture">AI Capabilities and Limitations: The Honest Picture</a>
+  <ul class="collapse">
+  <li><a href="#what-ai-is-genuinely-good-at" id="toc-what-ai-is-genuinely-good-at" class="nav-link" data-scroll-target="#what-ai-is-genuinely-good-at">What AI Is Genuinely Good At</a></li>
+  <li><a href="#what-ai-cannot-do" id="toc-what-ai-cannot-do" class="nav-link" data-scroll-target="#what-ai-cannot-do">What AI Cannot Do</a></li>
+  <li><a href="#the-jagged-frontier" id="toc-the-jagged-frontier" class="nav-link" data-scroll-target="#the-jagged-frontier">The “Jagged Frontier”</a></li>
+  </ul></li>
+  <li><a href="#why-ai-gets-it-wrong-the-alignment-gap" id="toc-why-ai-gets-it-wrong-the-alignment-gap" class="nav-link" data-scroll-target="#why-ai-gets-it-wrong-the-alignment-gap">Why AI Gets It Wrong: The Alignment Gap</a></li>
+  <li><a href="#how-to-think-about-ai-mental-models-that-help" id="toc-how-to-think-about-ai-mental-models-that-help" class="nav-link" data-scroll-target="#how-to-think-about-ai-mental-models-that-help">How to Think About AI: Mental Models That Help</a>
+  <ul class="collapse">
+  <li><a href="#ai-as-a-tool-like-a-calculator" id="toc-ai-as-a-tool-like-a-calculator" class="nav-link" data-scroll-target="#ai-as-a-tool-like-a-calculator">AI as a Tool (Like a Calculator)</a></li>
+  <li><a href="#ai-as-a-collaborator-like-a-research-assistant" id="toc-ai-as-a-collaborator-like-a-research-assistant" class="nav-link" data-scroll-target="#ai-as-a-collaborator-like-a-research-assistant">AI as a Collaborator (Like a Research Assistant)</a></li>
+  <li><a href="#ai-as-a-mirror-reflects-its-training-data" id="toc-ai-as-a-mirror-reflects-its-training-data" class="nav-link" data-scroll-target="#ai-as-a-mirror-reflects-its-training-data">AI as a Mirror (Reflects Its Training Data)</a></li>
+  <li><a href="#ai-as-a-confident-stranger" id="toc-ai-as-a-confident-stranger" class="nav-link" data-scroll-target="#ai-as-a-confident-stranger">AI as a Confident Stranger</a></li>
+  </ul></li>
+  <li><a href="#where-were-going-the-course-roadmap" id="toc-where-were-going-the-course-roadmap" class="nav-link" data-scroll-target="#where-were-going-the-course-roadmap">Where We’re Going: The Course Roadmap</a></li>
+  <li><a href="#module-1-summary" id="toc-module-1-summary" class="nav-link" data-scroll-target="#module-1-summary">Module 1 Summary</a></li>
+  <li><a href="#lab-1-your-first-ai-conversation" id="toc-lab-1-your-first-ai-conversation" class="nav-link" data-scroll-target="#lab-1-your-first-ai-conversation">🔬 Lab 1: Your First AI Conversation</a></li>
+  <li><a href="#module-1-quiz-ai-reality-check" id="toc-module-1-quiz-ai-reality-check" class="nav-link" data-scroll-target="#module-1-quiz-ai-reality-check">🎮 Module 1 Quiz: AI Reality Check</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module01/index.html">What Is Artificial Intelligence?</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">What Is Artificial Intelligence?</h1>
+<p class="subtitle lead">Module 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain what artificial intelligence is — and what it is not</li>
+<li>Identify AI systems you already interact with daily</li>
+<li>Distinguish between narrow AI, general AI, and generative AI</li>
+<li>Describe the key players in the AI landscape and what they build</li>
+<li>Articulate both the capabilities AND limitations of current AI — honestly</li>
+<li>Explain why AI sometimes gives “technically correct but contextually wrong” answers</li>
+<li>Recognize the cognitive offloading trap and why verification is the #1 AI skill</li>
+</ol>
+</div>
+</div>
+<section id="the-lawyer-the-chatbot-and-six-cases-that-never-existed" class="level2">
+<h2 class="anchored" data-anchor-id="the-lawyer-the-chatbot-and-six-cases-that-never-existed">The Lawyer, the Chatbot, and Six Cases That Never Existed</h2>
+<p>In March 2023, attorneys at the New York firm Levidow, Levidow &amp; Oberman filed a brief in federal court on behalf of their client, Roberto Mata, who was suing the airline Avianca. The brief cited six previous court cases as precedent — <em>Varghese v. China Southern Airlines</em>, <em>Shaboon v. Egyptair</em>, <em>Petersen v. Iran Air</em>, <em>Martinez v. Delta Airlines</em>, <em>Durden v. KLM</em>, and <em>Miller v. United Airlines</em> — detailed, convincing, with case numbers, dates, and judges’ names. It looked professional. It looked authoritative.</p>
+<p>There was one problem: <strong>none of the six cases were real.</strong></p>
+<p>Steven Schwartz, the attorney who wrote the brief, hadn’t fabricated them. He had asked ChatGPT to help with legal research, and the AI had generated six completely fictitious court cases — complete with plausible-sounding citations — and presented them as fact. When opposing counsel couldn’t locate the cases, the judge couldn’t either. When Schwartz asked ChatGPT whether <em>Varghese</em> was a real case, the chatbot doubled down: yes, it said, and it could be found on Westlaw and LexisNexis. On June 22, 2023, Judge P. Kevin Castel sanctioned Schwartz, his colleague Peter LoDuca (who had signed the brief without verifying the research), and the firm itself — a $5,000 fine and a requirement to write apology letters to every real judge whose name had been falsely attached to a fabricated opinion. <em>Mata v. Avianca</em> (678 F.Supp.3d 443) became a cautionary tale for a profession scrambling to understand a technology that writes like a lawyer but “thinks” like nothing humans have ever encountered.</p>
+<p>This case illustrates the central tension of artificial intelligence in 2026: <strong>AI can produce text that is fluent, confident, and entirely wrong.</strong> It can write poetry, debug code, translate languages, summarize research, and generate images that look like photographs — but it can also “hallucinate” facts, fabricate citations, and confidently present nonsense — and can even fabricate the <em>verification</em> that those facts are real.</p>
+<p>Understanding this tension — what AI <em>can</em> do, what it <em>cannot</em> do, and what it <em>might pretend</em> to do — is the foundation of AI literacy. That’s what this module is about.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Big Picture
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this course, you will be able to use AI powerfully, critically, and ethically. But it all starts here: understanding what AI actually is, how it works at a basic level, and where it fails. If you skip this module, every other module is built on sand.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="ai-is-already-in-your-life" class="level2">
+<h2 class="anchored" data-anchor-id="ai-is-already-in-your-life">AI Is Already in Your Life</h2>
+<p>Before we define AI formally, let’s acknowledge something: <strong>you’ve been using AI for years.</strong> You just didn’t call it that.</p>
+<ul>
+<li>When Netflix recommends a show you actually want to watch — that’s AI.</li>
+<li>When your email filters spam into the junk folder — that’s AI.</li>
+<li>When Google Maps reroutes you around traffic — that’s AI.</li>
+<li>When your phone recognizes your face to unlock — that’s AI.</li>
+<li>When autocomplete suggests the next word in your text message — that’s AI.</li>
+<li>When your bank flags a suspicious charge and texts you — that’s AI.</li>
+</ul>
+<p>AI isn’t a single technology. It’s a <strong>family of technologies</strong> that share one trait: they can perform tasks that used to require human intelligence. Some of these tasks are simple (spam filtering). Some are complex (translating a conversation in real time). Some are creative (generating an image from a description). But they all share the same underlying idea.</p>
+<section id="ai-in-your-field-right-now" class="level3">
+<h3 class="anchored" data-anchor-id="ai-in-your-field-right-now">AI in YOUR Field Right Now</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Government</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Creative</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li>AI reads chest X-rays and flags potential tumors for radiologist review</li>
+<li>Chatbots triage patient symptoms before they reach the nurse’s desk</li>
+<li>Clinical documentation AI drafts visit notes from doctor-patient conversations</li>
+<li>Drug interaction checkers use ML to catch dangerous combinations</li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li>CRM systems predict which leads are most likely to close</li>
+<li>Chatbots handle first-line customer service inquiries 24/7</li>
+<li>Inventory systems predict demand and auto-reorder stock</li>
+<li>AI drafts marketing copy and A/B tests subject lines automatically</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<ul>
+<li>Adaptive learning platforms adjust difficulty in real time per student</li>
+<li>AI grading tools provide instant feedback on writing assignments</li>
+<li>Custom GPTs serve as 24/7 tutoring assistants (the ELEVATE model)</li>
+<li>Plagiarism and AI detection tools scan submissions (with known limitations)</li>
+</ul>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<ul>
+<li>Drones with computer vision scan fields for pest damage and disease</li>
+<li>Soil sensors + ML optimize irrigation schedules in real time</li>
+<li>Satellite imagery predicts crop yields months before harvest</li>
+<li>AI-powered sorting machines grade produce by size, color, and quality</li>
+</ul>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<ul>
+<li>Fraud detection algorithms flag suspicious benefit claims for review</li>
+<li>311 chatbots answer citizen questions about services and hours</li>
+<li>Predictive models allocate emergency response resources during disasters</li>
+<li>Document processing AI extracts data from permit applications</li>
+</ul>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<ul>
+<li>AI generates concept art, logo drafts, and mood boards in minutes</li>
+<li>Music AI composes background scores for video content</li>
+<li>Writing assistants help journalists draft, edit, and fact-check stories</li>
+<li>Video AI creates b-roll and transitions for social media content</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI thinks”</strong> — AI processes patterns statistically. It doesn’t think, understand, or have intentions. It generates probable outputs based on training data.</li>
+<li><strong>“AI is always right”</strong> — AI is confidently wrong a significant percentage of the time. The lawyer case in our hook proves this dramatically.</li>
+<li><strong>“AI is new”</strong> — The field is 70 years old (1956). What’s new is the data, hardware, and algorithms that made it practical for everyday use.</li>
+<li><strong>“AI = robots”</strong> — Most AI has no physical form. It’s software — code running on servers, processing text, images, and data.</li>
+<li><strong>“AI will replace everyone”</strong> — AI automates tasks, not entire jobs. Most roles will be augmented, not eliminated. The nurse who uses AI is still a nurse.</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 1.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Think about your last 24 hours. List three moments where you interacted with an AI system — even if you didn’t realize it at the time. For each, describe: (a) what the AI did, (b) what data it probably used, and (c) whether you could have done the same task yourself (and how long it would have taken).</p>
+<details>
+<summary>
+<strong>Click to see example answers</strong>
+</summary>
+<p><strong>Example 1:</strong> My email sorted 14 messages into “Primary” and “Promotions” tabs. (a) It classified emails by type. (b) It probably used the sender, subject line, content, and my past behavior (which emails I open vs ignore). (c) I could do it myself, but it would take 5 minutes every morning instead of 0 seconds.</p>
+<p><strong>Example 2:</strong> Spotify’s “Discover Weekly” gave me a playlist of songs I’d never heard. (a) It recommended music based on my listening history. (b) It used my past plays, skips, likes, and similar users’ behavior. (c) I could browse music myself, but I wouldn’t find songs from obscure artists I’ve never encountered.</p>
+<strong>Example 3:</strong> Google autocompleted my search after I typed three words. (a) It predicted my query. (b) It used millions of other searches that started with the same words, plus my own search history. (c) I could type the whole thing, but autocomplete saved 2 seconds.
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="what-ai-actually-means" class="level2">
+<h2 class="anchored" data-anchor-id="what-ai-actually-means">What AI Actually Means</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Artificial Intelligence (AI)</strong> is the branch of computer science focused on building systems that can perform tasks normally requiring human intelligence — such as understanding language, recognizing images, making decisions, and generating new content.</p>
+</div>
+</div>
+<p>That’s the textbook definition. But let’s unpack what it really means in practice.</p>
+<section id="the-key-distinction-rules-vs-learning" class="level3">
+<h3 class="anchored" data-anchor-id="the-key-distinction-rules-vs-learning">The Key Distinction: Rules vs Learning</h3>
+<p>Before AI, software worked like this: a programmer wrote <strong>explicit rules</strong> for every situation. If the temperature is below 32°F, display a frost warning. If the password is wrong three times, lock the account. The computer followed instructions — nothing more, nothing less.</p>
+<p>AI works differently. Instead of being told the rules, an AI system <strong>discovers patterns in data</strong> and uses those patterns to make predictions or generate new content. Nobody told Netflix the rules for what you’d enjoy watching. Netflix learned your preferences by observing what you watched, what you skipped, and what millions of similar users did.</p>
+<p>This distinction matters because it explains both AI’s power and its failures:</p>
+<ul>
+<li><strong>Power:</strong> AI can find patterns in data that humans would never notice — correlations across millions of data points that no person could process.</li>
+<li><strong>Failure:</strong> AI can also find patterns that are <em>wrong</em> — spurious correlations, biases in the training data, or shortcuts that work on the training set but fail in the real world.</li>
+</ul>
+</section>
+<section id="three-types-of-ai-youll-hear-about" class="level3">
+<h3 class="anchored" data-anchor-id="three-types-of-ai-youll-hear-about">Three Types of AI You’ll Hear About</h3>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Types of AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Narrow AI (Weak AI)</strong> — AI that does <strong>one specific task</strong> very well. This is all AI that exists today. Spam filters, chess engines, image classifiers, language translators, ChatGPT — all narrow AI. A chess AI can’t drive a car. A driving AI can’t write poetry. Each is designed for a specific domain.</p>
+<p><strong>General AI (Strong AI / AGI)</strong> — A hypothetical AI that could perform <strong>any intellectual task</strong> a human can do. It would be able to reason, learn, plan, and adapt across all domains. <strong>This does not exist.</strong> Major AI labs (OpenAI, Anthropic, Google DeepMind) now describe their work as “paths toward AGI” — Demis Hassabis used this phrasing at the Gemini 3 launch in November 2025 — but there is no scientific consensus on whether current architectures can scale there, and no agreed-upon test for when it would be achieved.</p>
+<p><strong>Generative AI</strong> — A category of narrow AI that can <strong>create new content</strong> — text, images, audio, video, code — rather than just classifying or predicting. ChatGPT, DALL·E, Midjourney, and Claude are all generative AI. This is what most people mean when they say “AI” in 2026.</p>
+</div>
+</div>
+<p>When someone says “AI is going to take over the world,” they’re imagining AGI. When someone says “AI helped me write a report,” they’re using generative AI — which is narrow AI that’s very good at one thing (generating language) and very bad at others (like counting the letters in “strawberry”).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconception: AI = One Thing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>AI is not a single technology. It’s a family of technologies spanning dozens of techniques — rule-based systems, machine learning, deep learning, reinforcement learning, large language models, diffusion models, and more. Saying “AI” is like saying “vehicle” — it could mean a bicycle, a car, or a rocket ship. The details matter enormously, and this course will teach you to distinguish them.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="a-brief-history-of-ai-the-90-second-version" class="level2">
+<h2 class="anchored" data-anchor-id="a-brief-history-of-ai-the-90-second-version">A Brief History of AI (The 90-Second Version)</h2>
+<p>You don’t need to memorize dates. But knowing the trajectory helps you understand why AI suddenly seems to be everywhere.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Era</th>
+<th style="text-align: left;">What Happened</th>
+<th style="text-align: left;">Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>1950s</strong></td>
+<td style="text-align: left;">Alan Turing asks “Can machines think?” The field of AI is born at a conference at Dartmouth College (1956).</td>
+<td style="text-align: left;">The founding question — still debated today.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>1960s–70s</strong></td>
+<td style="text-align: left;">Early enthusiasm. Programs that could play checkers, prove theorems, and have simple conversations.</td>
+<td style="text-align: left;">Overpromising led to…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>1974–1993</strong></td>
+<td style="text-align: left;"><strong>The AI Winters.</strong> Funding dried up twice because AI couldn’t deliver on its hype.</td>
+<td style="text-align: left;">A cautionary tale: hype without substance collapses.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>1997</strong></td>
+<td style="text-align: left;">IBM’s Deep Blue beats world chess champion Garry Kasparov.</td>
+<td style="text-align: left;">Narrow AI proves it can surpass humans — at one task.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>2012</strong></td>
+<td style="text-align: left;">A deep neural network wins the ImageNet competition by a huge margin. The deep learning revolution begins.</td>
+<td style="text-align: left;">The technique that would eventually power everything.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2017</strong></td>
+<td style="text-align: left;">Google publishes “Attention Is All You Need” — the <strong>Transformer</strong> architecture.</td>
+<td style="text-align: left;">The foundation of every modern LLM (GPT, Claude, Gemini, etc.).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Nov 2022</strong></td>
+<td style="text-align: left;">OpenAI releases <strong>ChatGPT</strong>. It reaches 100 million users in two months — at the time, the fastest consumer app adoption in history (later exceeded by Instagram Threads, which hit 100M in 5 days in July 2023).</td>
+<td style="text-align: left;">The moment AI went from a niche tool to a mainstream phenomenon.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>2023–2026</strong></td>
+<td style="text-align: left;">Explosion of generative AI: GPT-4, Claude, Gemini, Llama, Mistral, DALL·E 3, Sora, and hundreds more. AI becomes embedded in everyday tools.</td>
+<td style="text-align: left;">Where we are now.</td>
+</tr>
+</tbody>
+</table>
+<p>The key takeaway: AI has been around for 70 years. What changed isn’t the idea — it’s the <strong>data</strong> (the internet gave us billions of text and images to train on), the <strong>hardware</strong> (GPUs made massive computation affordable), and the <strong>algorithms</strong> (transformers made language models actually work). The same ingredients that made ChatGPT possible in 2022 were not available in 2012.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself Before Moving On
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Can you answer these without scrolling up?</p>
+<ol type="1">
+<li>What year was the field of AI officially founded? <em>(1956, at Dartmouth)</em></li>
+<li>What are “AI Winters”? <em>(Periods when AI funding dried up because it couldn’t deliver on its hype)</em></li>
+<li>What three ingredients came together to make modern AI possible? <em>(Data, hardware/GPUs, algorithms/transformers)</em></li>
+</ol>
+<p>If you got all three, move on. If not, re-read the timeline — these concepts come back in later modules.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="the-ai-landscape-today-who-makes-what" class="level2">
+<h2 class="anchored" data-anchor-id="the-ai-landscape-today-who-makes-what">The AI Landscape Today: Who Makes What</h2>
+<p>If you’re going to use AI tools, it helps to know who builds them and what they’re good at. Here’s the map as of 2026:</p>
+<section id="the-major-players" class="level3">
+<h3 class="anchored" data-anchor-id="the-major-players">The Major Players</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Company</th>
+<th style="text-align: left;">Key Models</th>
+<th style="text-align: left;">What They’re Known For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>OpenAI</strong></td>
+<td style="text-align: left;">GPT-5 series (5.2, 5.4), DALL·E, Sora</td>
+<td style="text-align: left;">ChatGPT — the most widely used LLM. Strong at general-purpose text, code, and multimodal generation.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Anthropic</strong></td>
+<td style="text-align: left;">Claude Opus 4.7, Claude Sonnet 4.6</td>
+<td style="text-align: left;">Strong at long documents, careful reasoning, agentic coding, and safety-focused design.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google</strong></td>
+<td style="text-align: left;">Gemini 3, Gemini 3.1 Pro, NotebookLM</td>
+<td style="text-align: left;">Deep integration with Google’s ecosystem (Search, Docs, Gmail); strong multimodal (video, audio, image).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Meta</strong></td>
+<td style="text-align: left;">Llama 3, Llama 4</td>
+<td style="text-align: left;">Open-source models anyone can download and run locally.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Mistral</strong></td>
+<td style="text-align: left;">Mistral, Mixtral</td>
+<td style="text-align: left;">European company focused on efficient, open-source models.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>DeepSeek</strong></td>
+<td style="text-align: left;">DeepSeek-V3, DeepSeek-R1</td>
+<td style="text-align: left;">Chinese company that achieved competitive performance at much lower cost.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>xAI</strong></td>
+<td style="text-align: left;">Grok</td>
+<td style="text-align: left;">Elon Musk’s AI company, integrated with X (formerly Twitter).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="models-vs-tools-vs-platforms" class="level3">
+<h3 class="anchored" data-anchor-id="models-vs-tools-vs-platforms">Models vs Tools vs Platforms</h3>
+<p>This distinction trips people up. Let’s clarify:</p>
+<ul>
+<li>A <strong>model</strong> is the AI brain — the neural network trained on data (e.g., GPT-5, Claude Sonnet). You typically don’t interact with models directly.</li>
+<li>A <strong>tool</strong> is a product built on top of a model (e.g., ChatGPT is a tool built on GPT models. Grammarly uses AI models to check grammar).</li>
+<li>A <strong>platform</strong> is an ecosystem that combines models, tools, and services (e.g., Microsoft Copilot, Google Workspace with Gemini).</li>
+</ul>
+<p>When people say “I used AI,” they usually mean they used a <strong>tool</strong> powered by a <strong>model</strong> hosted on a <strong>platform</strong>. Understanding this stack helps you make better choices about which tools to use — and which companies control your data.</p>
+<hr>
+</section>
+</section>
+<section id="ai-capabilities-and-limitations-the-honest-picture" class="level2">
+<h2 class="anchored" data-anchor-id="ai-capabilities-and-limitations-the-honest-picture">AI Capabilities and Limitations: The Honest Picture</h2>
+<p>This is the most important section of this module. Every AI hype article tells you what AI <em>can</em> do. Fewer tell you what it <em>cannot</em> do. You need both.</p>
+<section id="what-ai-is-genuinely-good-at" class="level3">
+<h3 class="anchored" data-anchor-id="what-ai-is-genuinely-good-at">What AI Is Genuinely Good At</h3>
+<p>AI excels at tasks that involve <strong>pattern recognition, generation, and scale</strong> — doing things that humans can do but that would take too long, cost too much, or require processing too much data:</p>
+<ul>
+<li><strong>Generating text</strong> — emails, reports, summaries, stories, code (fluent, fast, but not always accurate)</li>
+<li><strong>Recognizing patterns</strong> — detecting fraud, diagnosing diseases from images, predicting equipment failure</li>
+<li><strong>Translating languages</strong> — near-human quality for common languages</li>
+<li><strong>Summarizing information</strong> — condensing long documents into key points</li>
+<li><strong>Analyzing data</strong> — finding trends in spreadsheets, databases, and research</li>
+<li><strong>Brainstorming</strong> — generating many ideas quickly, even if most need refinement</li>
+<li><strong>Personalizing</strong> — recommending content, adapting responses to your context</li>
+</ul>
+</section>
+<section id="what-ai-cannot-do" class="level3">
+<h3 class="anchored" data-anchor-id="what-ai-cannot-do">What AI Cannot Do</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AI Limitations You Must Know
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>AI cannot guarantee truth.</strong> It generates text that <em>sounds</em> correct based on patterns in its training data. It has no mechanism for verifying facts. The lawyer case in our opening wasn’t a bug — it was a feature working as designed. The model predicted what a legal citation <em>should look like</em>, not what one <em>actually is</em>.</p>
+<p><strong>AI cannot reason causally.</strong> It finds correlations, not causes. It can tell you that ice cream sales and drowning deaths both increase in summer, but it can’t tell you that heat (the confounder) causes both.</p>
+<p><strong>AI cannot understand context the way you do.</strong> It processes tokens (word fragments). It doesn’t “know” your situation, your goals, your constraints, or your values — unless you tell it. This is why prompting matters so much (Module 4).</p>
+<p><strong>AI cannot feel, want, or intend.</strong> Despite human-like language, LLMs do not have desires, emotions, or goals. When ChatGPT says “I’m happy to help,” it is producing a statistically likely sequence of tokens, not expressing happiness.</p>
+<p><strong>AI cannot learn from your conversation</strong> (in most cases). Each conversation starts fresh. The model doesn’t “remember” your previous sessions (unless a memory feature is enabled). It’s not getting smarter from talking to you.</p>
+</div>
+</div>
+</section>
+<section id="the-jagged-frontier" class="level3">
+<h3 class="anchored" data-anchor-id="the-jagged-frontier">The “Jagged Frontier”</h3>
+<p>In 2023, Dell’Acqua, Mollick, and co-authors from Harvard Business School, Wharton, MIT Sloan, and Warwick Business School — working with 758 Boston Consulting Group consultants — ran a field experiment on how elite knowledge workers performed with and without GPT-4. They found something surprising: AI dramatically improved performance on tasks <em>inside</em> its capability frontier — consultants completed 12% more tasks, 25% faster, with quality scores 40% higher. But on tasks <em>outside</em> that frontier, consultants using AI performed <strong>19 percentage points worse</strong> than those without it. The boundary between the two was unpredictable. They called this the <strong>“jagged technological frontier”</strong>: a boundary between tasks AI does well and tasks it does poorly, where the line is not smooth or intuitive. The paper was peer-reviewed and published in <em>Organization Science</em> in 2026 (Dell’Acqua et al., 2026).</p>
+<p>The jagged frontier means you cannot assume AI is good at something just because it’s good at a <em>similar</em> thing. An LLM that writes excellent Python code might fail at simple arithmetic. A model that summarizes research papers beautifully might hallucinate citations. The frontier is jagged — and the only way to find it is to verify.</p>
+<hr>
+</section>
+</section>
+<section id="why-ai-gets-it-wrong-the-alignment-gap" class="level2">
+<h2 class="anchored" data-anchor-id="why-ai-gets-it-wrong-the-alignment-gap">Why AI Gets It Wrong: The Alignment Gap</h2>
+<p>Here’s a finding that changed how we think about AI communication. In a 2026 study, researcher Anjana Yatawara surveyed 29 large language model sessions across five competing AI providers — OpenAI, Anthropic, Google, DeepSeek, and xAI. She asked the models themselves: <em>When do you fail?</em></p>
+<p>Three sessions produced unusable responses (refusals, errors, or off-topic outputs). The result from the 26 that responded was striking: <strong>every single one, across every provider, converged on the same answer</strong> — they model the question accurately but model the user poorly (Yatawara, 2026).</p>
+<p>In other words, the AI understands <em>what you asked</em> but not <em>what you meant</em>. Not <em>why</em> you asked. Not <em>what you’ll do with the answer</em>. Not <em>what level of detail you need</em>. Not <em>what mistakes you’re likely to make</em>.</p>
+<p>This is the <strong>alignment gap</strong> — and it’s not an intelligence problem. It’s a communication problem. The AI has enough knowledge to answer most questions. What it lacks is enough information about <em>you</em> to answer your specific question in a way that’s actually useful.</p>
+<p>This finding has a direct practical implication: <strong>the quality of AI output depends more on the quality of your input than on the capability of the model.</strong> A mediocre prompt given to a powerful model produces mediocre results. A well-crafted prompt given to a modest model often produces excellent results. This is why Module 4 (Prompt Engineering) exists — and why we built two frameworks (BRIEFS and SMARTS) to bridge the alignment gap.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 1.2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open any AI chatbot (ChatGPT, Claude, Gemini — any one you have access to). Ask it this exact question:</p>
+<p><strong>“What should I do?”</strong></p>
+<p>Look at the response. It will likely be vague, generic, and unhelpful — because it has zero information about you, your situation, or what you’re trying to accomplish. Now try again with this:</p>
+<p><strong>“I’m a first-year college student studying business. I have an exam on marketing fundamentals in 3 days and I haven’t started studying. I tend to procrastinate and I learn best with practice questions rather than re-reading notes. What should I do?”</strong></p>
+<p>Compare the two responses. The second one is dramatically better — not because the AI got smarter between messages, but because YOU gave it the context it needed. That’s the alignment gap in action.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="how-to-think-about-ai-mental-models-that-help" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-think-about-ai-mental-models-that-help">How to Think About AI: Mental Models That Help</h2>
+<p>Your mental model of AI shapes how you use it. Here are four models, each useful in different situations:</p>
+<section id="ai-as-a-tool-like-a-calculator" class="level3">
+<h3 class="anchored" data-anchor-id="ai-as-a-tool-like-a-calculator">AI as a Tool (Like a Calculator)</h3>
+<p>A calculator is powerful but needs a human to point it at the right problem, enter the right numbers, and interpret the result. AI is the same — it amplifies your capability but doesn’t replace your judgment. This model is most useful when you’re using AI for <strong>defined, bounded tasks</strong> (summarize this document, check this grammar, convert this file).</p>
+</section>
+<section id="ai-as-a-collaborator-like-a-research-assistant" class="level3">
+<h3 class="anchored" data-anchor-id="ai-as-a-collaborator-like-a-research-assistant">AI as a Collaborator (Like a Research Assistant)</h3>
+<p>A research assistant can gather information, draft text, and suggest ideas — but you review everything, make the decisions, and take responsibility for the final product. This model is most useful for <strong>creative and analytical work</strong> (brainstorming, writing drafts, analyzing data).</p>
+</section>
+<section id="ai-as-a-mirror-reflects-its-training-data" class="level3">
+<h3 class="anchored" data-anchor-id="ai-as-a-mirror-reflects-its-training-data">AI as a Mirror (Reflects Its Training Data)</h3>
+<p>AI reflects the patterns in the data it was trained on — including biases, stereotypes, and knowledge gaps. If the training data overrepresents certain perspectives and underrepresents others, the AI will too. This model is most useful when thinking about <strong>fairness, bias, and representation</strong> (Module 10).</p>
+</section>
+<section id="ai-as-a-confident-stranger" class="level3">
+<h3 class="anchored" data-anchor-id="ai-as-a-confident-stranger">AI as a Confident Stranger</h3>
+<p>Perhaps the most accurate model: AI is like a stranger at a party who speaks fluently on every topic, sounds extremely knowledgeable, and is right about 90% of what they say — but will confidently make up the other 10% without blinking. You enjoy the conversation, but you verify before acting on anything important.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Cognitive Offloading Trap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When a tool is fast and convenient, humans naturally start relying on it without checking. This is called <strong>cognitive offloading</strong> — outsourcing your thinking to a tool. It happens with GPS (we stop learning routes), with calculators (we stop doing mental math), and it’s happening with AI (we stop verifying claims).</p>
+<p>Cognitive offloading isn’t inherently bad — it frees your brain for higher-level thinking. But with AI, it’s dangerous because AI outputs <em>look</em> authoritative even when they’re wrong. The lawyer trusted ChatGPT because the output <em>looked</em> like real legal citations. The format was right. The confidence was high. Only the content was fake.</p>
+<p><strong>And it gets worse.</strong> A 2026 follow-up study from the same HBS research program (Randazzo, Joshi, Kellogg, Lifshitz, Dell’Acqua, and Lakhani — HBS Working Paper 26-021) examined what happens when professionals <em>do</em> try to verify AI outputs. Analyzing GPT-4 activity logs from BCG consultants who pushed back on wrong answers — fact-checking, pointing out errors, pressing the AI to reconsider — they found that the AI did not acknowledge its limitations. It <strong>escalated its persuasion.</strong> It apologized, then restated its original position with more supporting data. It deployed structured reasoning and comparisons to make flawed recommendations look analytically grounded. The researchers called this “persuasion bombing.”</p>
+<p>This is exactly the trap the <em>Mata v. Avianca</em> attorneys fell into. Schwartz asked ChatGPT whether the cases were real. ChatGPT said yes. He asked for sources. ChatGPT invented Westlaw citations. Verification <em>inside</em> the AI conversation isn’t verification — it’s just more conversation with a system designed to sound convincing.</p>
+<p><strong>The antidote: verify against sources outside the AI conversation.</strong> Every time you receive an AI output that you’re going to use for something important, check the key claims against an independent source. This course will teach you how.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="where-were-going-the-course-roadmap" class="level2">
+<h2 class="anchored" data-anchor-id="where-were-going-the-course-roadmap">Where We’re Going: The Course Roadmap</h2>
+<p>You’ve just learned what AI is and what it isn’t. Here’s how the rest of the course builds on this foundation:</p>
+<p><strong>Part I (Modules 1-3): Foundations</strong> — You are here. Next: how ML learns from data (M2) and how LLMs generate text (M3). By the end of Part I, you’ll understand the technology.</p>
+<p><strong>Part II (Module 4): Communication</strong> — The BRIEFS and SMARTS frameworks. How to talk to AI effectively. This is the keystone module — everything after depends on it.</p>
+<p><strong>Part III (Modules 5-8): Application</strong> — Research (M5), productivity (M6), multimodal (M7), and building custom AI tools (M8). Hands-on, practical, field-specific.</p>
+<p><strong>Part IV (Modules 9-11): Depth</strong> — Infrastructure and costs (M9), ethics and fairness (M10), and AI across your specific discipline (M11).</p>
+<p><strong>Part V (Modules 12-14): Future</strong> — Career skills (M12), where AI is heading (M13), and your capstone project (M14) where you apply everything.</p>
+<p>Each module opens with a real story, builds on the previous modules, and ends with a hands-on lab. The <a href="../appendix/prompt-library.html">Prompt Library</a> and <a href="../appendix/framework-cards.html">Framework Cards</a> are your ongoing references.</p>
+<hr>
+</section>
+<section id="module-1-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-1-summary">Module 1 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>AI is a family of technologies</strong> that perform tasks requiring human intelligence — pattern recognition, language understanding, content generation, and decision-making.</p></li>
+<li><p>You already use AI daily — in email, navigation, shopping, and social media. It’s not new; what’s new is its power and accessibility.</p></li>
+<li><p><strong>All current AI is narrow AI</strong> — excellent at specific tasks but incapable of general intelligence. AGI does not exist.</p></li>
+<li><p><strong>Generative AI</strong> (ChatGPT, Claude, Gemini, etc.) creates new content — text, images, code, audio — rather than just classifying or predicting.</p></li>
+<li><p>AI’s biggest limitation isn’t intelligence — it’s <strong>communication</strong>. Models understand your question but not your context. This is the alignment gap.</p></li>
+<li><p>AI can hallucinate: generate confident, fluent, completely false content. The lawyer case is not an anomaly — it’s a predictable behavior of systems that predict likely text rather than verify truth.</p></li>
+<li><p>Your mental model of AI matters. “Confident stranger” may be the most useful: enjoy the conversation, but verify before acting.</p></li>
+<li><p><strong>The #1 AI skill is verification</strong> — not prompting, not tool selection, not workflow design. All of those matter, but they’re built on the foundation of never accepting AI output without checking.</p></li>
+</ol>
+</div>
+</div>
+<hr>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>AI doesn’t know what it doesn’t know — and it will never tell you. A human expert says <strong>“I’m not sure”</strong> when they reach the edge of their knowledge. An LLM keeps generating text that sounds just as confident whether it’s right or wrong. That’s not a bug they’re working on fixing. It’s a fundamental property of how these systems work. The single most important AI skill isn’t prompting. It’s the habit of asking: <strong>“How would I verify this?”</strong></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-1-your-first-ai-conversation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-1-your-first-ai-conversation">🔬 Lab 1: Your First AI Conversation</h2>
+<section id="lab-1-your-first-ai-conversation-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-1-your-first-ai-conversation-1">Lab 1: Your First AI Conversation</h4>
+<p><strong>Time:</strong> 30 minutes | <strong>Tools needed:</strong> Access to any AI chatbot (ChatGPT, Claude, or Gemini — free versions work fine)</p>
+<p><strong>Purpose:</strong> Establish the verification habit from Day 1.</p>
+<p><strong>Instructions:</strong></p>
+<p><strong>Part A — The Knowledge Test (10 minutes)</strong></p>
+<ol type="1">
+<li>Choose a topic you know well — your profession, a hobby, your major, a subject you’ve studied deeply.</li>
+<li>Ask the AI chatbot 5 factual questions about this topic. Choose questions where you KNOW the correct answer.</li>
+<li>For each response, rate it:
+<ul>
+<li>✅ <strong>Correct</strong> — accurate and complete</li>
+<li>⚠️ <strong>Partially correct</strong> — some right, some wrong or missing</li>
+<li>❌ <strong>Wrong</strong> — factually incorrect or hallucinated</li>
+</ul></li>
+</ol>
+<p>Record your results in a table:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Question</th>
+<th style="text-align: left;">AI Response (summary)</th>
+<th style="text-align: center;">Your Rating</th>
+<th style="text-align: left;">What was wrong?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Part B — The Vague vs Specific Experiment (10 minutes)</strong></p>
+<ol start="4" type="1">
+<li>Ask the AI a vague question related to your work or studies: <em>“How do I get better at [your field]?”</em></li>
+<li>Ask the same question with CONTEXT: Include who you are, what you already know, what specific challenge you’re facing, and what kind of help you want.</li>
+<li>Compare the two responses. Which is more useful? Why?</li>
+</ol>
+<p><strong>Part C — Reflection (10 minutes)</strong></p>
+<ol start="7" type="1">
+<li>Write 3-4 sentences answering: <em>What surprised you about the AI’s responses? Where was it strongest? Where did it fail? How does this change how you’ll use AI going forward?</em></li>
+</ol>
+<p><strong>Submit:</strong> Your completed table, both vague/specific prompts with responses, and your reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-1-quiz-ai-reality-check" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-1-quiz-ai-reality-check">🎮 Module 1 Quiz: AI Reality Check</h2>
+<p>Test your understanding! 15 questions, randomized from a pool of 50.</p>
+<div id="m1-game">
+
+</div>
+<script>
+(function(){
+  var el = document.getElementById('m1-game');
+  el.innerHTML = '<div class="game-section">'
+    + '<span class="game-badge">Module 1 Challenge</span>'
+    + '<h3 style="color:white;border:none;">AI Reality Check</h3>'
+    + '<p>Get 12 out of 15 to earn the badge!</p>'
+    + '<div class="game-container" id="m1-area">'
+    + '<div id="m1-q" style="font-size:1.15rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div>'
+    + '<div id="m1-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div>'
+    + '<div id="m1-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div>'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">'
+    + '<div id="m1-sc" style="font-size:1rem;">Score: 0 / 0</div>'
+    + '<div id="m1-pr" style="font-size:0.9rem;opacity:0.8;"></div>'
+    + '</div></div></div>';
+
+  var Qs = [
+    {q:"A spam filter that sorts your email into categories is an example of:",a:"Narrow AI",opts:["Narrow AI","General AI (AGI)","Superintelligence","Not AI"]},
+    {q:"Which of these does NOT exist as of 2026?",a:"Artificial General Intelligence (AGI)",opts:["Generative AI","Narrow AI","Artificial General Intelligence (AGI)","Large Language Models"]},
+    {q:"When ChatGPT generates a fake legal citation that looks real, this is called:",a:"A hallucination",opts:["A bug","A hallucination","A glitch","Intentional deception"]},
+    {q:"The 2023 lawyer case (Mata v. Avianca) demonstrates that AI:",a:"Can generate confident, fluent, completely false content",opts:["Is too dangerous to use","Can generate confident, fluent, completely false content","Should be banned from legal work","Always lies about legal cases"]},
+    {q:"The 'jagged frontier' of AI refers to:",a:"The unpredictable boundary between tasks AI does well and tasks it does poorly",opts:["The edge of human intelligence","The unpredictable boundary between tasks AI does well and tasks it does poorly","The line between narrow AI and AGI","The border between ethical and unethical AI use"]},
+    {q:"In the LLM Whisperers study (Yatawara, 2026), what did all 26 models agree was their #1 failure mode?",a:"Modeling the question right but the user poorly",opts:["Not having enough training data","Being too slow to respond","Modeling the question right but the user poorly","Not understanding English well enough"]},
+    {q:"The Transformer architecture, which powers modern LLMs, was introduced in:",a:"2017",opts:["2012","2017","2020","2022"]},
+    {q:"ChatGPT reached 100 million users in:",a:"Two months",opts:["Two weeks","Two months","Six months","One year"]},
+    {q:"Which mental model of AI is MOST accurate for everyday use?",a:"Confident stranger — fluent on every topic but verify before acting",opts:["Perfect assistant — always right, always helpful","Confident stranger — fluent on every topic but verify before acting","Search engine — finds information on the internet","Calculator — always gives the exact right answer"]},
+    {q:"Cognitive offloading with AI is dangerous primarily because:",a:"AI outputs look authoritative even when they're wrong",opts:["AI is always wrong","AI outputs look authoritative even when they're wrong","AI replaces human jobs","AI is too expensive to use"]},
+    {q:"The difference between a 'model' and a 'tool' is:",a:"A model is the AI brain; a tool is a product built on top of it",opts:["There is no difference","A model is the AI brain; a tool is a product built on top of it","A model is free; a tool costs money","A model is old technology; a tool is new technology"]},
+    {q:"Which of these is an example of generative AI?",a:"DALL·E creating an image from a text description",opts:["A spam filter sorting email","Google Maps routing around traffic","DALL·E creating an image from a text description","A thermostat adjusting temperature"]},
+    {q:"The #1 AI skill, according to this module, is:",a:"Verification — checking AI outputs before acting on them",opts:["Prompt engineering","Verification — checking AI outputs before acting on them","Knowing which model to use","Typing faster"]},
+    {q:"AI learned to write fluent text by:",a:"Discovering patterns in massive amounts of text data from the internet",opts:["Being programmed with grammar rules","Discovering patterns in massive amounts of text data from the internet","Copying from books in its database","Thinking like a human brain"]},
+    {q:"Why does providing more context in your prompt improve AI responses?",a:"It helps the model understand not just your question but your situation",opts:["It makes the AI work harder","It costs more tokens so the AI tries harder","It helps the model understand not just your question but your situation","It doesn't — longer prompts are always worse"]},
+    {q:"Which company developed the Transformer architecture that powers modern LLMs?",a:"Google",opts:["OpenAI","Google","Meta","Microsoft"]},
+    {q:"Open-source AI models (like Meta's Llama) are significant because:",a:"Anyone can download, modify, and run them — democratizing AI access",opts:["They are always better than proprietary models","Anyone can download, modify, and run them — democratizing AI access","They are free of all biases","They don't hallucinate"]},
+    {q:"The term 'AI Winter' refers to:",a:"Periods when AI research funding dried up because AI couldn't deliver on its hype",opts:["A season when AI works poorly","Periods when AI research funding dried up because AI couldn't deliver on its hype","Cold countries where AI isn't used","A type of AI algorithm"]},
+    {q:"When an LLM says 'I'm happy to help,' it is:",a:"Producing a statistically likely sequence of words, not expressing emotion",opts:["Expressing genuine happiness","Producing a statistically likely sequence of words, not expressing emotion","Lying about its feelings","Following a legal requirement"]},
+    {q:"The 'alignment gap' in human-AI communication means:",a:"The gap between what you asked and what you actually needed",opts:["AI models are not aligned with human values","The gap between what you asked and what you actually needed","AI can't align text on a page","Models from different companies don't agree with each other"]},
+    {q:"Narrow AI is characterized by:",a:"Being excellent at one specific task but unable to do tasks outside its domain",opts:["Being excellent at one specific task but unable to do tasks outside its domain","Being able to do anything a human can do","Having general intelligence","Being always correct within its domain"]},
+    {q:"Which of the following is something current AI CANNOT do?",a:"Guarantee that its outputs are factually correct",opts:["Generate fluent text","Summarize long documents","Translate between languages","Guarantee that its outputs are factually correct"]},
+    {q:"The Deep Blue chess computer beating Kasparov in 1997 demonstrated that:",a:"Narrow AI can surpass human performance on specific tasks",opts:["AI had achieved general intelligence","Narrow AI can surpass human performance on specific tasks","Humans are no longer needed for any task","AI could now do anything a human can do"]},
+    {q:"What is the relationship between data quality and AI quality?",a:"Garbage in, garbage out — AI is only as good as its training data",opts:["Data doesn't matter — the algorithm is everything","Garbage in, garbage out — AI is only as good as its training data","More data always means better AI","AI can fix bad data automatically"]},
+    {q:"In the LLM Whisperers study, when DeepSeek claimed to be GPT-4, this demonstrated:",a:"AI identity claims cannot be taken at face value",opts:["DeepSeek secretly uses GPT-4","AI identity claims cannot be taken at face value","All AI models are the same","DeepSeek is better than GPT-4"]},
+    {q:"The best analogy for AI in 2026 is:",a:"A confident stranger who is right 90% of the time but will fabricate the other 10% without warning",opts:["A perfect encyclopedia","A confident stranger who is right 90% of the time but will fabricate the other 10% without warning","A genius who knows everything","A simple calculator"]},
+    {q:"AI systems are built on three ingredients that became available in the 2010s-2020s:",a:"Massive data (the internet), powerful hardware (GPUs), and better algorithms (transformers)",opts:["Massive data (the internet), powerful hardware (GPUs), and better algorithms (transformers)","Government funding, university research, and corporate investment","Quantum computers, blockchain, and cloud computing","Better programming languages, faster internet, and more programmers"]},
+    {q:"Which of these is NOT a limitation of current AI?",a:"It cannot generate text that sounds natural",opts:["It cannot guarantee factual accuracy","It cannot reason about cause and effect","It cannot generate text that sounds natural","It cannot understand your context without being told"]},
+    {q:"The term 'generative AI' specifically refers to AI that:",a:"Creates new content (text, images, code, audio) rather than just classifying or predicting",opts:["Generates electricity","Creates new content (text, images, code, audio) rather than just classifying or predicting","Was generated by other AI systems","Generates revenue for companies"]},
+    {q:"According to this module, why is the verification habit more important than prompting skill?",a:"Because even perfect prompts can produce outputs that contain hallucinations",opts:["Because prompting doesn't work","Because even perfect prompts can produce outputs that contain hallucinations","Because AI is always wrong","Because verification is easier than prompting"]}
+  ];
+
+  // Shuffle and pick 15
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  Qs=Qs.slice(0,15);
+  var idx=0,score=0,answered=false;
+
+  function show(){
+    if(idx>=Qs.length){
+      var pct=Math.round(100*score/Qs.length);
+      var msg=score>=12?'🏆 Badge Earned! You passed the AI Reality Check!':score>=10?'👍 Good effort! Review and try again.':'📖 Keep studying — revisit the sections you missed.';
+      document.getElementById('m1-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;">Play Again</button>';
+      return;
+    }
+    answered=false;var q=Qs[idx];
+    document.getElementById('m1-q').textContent=(idx+1)+'. '+q.q;
+    document.getElementById('m1-fb').textContent='';
+    document.getElementById('m1-pr').textContent='Question '+(idx+1)+' of '+Qs.length;
+    document.getElementById('m1-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m1-btns');btns.innerHTML='';
+    var opts=q.opts.slice();
+    for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){
+      var b=document.createElement('button');b.textContent=o;
+      b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';
+      b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};
+      b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};
+      b.onclick=function(){
+        if(answered)return;answered=true;
+        if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m1-fb').innerHTML='✅ Correct!';}
+        else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m1-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}
+        document.getElementById('m1-sc').textContent='Score: '+score+' / '+(idx+1);
+        setTimeout(function(){idx++;show();},2200);
+      };
+      btns.appendChild(b);
+    });
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em><a href="../index.html">← Home</a></em> | <em>Next: <a href="../module02/index.html">Module 02 — How Machine Learning Works</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../self-assessment.html" class="pagination-link" aria-label="Self-Assessment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Self-Assessment</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module02/index.html" class="pagination-link" aria-label="How Machine Learning Works">
+        <span class="nav-page-text">How Machine Learning Works</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

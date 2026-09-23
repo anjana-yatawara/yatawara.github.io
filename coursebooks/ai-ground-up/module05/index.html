@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI for Research and Analysis – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module06/index.html" rel="next">
+<link href="../module04/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="AI for Research and Analysis – AI from the Ground Up">
+<meta property="og:description" content="Module 5 · Search, Synthesize, Verify">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module05/index.html">AI for Research and Analysis</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-lawyers-who-cited-six-cases-that-didnt-exist" id="toc-the-lawyers-who-cited-six-cases-that-didnt-exist" class="nav-link active" data-scroll-target="#the-lawyers-who-cited-six-cases-that-didnt-exist">The Lawyers Who Cited Six Cases That Didn’t Exist</a></li>
+  <li><a href="#the-new-research-landscape" id="toc-the-new-research-landscape" class="nav-link" data-scroll-target="#the-new-research-landscape">The New Research Landscape</a>
+  <ul class="collapse">
+  <li><a href="#what-ai-research-looks-like-in-your-field" id="toc-what-ai-research-looks-like-in-your-field" class="nav-link" data-scroll-target="#what-ai-research-looks-like-in-your-field">What AI Research Looks Like in YOUR Field</a></li>
+  </ul></li>
+  <li><a href="#ai-powered-search-tools" id="toc-ai-powered-search-tools" class="nav-link" data-scroll-target="#ai-powered-search-tools">AI-Powered Search Tools</a>
+  <ul class="collapse">
+  <li><a href="#perplexity" id="toc-perplexity" class="nav-link" data-scroll-target="#perplexity">Perplexity</a></li>
+  <li><a href="#google-ai-overviews" id="toc-google-ai-overviews" class="nav-link" data-scroll-target="#google-ai-overviews">Google AI Overviews</a></li>
+  </ul></li>
+  <li><a href="#deep-research-agents" id="toc-deep-research-agents" class="nav-link" data-scroll-target="#deep-research-agents">Deep Research Agents</a>
+  <ul class="collapse">
+  <li><a href="#how-deep-research-works" id="toc-how-deep-research-works" class="nav-link" data-scroll-target="#how-deep-research-works">How Deep Research Works</a></li>
+  <li><a href="#available-deep-research-tools" id="toc-available-deep-research-tools" class="nav-link" data-scroll-target="#available-deep-research-tools">Available Deep Research Tools</a></li>
+  <li><a href="#when-to-use-deep-research-vs-regular-search" id="toc-when-to-use-deep-research-vs-regular-search" class="nav-link" data-scroll-target="#when-to-use-deep-research-vs-regular-search">When to Use Deep Research vs Regular Search</a></li>
+  </ul></li>
+  <li><a href="#notebooklm-your-documents-made-interactive" id="toc-notebooklm-your-documents-made-interactive" class="nav-link" data-scroll-target="#notebooklm-your-documents-made-interactive">NotebookLM: Your Documents, Made Interactive</a>
+  <ul class="collapse">
+  <li><a href="#what-makes-notebooklm-special" id="toc-what-makes-notebooklm-special" class="nav-link" data-scroll-target="#what-makes-notebooklm-special">What Makes NotebookLM Special</a></li>
+  <li><a href="#use-cases" id="toc-use-cases" class="nav-link" data-scroll-target="#use-cases">Use Cases</a></li>
+  <li><a href="#audio-overviews" id="toc-audio-overviews" class="nav-link" data-scroll-target="#audio-overviews">Audio Overviews</a></li>
+  </ul></li>
+  <li><a href="#ai-for-data-analysis" id="toc-ai-for-data-analysis" class="nav-link" data-scroll-target="#ai-for-data-analysis">AI for Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#what-ai-can-do-with-your-data" id="toc-what-ai-can-do-with-your-data" class="nav-link" data-scroll-target="#what-ai-can-do-with-your-data">What AI Can Do With Your Data</a></li>
+  <li><a href="#tools-for-ai-data-analysis" id="toc-tools-for-ai-data-analysis" class="nav-link" data-scroll-target="#tools-for-ai-data-analysis">Tools for AI Data Analysis</a></li>
+  <li><a href="#the-critical-skill-knowing-when-to-trust-the-analysis" id="toc-the-critical-skill-knowing-when-to-trust-the-analysis" class="nav-link" data-scroll-target="#the-critical-skill-knowing-when-to-trust-the-analysis">The Critical Skill: Knowing When to Trust the Analysis</a></li>
+  </ul></li>
+  <li><a href="#the-research-verification-workflow" id="toc-the-research-verification-workflow" class="nav-link" data-scroll-target="#the-research-verification-workflow">The Research Verification Workflow</a>
+  <ul class="collapse">
+  <li><a href="#the-4-step-verification-loop" id="toc-the-4-step-verification-loop" class="nav-link" data-scroll-target="#the-4-step-verification-loop">The 4-Step Verification Loop</a></li>
+  <li><a href="#the-citation-verification-checklist" id="toc-the-citation-verification-checklist" class="nav-link" data-scroll-target="#the-citation-verification-checklist">The Citation Verification Checklist</a></li>
+  </ul></li>
+  <li><a href="#the-line-between-ai-assisted-and-ai-generated" id="toc-the-line-between-ai-assisted-and-ai-generated" class="nav-link" data-scroll-target="#the-line-between-ai-assisted-and-ai-generated">The Line Between AI-Assisted and AI-Generated</a></li>
+  <li><a href="#module-5-summary" id="toc-module-5-summary" class="nav-link" data-scroll-target="#module-5-summary">Module 5 Summary</a></li>
+  <li><a href="#lab-5-the-notebooklm-deep-dive" id="toc-lab-5-the-notebooklm-deep-dive" class="nav-link" data-scroll-target="#lab-5-the-notebooklm-deep-dive">🔬 Lab 5: The NotebookLM Deep Dive</a></li>
+  <li><a href="#module-5-quiz" id="toc-module-5-quiz" class="nav-link" data-scroll-target="#module-5-quiz">🎮 Module 5 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module05/index.html">AI for Research and Analysis</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">AI for Research and Analysis</h1>
+<p class="subtitle lead">Module 5 · Search, Synthesize, Verify</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Module 4 (BRIEFS prompting framework)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Choose the right AI research tool for different types of questions</li>
+<li>Use AI-powered search tools (Perplexity, Google AI Overviews) effectively</li>
+<li>Use Deep Research agents for multi-step investigations</li>
+<li>Turn documents into interactive knowledge bases with NotebookLM</li>
+<li>Use AI for data analysis: spreadsheets, visualization, pattern detection</li>
+<li>Apply a systematic verification workflow to AI-generated research</li>
+<li>Distinguish between AI-assisted research and AI-generated content</li>
+</ol>
+</div>
+</div>
+<section id="the-lawyers-who-cited-six-cases-that-didnt-exist" class="level2">
+<h2 class="anchored" data-anchor-id="the-lawyers-who-cited-six-cases-that-didnt-exist">The Lawyers Who Cited Six Cases That Didn’t Exist</h2>
+<p>In June 2023, a New York federal judge sanctioned two attorneys and their law firm $5,000 for submitting a legal brief containing six fabricated court decisions. The attorneys — Steven Schwartz and Peter LoDuca of Levidow, Levidow &amp; Oberman — were representing a client, Roberto Mata, in a personal-injury suit against the airline Avianca. Schwartz had used ChatGPT to find case law supporting his argument. The chatbot returned six opinions that looked real: <em>Varghese v. China Southern Airlines</em>, <em>Martinez v. Delta Airlines</em>, <em>Shaboon v. EgyptAir</em>, and three others — complete with plausible citations, quoted holdings, and internal references to other cases.</p>
+<p>When opposing counsel couldn’t locate the cases and the court ordered Schwartz to produce copies, he asked ChatGPT again. The chatbot doubled down: “<em>Varghese</em>… is a real case” and “can be found in reputable legal databases such as LexisNexis and Westlaw” (<em>Mata v. Avianca</em>, 678 F. Supp. 3d 443, S.D.N.Y. 2023).</p>
+<p>None of them existed.</p>
+<p>The case became the most cited example of AI hallucination in professional practice — but it was not a one-off. Damien Charlotin, a French legal scholar, maintains a public database of court rulings that address AI-fabricated content in legal filings; as of April 2026, it tracks roughly 1,300 such rulings worldwide. A Stanford CodeX analysis of 114 U.S. cases through October 2025 found that 90% involved solo practitioners or small firms, and of the cases that identified the AI tool, half named some version of ChatGPT.</p>
+<p>This story illustrates both the <strong>danger</strong> and the <strong>opportunity</strong> of AI for research. The danger: AI will confidently fabricate sources — and even fabricate the <em>verification</em> that those sources exist. The opportunity: when used correctly — with the right tools, the right workflow, and the right verification habits — AI can make you a dramatically more effective researcher than you’ve ever been.</p>
+<p>This module teaches you the right way.</p>
+<hr>
+</section>
+<section id="the-new-research-landscape" class="level2">
+<h2 class="anchored" data-anchor-id="the-new-research-landscape">The New Research Landscape</h2>
+<p>Research used to mean one thing: go to a search engine, type keywords, wade through results, read articles, take notes, synthesize. It was slow, thorough, and entirely manual.</p>
+<p>AI has fractured this into <strong>three distinct approaches</strong>, each with different strengths:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">How It Works</th>
+<th style="text-align: left;">Best For</th>
+<th style="text-align: left;">Watch Out For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Traditional search</strong> (Google, library databases)</td>
+<td style="text-align: left;">Returns links. You read and synthesize.</td>
+<td style="text-align: left;">Known-item search, academic databases, primary sources</td>
+<td style="text-align: left;">Slow but reliable — you verify as you go</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>AI-powered search</strong> (Perplexity, Google AI Overviews)</td>
+<td style="text-align: left;">Returns synthesized answers WITH citations</td>
+<td style="text-align: left;">Quick factual questions, getting oriented on a topic</td>
+<td style="text-align: left;">May cite real sources but misrepresent what they say</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>AI research agents</strong> (Deep Research, Gemini Deep Research)</td>
+<td style="text-align: left;">Autonomously conducts multi-step research over minutes</td>
+<td style="text-align: left;">Complex questions requiring synthesis across many sources</td>
+<td style="text-align: left;">Can go deep but may follow wrong paths. Always verify conclusions.</td>
+</tr>
+</tbody>
+</table>
+<p>The key insight: <strong>these are complementary, not competitive.</strong> The best researchers in 2026 use all three — AI to accelerate discovery, traditional search to verify and go deep, and their own judgment to synthesize.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What’s the Actual Hallucination Rate?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hard numbers from peer-reviewed research:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool type</th>
+<th style="text-align: left;">Hallucination rate on legal queries</th>
+<th style="text-align: left;">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">General-purpose LLMs (e.g., GPT-4, PaLM 2)</td>
+<td style="text-align: left;"><strong>58% - 82%</strong></td>
+<td style="text-align: left;">Dahl et al.&nbsp;(2024), <em>J. Legal Analysis</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LexisNexis Lexis+ AI (RAG-grounded)</td>
+<td style="text-align: left;"><strong>~17%</strong></td>
+<td style="text-align: left;">Magesh et al.&nbsp;(2025), <em>J. Empirical Legal Stud.</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Westlaw AI-Assisted Research (RAG-grounded)</td>
+<td style="text-align: left;"><strong>~33%</strong></td>
+<td style="text-align: left;">Magesh et al.&nbsp;(2025)</td>
+</tr>
+</tbody>
+</table>
+<p>Even the best RAG-grounded tools hallucinated on roughly 1 in 6 queries. <strong>Retrieval-augmented generation helps, but it does not solve hallucination.</strong> If you’re citing AI output where accuracy matters, verify every claim, every citation, every time.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI Research
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI citations are always real”</strong> — 23 out of 47 were fake in our opening story. AI generates plausible-sounding citations as easily as real ones.</li>
+<li><strong>“If it cites a real paper, the claim is accurate”</strong> — AI can cite a real source but misrepresent what it says. The citation trap.</li>
+<li><strong>“NotebookLM replaces reading the original”</strong> — It supplements reading, not replaces it. Always check AI summaries against the source.</li>
+<li><strong>“Deep Research is always better than manual search”</strong> — Deep Research is great for breadth but can follow wrong paths. For a specific known source, manual search wins.</li>
+<li><strong>“AI research is cheating”</strong> — Using AI to FIND and ORGANIZE information is AI-assisted research. Having AI WRITE your analysis is a different thing. SMARTS keeps you on the right side.</li>
+</ul>
+</div>
+</div>
+<section id="what-ai-research-looks-like-in-your-field" class="level3">
+<h3 class="anchored" data-anchor-id="what-ai-research-looks-like-in-your-field">What AI Research Looks Like in YOUR Field</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li>“What’s the latest evidence on [treatment] for [condition]?” — Perplexity with Academic focus</li>
+<li>Uploading 15 clinical guidelines into NotebookLM to compare recommendations across organizations</li>
+<li>Deep Research on drug interaction profiles for a specific patient population</li>
+<li><strong>Critical:</strong> Medical research AI MUST be verified against peer-reviewed sources and clinical databases (PubMed, UpToDate)</li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li>“What are the market trends in [industry] for Q1 2026?” — Deep Research for competitive analysis</li>
+<li>Uploading quarterly reports into NotebookLM to extract patterns across periods</li>
+<li>Using AI to analyze customer feedback themes from 500+ survey responses</li>
+<li><strong>Critical:</strong> Financial claims from AI must be verified against SEC filings, analyst reports, or primary data</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<ul>
+<li>“What does the research say about [teaching method]?” — Perplexity with Academic focus</li>
+<li>Uploading curriculum standards into NotebookLM to map learning objectives</li>
+<li>Deep Research on AI literacy frameworks for a curriculum proposal</li>
+<li><strong>Critical:</strong> Educational research claims should be verified in ERIC, Google Scholar, or discipline-specific databases</li>
+</ul>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<ul>
+<li>“What are the recommended treatments for [crop disease] in [region]?” — Perplexity</li>
+<li>Uploading extension service bulletins into NotebookLM for quick reference during the growing season</li>
+<li>Deep Research on precision agriculture technologies for a grant proposal</li>
+<li><strong>Critical:</strong> Agricultural recommendations must be verified against local extension office guidance and soil/climate data</li>
+</ul>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-powered-search-tools" class="level2">
+<h2 class="anchored" data-anchor-id="ai-powered-search-tools">AI-Powered Search Tools</h2>
+<section id="perplexity" class="level3">
+<h3 class="anchored" data-anchor-id="perplexity">Perplexity</h3>
+<p>Perplexity is a search engine that answers questions conversationally and shows you exactly which sources informed each claim. Think of it as “Google that actually reads the pages for you.”</p>
+<p><strong>What it does well:</strong></p>
+<ul>
+<li>Returns concise answers with numbered source citations</li>
+<li>Lets you ask follow-up questions (conversational search)</li>
+<li>Shows you the actual sources so you can verify</li>
+<li>Excellent for getting oriented on a new topic quickly</li>
+<li>“Focus” modes let you search academic papers, YouTube, Reddit, or the full web</li>
+</ul>
+<p><strong>What to watch for:</strong></p>
+<ul>
+<li>It can misrepresent what a source actually says (cites a real article but summarizes it incorrectly)</li>
+<li>Citation ≠ verification — just because it links a source doesn’t mean the claim matches the source</li>
+<li>For academic work, always click through to the original source and confirm</li>
+</ul>
+<p><strong>Best use case:</strong> “I need to understand [topic] quickly and I want to know where the information is coming from.”</p>
+</section>
+<section id="google-ai-overviews" class="level3">
+<h3 class="anchored" data-anchor-id="google-ai-overviews">Google AI Overviews</h3>
+<p>Google now displays AI-generated summary boxes at the top of search results for many queries. These synthesize information from multiple web pages into a paragraph answer.</p>
+<p><strong>What it does well:</strong></p>
+<ul>
+<li>Fast — the answer appears before you click anything</li>
+<li>Integrated with Google’s massive search index</li>
+<li>Shows source links below the summary</li>
+</ul>
+<p><strong>What to watch for:</strong></p>
+<ul>
+<li>Early versions made embarrassing errors (suggesting people add glue to pizza to keep cheese from sliding off — sourced from a joke Reddit post)</li>
+<li>Summaries can be misleading when the topic is nuanced or contested</li>
+<li>You can’t ask follow-up questions — it’s a one-shot summary</li>
+</ul>
+<p><strong>Best use case:</strong> Quick factual lookup where you’ll verify the answer anyway.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Citation Trap
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>AI-powered search tools cite real sources. This creates a dangerous illusion of reliability. The citation makes you trust the claim — but the AI may have misinterpreted, oversimplified, or outright misrepresented what the source actually says. <strong>Always click the source. Read the relevant section. Confirm the claim matches.</strong> Citations are starting points for verification, not proof of accuracy.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: AI Search Tools
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>What’s the key difference between Perplexity and a regular Google search? <em>(Perplexity synthesizes answers with numbered citations; Google returns links you read yourself)</em></li>
+<li>What is the “citation trap”? <em>(AI cites real sources but may misrepresent what they say — citation ≠ verification)</em></li>
+<li>When would you use traditional Google over AI search? <em>(When you need a specific known document, a specific database, or the most authoritative primary source)</em></li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="deep-research-agents" class="level2">
+<h2 class="anchored" data-anchor-id="deep-research-agents">Deep Research Agents</h2>
+<p>Deep Research is a newer category of AI tool that goes beyond answering a single question. These agents <strong>autonomously conduct multi-step research</strong> — searching, reading, synthesizing, following threads, and producing comprehensive reports.</p>
+<section id="how-deep-research-works" class="level3">
+<h3 class="anchored" data-anchor-id="how-deep-research-works">How Deep Research Works</h3>
+<ol type="1">
+<li>You give the agent a research question or topic</li>
+<li>The agent creates a research plan (which sub-questions to investigate)</li>
+<li>It searches the web, reads multiple sources, and extracts key findings</li>
+<li>It follows leads — if one source mentions a related study, it searches for that too</li>
+<li>It synthesizes everything into a structured report with citations</li>
+<li>The whole process takes 5-30 minutes depending on complexity</li>
+</ol>
+</section>
+<section id="available-deep-research-tools" class="level3">
+<h3 class="anchored" data-anchor-id="available-deep-research-tools">Available Deep Research Tools</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Provider</th>
+<th style="text-align: left;">Strengths</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Deep Research</strong></td>
+<td style="text-align: left;">OpenAI (ChatGPT Pro)</td>
+<td style="text-align: left;">Thorough, produces long-form reports with citations</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Deep Research</strong></td>
+<td style="text-align: left;">Google (Gemini Advanced)</td>
+<td style="text-align: left;">Leverages Google’s search index, good at finding recent sources</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Research mode</strong></td>
+<td style="text-align: left;">Perplexity Pro</td>
+<td style="text-align: left;">Faster than others, good at following citation chains</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Claude with search</strong></td>
+<td style="text-align: left;">Anthropic</td>
+<td style="text-align: left;">Strong at synthesis and nuanced analysis of what it finds</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="when-to-use-deep-research-vs-regular-search" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-use-deep-research-vs-regular-search">When to Use Deep Research vs Regular Search</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Use Deep Research When…</th>
+<th style="text-align: left;">Use Regular Search When…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The question requires synthesis across many sources</td>
+<td style="text-align: left;">You need one specific fact</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">You want a comprehensive overview of a topic</td>
+<td style="text-align: left;">You need a specific document you already know exists</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">You need to compare multiple perspectives</td>
+<td style="text-align: left;">You need to search a specific database (academic, legal, medical)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">You’re starting research on an unfamiliar topic</td>
+<td style="text-align: left;">You need the most authoritative primary source</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 5.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pick a topic you’re curious about but don’t know well. Use three different approaches to research it:</p>
+<ol type="1">
+<li>A regular Google search (5 minutes of reading results)</li>
+<li>Perplexity (ask the same question)</li>
+<li>A Deep Research agent if available (or a detailed ChatGPT/Claude conversation with search enabled)</li>
+</ol>
+<p>Compare: Which approach gave you the most useful overview? Which gave you the most trustworthy information? Which was fastest? Which would you use for different stages of a research project?</p>
+<details>
+<summary>
+<strong>What most people find</strong>
+</summary>
+Regular Google gives you the most control but takes the most time. Perplexity gives a fast, well-cited overview that’s great for getting oriented. Deep Research gives the most comprehensive synthesis but may include errors you’d miss without verification. <strong>The winning strategy: start with Perplexity to get oriented, use Deep Research for comprehensive synthesis, then verify key claims with traditional search and primary sources.</strong>
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="notebooklm-your-documents-made-interactive" class="level2">
+<h2 class="anchored" data-anchor-id="notebooklm-your-documents-made-interactive">NotebookLM: Your Documents, Made Interactive</h2>
+<p>Google’s NotebookLM is one of the most underappreciated AI tools available. It lets you upload documents (PDFs, Google Docs, web pages, YouTube videos) and creates an <strong>interactive knowledge base</strong> that you can ask questions about.</p>
+<section id="what-makes-notebooklm-special" class="level3">
+<h3 class="anchored" data-anchor-id="what-makes-notebooklm-special">What Makes NotebookLM Special</h3>
+<p>Unlike ChatGPT or Claude, which draw on their general training data, NotebookLM <strong>only answers from your uploaded sources.</strong> If the answer isn’t in your documents, it tells you — rather than hallucinating. This makes it dramatically more reliable for document-specific questions.</p>
+</section>
+<section id="use-cases" class="level3">
+<h3 class="anchored" data-anchor-id="use-cases">Use Cases</h3>
+<ul>
+<li><strong>Studying:</strong> Upload lecture notes, textbook chapters, and study guides. Ask questions. Get answers grounded in YOUR course materials.</li>
+<li><strong>Meeting prep:</strong> Upload the agenda, last meeting’s minutes, and relevant reports. Ask “What were the action items from last meeting?” or “What’s the background on agenda item 3?”</li>
+<li><strong>Literature review:</strong> Upload 10-20 research papers. Ask “What do these papers agree on?” or “What methodological approaches are used across these studies?”</li>
+<li><strong>Policy analysis:</strong> Upload policy documents, regulations, and guidelines. Ask specific questions about what’s allowed, required, or prohibited.</li>
+<li><strong>Learning a new field:</strong> Upload foundational papers and textbooks. Ask the AI to explain concepts using only those sources.</li>
+</ul>
+</section>
+<section id="audio-overviews" class="level3">
+<h3 class="anchored" data-anchor-id="audio-overviews">Audio Overviews</h3>
+<p>NotebookLM can generate <strong>audio summaries</strong> of your documents — a podcast-style conversation between two AI voices discussing the key ideas in your uploaded material. This is genuinely useful for:</p>
+<ul>
+<li>Reviewing material while commuting or exercising</li>
+<li>Getting a high-level overview before diving into detailed reading</li>
+<li>Identifying which sections of a long document are most relevant</li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+NotebookLM vs General AI Chatbots
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The key difference: <strong>grounding.</strong> ChatGPT answers from its training data (the entire internet). NotebookLM answers from YOUR documents. This means NotebookLM is less likely to hallucinate — but it can only answer questions covered by the documents you uploaded. Use ChatGPT/Claude for broad questions. Use NotebookLM for document-specific questions where accuracy matters more than breadth.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-for-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="ai-for-data-analysis">AI for Data Analysis</h2>
+<p>One of the most practical AI applications for working professionals: analyzing data without being a data scientist.</p>
+<section id="what-ai-can-do-with-your-data" class="level3">
+<h3 class="anchored" data-anchor-id="what-ai-can-do-with-your-data">What AI Can Do With Your Data</h3>
+<ul>
+<li><strong>Summarize a spreadsheet:</strong> “What are the key trends in this sales data?”</li>
+<li><strong>Create visualizations:</strong> “Make a bar chart comparing Q1 vs Q2 revenue by region”</li>
+<li><strong>Run calculations:</strong> “Calculate the year-over-year growth rate for each product category”</li>
+<li><strong>Find patterns:</strong> “Are there any correlations between customer age and purchase frequency?”</li>
+<li><strong>Clean messy data:</strong> “Standardize the date formats and remove duplicate rows”</li>
+<li><strong>Generate SQL queries:</strong> “Write a query to find all customers who haven’t purchased in 90 days”</li>
+</ul>
+</section>
+<section id="tools-for-ai-data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="tools-for-ai-data-analysis">Tools for AI Data Analysis</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">How It Works</th>
+<th style="text-align: left;">Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>ChatGPT Advanced Data Analysis</strong></td>
+<td style="text-align: left;">Upload files, ask questions in natural language</td>
+<td style="text-align: left;">Quick analysis of CSVs and spreadsheets</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Claude</strong></td>
+<td style="text-align: left;">Upload files, strong at explaining methodology</td>
+<td style="text-align: left;">Analysis that requires careful reasoning</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google Sheets + Gemini</strong></td>
+<td style="text-align: left;">AI built into the spreadsheet</td>
+<td style="text-align: left;">Analysis within your existing workflow</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Microsoft Copilot in Excel</strong></td>
+<td style="text-align: left;">AI built into Excel</td>
+<td style="text-align: left;">Enterprise users already in Microsoft ecosystem</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-critical-skill-knowing-when-to-trust-the-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="the-critical-skill-knowing-when-to-trust-the-analysis">The Critical Skill: Knowing When to Trust the Analysis</h3>
+<p>AI data analysis has a subtle danger: it can produce a chart that looks professional, a statistic that looks precise, and a conclusion that looks authoritative — <strong>while being completely wrong about what the data means.</strong></p>
+<p>Common failure modes:</p>
+<ul>
+<li><strong>Confusing correlation with causation</strong> — “Sales increase when temperature increases” doesn’t mean heat causes purchases (both increase in summer)</li>
+<li><strong>Ignoring missing data</strong> — analyzing only the rows that have values, producing misleading averages</li>
+<li><strong>Wrong statistical test</strong> — running a t-test when the data isn’t normally distributed</li>
+<li><strong>Cherry-picking results</strong> — presenting the one analysis that supports a conclusion while ignoring contradictory patterns</li>
+</ul>
+<p><strong>The rule:</strong> Use AI to DO the analysis (compute, visualize, summarize). Use YOUR brain to INTERPRET the analysis (what does it mean, what’s missing, what conclusions are justified).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 5.2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Find a publicly available dataset (e.g., from data.gov, Kaggle, or your own work). Upload it to ChatGPT or Claude and ask:</p>
+<ol type="1">
+<li>“Summarize this dataset. How many rows, how many columns, what are the key variables?”</li>
+<li>“What are the 3 most interesting patterns or trends in this data?”</li>
+<li>“Create a visualization that shows the most important finding.”</li>
+<li>“What questions can this data NOT answer?”</li>
+</ol>
+<p>Pay attention to question 4 — does the AI acknowledge the limitations of the data, or does it gloss over them?</p>
+<details>
+<summary>
+<strong>What to look for</strong>
+</summary>
+Most AI tools handle questions 1-3 well — they can compute, summarize, and visualize. Question 4 is the test of critical thinking. Good models will acknowledge limitations (sample size, missing variables, time period constraints). Weaker responses will claim the data “shows” conclusions that require additional evidence. <strong>If the AI doesn’t mention limitations, you need to identify them yourself.</strong>
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-research-verification-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="the-research-verification-workflow">The Research Verification Workflow</h2>
+<p>Here’s the process that separates AI-enhanced research from AI-dependent research:</p>
+<section id="the-4-step-verification-loop" class="level3">
+<h3 class="anchored" data-anchor-id="the-4-step-verification-loop">The 4-Step Verification Loop</h3>
+<pre><code>┌──────────────────────────────────────────────┐
+│  1. DISCOVER — Use AI to find information     │
+│     Perplexity, Deep Research, ChatGPT/Claude │
+├──────────────────────────────────────────────┤
+│  2. VERIFY — Check key claims against         │
+│     original sources. Click the citation.     │
+│     Does it actually say what AI claimed?     │
+├──────────────────────────────────────────────┤
+│  3. DEEPEN — Use traditional search for       │
+│     the most important findings. Find         │
+│     primary sources. Read the original.       │
+├──────────────────────────────────────────────┤
+│  4. SYNTHESIZE — Use YOUR judgment to         │
+│     combine findings. What does it mean?      │
+│     What's missing? What's uncertain?         │
+└──────────────────────────────────────────────┘</code></pre>
+</section>
+<section id="the-citation-verification-checklist" class="level3">
+<h3 class="anchored" data-anchor-id="the-citation-verification-checklist">The Citation Verification Checklist</h3>
+<p>For every AI-generated citation you plan to use:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Does the paper/article actually exist? (Search the title in Google Scholar or the publisher’s website)</label></li>
+<li><label><input type="checkbox">Is the author real? Do they work in this field?</label></li>
+<li><label><input type="checkbox">Is the journal/publication real and reputable?</label></li>
+<li><label><input type="checkbox">Does the paper actually say what the AI claims it says?</label></li>
+<li><label><input type="checkbox">Is the year correct?</label></li>
+<li><label><input type="checkbox">Are the specific statistics or quotes accurate?</label></li>
+</ul>
+<p>This takes 60-90 seconds per citation. It’s the difference between the student with 47 citations and 24 real ones versus a student with 47 citations and 47 verified ones.</p>
+<hr>
+</section>
+</section>
+<section id="the-line-between-ai-assisted-and-ai-generated" class="level2">
+<h2 class="anchored" data-anchor-id="the-line-between-ai-assisted-and-ai-generated">The Line Between AI-Assisted and AI-Generated</h2>
+<p>This distinction matters — academically, professionally, and ethically:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Category</th>
+<th style="text-align: left;">What It Means</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>AI-assisted research</strong></td>
+<td style="text-align: left;">You use AI to find, organize, and analyze — but the thinking, synthesis, and writing are yours</td>
+<td style="text-align: left;">Using Perplexity to find sources, then reading them yourself and writing your own analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>AI-generated content</strong></td>
+<td style="text-align: left;">AI produces the output — you edit, verify, or submit as-is</td>
+<td style="text-align: left;">Asking ChatGPT to “write a literature review on X” and submitting the output</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>AI-enhanced workflow</strong></td>
+<td style="text-align: left;">AI handles mechanical tasks while you handle intellectual ones</td>
+<td style="text-align: left;">AI cleans your data and makes charts; you interpret the results and draw conclusions</td>
+</tr>
+</tbody>
+</table>
+<p>Most academic and professional contexts accept AI-assisted research and AI-enhanced workflows. AI-generated content is more controversial and often prohibited or restricted. <strong>Know your institution’s policy</strong> (Module 10 covers this in depth).</p>
+<p>The SMARTS framework (Module 4) naturally produces AI-assisted rather than AI-generated work — because SMARTS keeps YOU in the reasoning loop. You think, the AI supports. That’s the difference.</p>
+<hr>
+</section>
+<section id="module-5-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-5-summary">Module 5 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Three research approaches:</strong> Traditional search (reliable, slow), AI-powered search (fast, needs verification), Deep Research agents (comprehensive, needs oversight). Use all three.</p></li>
+<li><p><strong>Perplexity</strong> gives fast, cited answers. <strong>Google AI Overviews</strong> give quick summaries. Both require you to click through and verify what the sources actually say.</p></li>
+<li><p><strong>Deep Research agents</strong> autonomously investigate complex questions. They’re powerful but can follow wrong paths. Always verify conclusions.</p></li>
+<li><p><strong>NotebookLM</strong> creates grounded knowledge bases from YOUR documents — more reliable than general chatbots for document-specific questions.</p></li>
+<li><p><strong>AI data analysis</strong> is powerful for computing, visualizing, and summarizing. But INTERPRETING what the data means is still YOUR job.</p></li>
+<li><p><strong>The 4-step verification loop:</strong> Discover (AI) → Verify (check sources) → Deepen (primary sources) → Synthesize (your judgment).</p></li>
+<li><p><strong>Every citation must be verified.</strong> 60-90 seconds per citation. No exceptions.</p></li>
+<li><p><strong>AI-assisted ≠ AI-generated.</strong> Use AI to find and organize. Use your brain to think and write. SMARTS keeps you on the right side of this line.</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>AI can read faster than you. It can search more broadly, summarize more quickly, and find connections across more sources. But it can’t <strong>think about what it reads.</strong> It can tell you what 50 papers say. It can’t tell you which ones matter, which ones are methodologically sound, and which conclusions are justified by the evidence. The research skill of the future isn’t finding information — it’s <strong>evaluating information that AI found for you.</strong> That requires domain knowledge, critical thinking, and judgment. Those are human skills. They just became the most valuable skills in the room.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-5-the-notebooklm-deep-dive" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-5-the-notebooklm-deep-dive">🔬 Lab 5: The NotebookLM Deep Dive</h2>
+<section id="lab-5-the-notebooklm-deep-dive-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-5-the-notebooklm-deep-dive-1">Lab 5: The NotebookLM Deep Dive</h4>
+<p><strong>Time:</strong> 45 minutes | <strong>Tools needed:</strong> Google NotebookLM (free at notebooklm.google.com) + 3 documents from your field</p>
+<p><strong>Part A — Build Your Knowledge Base (10 min)</strong> 1. Choose 3 documents relevant to your work or studies (PDFs, Google Docs, or web links). These should be documents you’re already somewhat familiar with. 2. Upload them to a new NotebookLM notebook. 3. Generate the Audio Overview and listen to at least 3 minutes of it.</p>
+<p><strong>Part B — Test the Boundaries (15 min)</strong> 4. Ask NotebookLM 5 questions about your documents: - 2 questions you already know the answer to (to test accuracy) - 2 questions you’re genuinely curious about (to test usefulness) - 1 question that CANNOT be answered from these documents alone (to test whether it admits limitations or halluccinates)</p>
+<p>Record each question, the AI’s response, and your assessment.</p>
+<p><strong>Part C — Compare With a General Chatbot (10 min)</strong> 5. Ask the same 5 questions to ChatGPT or Claude (without uploading the documents). Compare the responses. Which is more accurate for document-specific questions? Which is more useful for broader questions?</p>
+<p><strong>Part D — Reflection (10 min)</strong> 6. Write a short paragraph: When would NotebookLM be your first choice vs a general chatbot? What surprised you? How might you use this tool in your actual work?</p>
+<p><strong>Submit:</strong> Your questions, NotebookLM responses, comparison notes, and reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-5-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-5-quiz">🎮 Module 5 Quiz</h2>
+<div id="m5-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m5-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 5 Challenge</span><h3 style="color:white;border:none;">Research & Analysis</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m5-area"><div id="m5-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m5-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m5-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m5-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m5-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"The student's literature review had 47 citations. How many were fabricated by AI?",a:"23 — nearly half were plausible-sounding fakes blended with real ones",opts:["All 47","23 — nearly half were plausible-sounding fakes blended with real ones","Only 2 or 3","None — the AI cited correctly"]},
+    {q:"What makes NotebookLM different from ChatGPT for research?",a:"NotebookLM only answers from YOUR uploaded documents, reducing hallucinations",opts:["NotebookLM is faster","NotebookLM only answers from YOUR uploaded documents, reducing hallucinations","NotebookLM has more training data","There is no meaningful difference"]},
+    {q:"The 'citation trap' in AI-powered search means:",a:"AI cites real sources but may misrepresent what those sources actually say",opts:["AI creates fake citation formats","AI cites real sources but may misrepresent what those sources actually say","Citations slow down the AI","AI only cites paywalled sources"]},
+    {q:"Deep Research agents work by:",a:"Autonomously conducting multi-step research — searching, reading, following leads, and synthesizing",opts:["Searching Google and showing results","Autonomously conducting multi-step research — searching, reading, following leads, and synthesizing","Accessing secret databases","Replacing human researchers entirely"]},
+    {q:"The 4-step verification loop is:",a:"Discover (AI) → Verify (check sources) → Deepen (primary sources) → Synthesize (your judgment)",opts:["Search → Read → Write → Submit","Discover (AI) → Verify (check sources) → Deepen (primary sources) → Synthesize (your judgment)","Ask → Accept → Use → Cite","Google → Wikipedia → AI → Done"]},
+    {q:"For AI data analysis, the critical skill is:",a:"Using AI to compute and visualize, but using YOUR brain to interpret what it means",opts:["Letting AI do everything automatically","Using AI to compute and visualize, but using YOUR brain to interpret what it means","Only using Excel, never AI","Trusting AI statistics without checking"]},
+    {q:"When should you use traditional Google search instead of AI search?",a:"When you need a specific document you know exists, or need the most authoritative primary source",opts:["Never — AI search is always better","When you need a specific document you know exists, or need the most authoritative primary source","Only for historical research","When the internet is slow"]},
+    {q:"AI-assisted research means:",a:"You use AI to find and organize, but the thinking, synthesis, and writing are yours",opts:["AI writes everything and you submit it","You use AI to find and organize, but the thinking, synthesis, and writing are yours","You assist the AI by giving it prompts","AI and humans take turns writing"]},
+    {q:"How long should it take to verify one AI-generated citation?",a:"60-90 seconds — search the title, check the author, confirm the claim",opts:["It can't be done","60-90 seconds — search the title, check the author, confirm the claim","At least 30 minutes per citation","Verification isn't necessary if the AI cited a real source"]},
+    {q:"Perplexity's main advantage over regular ChatGPT for research is:",a:"It shows numbered source citations alongside its answers",opts:["It's faster","It shows numbered source citations alongside its answers","It never hallucinates","It searches academic databases only"]},
+    {q:"Google AI Overviews have been criticized for:",a:"Sometimes sourcing claims from unreliable content like joke Reddit posts",opts:["Being too slow","Sometimes sourcing claims from unreliable content like joke Reddit posts","Requiring a subscription","Not providing any sources"]},
+    {q:"NotebookLM's Audio Overview feature is useful for:",a:"Getting a podcast-style summary of your documents for review on the go",opts:["Recording your own notes","Getting a podcast-style summary of your documents for review on the go","Transcribing audio files","Nothing — it's a gimmick"]},
+    {q:"The biggest danger of AI data analysis is:",a:"Producing professional-looking charts and statistics that lead to wrong conclusions",opts:["It's too slow","Producing professional-looking charts and statistics that lead to wrong conclusions","It can't handle large datasets","It only works with Excel"]},
+    {q:"The SMARTS framework keeps research on the 'AI-assisted' side because:",a:"It keeps YOU in the reasoning loop — you think, the AI supports",opts:["It's a citation manager","It keeps YOU in the reasoning loop — you think, the AI supports","It prevents AI from generating text","It's required by universities"]},
+    {q:"The optimal research strategy in 2026 combines:",a:"AI search for discovery, traditional search for verification, and human judgment for synthesis",opts:["Only AI tools","Only traditional search","AI search for discovery, traditional search for verification, and human judgment for synthesis","Asking one AI model all your questions"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned! You\'re a verified AI researcher!':score>=10?'👍 Good effort! Review and retry.':'📖 Re-read the verification workflow and try again.';document.getElementById('m5-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m5-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m5-fb').textContent='';document.getElementById('m5-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m5-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m5-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m5-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m5-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m5-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module04/index.html">Module 04 — Prompting</a></em> | <em>Next: <a href="../module06/index.html">Module 06 — AI for Productivity</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module04/index.html" class="pagination-link" aria-label="The Art and Science of Prompting">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">The Art and Science of Prompting</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module06/index.html" class="pagination-link" aria-label="AI for Everyday Productivity">
+        <span class="nav-page-text">AI for Everyday Productivity</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

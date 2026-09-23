@@ -1,0 +1,2763 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The Art and Science of Prompting – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module05/index.html" rel="next">
+<link href="../module03/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="The Art and Science of Prompting – AI from the Ground Up">
+<meta property="og:description" content="Module 4 · BRIEFS + SMARTS: The Complete Interaction Protocol">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module04/index.html">PART II: COMMUNICATION</a></li><li class="breadcrumb-item"><a href="../module04/index.html">The Art and Science of Prompting</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#we-asked-the-models.-they-agreed." id="toc-we-asked-the-models.-they-agreed." class="nav-link active" data-scroll-target="#we-asked-the-models.-they-agreed.">We Asked the Models. They Agreed.</a></li>
+  <li><a href="#why-prompting-is-a-skill-not-just-typing" id="toc-why-prompting-is-a-skill-not-just-typing" class="nav-link" data-scroll-target="#why-prompting-is-a-skill-not-just-typing">Why Prompting Is a Skill, Not Just Typing</a></li>
+  <li><a href="#the-secret-to-good-prompting-show-the-ai-who-you-are" id="toc-the-secret-to-good-prompting-show-the-ai-who-you-are" class="nav-link" data-scroll-target="#the-secret-to-good-prompting-show-the-ai-who-you-are">The Secret to Good Prompting: Show the AI Who You Are</a>
+  <ul class="collapse">
+  <li><a href="#see-the-pattern-across-fields" id="toc-see-the-pattern-across-fields" class="nav-link" data-scroll-target="#see-the-pattern-across-fields">See the Pattern Across Fields</a></li>
+  <li><a href="#the-simple-version-the-3-questions" id="toc-the-simple-version-the-3-questions" class="nav-link" data-scroll-target="#the-simple-version-the-3-questions">The Simple Version: The 3 Questions</a></li>
+  <li><a href="#the-pattern-has-a-name-briefs" id="toc-the-pattern-has-a-name-briefs" class="nav-link" data-scroll-target="#the-pattern-has-a-name-briefs">The Pattern Has a Name: BRIEFS</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.a-recognize-before-you-produce" id="toc-exercise-4.a-recognize-before-you-produce" class="nav-link" data-scroll-target="#exercise-4.a-recognize-before-you-produce">🪜 Exercise 4.A — Recognize Before You Produce</a></li>
+  <li><a href="#exercise-4.b-single-element-insertion" id="toc-exercise-4.b-single-element-insertion" class="nav-link" data-scroll-target="#exercise-4.b-single-element-insertion">🪜 Exercise 4.B — Single-Element Insertion</a>
+  <ul class="collapse">
+  <li><a href="#variation-4.b.2-same-drill-your-own-domain" id="toc-variation-4.b.2-same-drill-your-own-domain" class="nav-link" data-scroll-target="#variation-4.b.2-same-drill-your-own-domain">Variation 4.B.2 — Same drill, your own domain</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.c-completion-drill-fill-the-gaps" id="toc-exercise-4.c-completion-drill-fill-the-gaps" class="nav-link" data-scroll-target="#exercise-4.c-completion-drill-fill-the-gaps">🪜 Exercise 4.C — Completion Drill (Fill the Gaps)</a>
+  <ul class="collapse">
+  <li><a href="#skeleton-1-grant-editor" id="toc-skeleton-1-grant-editor" class="nav-link" data-scroll-target="#skeleton-1-grant-editor">Skeleton 1 — Grant Editor</a></li>
+  <li><a href="#skeleton-2-customer-email" id="toc-skeleton-2-customer-email" class="nav-link" data-scroll-target="#skeleton-2-customer-email">Skeleton 2 — Customer Email</a></li>
+  <li><a href="#skeleton-3-exam-question-bank" id="toc-skeleton-3-exam-question-bank" class="nav-link" data-scroll-target="#skeleton-3-exam-question-bank">Skeleton 3 — Exam Question Bank</a></li>
+  <li><a href="#seeing-briefs-broken-down" id="toc-seeing-briefs-broken-down" class="nav-link" data-scroll-target="#seeing-briefs-broken-down">Seeing BRIEFS Broken Down</a></li>
+  <li><a href="#the-calibration-handshake" id="toc-the-calibration-handshake" class="nav-link" data-scroll-target="#the-calibration-handshake">The Calibration Handshake</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.d-full-briefs-production" id="toc-exercise-4.d-full-briefs-production" class="nav-link" data-scroll-target="#exercise-4.d-full-briefs-production">🪜 Exercise 4.D — Full BRIEFS Production</a>
+  <ul class="collapse">
+  <li><a href="#variation-4.d.2-your-own-three" id="toc-variation-4.d.2-your-own-three" class="nav-link" data-scroll-target="#variation-4.d.2-your-own-three">Variation 4.D.2 — Your Own Three</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.e-calibration-handshake-drill" id="toc-exercise-4.e-calibration-handshake-drill" class="nav-link" data-scroll-target="#exercise-4.e-calibration-handshake-drill">🪜 Exercise 4.E — Calibration Handshake Drill</a>
+  <ul class="collapse">
+  <li><a href="#scenario-1-the-drift-you-want-to-catch" id="toc-scenario-1-the-drift-you-want-to-catch" class="nav-link" data-scroll-target="#scenario-1-the-drift-you-want-to-catch">Scenario 1 — The Drift You Want to Catch</a></li>
+  <li><a href="#scenario-2-the-ambiguity-that-looks-clean" id="toc-scenario-2-the-ambiguity-that-looks-clean" class="nav-link" data-scroll-target="#scenario-2-the-ambiguity-that-looks-clean">Scenario 2 — The Ambiguity That Looks Clean</a></li>
+  <li><a href="#scenario-3-your-own" id="toc-scenario-3-your-own" class="nav-link" data-scroll-target="#scenario-3-your-own">Scenario 3 — Your Own</a></li>
+  </ul></li>
+  <li><a href="#core-prompting-techniques" id="toc-core-prompting-techniques" class="nav-link" data-scroll-target="#core-prompting-techniques">Core Prompting Techniques</a>
+  <ul class="collapse">
+  <li><a href="#zero-shot-prompting" id="toc-zero-shot-prompting" class="nav-link" data-scroll-target="#zero-shot-prompting">Zero-Shot Prompting</a></li>
+  <li><a href="#few-shot-prompting" id="toc-few-shot-prompting" class="nav-link" data-scroll-target="#few-shot-prompting">Few-Shot Prompting</a></li>
+  <li><a href="#chain-of-thought-prompting" id="toc-chain-of-thought-prompting" class="nav-link" data-scroll-target="#chain-of-thought-prompting">Chain-of-Thought Prompting</a></li>
+  <li><a href="#role-based-prompting" id="toc-role-based-prompting" class="nav-link" data-scroll-target="#role-based-prompting">Role-Based Prompting</a></li>
+  <li><a href="#structured-output-prompting" id="toc-structured-output-prompting" class="nav-link" data-scroll-target="#structured-output-prompting">Structured Output Prompting</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.f-technique-selection" id="toc-exercise-4.f-technique-selection" class="nav-link" data-scroll-target="#exercise-4.f-technique-selection">🪜 Exercise 4.F — Technique Selection</a></li>
+  <li><a href="#advanced-techniques" id="toc-advanced-techniques" class="nav-link" data-scroll-target="#advanced-techniques">Advanced Techniques</a>
+  <ul class="collapse">
+  <li><a href="#prompt-chaining" id="toc-prompt-chaining" class="nav-link" data-scroll-target="#prompt-chaining">Prompt Chaining</a></li>
+  <li><a href="#constraint-setting" id="toc-constraint-setting" class="nav-link" data-scroll-target="#constraint-setting">Constraint Setting</a></li>
+  <li><a href="#meta-prompting" id="toc-meta-prompting" class="nav-link" data-scroll-target="#meta-prompting">Meta-Prompting</a></li>
+  <li><a href="#negative-prompting" id="toc-negative-prompting" class="nav-link" data-scroll-target="#negative-prompting">Negative Prompting</a></li>
+  <li><a href="#persona-stacking" id="toc-persona-stacking" class="nav-link" data-scroll-target="#persona-stacking">Persona Stacking</a></li>
+  </ul></li>
+  <li><a href="#the-smarts-framework-your-interaction-loop" id="toc-the-smarts-framework-your-interaction-loop" class="nav-link" data-scroll-target="#the-smarts-framework-your-interaction-loop">The SMARTS Framework: Your Interaction Loop</a>
+  <ul class="collapse">
+  <li><a href="#smarts-in-action-a-business-example" id="toc-smarts-in-action-a-business-example" class="nav-link" data-scroll-target="#smarts-in-action-a-business-example">SMARTS in Action: A Business Example</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.g-smarts-multi-turn-walkthrough" id="toc-exercise-4.g-smarts-multi-turn-walkthrough" class="nav-link" data-scroll-target="#exercise-4.g-smarts-multi-turn-walkthrough">🪜 Exercise 4.G — SMARTS Multi-Turn Walkthrough</a>
+  <ul class="collapse">
+  <li><a href="#variation-4.g.2-compress-to-3-turns" id="toc-variation-4.g.2-compress-to-3-turns" class="nav-link" data-scroll-target="#variation-4.g.2-compress-to-3-turns">Variation 4.G.2 — Compress to 3 Turns</a></li>
+  </ul></li>
+  <li><a href="#briefs-smarts-together-the-complete-protocol" id="toc-briefs-smarts-together-the-complete-protocol" class="nav-link" data-scroll-target="#briefs-smarts-together-the-complete-protocol">BRIEFS + SMARTS Together: The Complete Protocol</a>
+  <ul class="collapse">
+  <li><a href="#when-to-use-what" id="toc-when-to-use-what" class="nav-link" data-scroll-target="#when-to-use-what">When to Use What</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.h-anti-pattern-gallery" id="toc-exercise-4.h-anti-pattern-gallery" class="nav-link" data-scroll-target="#exercise-4.h-anti-pattern-gallery">🪜 Exercise 4.H — Anti-Pattern Gallery</a>
+  <ul class="collapse">
+  <li><a href="#prompt-1-the-wall-of-context" id="toc-prompt-1-the-wall-of-context" class="nav-link" data-scroll-target="#prompt-1-the-wall-of-context">Prompt 1 — The Wall of Context</a></li>
+  <li><a href="#prompt-2-the-frankenstein" id="toc-prompt-2-the-frankenstein" class="nav-link" data-scroll-target="#prompt-2-the-frankenstein">Prompt 2 — The Frankenstein</a></li>
+  <li><a href="#prompt-3-the-yes-man-bait" id="toc-prompt-3-the-yes-man-bait" class="nav-link" data-scroll-target="#prompt-3-the-yes-man-bait">Prompt 3 — The Yes-Man Bait</a></li>
+  <li><a href="#prompt-4-the-phantom-context" id="toc-prompt-4-the-phantom-context" class="nav-link" data-scroll-target="#prompt-4-the-phantom-context">Prompt 4 — The Phantom Context</a></li>
+  <li><a href="#prompt-5-the-role-dump" id="toc-prompt-5-the-role-dump" class="nav-link" data-scroll-target="#prompt-5-the-role-dump">Prompt 5 — The Role Dump</a></li>
+  <li><a href="#prompt-6-the-formatcontent-mismatch" id="toc-prompt-6-the-formatcontent-mismatch" class="nav-link" data-scroll-target="#prompt-6-the-formatcontent-mismatch">Prompt 6 — The Format/Content Mismatch</a></li>
+  <li><a href="#prompt-7-the-leading-question" id="toc-prompt-7-the-leading-question" class="nav-link" data-scroll-target="#prompt-7-the-leading-question">Prompt 7 — The Leading Question</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.i-transfer-red-team" id="toc-exercise-4.i-transfer-red-team" class="nav-link" data-scroll-target="#exercise-4.i-transfer-red-team">🪜 Exercise 4.I — Transfer &amp; Red-Team</a>
+  <ul class="collapse">
+  <li><a href="#part-1-domain-transfer" id="toc-part-1-domain-transfer" class="nav-link" data-scroll-target="#part-1-domain-transfer">Part 1 — Domain Transfer</a></li>
+  <li><a href="#part-2-red-team-break-briefs" id="toc-part-2-red-team-break-briefs" class="nav-link" data-scroll-target="#part-2-red-team-break-briefs">Part 2 — Red Team (Break BRIEFS)</a></li>
+  </ul></li>
+  <li><a href="#exercise-4.j-rubric-based-peer-critique" id="toc-exercise-4.j-rubric-based-peer-critique" class="nav-link" data-scroll-target="#exercise-4.j-rubric-based-peer-critique">🪜 Exercise 4.J — Rubric-Based Peer Critique</a>
+  <ul class="collapse">
+  <li><a href="#the-critique-rubric" id="toc-the-critique-rubric" class="nav-link" data-scroll-target="#the-critique-rubric">The Critique Rubric</a></li>
+  <li><a href="#the-critique-script" id="toc-the-critique-script" class="nav-link" data-scroll-target="#the-critique-script">The Critique Script</a></li>
+  <li><a href="#debrief-do-this-with-your-partner-5-min" id="toc-debrief-do-this-with-your-partner-5-min" class="nav-link" data-scroll-target="#debrief-do-this-with-your-partner-5-min">Debrief (Do This With Your Partner, 5 min)</a></li>
+  </ul></li>
+  <li><a href="#common-prompting-mistakes-and-how-to-fix-them" id="toc-common-prompting-mistakes-and-how-to-fix-them" class="nav-link" data-scroll-target="#common-prompting-mistakes-and-how-to-fix-them">Common Prompting Mistakes (and How to Fix Them)</a></li>
+  <li><a href="#module-4-summary" id="toc-module-4-summary" class="nav-link" data-scroll-target="#module-4-summary">Module 4 Summary</a></li>
+  <li><a href="#lab-4-the-briefs-beforeafter-experiment" id="toc-lab-4-the-briefs-beforeafter-experiment" class="nav-link" data-scroll-target="#lab-4-the-briefs-beforeafter-experiment">🔬 Lab 4: The BRIEFS Before/After Experiment</a></li>
+  <li><a href="#module-4-quiz" id="toc-module-4-quiz" class="nav-link" data-scroll-target="#module-4-quiz">🎮 Module 4 Quiz</a></li>
+  <li><a href="#references-for-module-4" id="toc-references-for-module-4" class="nav-link" data-scroll-target="#references-for-module-4">References for Module 4</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module04/index.html">PART II: COMMUNICATION</a></li><li class="breadcrumb-item"><a href="../module04/index.html">The Art and Science of Prompting</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">The Art and Science of Prompting</h1>
+<p class="subtitle lead">Module 4 · BRIEFS + SMARTS: The Complete Interaction Protocol</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Modules 1-3 (understanding what AI is and how it works)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain why prompting is a communication skill, not just typing</li>
+<li><strong>Diagnose</strong> which BRIEFS element is missing from a weak prompt (recognition)</li>
+<li><strong>Produce</strong> each BRIEFS element in isolation and in combination (production)</li>
+<li>Apply the <strong>BRIEFS</strong> framework to design effective first messages</li>
+<li>Apply the <strong>SMARTS</strong> framework to guide multi-turn AI conversations</li>
+<li>Use core prompting techniques: zero-shot, few-shot, chain-of-thought, and role-based, and <strong>select</strong> the right one for a given task</li>
+<li>Apply advanced techniques: prompt chaining, constraint setting, meta-prompting</li>
+<li>Combine BRIEFS and SMARTS into a complete interaction protocol</li>
+<li>Diagnose and fix common prompting mistakes — and give structured peer feedback on others’ prompts</li>
+<li><strong>Transfer</strong> a well-formed prompt across domains, and recognize the cases where BRIEFS is the wrong tool</li>
+</ol>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A Note on This Module’s Structure
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This module contains a <strong>practice ladder</strong> — nine stepwise exercises (4.A through 4.I, plus a peer-critique protocol 4.J) designed so you build the skill in layers, not all at once. Each exercise reduces the scaffolding by one step: you begin by <em>recognizing</em> weak prompts, then <em>insert</em> single elements, then <em>complete</em> partial skeletons, then <em>produce</em> full prompts, then <em>transfer</em> them across domains. This follows the well-validated <strong>faded worked example</strong> pattern from cognitive load research (Renkl &amp; Atkinson, 2003; Belland et al., 2017 meta-analysis, <em>g</em> = 0.46 on STEM cognitive outcomes). Do the exercises in order. Do not skip ahead. The whole point is the ladder.</p>
+</div>
+</div>
+<section id="we-asked-the-models.-they-agreed." class="level2">
+<h2 class="anchored" data-anchor-id="we-asked-the-models.-they-agreed.">We Asked the Models. They Agreed.</h2>
+<p>Most prompt engineering advice comes from humans experimenting with AI — trying different phrasings, comparing outputs, building rules of thumb. That’s valuable. But there’s a question nobody thought to ask:</p>
+<p><em>What do the models themselves say they need?</em></p>
+<p>In April 2026, researcher Dr.&nbsp;Anjana Yatawara did exactly that. He administered a standardized 17-question survey to 29 large language model sessions across five competing providers — OpenAI (GPT-5.x, o3), Anthropic (Claude Opus, Sonnet), Google (Gemini 3), DeepSeek (V3), and xAI (Grok). He asked the models: What information most changes how you respond? Where does communication break down? What would an ideal first message look like?</p>
+<p>The results were striking. After deduplication, 26 unique model responses were analyzed. Three findings emerged with <strong>perfect convergence — 26 out of 26 models agreed</strong>:</p>
+<ol type="1">
+<li><p><strong>Intent is the #1 signal.</strong> Every model, across every provider, ranked user intent/goal/purpose as the single most important piece of information shaping response quality. Not expertise level. Not format preferences. Not constraints. <strong>Intent.</strong></p></li>
+<li><p><strong>Every model independently invented the same calibration protocol.</strong> Without being prompted about any specific protocol, all 26 models described the same three-phase exchange: user states goal → model restates interpretation → user confirms. They called it different names — “Ping-Pong,” “Intent Handshake,” “3-turn handshake” — but the structure was identical.</p></li>
+<li><p><strong>Every model admitted the same failure mode.</strong> All 26 said they routinely produce responses that are “technically correct but contextually wrong” — and attributed it to modeling the <em>question</em> accurately while modeling the <em>user</em> poorly.</p></li>
+</ol>
+<p>These findings motivated two frameworks that form the backbone of this module — and the backbone of this entire course:</p>
+<ul>
+<li><strong>BRIEFS</strong> — how to design your first message so the model understands you from the start</li>
+<li><strong>SMARTS</strong> — how to guide the conversation so you think WITH the AI, not just AT it</li>
+</ul>
+<p>No other AI literacy program has either of these. You’re about to learn both (Yatawara, 2026 — <em>LLM &amp; Human Whisperers: What Large Language Models Ask of Us</em>. SSRN Working Paper).</p>
+<hr>
+</section>
+<section id="why-prompting-is-a-skill-not-just-typing" class="level2">
+<h2 class="anchored" data-anchor-id="why-prompting-is-a-skill-not-just-typing">Why Prompting Is a Skill, Not Just Typing</h2>
+<p>Here’s the core insight from the Whisperers study: <strong>the quality of AI output depends more on the quality of your input than on the capability of the model.</strong></p>
+<p>When all 26 models identified “intent” as the #1 signal and “modeling the user poorly” as the #1 failure mode, they were saying the same thing in two ways: <em>we can answer your question — but we need to know WHY you’re asking.</em></p>
+<hr>
+</section>
+<section id="the-secret-to-good-prompting-show-the-ai-who-you-are" class="level2">
+<h2 class="anchored" data-anchor-id="the-secret-to-good-prompting-show-the-ai-who-you-are">The Secret to Good Prompting: Show the AI Who You Are</h2>
+<p>Forget everything you’ve heard about “prompt engineering tricks.” The core skill is simpler than anyone makes it sound: <strong>give the AI enough context to help you specifically, not generically.</strong></p>
+<p>Look at these two prompts:</p>
+<blockquote class="blockquote">
+<p><strong>Weak:</strong> “Tell me about diabetes.”</p>
+<p><strong>Strong:</strong> “I’m a nursing student preparing for my NCLEX exam. I need a concise review of Type 2 diabetes covering pathophysiology, risk factors, diagnostic criteria, and first-line treatment. Keep it under 500 words and use clinical terminology I’d see on the exam.”</p>
+</blockquote>
+<p>Same question. Dramatically different results. The strong prompt works because it tells the AI six things the weak prompt doesn’t:</p>
+<ol type="1">
+<li><strong>Who you are</strong> — a nursing student (not a patient, not a researcher, not a 10-year-old)</li>
+<li><strong>Your expertise level</strong> — preparing for NCLEX (knows medical terminology, needs clinical depth)</li>
+<li><strong>What you actually want</strong> — a concise review for exam prep (not a general overview)</li>
+<li><strong>What to include</strong> — pathophysiology, risk factors, diagnostics, treatment</li>
+<li><strong>How to format it</strong> — under 500 words, clinical terminology</li>
+<li><strong>What you’ll do with it</strong> — pass an exam (this changes everything about tone and focus)</li>
+</ol>
+<p>That’s it. That’s the whole secret. <strong>Six types of context.</strong> The more you provide, the better the response.</p>
+<section id="see-the-pattern-across-fields" class="level3">
+<h3 class="anchored" data-anchor-id="see-the-pattern-across-fields">See the Pattern Across Fields</h3>
+<p>Here’s what good prompts look like in different contexts. Notice the same six elements showing up every time:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Teacher</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Small Business Owner</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Nurse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">County Employee</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">College Student</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Farmer / Ag Manager</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<blockquote class="blockquote">
+<p>“I teach 8th grade science at a Title I school. My students are mostly English learners reading at 5th-6th grade level. I need a lesson plan for introducing photosynthesis that uses visual models and hands-on activities instead of heavy reading. 45-minute class period. Include 3 check-for-understanding questions I can ask during the lesson. This is for a formal observation next Tuesday.”</p>
+</blockquote>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<blockquote class="blockquote">
+<p>“I own a mobile car detailing business targeting busy professionals downtown. I’ve been open 8 months, revenue is $4K/month, I work solo. I need 5 social media post ideas for Instagram that show real results (before/after photos) and drive bookings. Keep the captions under 50 words each. I post 3x/week and my audience is 25-45 year old professionals.”</p>
+</blockquote>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<blockquote class="blockquote">
+<p>“I’m an RN in a 12-bed urgent care clinic. I need to create a one-page patient handout explaining what to expect after a tetanus booster shot — common side effects, when to call us, and when to go to the ER. Reading level: 6th grade. No medical jargon. Include a phone number placeholder. The handout goes to every patient who gets the shot, including non-English speakers, so keep sentences short and clear.”</p>
+</blockquote>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<blockquote class="blockquote">
+<p>“I’m a program analyst at Kern County Public Health. I need to summarize our Q2 vaccination outreach data for a 5-minute presentation to the Board of Supervisors. They’re non-technical — they want to know: how many people reached, which communities, what worked, and what we need. I have the raw data in a spreadsheet I’ll upload. Make it 3 slides max with talking points.”</p>
+</blockquote>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<blockquote class="blockquote">
+<p>“I’m a junior business major. I need to write a 5-page case analysis of Netflix’s pricing strategy for my marketing class. The professor wants: situation analysis, identification of the core strategic issue, 3 alternative solutions with pros/cons, and a recommendation with justification. Due Friday. I’ve read the case but I’m stuck on structuring the alternatives section — help me think through that part, don’t write it for me.”</p>
+</blockquote>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<blockquote class="blockquote">
+<p>“I manage a 200-acre almond orchard in the southern San Joaquin Valley. We’re seeing leaf curl on about 15% of trees in the northeast block. It started 2 weeks ago after an unusually wet March. I need a differential diagnosis — the 3 most likely causes — with recommended next steps for each. I’m not a plant pathologist, so explain in practical terms. I need to decide by Friday whether to spray or wait.”</p>
+</blockquote>
+</div>
+</div>
+</div>
+</section>
+<section id="the-simple-version-the-3-questions" class="level3">
+<h3 class="anchored" data-anchor-id="the-simple-version-the-3-questions">The Simple Version: The 3 Questions</h3>
+<p>If six things feels like a lot, start with three:</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The 3 Questions (Your Everyday Default)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>What do I want?</strong> — Your goal. The #1 most important thing.</li>
+<li><strong>Who am I?</strong> — Your background, expertise, context.</li>
+<li><strong>How will I use this?</strong> — What the output is for. Rough draft ≠ final report.</li>
+</ol>
+<p>Answer these three before you type, and you’ll outperform 90% of AI users. That’s the whole secret at its simplest.</p>
+</div>
+</div>
+</section>
+<section id="the-pattern-has-a-name-briefs" class="level3">
+<h3 class="anchored" data-anchor-id="the-pattern-has-a-name-briefs">The Pattern Has a Name: BRIEFS</h3>
+<p>Those six elements have a name. In a 2026 research study, Dr.&nbsp;Anjana Yatawara surveyed 29 AI models across five competing companies and found that ALL of them — 26 out of 26 — independently asked for the same six types of information. He organized them into the <strong>BRIEFS</strong> framework:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Letter</th>
+<th style="text-align: left;">What It Means</th>
+<th style="text-align: left;">The Question You’re Answering</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>B</strong></td>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;"><em>Who am I?</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>R</strong></td>
+<td style="text-align: left;">Role</td>
+<td style="text-align: left;"><em>What’s my expertise level?</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>I</strong></td>
+<td style="text-align: left;">Intent</td>
+<td style="text-align: left;"><em>What do I actually want?</em> (THE most important one)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>E</strong></td>
+<td style="text-align: left;">Execution</td>
+<td style="text-align: left;"><em>What constraints should the output follow?</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>F</strong></td>
+<td style="text-align: left;">Format</td>
+<td style="text-align: left;"><em>How long? What structure?</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S</strong></td>
+<td style="text-align: left;">Stakes</td>
+<td style="text-align: left;"><em>What will I do with this?</em></td>
+</tr>
+</tbody>
+</table>
+<p>You don’t need to memorize the acronym. You don’t need to include all six every time. <strong>Just ask yourself before hitting send: “Does the AI know enough about ME and MY SITUATION to give a useful answer?”</strong> If not, add more context. BRIEFS tells you which context matters most.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Shortcut: If You Only Remember One Thing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Intent is the anchor.</strong> If you add nothing else, tell the AI WHAT YOU WANT TO ACCOMPLISH — not just what topic you’re asking about. “Tell me about diabetes” vs “I need to pass my NCLEX” changes everything. Start with intent. Add the others when it matters.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.a-recognize-before-you-produce" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.a-recognize-before-you-produce">🪜 Exercise 4.A — Recognize Before You Produce</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before you can <em>write</em> a good BRIEFS prompt, you need to <em>see</em> what’s missing from a weak one. Production without diagnosis is guessing.</p>
+<p><strong>Scaffolding level:</strong> Fully worked. You are diagnosing, not producing. | <strong>Time:</strong> 8 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> For each weak prompt below, identify which <strong>ONE</strong> BRIEFS element, if added, would most improve the response. (Often more than one is missing — pick the element whose absence is most <em>costly</em>.)</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 28%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Weak Prompt</th>
+<th style="text-align: center;">Most-Missing Element?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">“Give me some marketing ideas.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">“Explain the Krebs cycle. Keep it short. Use bullet points.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">“I’m a high school biology teacher. My students are mostly ELL. Explain the Krebs cycle.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">“I’m a nurse. I need a patient handout. Reading level 6th grade, no jargon, one page.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">“Write a cover letter for me. Make it professional.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: left;">“I’m submitting this loan application to my local credit union tomorrow morning. Help me sharpen the business plan.”</td>
+<td style="text-align: center;">__</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<strong>Click for answer key + reasoning</strong>
+</summary>
+<ol type="1">
+<li><strong>I (Intent)</strong> — “Marketing ideas” is a topic, not a goal. Ideas for what? B2B lead gen? Instagram posts? Email subject lines? Fix: add the actual outcome you want.</li>
+<li><strong>I (Intent)</strong> — It has Execution (“short”) and Format (“bullets”) but no goal. Review for an exam? Teaching? Understanding for yourself? The model will guess and often guess wrong.</li>
+<li><strong>I (Intent)</strong> — Has strong Background and Role. Still no Intent. Explain for what purpose — a 10-minute lecture? A worksheet? A homework review? Each produces a different output.</li>
+<li><strong>I (Intent)</strong> — Still missing. “A patient handout” is <em>what</em>, not <em>why</em>. Post-surgery instructions? Vaccine side effects? Medication adherence? The handout’s purpose drives the content entirely.</li>
+<li><strong>B + R (Background + Role)</strong> — Intent is clear (cover letter), Execution is implied (professional), but the model has no idea whether you’re a 22-year-old applying for your first job or a 45-year-old executive. Background and Role are doing the heavy lifting here.</li>
+<li><strong>E (Execution)</strong> — Everything else is solid: Background (loan application), Role (business owner), Intent (sharpen business plan), Format (standard loan application), Stakes (tomorrow, real money). What the model doesn’t have is <em>what to focus on</em>. Is the plan too long? Too vague on financials? Missing the competitive analysis? Execution = the specific constraints / focus areas.</li>
+</ol>
+<strong>The pattern.</strong> Across 100+ weak prompts, the most-missing element is Intent (~60% of cases), followed by Execution (~20%). This is exactly what the Whisperers study predicted: <em>intent is the #1 signal</em>. Get used to diagnosing it first.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After checking your answers, answer this <strong>in your own words</strong>: <em>“Why does the model need to know my Intent before it can help me, even when the topic is perfectly clear?”</em> Write it down. You are more likely to remember a framework when you can state its rationale without looking.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="exercise-4.b-single-element-insertion" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.b-single-element-insertion">🪜 Exercise 4.B — Single-Element Insertion</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write each BRIEFS element in isolation. This is deliberate practice — like drilling scales before playing a song. You will never do this in production, but doing it once makes all six elements automatic.</p>
+<p><strong>Scaffolding level:</strong> High (you focus on ONE element at a time). | <strong>Time:</strong> 12 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> Take the bare prompt below:</p>
+<blockquote class="blockquote">
+<p><strong>Bare prompt:</strong> <em>“Summarize this meeting transcript.”</em></p>
+</blockquote>
+<p>Now add each BRIEFS element, one at a time, on its own line. <strong>Do not combine them yet.</strong> The goal is to feel each element as a distinct move.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Element</th>
+<th style="text-align: left;">Your sentence adding only this element</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>B — Background</strong></td>
+<td style="text-align: left;"><em>“I’m …”</em> (who are you?)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>R — Role</strong></td>
+<td style="text-align: left;"><em>“My expertise is …”</em> (what’s your level?)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>I — Intent</strong></td>
+<td style="text-align: left;"><em>“I need this summary to …”</em> (what’s the outcome?)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>E — Execution</strong></td>
+<td style="text-align: left;"><em>“Focus on …”</em> or <em>“Don’t include …”</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>F — Format</strong></td>
+<td style="text-align: left;"><em>“Structure it as …”</em> (how long, what shape?)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S — Stakes</strong></td>
+<td style="text-align: left;"><em>“This will be used for …”</em> (where does it land?)</td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<strong>Click for sample answers (one plausible set)</strong>
+</summary>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Element</th>
+<th style="text-align: left;">Sample sentence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>B</strong></td>
+<td style="text-align: left;">“I’m a project manager at a mid-sized construction firm.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>R</strong></td>
+<td style="text-align: left;">“I joined this project mid-stream, so I’m catching up rather than leading technical decisions.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>I</strong></td>
+<td style="text-align: left;">“I need this summary to decide which of three open issues I should raise first at tomorrow’s 8am client call.”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>E</strong></td>
+<td style="text-align: left;">“Focus on unresolved action items and decisions. Skip social chat, re-introductions, and status updates on items already closed.”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>F</strong></td>
+<td style="text-align: left;">“Give me a single paragraph (≤150 words) followed by a 3-column table: Issue</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S</strong></td>
+<td style="text-align: left;">“This summary is for my own prep — not for distribution — so clarity matters more than polish.”</td>
+</tr>
+</tbody>
+</table>
+<strong>Now combine them.</strong> Write all six as a single paragraph. Notice that the natural order (B → R → I → E → F → S) isn’t always the clearest — sometimes Intent should go first for emphasis. Order is stylistic; completeness is structural.
+</details>
+<section id="variation-4.b.2-same-drill-your-own-domain" class="level3">
+<h3 class="anchored" data-anchor-id="variation-4.b.2-same-drill-your-own-domain">Variation 4.B.2 — Same drill, your own domain</h3>
+<p>Pick a task from your own life (a syllabus revision, a customer email, a code review, a lab-report outline — anything). Bare-prompt it in one sentence. Then add each BRIEFS element on its own line. Repeat until it takes less than 90 seconds.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which element was <em>hardest</em> for you to write cleanly? That’s the one that will bite you under time pressure. Note it down. For the rest of the course, whenever you draft a real prompt, audit that element specifically.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.c-completion-drill-fill-the-gaps" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.c-completion-drill-fill-the-gaps">🪜 Exercise 4.C — Completion Drill (Fill the Gaps)</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Partial scaffold. Some BRIEFS elements are given; you fill in the rest. This is the classic <em>completion problem</em> from cognitive load theory — the first step where learners are producing, not just recognizing.</p>
+<p><strong>Scaffolding level:</strong> Partial (2-3 elements given, you add the rest). | <strong>Time:</strong> 10 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> Each skeleton below has 2–3 elements filled in. Add the missing elements to produce a complete BRIEFS prompt. Don’t change what’s given — just fill the gaps.</p>
+<section id="skeleton-1-grant-editor" class="level3">
+<h3 class="anchored" data-anchor-id="skeleton-1-grant-editor">Skeleton 1 — Grant Editor</h3>
+<pre><code>[B] I'm a first-year assistant professor preparing an NSF CAREER proposal.
+[R] ____________________________________________
+[I] ____________________________________________
+[E] ____________________________________________
+[F] Give me inline suggested edits in [brackets] with a 1-sentence rationale for each.
+[S] Internal deadline for my department mentor's review is Friday.</code></pre>
+</section>
+<section id="skeleton-2-customer-email" class="level3">
+<h3 class="anchored" data-anchor-id="skeleton-2-customer-email">Skeleton 2 — Customer Email</h3>
+<pre><code>[B] ____________________________________________
+[R] ____________________________________________
+[I] I need to respond to an angry customer who received the wrong order and wants a refund plus 
+    compensation for "wasted time."
+[E] Apologize sincerely but do not promise compensation beyond the refund until my manager approves.
+[F] Under 120 words, professional tone, no emojis.
+[S] ____________________________________________</code></pre>
+</section>
+<section id="skeleton-3-exam-question-bank" class="level3">
+<h3 class="anchored" data-anchor-id="skeleton-3-exam-question-bank">Skeleton 3 — Exam Question Bank</h3>
+<pre><code>[B] I teach introductory statistics to 90 undergraduates, mixed majors.
+[R] ____________________________________________
+[I] I need 10 multiple-choice questions testing understanding of Type I / Type II error.
+[E] ____________________________________________
+[F] ____________________________________________
+[S] Questions go into the actual midterm in two weeks — they need to be defensible if a student 
+    disputes the answer.</code></pre>
+<details>
+<summary>
+<strong>Click for sample completions</strong>
+</summary>
+<p><strong>Skeleton 1 — possible R, I, E:</strong></p>
+<ul>
+<li><strong>[R]</strong> <em>“I’ve written two NIH R21s but this is my first NSF submission; I know the science, not the NSF rhetoric.”</em></li>
+<li><strong>[I]</strong> <em>“I need line-by-line editing on the Project Summary (1-page limit) to sharpen my broader-impacts narrative and tighten transitions.”</em></li>
+<li><strong>[E]</strong> <em>“Preserve my voice; don’t rewrite. Flag any claim that overstates preliminary data. Do not add citations I haven’t already included.”</em></li>
+</ul>
+<p><strong>Skeleton 2 — possible B, R, S:</strong></p>
+<ul>
+<li><strong>[B]</strong> <em>“I’m a customer service rep at a small online retailer (12 employees).”</em></li>
+<li><strong>[R]</strong> <em>“Two weeks into the role — I follow a response playbook but haven’t handled escalations yet.”</em></li>
+<li><strong>[S]</strong> <em>“My manager reviews every draft before it sends. She flags tone issues fast — I’d rather get this right than fast.”</em></li>
+</ul>
+<p><strong>Skeleton 3 — possible R, E, F:</strong></p>
+<ul>
+<li><strong>[R]</strong> <em>“I’ve taught this course 4 times; my students consistently confuse Type I vs Type II and power.”</em></li>
+<li><strong>[E]</strong> <em>“Use applied scenarios, not pure symbolic notation. Each distractor must be a <em>plausible</em> misconception, not an obvious throwaway. Avoid ‘all of the above’ / ‘none of the above.’”</em></li>
+<li><strong>[F]</strong> <em>“One question per block, stem then 4 options (A–D), correct answer + 1-sentence rationale below.”</em></li>
+</ul>
+<strong>Common pattern.</strong> Skeleton 2 and 3 deliberately left Stakes empty because students most often under-specify Stakes. If your draft Stakes were one-word (“work,” “class”) — rewrite them. Stakes = <em>where this lands and who sees it</em>.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each skeleton you completed, ask: <em>“If I had written this element differently, how would the model’s output change?”</em> The ability to predict output from prompt is the real skill you’re building. It’s what separates fluent prompters from guessers.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="seeing-briefs-broken-down" class="level3">
+<h3 class="anchored" data-anchor-id="seeing-briefs-broken-down">Seeing BRIEFS Broken Down</h3>
+<p>In the examples above, all six components were woven together naturally. Here’s what it looks like when you see each piece labeled:</p>
+<p><strong>Weak prompt:</strong></p>
+<blockquote class="blockquote">
+<p>“Write me a business plan.”</p>
+</blockquote>
+<p><strong>Strong prompt, with BRIEFS components labeled:</strong></p>
+<blockquote class="blockquote">
+<p><strong>[B]</strong> I’m a college senior starting a mobile car detailing business. <strong>[R]</strong> Business major, one entrepreneurship course, no prior business ownership. <strong>[I]</strong> I need a lean business plan for a $5,000 microloan application. <strong>[E]</strong> Focus on market opportunity, startup costs, Year 1 revenue projections, and competitive advantage. Skip mission/vision boilerplate. <strong>[F]</strong> Max 3 pages. Headers, short paragraphs, one financial table. <strong>[S]</strong> This is my actual loan application. Reviewers are non-technical community members. Plain language, concrete numbers.</p>
+</blockquote>
+<p>You’d never actually label them this way in real life — you’d just write it all in one paragraph like the examples above. The labels are training wheels. Once the habit clicks, you drop them.</p>
+</section>
+<section id="the-calibration-handshake" class="level3">
+<h3 class="anchored" data-anchor-id="the-calibration-handshake">The Calibration Handshake</h3>
+<p>Here’s something remarkable: all 26 models in the Whisperers study independently proposed the same follow-up protocol after receiving a first message:</p>
+<ol type="1">
+<li><strong>You</strong> send a BRIEFS-structured message</li>
+<li><strong>The model</strong> restates its understanding: “So you want X for Y audience, with Z constraints. Is that right?”</li>
+<li><strong>You</strong> confirm or correct: “Yes, but also include…”</li>
+<li>Work begins</li>
+</ol>
+<p>Several models emphasized that this handshake must cost <strong>at most one extra exchange</strong> to be practical. If the first message is well-structured (BRIEFS), calibration takes zero additional exchanges — the model gets it right on the first try.</p>
+<hr>
+</section>
+</section>
+<section id="exercise-4.d-full-briefs-production" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.d-full-briefs-production">🪜 Exercise 4.D — Full BRIEFS Production</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>No scaffold. Three prompts, written from scratch, using all relevant BRIEFS elements. This is the production test for first-message design.</p>
+<p><strong>Scaffolding level:</strong> Low (independent production). | <strong>Time:</strong> 15 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> Rewrite each weak prompt using BRIEFS. Include whichever elements matter; you do not need all six every time. Total time target: 5 minutes per prompt. If it’s taking longer than that, your BRIEFS isn’t automatic yet — go back to Exercise 4.B.</p>
+<ol type="1">
+<li><em>“Help me with my resume.”</em></li>
+<li><em>“Explain machine learning.”</em></li>
+<li><em>“Write an email to my professor.”</em></li>
+</ol>
+<details>
+<summary>
+<strong>Click for example rewrites</strong>
+</summary>
+<p><strong>1. Resume — BRIEFS rewrite:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a junior majoring in business administration with a minor in data analytics. [R] I have one marketing internship at a local ag company and two part-time jobs (retail + campus tour guide). [I] I need to update my resume to apply for summer 2027 data analyst internships at mid-size companies. [E] Emphasize analytical skills; surface transferable skills from non-technical roles; cut any objectives statement. [F] One page, reverse-chronological, clean formatting. [S] I’m applying to 5 positions this week — this has to ship tomorrow.”</p>
+</blockquote>
+<p><strong>2. Machine learning — BRIEFS rewrite:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a high school teacher preparing a 15-minute segment for my AP Computer Science class. [I] I need to explain what machine learning is in a way that 16–17-year-olds with basic programming knowledge will understand. [E] Use one concrete analogy and one real-world example. Don’t introduce jargon they haven’t seen. Don’t mention neural networks — that’s next week’s topic. [F] Hook → explanation → example → one check-for-understanding question. Under 400 words. [S] Goes straight into my lesson plan for Tuesday.”</p>
+</blockquote>
+<p><strong>3. Email to professor — BRIEFS rewrite:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a sophomore who missed last Monday’s statistics lecture due to a medical appointment. [R] This is a large lecture class (80 students); I’ve attended every other session. [I] I need to draft an email asking for the lecture notes and whether I missed any exam announcements. [E] Polite, not groveling. No over-explaining the absence. [F] Under 100 words, with a specific subject line. [S] I want to preserve a good relationship — I may ask this professor for a rec letter later.”</p>
+</blockquote>
+</details>
+<section id="variation-4.d.2-your-own-three" class="level3">
+<h3 class="anchored" data-anchor-id="variation-4.d.2-your-own-three">Variation 4.D.2 — Your Own Three</h3>
+<p>Now do three prompts from <em>your own</em> work, study, or personal life. Write the bare version first, then the BRIEFS version. <strong>Keep these three.</strong> You will reuse them in Exercise 4.J (peer critique) and in Lab 4 (the Before/After experiment).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Compare your three BRIEFS prompts side by side. Which element was strongest in each? Weakest? Look for a pattern — the element you consistently under-specify is your personal blind spot. Mine tends to be Stakes; what’s yours?</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.e-calibration-handshake-drill" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.e-calibration-handshake-drill">🪜 Exercise 4.E — Calibration Handshake Drill</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Whisperers study found all 26 models converged on the same three-phase exchange: user states goal → model restates understanding → user confirms or corrects. Most people skip phase three because they assume their first message was clear. It usually wasn’t. This drill builds the habit.</p>
+<p><strong>Scaffolding level:</strong> High (all three phases modeled before you write your own). | <strong>Time:</strong> 10 min</p>
+</div>
+</div>
+<p><strong>The drill.</strong> You will role-play both sides of a calibration handshake for three scenarios. In each, write:</p>
+<ol type="1">
+<li>Your BRIEFS-structured first message (Phase 1).</li>
+<li>The model’s <em>most probable</em> restatement (Phase 2) — what you expect it to say.</li>
+<li>Your confirm-or-correct response (Phase 3) — usually one or two sentences that catch the drift early.</li>
+</ol>
+<section id="scenario-1-the-drift-you-want-to-catch" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-1-the-drift-you-want-to-catch">Scenario 1 — The Drift You Want to Catch</h3>
+<p>You’re a county health program analyst. You ask the AI to “summarize Q2 vaccination outreach for the Board of Supervisors.” What could go wrong in the model’s interpretation? Anticipate it in Phase 3.</p>
+</section>
+<section id="scenario-2-the-ambiguity-that-looks-clean" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-2-the-ambiguity-that-looks-clean">Scenario 2 — The Ambiguity That Looks Clean</h3>
+<p>You’re a nursing instructor. You ask the AI to “create practice questions for my students on medication errors.” Where is the silent ambiguity? (Hint: whose students, what level, what kind of errors, for what kind of exam?)</p>
+</section>
+<section id="scenario-3-your-own" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-3-your-own">Scenario 3 — Your Own</h3>
+<p>Pick one of your BRIEFS prompts from Exercise 4.D. Write all three phases of the handshake for it.</p>
+<details>
+<summary>
+<strong>Click for a worked example of Scenario 1</strong>
+</summary>
+<p><strong>Phase 1 — Your BRIEFS message:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a program analyst at Kern County Public Health. [R] I write operational summaries, not policy analyses. [I] I need to summarize our Q2 vaccination outreach data for a 5-minute Board of Supervisors presentation. They’re non-technical — they want to know how many people were reached, which communities, what worked, and what we still need. [E] Lead with impact numbers; de-emphasize methodology. [F] 3 slides max with talking-point bullets under each. [S] I present this Thursday; content gets saved to our public archive.”</p>
+</blockquote>
+<p><strong>Phase 2 — Model’s probable restatement:</strong></p>
+<blockquote class="blockquote">
+<p><em>“Got it — you want a 3-slide Board presentation summarizing Q2 vaccination outreach, with 3–5 talking points per slide, leading with reach numbers and community coverage. I’ll skip methodological detail. Should I also include a recommendations slide, or is ‘what we still need’ meant to live inside the last slide?”</em></p>
+</blockquote>
+<p><strong>Phase 3 — Your confirm-or-correct:</strong></p>
+<blockquote class="blockquote">
+<p>“Keep it to 3 slides — fold ‘what we still need’ into slide 3 as the final two bullets. Also: I’ll share the raw data separately. Don’t invent numbers. If a number isn’t in what I upload, say so.”</p>
+</blockquote>
+<strong>The catch.</strong> Phase 3 caught two failure modes early: (a) the model was about to add a fourth slide you didn’t want, and (b) it might have filled in plausible-looking numbers rather than stopping at the data you actually provide. Both are the routine “technically correct but contextually wrong” failures the Whisperers study identified. The handshake eliminates them in one turn.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When in the future would you <em>skip</em> the handshake? (Real answer: when stakes are low and the task is routine. The handshake has a cost — one extra exchange — and that cost isn’t always worth it.) Being able to name <em>when not to use</em> a framework is a stronger signal of mastery than using it every time.</p>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: BRIEFS Quick Check
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Without scrolling up, what does each letter in BRIEFS stand for?</p>
+<ul>
+<li><strong>B</strong> = ? <em>(Background)</em></li>
+<li><strong>R</strong> = ? <em>(Role)</em></li>
+<li><strong>I</strong> = ? <em>(Intent — the #1 signal)</em></li>
+<li><strong>E</strong> = ? <em>(Execution constraints)</em></li>
+<li><strong>F</strong> = ? <em>(Format)</em></li>
+<li><strong>S</strong> = ? <em>(Stakes)</em></li>
+</ul>
+<p>If you can’t recall all six, re-read Section 4.2. These will come back in every remaining module.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="core-prompting-techniques" class="level2">
+<h2 class="anchored" data-anchor-id="core-prompting-techniques">Core Prompting Techniques</h2>
+<p>BRIEFS handles the <em>first message.</em> But prompting is broader — it includes how you structure any interaction with AI. Here are the essential techniques:</p>
+<section id="zero-shot-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="zero-shot-prompting">Zero-Shot Prompting</h3>
+<p>Just ask. No examples, no setup.</p>
+<blockquote class="blockquote">
+<p>“Translate ‘Where is the library?’ into Japanese.”</p>
+</blockquote>
+<p>Best for: Simple, unambiguous tasks where the model already knows what you want.</p>
+</section>
+<section id="few-shot-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="few-shot-prompting">Few-Shot Prompting</h3>
+<p>Give examples first, then ask the model to follow the pattern.</p>
+<blockquote class="blockquote">
+<p>“Here are some product descriptions and their categories: - ‘Wireless noise-canceling headphones with 30-hour battery’ → Electronics - ‘Organic cold-pressed green juice, 16 oz’ → Food &amp; Beverage - ‘Memory foam travel pillow with carrying case’ → Travel Accessories</p>
+<p>Now categorize: ‘Stainless steel insulated water bottle, 32 oz’ → ?”</p>
+</blockquote>
+<p>Best for: Classification tasks, maintaining a specific style, or teaching the model a pattern it might not default to.</p>
+</section>
+<section id="chain-of-thought-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="chain-of-thought-prompting">Chain-of-Thought Prompting</h3>
+<p>Ask the model to reason step by step.</p>
+<blockquote class="blockquote">
+<p>“A store has 15 apples. 8 are sold in the morning. 3 more are delivered in the afternoon. How many apples does the store have at the end of the day? <strong>Think step by step.</strong>”</p>
+</blockquote>
+<p>The phrase “think step by step” dramatically improves accuracy on reasoning tasks. It forces the model to show its work, which reduces errors — for the same reason showing your work on a math test reduces errors. The process of writing out intermediate steps constrains the final answer.</p>
+</section>
+<section id="role-based-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="role-based-prompting">Role-Based Prompting</h3>
+<p>Assign the model a specific identity.</p>
+<blockquote class="blockquote">
+<p>“You are a senior data analyst at a healthcare company. I’m going to share quarterly patient satisfaction data. Analyze it the way you would in a real report to the VP of Operations.”</p>
+</blockquote>
+<p>The role sets expectations for vocabulary, depth, format, and focus. “Data analyst” produces different output than “journalist” or “patient advocate” — even for the same data.</p>
+</section>
+<section id="structured-output-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="structured-output-prompting">Structured Output Prompting</h3>
+<p>Tell the model exactly what format you want.</p>
+<blockquote class="blockquote">
+<p>“List the top 5 risks of this proposal. For each, provide: (a) the risk in one sentence, (b) likelihood (high/medium/low), (c) impact (high/medium/low), (d) one mitigation strategy.”</p>
+</blockquote>
+<p>Without this structure, the model gives you a wall of text. With it, you get a clean table you can paste into a report.</p>
+<hr>
+</section>
+</section>
+<section id="exercise-4.f-technique-selection" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.f-technique-selection">🪜 Exercise 4.F — Technique Selection</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>BRIEFS designs your first message. But the <em>kind</em> of prompt — zero-shot, few-shot, chain-of-thought, role-based, structured output — is a separate decision. This exercise makes that choice deliberate.</p>
+<p><strong>Scaffolding level:</strong> Mixed (recognition + production). | <strong>Time:</strong> 12 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> For each task below, (a) pick the <em>best-fit technique</em> from the five core options, (b) justify in one sentence, (c) write the actual prompt using that technique. Do all five.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Your technique</th>
+<th style="text-align: left;">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Translate ‘Where is the library?’ into Japanese</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Classify 500 customer reviews as Positive / Neutral / Negative — you want a consistent style</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Work through a multi-step tax calculation where you need to catch arithmetic errors</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Analyze quarterly patient-satisfaction data for a VP-level report</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Extract risks, likelihood, and mitigation from a 20-page contract into a table</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<strong>Click for suggested technique + sample prompt</strong>
+</summary>
+<p><strong>1. Zero-shot.</strong> Translation of a short common phrase. The model doesn’t need examples or reasoning steps.</p>
+<blockquote class="blockquote">
+<p>“Translate ‘Where is the library?’ into Japanese. Give the phrase in kanji/kana, romaji, and a literal gloss.”</p>
+</blockquote>
+<p><strong>2. Few-shot.</strong> Classification with consistent style — show 2–3 examples so the model locks onto your convention (e.g., how you treat sarcasm, what counts as “Neutral,” whether borderline cases round up or down).</p>
+<blockquote class="blockquote">
+<p>“Classify customer reviews. Examples: - ‘Shipping took forever but the product is fine.’ → Neutral - ‘Best purchase I’ve made all year!!!’ → Positive - ‘Doesn’t work as described. Returning.’ → Negative</p>
+<p>Now classify: ‘Arrived broken but customer service handled it well.’”</p>
+</blockquote>
+<p><strong>3. Chain-of-thought.</strong> Multi-step arithmetic where error accumulates. Forcing step-by-step reasoning surfaces arithmetic slips.</p>
+<blockquote class="blockquote">
+<p>“Calculate my federal tax liability given: $82,000 taxable income, single filer, 2025 brackets. <strong>Show each bracket calculation step by step</strong>, then sum.”</p>
+</blockquote>
+<p><strong>4. Role-based.</strong> A VP-level report has a specific voice, structure, and omission pattern that “senior analyst” evokes and “generic helper” doesn’t.</p>
+<blockquote class="blockquote">
+<p>“You are a senior data analyst reporting to the VP of Operations. You prioritize the one chart that matters over five that distract. Analyze the Q3 patient-satisfaction data I’ll paste next and draft the 1-page exec brief.”</p>
+</blockquote>
+<p><strong>5. Structured output.</strong> You want a table, not prose. Tell the model exactly what columns.</p>
+<blockquote class="blockquote">
+<p>“Extract the top 10 risks from the contract I paste below. For each, provide: (a) risk in one sentence, (b) likelihood High/Medium/Low, (c) impact High/Medium/Low, (d) suggested mitigation in one sentence, (e) page number in the contract.”</p>
+</blockquote>
+<strong>Combination note.</strong> In production, these overlap. You’ll often combine role-based + structured output for a report, or few-shot + chain-of-thought for consistent reasoning. The point of this exercise is to feel each technique as a separate tool first, before mixing them.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which technique do you personally under-use? Most people default to zero-shot for <em>everything</em>, even tasks where few-shot or chain-of-thought would cut error rates in half. Name the one you reach for least. That’s your homework for the next week of real-world prompting.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="advanced-techniques" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-techniques">Advanced Techniques</h2>
+<section id="prompt-chaining" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-chaining">Prompt Chaining</h3>
+<p>Break complex tasks into sequential prompts, where each output feeds the next:</p>
+<ol type="1">
+<li>“Summarize this 30-page report in 500 words.”</li>
+<li>“From that summary, identify the 3 most important findings.”</li>
+<li>“For each finding, draft a 2-sentence recommendation for our board.”</li>
+</ol>
+<p>Each prompt is simple. The chain produces sophisticated output.</p>
+</section>
+<section id="constraint-setting" class="level3">
+<h3 class="anchored" data-anchor-id="constraint-setting">Constraint Setting</h3>
+<p>Tell the model what NOT to do:</p>
+<blockquote class="blockquote">
+<p>“Explain quantum computing to a 10-year-old. Do NOT use any technical jargon. Do NOT use analogies involving cats.”</p>
+</blockquote>
+<p>Negative constraints are surprisingly powerful. They close off failure modes that the model would otherwise default to.</p>
+</section>
+<section id="meta-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="meta-prompting">Meta-Prompting</h3>
+<p>Ask the AI to help you write better prompts:</p>
+<blockquote class="blockquote">
+<p>“I want to use AI to help me prepare for a job interview. What information would you need from me to give the most useful advice? Ask me the questions.”</p>
+</blockquote>
+<p>This flips the conversation — the model interviews YOU, gathering the context it needs. It’s the calibration handshake in reverse.</p>
+</section>
+<section id="negative-prompting" class="level3">
+<h3 class="anchored" data-anchor-id="negative-prompting">Negative Prompting</h3>
+<p>Specify what you want to avoid:</p>
+<blockquote class="blockquote">
+<p>“Write a product description for this coffee mug. Avoid: buzzwords like ‘revolutionary’ or ‘game-changing,’ exclamation marks, and claims about ‘changing your morning routine.’”</p>
+</blockquote>
+</section>
+<section id="persona-stacking" class="level3">
+<h3 class="anchored" data-anchor-id="persona-stacking">Persona Stacking</h3>
+<p>Combine multiple roles for richer output:</p>
+<blockquote class="blockquote">
+<p>“You are both a nutritionist AND a behavioral psychologist. I want to change my eating habits but I always fall back to snacking. Give me advice that addresses both the nutritional and psychological dimensions.”</p>
+</blockquote>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About Prompting
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“Longer prompts are always better”</strong> — Specificity beats length. A 50-word BRIEFS prompt outperforms a rambling 500-word prompt every time. More words ≠ more clarity.</li>
+<li><strong>“There’s one perfect prompt”</strong> — Prompting is iterative. Your first prompt is a draft. The second is better. The third is usually good enough. Expect 2-3 rounds.</li>
+<li><strong>“Prompting is just for ChatGPT”</strong> — BRIEFS and SMARTS work with Claude, Gemini, Perplexity, local models, and any future AI. They’re communication frameworks, not tool-specific tricks.</li>
+<li><strong>“If the AI doesn’t get it, the AI is bad”</strong> — Nine times out of ten, the issue is insufficient context. Add more BRIEFS components before blaming the model.</li>
+<li><strong>“Prompt engineering will become obsolete”</strong> — The tools will change. The need to communicate your intent clearly will not. BRIEFS is human communication skill with AI characteristics, not an AI hack.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-smarts-framework-your-interaction-loop" class="level2">
+<h2 class="anchored" data-anchor-id="the-smarts-framework-your-interaction-loop">The SMARTS Framework: Your Interaction Loop</h2>
+<p><strong>BRIEFS</strong> opens the door. <strong>SMARTS</strong> walks you through the room.</p>
+<p>Where BRIEFS designs the first message, SMARTS guides the <strong>entire conversation</strong> — especially for complex tasks that require reasoning, learning, or problem-solving. SMARTS was developed through the ELEVATE project and tested across four undergraduate courses (Yatawara, 2025).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The SMARTS Framework (Yatawara, 2025)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">What You Do</th>
+<th style="text-align: left;">What It Sounds Like</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>S — State</strong></td>
+<td style="text-align: left;">State the question clearly. Restate it in your own words. Ask the AI to confirm understanding.</td>
+<td style="text-align: left;"><em>“Can you rephrase this question so I better understand the task?”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>M — Map</strong></td>
+<td style="text-align: left;">Map out a plan before diving in. Share your approach with the AI. Ask for feedback on the plan, not the answer.</td>
+<td style="text-align: left;"><em>“Here’s my plan: [steps]. Is this approach sound?”</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>A — Ask</strong></td>
+<td style="text-align: left;">Ask for and gather relevant resources — definitions, examples, formulas, context.</td>
+<td style="text-align: left;"><em>“What are the key concepts I need for this? Remind me of the relevant definitions.”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>R — Reason</strong></td>
+<td style="text-align: left;">Reason through the steps one at a time. Share your work, let the AI check each step.</td>
+<td style="text-align: left;"><em>“I’ll run each step and share results. Check whether the output is correct before I proceed.”</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>T — Think</strong></td>
+<td style="text-align: left;">Think critically. If stuck, ask for a hint, not the full answer. Reflect on what’s working.</td>
+<td style="text-align: left;"><em>“I’m stuck on this part. Give me a hint, not the solution.”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S — Summarize</strong></td>
+<td style="text-align: left;">Summarize what was done, what was learned, and verify the final result.</td>
+<td style="text-align: left;"><em>“Summarize what we just did and what I should remember from this.”</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<section id="smarts-in-action-a-business-example" class="level3">
+<h3 class="anchored" data-anchor-id="smarts-in-action-a-business-example">SMARTS in Action: A Business Example</h3>
+<p><strong>Task:</strong> Evaluate whether to open a second location for your bakery.</p>
+<blockquote class="blockquote">
+<p><strong>S — State:</strong> <em>“I run a bakery downtown. We’ve been profitable for 2 years. I’m considering a second location. Help me think through whether this is a good idea — but don’t just give me the answer. Walk me through how to analyze this.”</em></p>
+<p><strong>M — Map:</strong> <em>“Here’s my plan: (1) analyze current financials, (2) estimate startup costs for a second location, (3) assess the local market, (4) identify risks, (5) decide go/no-go. Does this plan cover the key factors?”</em></p>
+<p><strong>A — Ask:</strong> <em>“What financial metrics should I look at to know if my current business is healthy enough to expand? What does ‘healthy enough’ typically mean for a small food business?”</em></p>
+<p><strong>R — Reason:</strong> <em>“Our current revenue is $380K/year with 12% profit margin after owner salary. Our lease is $2,800/month. Foot traffic has grown 15% year-over-year. Based on these numbers, does expansion look viable? Walk me through the reasoning.”</em></p>
+<p><strong>T — Think:</strong> <em>“You mentioned cannibalization risk — that a second location might steal customers from the first. I hadn’t considered that. How do I estimate whether that’s likely given that I’m looking at a location 8 miles away?”</em></p>
+<p><strong>S — Summarize:</strong> <em>“Summarize the key factors in favor and against expansion based on everything we’ve discussed. What’s the single biggest risk I should focus on?”</em></p>
+</blockquote>
+<p>Notice: at no point did the user say “Should I open a second location?” Instead, they used SMARTS to <strong>think through the problem with AI as a partner.</strong> The user retained control of the reasoning. The AI contributed expertise, structure, and challenge.</p>
+<hr>
+</section>
+</section>
+<section id="exercise-4.g-smarts-multi-turn-walkthrough" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.g-smarts-multi-turn-walkthrough">🪜 Exercise 4.G — SMARTS Multi-Turn Walkthrough</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>SMARTS is a reasoning loop, not a first message. This exercise is the only way to feel the difference — you write all six turns on one real problem.</p>
+<p><strong>Scaffolding level:</strong> Partial (one worked example given, you produce your own 6-turn sequence). | <strong>Time:</strong> 20 min</p>
+</div>
+</div>
+<p><strong>The task.</strong> You are evaluating whether to adopt a new textbook for a course you teach (or whether to take a new job, or whether to open a second location — pick a complex real decision where you retain authority but want an AI thinking partner).</p>
+<p>Write one message for each SMARTS phase. Do not skip any. Do not write the AI’s responses — just your outgoing messages.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Your outgoing message</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>S — State</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>M — Map</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>A — Ask</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>R — Reason</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>T — Think</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S — Summarize</strong></td>
+<td style="text-align: left;"><em>“…”</em></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<strong>Click for a worked example: “Should I adopt this new textbook?”</strong>
+</summary>
+<p><strong>S — State:</strong></p>
+<blockquote class="blockquote">
+<p>“I’m considering switching from our current intro statistics textbook to a new one that integrates R throughout. I want to walk through whether this is a good idea — not get a yes/no answer. Can you restate what you think I’m actually asking you to help with?”</p>
+</blockquote>
+<p><strong>M — Map:</strong></p>
+<blockquote class="blockquote">
+<p>“Here’s my plan: (1) inventory what’s working and not working with the current textbook, (2) list what the new book claims to do differently, (3) assess student readiness for R integration, (4) estimate the switching cost (my prep time, student disruption), (5) decide. Does this cover the key factors or am I missing one?”</p>
+</blockquote>
+<p><strong>A — Ask:</strong></p>
+<blockquote class="blockquote">
+<p>“For step 3, I don’t know what student readiness looks like for an R-integrated textbook at a regional comprehensive with mostly first-gen learners. What evidence or benchmarks exist on this? Point me to concrete sources or concepts, not generic reassurance.”</p>
+</blockquote>
+<p><strong>R — Reason:</strong></p>
+<blockquote class="blockquote">
+<p>“Here’s what I’ve found about student readiness: [pastes findings]. Given this, my current draft conclusion is ‘pilot with one section in Fall before committing the whole course.’ Walk me through the reasoning: does ‘pilot one section’ actually answer my question, or am I just kicking the decision down the road?”</p>
+</blockquote>
+<p><strong>T — Think:</strong></p>
+<blockquote class="blockquote">
+<p>“You flagged that piloting one section creates an evaluation problem — the two sections aren’t comparable because students self-select. I hadn’t thought of that. Give me a hint, not the solution: what’s the standard way to handle non-comparability in a one-semester pilot?”</p>
+</blockquote>
+<p><strong>S — Summarize:</strong></p>
+<blockquote class="blockquote">
+<p>“Summarize where we landed: the factors for and against adoption, the evaluation design we settled on, and what I still need to decide before my chair meeting next week. What’s the single biggest risk I should raise with my chair proactively rather than wait to be asked?”</p>
+</blockquote>
+<strong>What to notice.</strong> At no point did the user ask “Should I adopt the textbook?” They used SMARTS to <em>think through</em> the decision with the AI. The user stayed the reasoner; the AI was the challenger. That’s the point — SMARTS keeps you in the driver’s seat.
+</details>
+<section id="variation-4.g.2-compress-to-3-turns" class="level3">
+<h3 class="anchored" data-anchor-id="variation-4.g.2-compress-to-3-turns">Variation 4.G.2 — Compress to 3 Turns</h3>
+<p>After you do the full 6-turn version, rewrite it as a 3-turn version, fusing steps: (State + Map) → (Ask + Reason) → (Think + Summarize). Notice what’s lost. Notice what’s still there. The full 6 is for high-stakes decisions; the compressed 3 is for everyday complex tasks.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Of the six SMARTS steps, which felt most <em>unnatural</em> for you to write? For many people it’s <strong>T (Think)</strong> — asking for a hint rather than the answer — because it requires resisting the AI’s willingness to just give you the answer. That resistance is the skill. Without it, SMARTS collapses back into “ask the AI to do my job.”</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="briefs-smarts-together-the-complete-protocol" class="level2">
+<h2 class="anchored" data-anchor-id="briefs-smarts-together-the-complete-protocol">BRIEFS + SMARTS Together: The Complete Protocol</h2>
+<p>Here’s how the two frameworks work as a unified system:</p>
+<pre><code>┌─────────────────────────────────────────────────┐
+│  BRIEFS — First Message Design                   │
+│  Background · Role · Intent · Execution ·        │
+│  Format · Stakes                                 │
+├─────────────────────────────────────────────────┤
+│  ↓ Model receives structured first message       │
+├─────────────────────────────────────────────────┤
+│  CALIBRATION HANDSHAKE                           │
+│  Model restates understanding → User confirms    │
+├─────────────────────────────────────────────────┤
+│  SMARTS — Iterative Reasoning Loop               │
+│  State → Map → Ask → Reason → Think → Summarize │
+│     ↑────────── iterate as needed ──────────↲    │
+├─────────────────────────────────────────────────┤
+│  ↓ Final output verified and complete            │
+└─────────────────────────────────────────────────┘</code></pre>
+<section id="when-to-use-what" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-use-what">When to Use What</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Situation</th>
+<th style="text-align: left;">Use This</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Simple, one-shot task (translate, summarize, convert)</td>
+<td style="text-align: left;"><strong>BRIEFS only</strong> — one well-structured message, done</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Quick question in a familiar domain</td>
+<td style="text-align: left;"><strong>Neither</strong> — just ask. Don’t overcomplicate simple things.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Complex task requiring reasoning</td>
+<td style="text-align: left;"><strong>BRIEFS to open + SMARTS to guide</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Learning a new concept</td>
+<td style="text-align: left;"><strong>SMARTS only</strong> — you already have context, you need the reasoning loop</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">High-stakes output (loan application, legal document, medical decision)</td>
+<td style="text-align: left;"><strong>Full protocol</strong> — BRIEFS + Handshake + SMARTS + extra verification</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Don’t Over-Engineer Simple Tasks
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Not every interaction needs BRIEFS or SMARTS. Asking “What year was the Eiffel Tower built?” doesn’t need a six-component first message. Use the frameworks when the stakes are high, the task is complex, or you’ve been getting poor results with simple prompting. <strong>The goal is effectiveness, not ceremony.</strong></p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.h-anti-pattern-gallery" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.h-anti-pattern-gallery">🪜 Exercise 4.H — Anti-Pattern Gallery</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Diagnose failures. A good prompter can look at a bad prompt and name the problem within seconds. This is the same skill as a good editor reading a bad paragraph.</p>
+<p><strong>Scaffolding level:</strong> Low (independent diagnosis + repair of 7 broken prompts). | <strong>Time:</strong> 15 min</p>
+</div>
+</div>
+<p><strong>Instructions.</strong> For each broken prompt, identify (a) the anti-pattern, (b) the most costly consequence for output quality, and (c) the one-move repair.</p>
+<section id="prompt-1-the-wall-of-context" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-1-the-wall-of-context">Prompt 1 — The Wall of Context</h3>
+<blockquote class="blockquote">
+<p>“Hey so I’ve been thinking about this for a while and I’m not sure exactly what I want but basically there’s this project at work and my manager mentioned it last Tuesday though I had been thinking about something similar for a few weeks before that, and the thing is the team is small so the dynamics are kind of weird and I’m one of three women on a team of eleven, anyway the project is about improving our internal documentation system which is currently pretty bad, and I want to know how to approach this. Also can you make it concise? Thanks!”</p>
+</blockquote>
+</section>
+<section id="prompt-2-the-frankenstein" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-2-the-frankenstein">Prompt 2 — The Frankenstein</h3>
+<blockquote class="blockquote">
+<p>“I am a doctor. Write me a poem. About mitochondria. For my 5 year old daughter. That rhymes. In the style of Dr.&nbsp;Seuss. But scientifically accurate. And also funny. And under 200 words. And use simple language. And include at least three facts.”</p>
+</blockquote>
+</section>
+<section id="prompt-3-the-yes-man-bait" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-3-the-yes-man-bait">Prompt 3 — The Yes-Man Bait</h3>
+<blockquote class="blockquote">
+<p>“I wrote this draft strategy for expanding our consulting practice into the Central Valley. It’s really strong — I spent 3 weeks on it. Can you review it and give me feedback?”</p>
+</blockquote>
+</section>
+<section id="prompt-4-the-phantom-context" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-4-the-phantom-context">Prompt 4 — The Phantom Context</h3>
+<blockquote class="blockquote">
+<p>“Based on what I told you earlier about my situation, what should I do next?”</p>
+</blockquote>
+</section>
+<section id="prompt-5-the-role-dump" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-5-the-role-dump">Prompt 5 — The Role Dump</h3>
+<blockquote class="blockquote">
+<p>“You are an expert data scientist and statistician and business strategist and machine learning engineer and UX researcher and product manager with 20+ years of Fortune 500 experience. Analyze my startup idea.”</p>
+</blockquote>
+</section>
+<section id="prompt-6-the-formatcontent-mismatch" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-6-the-formatcontent-mismatch">Prompt 6 — The Format/Content Mismatch</h3>
+<blockquote class="blockquote">
+<p>“Write me a detailed, nuanced, evidence-based 3000-word analysis of the history and current state of central bank digital currencies, including regulatory differences across the EU, US, and China, with citations. Use bullet points only.”</p>
+</blockquote>
+</section>
+<section id="prompt-7-the-leading-question" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-7-the-leading-question">Prompt 7 — The Leading Question</h3>
+<blockquote class="blockquote">
+<p>“Everyone knows remote work is bad for junior employees because they miss mentorship opportunities. Write a 500-word essay explaining why.”</p>
+</blockquote>
+<details>
+<summary>
+<strong>Click for diagnosis + repair</strong>
+</summary>
+<p><strong>1. Wall of Context.</strong> - <strong>Anti-pattern:</strong> Front-loaded narrative, Intent buried, self-contradictory request (“concise” appended after a rambling setup). - <strong>Consequence:</strong> Model responds to the surface request (“how to approach this”) without anchoring on what “improve documentation” actually means in this context. Output will be generic. - <strong>Repair:</strong> Lead with Intent in one sentence. Strip the narrative. If team dynamics matter, include them in one clause under Background. Example: <em>“[I] I need a 90-day plan to improve our internal documentation. [B] 11-person team, I’m newly leading this initiative. [E] Focus on adoption, not tooling selection.”</em></p>
+<p><strong>2. Frankenstein.</strong> - <strong>Anti-pattern:</strong> Too many constraints stacked, some mutually incompatible (“scientifically accurate” + “for a 5-year-old” + “Dr.&nbsp;Seuss style” + “three facts” + “funny” + “rhyming” + “under 200 words”). - <strong>Consequence:</strong> Model will satisfy the <em>easiest</em> constraints and soft-fail the hardest. Usually “funny” and “scientifically accurate” lose first. - <strong>Repair:</strong> Rank constraints. Tell the model which to prioritize if they conflict. Example: <em>“Priority order: (1) age-appropriate, (2) rhymes cleanly, (3) accurate, (4) funny. If accuracy and rhyming conflict, favor rhyming and we’ll fix facts in editing.”</em></p>
+<p><strong>3. Yes-Man Bait.</strong> - <strong>Anti-pattern:</strong> Priming the model toward agreement by pre-announcing the draft is “really strong” and noting the effort (“3 weeks”). The model picks up on both cues and softens critique. - <strong>Consequence:</strong> You get warm, useless feedback. The draft’s real weaknesses go unflagged. - <strong>Repair:</strong> Reverse the priming. Example: <em>“This is a rough first draft. Challenge it. Assume I got at least three things wrong — find them. Don’t soften.”</em></p>
+<p><strong>4. Phantom Context.</strong> - <strong>Anti-pattern:</strong> Refers to context that only exists in the user’s head (or in an earlier conversation the model doesn’t have). - <strong>Consequence:</strong> Model hallucinates a plausible-sounding context and gives advice grounded in fiction. - <strong>Repair:</strong> Restate the context. Assume the model remembers nothing. If you’re continuing an earlier session, paste the relevant summary back in.</p>
+<p><strong>5. Role Dump.</strong> - <strong>Anti-pattern:</strong> Piling on roles does not summon expertise; it summons the <em>average</em> of generic expert-talk. Also no Intent. - <strong>Consequence:</strong> Output reads like a LinkedIn post — confident, vague, useless. - <strong>Repair:</strong> Pick one primary role and one secondary at most. Specify Intent. Example: <em>“You’re a data scientist reviewing the quantitative claims in my startup pitch deck. I need the three numbers most likely to be challenged by a skeptical investor, and how to pressure-test them.”</em></p>
+<p><strong>6. Format/Content Mismatch.</strong> - <strong>Anti-pattern:</strong> Content demands (“detailed, nuanced, evidence-based, regulatory differences across jurisdictions”) that require flowing argument, combined with a format constraint (“bullet points only”) that prevents flowing argument. - <strong>Consequence:</strong> Model chooses one side and soft-fails the other — usually it writes prose that tries to look like bullets, or bullets that try to look like prose. Neither is useful. - <strong>Repair:</strong> Pick one. Either <em>“narrative analysis with bullet-point summary at the end”</em> or <em>“structured briefing note with short prose under each bullet.”</em> Don’t ask for a Tesla in Lego form.</p>
+<strong>7. Leading Question.</strong> - <strong>Anti-pattern:</strong> The prompt pre-commits the conclusion (“remote work is bad for junior employees”) and asks the model to justify it. The model will comply and produce a one-sided essay. - <strong>Consequence:</strong> You get back what you put in — a rhetorical echo of your own bias, dressed as research. You’ll cite it thinking it’s evidence. - <strong>Repair:</strong> Ask the model to argue both sides. Example: <em>“Make the strongest case both for AND against the claim that remote work disadvantages junior employees. Then tell me which evidence is more robust.”</em> Leading prompts are the #1 source of sophisticated-looking hallucinated confirmation.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which of these seven anti-patterns have you personally committed in the last month? (Most of us have done at least one.) Write it down. Knowing your own patterns is the first step to breaking them.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.i-transfer-red-team" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.i-transfer-red-team">🪜 Exercise 4.I — Transfer &amp; Red-Team</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Transfer is the real test of mastery. Can you take a BRIEFS prompt that works in one domain and re-target it for a completely different audience without losing fidelity? And can you find a case where BRIEFS <em>fails</em> — because knowing a framework’s limits is part of knowing the framework.</p>
+<p><strong>Scaffolding level:</strong> Independent (cross-domain rewriting + active red-teaming). | <strong>Time:</strong> 15 min</p>
+</div>
+</div>
+<section id="part-1-domain-transfer" class="level3">
+<h3 class="anchored" data-anchor-id="part-1-domain-transfer">Part 1 — Domain Transfer</h3>
+<p>Here is a BRIEFS prompt written for an almond orchard manager:</p>
+<blockquote class="blockquote">
+<p>“[B] I manage a 200-acre almond orchard in the southern San Joaquin Valley. [R] I’ve managed this operation for 8 years; I know horticulture but not plant pathology. [I] I need a differential diagnosis — the 3 most likely causes — for leaf curl appearing on ~15% of trees in the northeast block, starting 2 weeks ago after an unusually wet March. [E] For each cause, include one diagnostic observation I can make in the field tomorrow and one recommended intervention. [F] Bulleted, under 300 words. [S] I need to decide Friday whether to spray or wait — this decision is ~$18K either way.”</p>
+</blockquote>
+<p><strong>Your task.</strong> Re-target this prompt for each of the following, preserving the BRIEFS structure. You may need to change the Role entirely, but preserve the <em>function</em> of each element.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Target</th>
+<th style="text-align: left;">Your rewrite</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A pediatric nurse diagnosing a rash in a 4-year-old</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A software engineer triaging a sudden latency spike in production</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A high school principal investigating a sudden drop in 9th-grade attendance</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<strong>Click for one version of each</strong>
+</summary>
+<p><strong>Pediatric nurse, rash:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a pediatric nurse in an urgent-care clinic with MD on call but not on-site. [R] 6 years pediatric experience; I recognize common rashes but this one doesn’t match my usual patterns. [I] I need a differential diagnosis — the 3 most likely causes — for a rash covering the anterior trunk of a 4-year-old, onset 36 hours ago after a family camping trip. Not febrile; child is alert and playful. [E] For each cause, give one bedside finding I can confirm now and one red flag that would escalate to ER. [F] Bulleted, under 250 words. [S] The MD will decide treatment — I’m preparing the handoff.”</p>
+</blockquote>
+<p><strong>Software engineer, latency spike:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m a backend engineer on a 6-person team running a payments API. [R] Senior on the team but not the original author of the affected service. [I] I need a differential diagnosis — the 3 most likely causes — for a 4× latency increase (p99: 220ms → 900ms) that started 2 hours ago. Deploy window was 6 hours prior; traffic is unchanged. [E] For each cause, give one dashboard/log query I can run in the next 5 minutes to confirm or rule out, and one mitigation. [F] Bulleted, under 300 words. [S] SLO breach window is 40 minutes from now — decision to roll back vs continue investigating needs to happen before then.”</p>
+</blockquote>
+<p><strong>Principal, attendance:</strong></p>
+<blockquote class="blockquote">
+<p>“[B] I’m the principal of a 600-student comprehensive high school. [R] 3 years in this role, 12 years in education; I know attendance patterns but this one doesn’t match prior years. [I] I need a differential diagnosis — the 3 most likely causes — for a 14% drop in 9th-grade attendance over the past 3 weeks, with no drop in grades 10–12. [E] For each cause, give one data point I can pull from the SIS tomorrow morning and one immediate intervention I could trial for two weeks. [F] Bulleted, under 300 words. [S] District office is asking questions; I have a Board meeting next Thursday.”</p>
+</blockquote>
+<strong>What stays constant.</strong> Notice the <em>structure</em> is identical across all four: the differential-diagnosis genre, the “3 causes” constraint, the one-check + one-intervention pattern, the hard deadline/stakes, the word limit. The <em>content</em> changes completely. This is the mark of a well-formed BRIEFS prompt: it’s a skeleton, not a script.
+</details>
+</section>
+<section id="part-2-red-team-break-briefs" class="level3">
+<h3 class="anchored" data-anchor-id="part-2-red-team-break-briefs">Part 2 — Red Team (Break BRIEFS)</h3>
+<p>Find a case where BRIEFS is actively the wrong tool. Write the case in 2–3 sentences. Explain what framework you’d use instead, or why no framework applies.</p>
+<details>
+<summary>
+<strong>Click for three red-team cases</strong>
+</summary>
+<p><strong>Case 1: Pure creative exploration.</strong> <em>“I want to play. Give me 10 weird startup ideas at the intersection of dog-walking and mathematics.”</em> Imposing BRIEFS on this kills the generativity — Intent = “weird ideas” is already maximally loose, and tight Execution would narrow the space. Better tool: simple high-temperature zero-shot, maybe with persona stacking for variety.</p>
+<p><strong>Case 2: Single-fact lookup.</strong> <em>“What year was the Eiffel Tower built?”</em> BRIEFS is pure ceremony here. The question is already well-formed. More structure = slower answer for no benefit. Use no framework.</p>
+<p><strong>Case 3: Emotional or first-person processing.</strong> <em>“I had a hard conversation with my advisor today and I’m trying to figure out what I actually feel.”</em> BRIEFS forces premature structure onto processing that needs to stay loose. Treat as conversation, not task. If structure emerges, it should emerge from you, not from a framework.</p>
+<strong>The meta-point.</strong> BRIEFS is for <em>tasks with a recognizable output you’d accept or reject.</em> When you don’t yet know what you want, frameworks are friction. Use them when they reduce cost, not when they add it.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The red-team exercise is the most important one in this whole module. Naming when <em>not</em> to use BRIEFS is the mark of actual mastery. Re-read your own red-team case in a week. If it still holds up, you’ve got it.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="exercise-4.j-rubric-based-peer-critique" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="exercise-4.j-rubric-based-peer-critique">🪜 Exercise 4.J — Rubric-Based Peer Critique</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Objective
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Peer critique is the most under-used tool in prompt engineering pedagogy. The reviewer learns more than the reviewee (classic peer-review finding, documented for prompt engineering courses in Turan et al., 2024). This exercise puts you on both sides of the desk.</p>
+<p><strong>Scaffolding level:</strong> Independent + collaborative. | <strong>Time:</strong> 20 min (10 min review, 10 min debrief)</p>
+</div>
+</div>
+<p><strong>The drill.</strong> Pair up with another learner. Each of you:</p>
+<ol type="1">
+<li>Shares one of your three BRIEFS prompts from Exercise 4.D.2 (the real-world ones).</li>
+<li>Critiques your partner’s prompt using the rubric below.</li>
+<li>Suggests <strong>one concrete revision</strong>, not vague feedback.</li>
+<li>Debriefs what you each learned.</li>
+</ol>
+<section id="the-critique-rubric" class="level3">
+<h3 class="anchored" data-anchor-id="the-critique-rubric">The Critique Rubric</h3>
+<p>Score each dimension 0 / 1 / 2. Ten points maximum.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dimension</th>
+<th style="text-align: left;">0</th>
+<th style="text-align: left;">1</th>
+<th style="text-align: left;">2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Intent specified</strong></td>
+<td style="text-align: left;">Topic only</td>
+<td style="text-align: left;">General goal</td>
+<td style="text-align: left;">Specific outcome + use</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Context right-sized</strong></td>
+<td style="text-align: left;">Missing or drowning</td>
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: left;">Exactly what the model needs, no filler</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Execution constraints</strong></td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Soft (“be concise”)</td>
+<td style="text-align: left;">Hard and specific (“≤300 words, no code”)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Format stated</strong></td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Vague (“bullet points”)</td>
+<td style="text-align: left;">Unambiguous structure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Stakes transparent</strong></td>
+<td style="text-align: left;">Implied</td>
+<td style="text-align: left;">Named</td>
+<td style="text-align: left;">Named + consequence named</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation.</strong> 8–10 = production-ready · 5–7 = one calibration handshake will fix it · 0–4 = rewrite before sending.</p>
+</section>
+<section id="the-critique-script" class="level3">
+<h3 class="anchored" data-anchor-id="the-critique-script">The Critique Script</h3>
+<p>Peer review fails when reviewers either pile on or dodge. Use this structure — it’s adapted from software engineering code review practice, which has the longest track record of making peer critique actually useful:</p>
+<ol type="1">
+<li><strong>Say what’s working first</strong> (one sentence). “The Intent is crystal — I can see exactly what you want.”</li>
+<li><strong>Identify the weakest dimension by score</strong> (one sentence). “Stakes scored 1 — it’s named but the consequence isn’t.”</li>
+<li><strong>Propose the one revision that would raise that score to 2</strong> (one sentence). “Add ‘this goes to my department chair; a typo costs me political capital’ and you’re at 2.”</li>
+<li><strong>Stop.</strong> Don’t review the whole prompt. One targeted fix beats five vague suggestions.</li>
+</ol>
+</section>
+<section id="debrief-do-this-with-your-partner-5-min" class="level3">
+<h3 class="anchored" data-anchor-id="debrief-do-this-with-your-partner-5-min">Debrief (Do This With Your Partner, 5 min)</h3>
+<ul>
+<li>Did the critique rubric feel objective, or did you disagree on scores?</li>
+<li>Was the one suggested revision <em>actually</em> more important than other possible improvements?</li>
+<li>Reviewers: what did you notice about your OWN prompts after critiquing someone else’s?</li>
+</ul>
+<details>
+<summary>
+<strong>Why the reviewer learns more than the reviewee</strong>
+</summary>
+<p>When you read someone else’s prompt against a rubric, you have to make your implicit standards explicit. You can no longer get away with “this one feels good, that one feels bad” — you have to justify a score on each dimension. That forced explicitness is the real pedagogical payload.</p>
+<p>This is why peer review works for prompt engineering specifically: the rubric teaches you what “good” means <em>as a criterion</em>, not just <em>as a vibe</em>. You go back to your own prompts with new diagnostic eyes.</p>
+The Turan et al.&nbsp;(2024) “I Learn with Prompt Engineering” study operationalized this with pre-defined rubrics and found that assignments requiring peer review (with rubrics) produced significantly better downstream prompting than solo practice alone.
+</details>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+🧠 Self-Explanation Prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you reviewed a peer’s prompt, what did you notice about your own prompts <em>after</em> reviewing theirs? For most people, reviewing someone else’s work is the moment their own blind spots become visible. That’s not a side effect of peer review — it’s the main effect.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="common-prompting-mistakes-and-how-to-fix-them" class="level2">
+<h2 class="anchored" data-anchor-id="common-prompting-mistakes-and-how-to-fix-them">Common Prompting Mistakes (and How to Fix Them)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Mistake</th>
+<th style="text-align: left;">What Happens</th>
+<th style="text-align: left;">Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Too vague</strong></td>
+<td style="text-align: left;">“Help me with my project” → generic response</td>
+<td style="text-align: left;">Add intent + constraints (BRIEFS I + E)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Too much context</strong></td>
+<td style="text-align: left;">2,000-word prompt buries the actual question</td>
+<td style="text-align: left;">Front-load the question, then provide context</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Asking for the answer</strong></td>
+<td style="text-align: left;">“What’s the answer to #7?” → rote output, no learning</td>
+<td style="text-align: left;">Ask for a hint, not the solution (SMARTS T)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Not verifying</strong></td>
+<td style="text-align: left;">Accepting the first output without checking</td>
+<td style="text-align: left;">Always verify claims, especially citations and numbers</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Anchoring bias</strong></td>
+<td style="text-align: left;">Accepting the first response as “good enough”</td>
+<td style="text-align: left;">Iterate. Ask “what’s wrong with this?” or “how could this be better?”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>The yes-man trap</strong></td>
+<td style="text-align: left;">AI agrees with whatever you say</td>
+<td style="text-align: left;">Explicitly ask: “Challenge my reasoning. What am I missing?”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Context window overflow</strong></td>
+<td style="text-align: left;">Very long conversations lose coherence</td>
+<td style="text-align: left;">Start a new conversation for new topics. Summarize key points first.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Prompt injection ignorance</strong></td>
+<td style="text-align: left;">Pasting untrusted text into prompts</td>
+<td style="text-align: left;">Never paste content from unknown sources into system prompts without review</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="module-4-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-4-summary">Module 4 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Prompting is communication</strong>, not typing. The quality of AI output depends more on the quality of your input than on the model’s capability.</p></li>
+<li><p><strong>BRIEFS</strong> (Background, Role, Intent, Execution, Format, Stakes) designs your first message based on what 26 LLMs across 5 providers independently said they need.</p></li>
+<li><p><strong>SMARTS</strong> (State, Map, Ask, Reason, Think, Summarize) guides multi-turn conversations for complex tasks, keeping you in control of the reasoning.</p></li>
+<li><p><strong>Together:</strong> BRIEFS opens the conversation → Calibration Handshake confirms alignment → SMARTS guides the reasoning → Verified output.</p></li>
+<li><p><strong>Core techniques</strong> (zero-shot, few-shot, chain-of-thought, role-based, structured output) are your everyday toolkit.</p></li>
+<li><p><strong>Advanced techniques</strong> (prompt chaining, constraint setting, meta-prompting, persona stacking) handle complex scenarios.</p></li>
+<li><p><strong>Don’t over-engineer.</strong> Simple questions don’t need six-component frameworks. Use BRIEFS and SMARTS when the stakes or complexity warrant it.</p></li>
+<li><p><strong>The calibration handshake</strong> (model restates → user confirms) eliminates most misalignment in one extra exchange — or zero, if your first message is well-structured.</p></li>
+<li><p><strong>The practice ladder matters more than the frameworks themselves.</strong> You can read about BRIEFS in ten minutes. Becoming fluent in it is the work of Exercises 4.A through 4.J. The research is clear: reading about a framework and doing scaffolded practice produce very different skill levels (Zhang et al., 2025, found that students with strong theoretical knowledge still wrote short, informal prompts without structured scaffolding).</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>The models told us what they need: <strong>intent first, context second, constraints third.</strong> BRIEFS gives them that. SMARTS gives you a way to think WITH them, not just AT them. Together, they turn AI from a search engine into a thinking partner. But here’s the deeper lesson: the same skills that make you good at prompting AI — clarity, specificity, structured thinking, knowing your own intent — also make you a better communicator with humans. The frameworks aren’t just for machines. They’re for <strong>anyone</strong> who has ever sent a vague email and gotten a useless reply.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+📇 Print Your Cheat Sheets
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The BRIEFS and SMARTS frameworks are summarized on printable reference cards in the <a href="../appendix/framework-cards.html">Framework Cards appendix</a>. Print them. Pin them next to your screen. The best framework is the one you actually use.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-4-the-briefs-beforeafter-experiment" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-4-the-briefs-beforeafter-experiment">🔬 Lab 4: The BRIEFS Before/After Experiment</h2>
+<section id="lab-4-the-briefs-beforeafter-experiment-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-4-the-briefs-beforeafter-experiment-1">Lab 4: The BRIEFS Before/After Experiment</h4>
+<p><strong>Time:</strong> 45 minutes | <strong>Tools needed:</strong> Access to any AI chatbot</p>
+<p><strong>Purpose:</strong> Measure the actual impact of BRIEFS on response quality.</p>
+<p><strong>Instructions:</strong></p>
+<p><strong>Part A — Collect Your Prompts (10 min)</strong> Write down 5 prompts you would naturally send to an AI chatbot — real tasks from your actual work, studies, or personal life. Don’t overthink them. Write them the way you normally would. <em>(You can re-use the three you produced in Exercise 4.D.2 — the lab is specifically designed to build on the ladder.)</em></p>
+<p><strong>Part B — Send the “Before” Versions (10 min)</strong> Send each prompt to your AI chatbot exactly as written. Save each response.</p>
+<p><strong>Part C — Rewrite with BRIEFS (10 min)</strong> Rewrite each of your 5 prompts using BRIEFS. You don’t need all 6 components for every prompt — use whichever are most relevant.</p>
+<p><strong>Part D — Send the “After” Versions (10 min)</strong> Send each rewritten prompt to the SAME AI chatbot (in a new conversation). Save each response.</p>
+<p><strong>Part E — Score and Compare (5 min)</strong> For each prompt pair, score the Before and After responses on three dimensions:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Prompt</th>
+<th style="text-align: center;">Relevance (1-5)</th>
+<th style="text-align: center;">Accuracy (1-5)</th>
+<th style="text-align: center;">Usefulness (1-5)</th>
+<th style="text-align: center;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">#1 Before</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">#1 After</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">#2 Before</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">#2 After</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">…</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p>Calculate the average improvement across all 5 prompts.</p>
+<p><strong>Submit:</strong> All 10 prompts (5 before, 5 after), all 10 responses, your scoring table, and one paragraph reflecting on what changed.</p>
+</section>
+<hr>
+</section>
+<section id="module-4-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-4-quiz">🎮 Module 4 Quiz</h2>
+<div id="m4-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m4-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 4 Challenge</span><h3 style="color:white;border:none;">The Art & Science of Prompting</h3><p>Get 14 out of 18 to earn the badge!</p><div class="game-container" id="m4-area"><div id="m4-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m4-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m4-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m4-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m4-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"In the BRIEFS framework, what does the 'I' stand for?",a:"Intent — what you want to accomplish",opts:["Intelligence — the AI's capability level","Intent — what you want to accomplish","Information — background data","Integration — how AI fits your workflow"]},
+    {q:"In the Whisperers study, what signal did ALL 26 models rank as #1?",a:"User intent / goal / purpose",opts:["User expertise level","Output format preferences","User intent / goal / purpose","The length of the prompt"]},
+    {q:"The calibration handshake is:",a:"User states goal → Model restates understanding → User confirms",opts:["A secret code to unlock AI features","User states goal → Model restates understanding → User confirms","A way to test if the AI is working","A handshake between two AI models"]},
+    {q:"SMARTS stands for:",a:"State, Map, Ask, Reason, Think, Summarize",opts:["Smart Methods for AI Response Testing","State, Map, Ask, Reason, Think, Summarize","Specific, Measurable, Achievable, Relevant, Time-bound, Simple","Systems, Models, Applications, Research, Tools, Standards"]},
+    {q:"BRIEFS is best described as:",a:"A mental checklist for designing effective first messages to AI",opts:["A form you fill out before each AI interaction","A mental checklist for designing effective first messages to AI","A type of AI model","A programming language"]},
+    {q:"Chain-of-thought prompting works by:",a:"Asking the model to reason step by step, reducing errors",opts:["Chaining multiple models together","Asking the model to reason step by step, reducing errors","Creating a chain of prompts in advance","Linking conversations across sessions"]},
+    {q:"The 'S' in Stakes (BRIEFS) answers:",a:"What this is for and how you'll use the output",opts:["How stressful the task is","What this is for and how you'll use the output","The severity of the problem","How smart the AI needs to be"]},
+    {q:"When should you NOT use BRIEFS?",a:"For simple, unambiguous questions like 'What year was the Eiffel Tower built?'",opts:["Never — always use it","For simple, unambiguous questions like 'What year was the Eiffel Tower built?'","For important tasks","When talking to Claude"]},
+    {q:"Few-shot prompting means:",a:"Giving examples of the desired pattern before asking the model to follow it",opts:["Asking the model to try multiple times","Giving examples of the desired pattern before asking the model to follow it","Using a small model","Typing a short prompt"]},
+    {q:"The SMARTS step 'Think' encourages you to:",a:"Ask for hints rather than full solutions when stuck",opts:["Think about switching to a different AI","Ask for hints rather than full solutions when stuck","Stop using AI entirely","Think faster"]},
+    {q:"Meta-prompting is:",a:"Asking the AI to help you write better prompts",opts:["Prompting about metaphysics","Asking the AI to help you write better prompts","Using metadata in prompts","Prompting multiple models at once"]},
+    {q:"The yes-man trap is when:",a:"AI agrees with whatever you say instead of challenging your reasoning",opts:["You agree with everything the AI says","AI agrees with whatever you say instead of challenging your reasoning","The AI says yes to harmful requests","You only use one AI model"]},
+    {q:"BRIEFS + SMARTS together work as:",a:"BRIEFS opens the conversation, SMARTS guides the reasoning, calibration handshake bridges them",opts:["Two competing frameworks — use one or the other","BRIEFS opens the conversation, SMARTS guides the reasoning, calibration handshake bridges them","A replacement for all other prompting techniques","A framework only for educational settings"]},
+    {q:"The Whisperers study found that models produce 'technically correct but contextually wrong' answers because:",a:"They model the question accurately but model the user poorly",opts:["They don't have enough training data","They model the question accurately but model the user poorly","The questions were poorly designed","They prioritize speed over accuracy"]},
+    {q:"Role-based prompting works by:",a:"Assigning the model a specific identity that shapes vocabulary, depth, and focus",opts:["Letting the model choose its own role","Assigning the model a specific identity that shapes vocabulary, depth, and focus","Creating a role-playing game","Specifying which user role you have"]},
+    {q:"In Exercise 4.A, across most weak prompts, which BRIEFS element was most often missing?",a:"Intent",opts:["Background","Role","Intent","Format"]},
+    {q:"The 'Frankenstein' anti-pattern from Exercise 4.H is:",a:"Too many constraints stacked, some mutually incompatible",opts:["Too many constraints stacked, some mutually incompatible","Using too many AI models at once","Mixing human and AI writing","Copying prompts from the internet"]},
+    {q:"The 'Leading Question' anti-pattern produces:",a:"A rhetorical echo of your own bias, dressed as research",opts:["A follow-up question from the model","An exam question for students","A rhetorical echo of your own bias, dressed as research","A failed API call"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=14?'🏆 Badge Earned! You\'ve mastered the art of prompting!':score>=11?'👍 Good effort! Review and retry.':'📖 Re-read BRIEFS and SMARTS, then try again.';document.getElementById('m4-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m4-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m4-fb').textContent='';document.getElementById('m4-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m4-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m4-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m4-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m4-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m4-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+</section>
+<section id="references-for-module-4" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references-for-module-4">References for Module 4</h2>
+<p>Belland, B. R., Walker, A. E., Kim, N. J., &amp; Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. <em>Review of Educational Research</em>, 87(2), 309–344.</p>
+<p>Jang, J., Eun, S., Lee, H., Choi, J., &amp; Cho, Y. H. (2024). The effects of prompt scaffolding on learning to write arguments with ChatGPT. In <em>Proceedings of the 18th International Conference of the Learning Sciences — ICLS 2024</em> (pp.&nbsp;1502–1505). International Society of the Learning Sciences.</p>
+<p>Qian, Y. (2025). Prompt engineering in education: A systematic review of approaches and educational applications. <em>Journal of Educational Computing Research</em>. Advance online publication.</p>
+<p>Renkl, A., &amp; Atkinson, R. K. (2003). Structuring the transition from example study to problem solving in cognitive skills acquisition: A cognitive load perspective. <em>Educational Psychologist</em>, 38(1), 15–22.</p>
+<p>Sweller, J., Ayres, P., &amp; Kalyuga, S. (2011). <em>Cognitive load theory</em> (Explorations in the Learning Sciences, Instructional Systems and Performance Technologies, Vol. 1). Springer.</p>
+<p>Turan, B., et al.&nbsp;(2024). The impact of prompt engineering and a generative AI-driven tool on autonomous learning: A case study. <em>Education Sciences</em>, 15(2), 199.</p>
+<p>Yatawara, A. (2025). <em>SMARTS: A Process-Based Framework for Multi-Turn AI Reasoning</em>. ELEVATE Project Working Paper.</p>
+<p>Yatawara, A. (2026). <em>LLM &amp; Human Whisperers: What Large Language Models Ask of Us</em> (SSRN Working Paper).</p>
+<p>Zhang, X., et al.&nbsp;(2025). An empirical study of student translators’ prompting behaviours. Referenced in Prompt Engineering Frameworks review, <em>ITLJ</em>.</p>
+<hr>
+<p><em>Previous: <a href="../module03/index.html">Module 03 — LLMs and Generative AI</a></em> | <em>Next: <a href="../module05/index.html">Module 05 — AI for Research and Analysis</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module03/index.html" class="pagination-link" aria-label="LLMs and Generative AI">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">LLMs and Generative AI</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module05/index.html" class="pagination-link" aria-label="AI for Research and Analysis">
+        <span class="nav-page-text">AI for Research and Analysis</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
