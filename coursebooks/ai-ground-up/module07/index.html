@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multimodal AI — Creating Beyond Text – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module08/index.html" rel="next">
+<link href="../module06/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="Multimodal AI — Creating Beyond Text – AI from the Ground Up">
+<meta property="og:description" content="Module 7 · Images, Video, Audio, and More">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module07/index.html">Multimodal AI — Creating Beyond Text</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-pope-in-a-puffer-jacket" id="toc-the-pope-in-a-puffer-jacket" class="nav-link active" data-scroll-target="#the-pope-in-a-puffer-jacket">The Pope in a Puffer Jacket</a>
+  <ul class="collapse">
+  <li><a href="#multimodal-ai-in-your-field" id="toc-multimodal-ai-in-your-field" class="nav-link" data-scroll-target="#multimodal-ai-in-your-field">Multimodal AI in YOUR Field</a></li>
+  </ul></li>
+  <li><a href="#how-ai-image-generation-works" id="toc-how-ai-image-generation-works" class="nav-link" data-scroll-target="#how-ai-image-generation-works">How AI Image Generation Works</a>
+  <ul class="collapse">
+  <li><a href="#the-short-version" id="toc-the-short-version" class="nav-link" data-scroll-target="#the-short-version">The Short Version</a></li>
+  <li><a href="#image-generation-tools" id="toc-image-generation-tools" class="nav-link" data-scroll-target="#image-generation-tools">Image Generation Tools</a></li>
+  <li><a href="#writing-prompts-for-images" id="toc-writing-prompts-for-images" class="nav-link" data-scroll-target="#writing-prompts-for-images">Writing Prompts for Images</a></li>
+  </ul></li>
+  <li><a href="#ai-video-generation" id="toc-ai-video-generation" class="nav-link" data-scroll-target="#ai-video-generation">AI Video Generation</a>
+  <ul class="collapse">
+  <li><a href="#current-state-april-2026" id="toc-current-state-april-2026" class="nav-link" data-scroll-target="#current-state-april-2026">Current State (April 2026)</a></li>
+  <li><a href="#realistic-use-cases-today" id="toc-realistic-use-cases-today" class="nav-link" data-scroll-target="#realistic-use-cases-today">Realistic Use Cases Today</a></li>
+  <li><a href="#what-video-ai-cant-do-yet" id="toc-what-video-ai-cant-do-yet" class="nav-link" data-scroll-target="#what-video-ai-cant-do-yet">What Video AI Can’t Do Yet</a></li>
+  </ul></li>
+  <li><a href="#ai-audio-and-music" id="toc-ai-audio-and-music" class="nav-link" data-scroll-target="#ai-audio-and-music">AI Audio and Music</a>
+  <ul class="collapse">
+  <li><a href="#text-to-speech" id="toc-text-to-speech" class="nav-link" data-scroll-target="#text-to-speech">Text-to-Speech</a></li>
+  <li><a href="#music-generation" id="toc-music-generation" class="nav-link" data-scroll-target="#music-generation">Music Generation</a></li>
+  <li><a href="#notebooklm-audio-overviews" id="toc-notebooklm-audio-overviews" class="nav-link" data-scroll-target="#notebooklm-audio-overviews">NotebookLM Audio Overviews</a></li>
+  </ul></li>
+  <li><a href="#combining-modalities-the-creative-pipeline" id="toc-combining-modalities-the-creative-pipeline" class="nav-link" data-scroll-target="#combining-modalities-the-creative-pipeline">Combining Modalities: The Creative Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#example-pipeline-course-marketing-video" id="toc-example-pipeline-course-marketing-video" class="nav-link" data-scroll-target="#example-pipeline-course-marketing-video">Example Pipeline: Course Marketing Video</a></li>
+  <li><a href="#example-pipeline-brand-identity-package" id="toc-example-pipeline-brand-identity-package" class="nav-link" data-scroll-target="#example-pipeline-brand-identity-package">Example Pipeline: Brand Identity Package</a></li>
+  </ul></li>
+  <li><a href="#recognizing-ai-generated-content" id="toc-recognizing-ai-generated-content" class="nav-link" data-scroll-target="#recognizing-ai-generated-content">Recognizing AI-Generated Content</a>
+  <ul class="collapse">
+  <li><a href="#visual-tells-as-of-2026" id="toc-visual-tells-as-of-2026" class="nav-link" data-scroll-target="#visual-tells-as-of-2026">Visual Tells (as of 2026)</a></li>
+  <li><a href="#detection-tools" id="toc-detection-tools" class="nav-link" data-scroll-target="#detection-tools">Detection Tools</a></li>
+  <li><a href="#the-deepfake-concern" id="toc-the-deepfake-concern" class="nav-link" data-scroll-target="#the-deepfake-concern">The Deepfake Concern</a></li>
+  </ul></li>
+  <li><a href="#module-7-summary" id="toc-module-7-summary" class="nav-link" data-scroll-target="#module-7-summary">Module 7 Summary</a></li>
+  <li><a href="#lab-7-the-brand-sprint" id="toc-lab-7-the-brand-sprint" class="nav-link" data-scroll-target="#lab-7-the-brand-sprint">🔬 Lab 7: The Brand Sprint</a></li>
+  <li><a href="#module-7-quiz" id="toc-module-7-quiz" class="nav-link" data-scroll-target="#module-7-quiz">🎮 Module 7 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module05/index.html">PART III: APPLICATION</a></li><li class="breadcrumb-item"><a href="../module07/index.html">Multimodal AI — Creating Beyond Text</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Multimodal AI — Creating Beyond Text</h1>
+<p class="subtitle lead">Module 7 · Images, Video, Audio, and More</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Module 4 (prompting), Module 5 (verification)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain how AI generates images, video, and audio — in plain language</li>
+<li>Write effective prompts for image generation tools</li>
+<li>Identify the strengths and limitations of each multimodal modality</li>
+<li>Combine text, image, audio, and video AI tools into a creative workflow</li>
+<li>Recognize AI-generated content and understand deepfake risks</li>
+<li>Apply ethical guidelines to multimodal AI creation</li>
+</ol>
+</div>
+</div>
+<section id="the-pope-in-a-puffer-jacket" class="level2">
+<h2 class="anchored" data-anchor-id="the-pope-in-a-puffer-jacket">The Pope in a Puffer Jacket</h2>
+<p>In March 2023, an image went viral showing Pope Francis wearing a stylish white Balenciaga puffer jacket. It was shared millions of times. News outlets scrambled to confirm or deny it. For a few hours, a significant portion of the internet believed the Pope had suddenly become a fashion icon.</p>
+<p><strong>The image was entirely AI-generated.</strong> A Reddit user named Pablo Xavier had created it using Midjourney in about 30 seconds. When asked how he made it, he said he was “just messing around.”</p>
+<p>The Pope image marked a turning point: the moment the general public realized that <strong>AI could create images indistinguishable from photographs.</strong> Not blurry, not obviously fake, not “AI-looking.” Photorealistic images that fooled millions of people, created in seconds by someone with zero design training.</p>
+<p>This module covers the entire multimodal landscape — images, video, audio, and more. The capabilities are extraordinary. So are the responsibilities.</p>
+<section id="multimodal-ai-in-your-field" class="level3">
+<h3 class="anchored" data-anchor-id="multimodal-ai-in-your-field">Multimodal AI in YOUR Field</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li>AI-generated anatomical diagrams for patient education</li>
+<li>Medical imaging AI that highlights areas of concern on X-rays and CT scans</li>
+<li>Text-to-speech for accessibility in patient communications</li>
+<li>Video walkthroughs of post-surgical care instructions</li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li>Product photography generated from text descriptions (no photoshoot needed)</li>
+<li>Brand identity packages: logos, color palettes, marketing visuals</li>
+<li>Video ads and social media content at scale</li>
+<li>Presentation visuals generated from slide content</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<ul>
+<li>Illustrations for course materials generated from learning objectives</li>
+<li>Audio summaries of readings for students with visual impairments</li>
+<li>Educational animations explaining complex processes</li>
+<li>Multilingual content creation for diverse classrooms</li>
+</ul>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<ul>
+<li>Drone imagery + AI for crop disease identification</li>
+<li>Infographics generated from yield data for stakeholder reports</li>
+<li>Training videos for equipment operation and safety procedures</li>
+<li>Visual documentation of field conditions for compliance</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About Multimodal AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“AI images are always detectable”</strong> — Detection is getting harder. The Pope jacket fooled millions. AI detection tools have significant false positive and false negative rates.</li>
+<li><strong>“AI art isn’t creative”</strong> — The AI isn’t creative. The PERSON directing it can be. Creativity lives in the vision and judgment, not the execution tool.</li>
+<li><strong>“Video AI is ready for production”</strong> — It’s ready for short clips, b-roll, and concepts. Full production-quality video still needs human direction and editing.</li>
+<li><strong>“AI-generated voice is always fake-sounding”</strong> — Modern text-to-speech is nearly indistinguishable from human voice. Voice cloning from a few seconds of audio is real and raises serious ethical concerns.</li>
+<li><strong>“If I generated it, I own it”</strong> — Copyright for AI-generated content is unsettled law. Adobe Firefly offers the clearest commercial licensing. For other tools, check the terms.</li>
+</ul>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="how-ai-image-generation-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-ai-image-generation-works">How AI Image Generation Works</h2>
+<section id="the-short-version" class="level3">
+<h3 class="anchored" data-anchor-id="the-short-version">The Short Version</h3>
+<p>Image generation models (DALL·E, Midjourney, Stable Diffusion, Ideogram, Flux) use a technique called <strong>diffusion.</strong> Here’s the intuition:</p>
+<ol type="1">
+<li><strong>Start with pure noise</strong> — random colored pixels, like TV static</li>
+<li><strong>Gradually remove the noise</strong> — step by step, guided by your text prompt</li>
+<li><strong>Each step makes the image slightly more coherent</strong> — shapes emerge, colors form, details sharpen</li>
+<li><strong>After hundreds of steps</strong> — a fully formed image appears</li>
+</ol>
+<p>It’s like a sculptor starting with a rough block of marble and chipping away until a figure emerges — except the sculptor is guided by your words.</p>
+<p>The model learned what images look like by training on billions of image-text pairs from the internet. It knows that “sunset over mountains” typically involves orange/pink skies, silhouetted peaks, and warm light — because it’s seen millions of examples. When you prompt it, it’s not searching a database. It’s <strong>generating a new image</strong> that matches the patterns associated with your words.</p>
+</section>
+<section id="image-generation-tools" class="level3">
+<h3 class="anchored" data-anchor-id="image-generation-tools">Image Generation Tools</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Strengths</th>
+<th style="text-align: left;">Best For</th>
+<th style="text-align: left;">Access</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>DALL·E 3</strong> (OpenAI)</td>
+<td style="text-align: left;">Text rendering, integration with ChatGPT</td>
+<td style="text-align: left;">Quick generation in conversation</td>
+<td style="text-align: left;">ChatGPT Plus</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Midjourney</strong></td>
+<td style="text-align: left;">Artistic quality, distinctive aesthetic</td>
+<td style="text-align: left;">Professional creative work</td>
+<td style="text-align: left;">Discord or web</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Stable Diffusion</strong></td>
+<td style="text-align: left;">Open-source, local running, customizable</td>
+<td style="text-align: left;">Maximum control, privacy</td>
+<td style="text-align: left;">Free, runs locally</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Ideogram</strong></td>
+<td style="text-align: left;">Best text-in-image rendering</td>
+<td style="text-align: left;">Logos, signs, text-heavy designs</td>
+<td style="text-align: left;">Web, free tier</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Flux</strong></td>
+<td style="text-align: left;">High quality, fast</td>
+<td style="text-align: left;">Quick high-quality generation</td>
+<td style="text-align: left;">Various platforms</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Adobe Firefly</strong></td>
+<td style="text-align: left;">Commercial licensing clarity</td>
+<td style="text-align: left;">Business/commercial use</td>
+<td style="text-align: left;">Adobe Creative Cloud</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="writing-prompts-for-images" class="level3">
+<h3 class="anchored" data-anchor-id="writing-prompts-for-images">Writing Prompts for Images</h3>
+<p>Image prompting is different from text prompting. The key variables:</p>
+<p><strong>Subject:</strong> What’s in the image (“a golden retriever puppy sitting in autumn leaves”) <strong>Style:</strong> The artistic approach (“watercolor painting,” “photorealistic,” “flat vector illustration,” “anime style”) <strong>Composition:</strong> How it’s framed (“close-up portrait,” “wide landscape,” “bird’s eye view”) <strong>Lighting:</strong> The mood (“soft golden hour light,” “dramatic studio lighting,” “neon cyberpunk glow”) <strong>Details:</strong> Specific elements (“wearing a red collar,” “with a mountain background,” “in the style of Wes Anderson films”)</p>
+<p><strong>Example — from vague to specific:</strong></p>
+<blockquote class="blockquote">
+<p>❌ Vague: “a dog”</p>
+<p>✅ Better: “a golden retriever puppy sitting in a pile of autumn leaves, soft afternoon sunlight filtering through trees, shallow depth of field, warm color palette, photorealistic style”</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 7.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using any image generation tool you have access to (DALL·E through ChatGPT, Ideogram, or Bing Image Creator — all have free options), generate images for:</p>
+<ol type="1">
+<li>A professional headshot-style portrait of a fictional character for a business website</li>
+<li>An infographic-style illustration explaining how photosynthesis works</li>
+<li>A logo concept for “Roadrunner Lemonade” (the brand from Module 6)</li>
+</ol>
+<p>For each, write at least two prompt versions — one simple, one detailed. Compare the results.</p>
+<details>
+<summary>
+<strong>What to notice</strong>
+</summary>
+The detailed prompts produce dramatically more usable results. Also notice what the AI struggles with: text in images (often garbled), hands (sometimes wrong number of fingers), and consistent character design across multiple images. These are known limitations of current models that are improving rapidly.
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-video-generation" class="level2">
+<h2 class="anchored" data-anchor-id="ai-video-generation">AI Video Generation</h2>
+<section id="current-state-april-2026" class="level3">
+<h3 class="anchored" data-anchor-id="current-state-april-2026">Current State (April 2026)</h3>
+<p>Video generation has made remarkable progress but remains less mature than image generation:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">What It Does</th>
+<th style="text-align: left;">Quality Level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sora</strong> (OpenAI)</td>
+<td style="text-align: left;">Text-to-video, up to 60 seconds</td>
+<td style="text-align: left;">High quality, sometimes uncanny</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Runway Gen-3</strong></td>
+<td style="text-align: left;">Text-to-video + video editing</td>
+<td style="text-align: left;">Good for short clips</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Kling</strong> (China)</td>
+<td style="text-align: left;">Text-to-video, strong at motion</td>
+<td style="text-align: left;">Competitive quality</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Veo</strong> (Google)</td>
+<td style="text-align: left;">Text-to-video, integrated with YouTube</td>
+<td style="text-align: left;">Improving rapidly</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="realistic-use-cases-today" class="level3">
+<h3 class="anchored" data-anchor-id="realistic-use-cases-today">Realistic Use Cases Today</h3>
+<ul>
+<li><strong>Short social media clips</strong> (5-15 seconds)</li>
+<li><strong>B-roll footage</strong> for presentations and videos</li>
+<li><strong>Concept visualization</strong> (“show me what this product would look like in use”)</li>
+<li><strong>Educational animations</strong> (simple demonstrations of concepts)</li>
+<li><strong>Storyboarding</strong> (generating visual frames for a planned video)</li>
+</ul>
+</section>
+<section id="what-video-ai-cant-do-yet" class="level3">
+<h3 class="anchored" data-anchor-id="what-video-ai-cant-do-yet">What Video AI Can’t Do Yet</h3>
+<ul>
+<li>Consistent characters across scenes (the person looks different in each clip)</li>
+<li>Complex physics (water, hair, and fabric often look wrong)</li>
+<li>Long-form narrative (anything over 30-60 seconds breaks coherence)</li>
+<li>Reliable text or UI elements in video</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: Multimodal Basics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>How do diffusion models generate images? <em>(Start with noise, gradually remove it guided by the text prompt)</em></li>
+<li>Name one thing AI image generators still struggle with. <em>(Hands/fingers, text in images, consistency across multiple images)</em></li>
+<li>What’s the current practical limit of AI video? <em>(Short clips 5-60 seconds; consistent characters and complex physics are still weak)</em></li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ai-audio-and-music" class="level2">
+<h2 class="anchored" data-anchor-id="ai-audio-and-music">AI Audio and Music</h2>
+<section id="text-to-speech" class="level3">
+<h3 class="anchored" data-anchor-id="text-to-speech">Text-to-Speech</h3>
+<p>Modern AI can generate speech that is nearly indistinguishable from human voices:</p>
+<ul>
+<li><strong>Natural narration</strong> for presentations, videos, and podcasts</li>
+<li><strong>Voice cloning</strong> — replicating a specific person’s voice from a few seconds of audio sample</li>
+<li><strong>Multilingual dubbing</strong> — translating AND speaking in another language while matching the original speaker’s voice</li>
+</ul>
+</section>
+<section id="music-generation" class="level3">
+<h3 class="anchored" data-anchor-id="music-generation">Music Generation</h3>
+<p>Tools like <strong>Suno</strong> and <strong>Udio</strong> generate original music from text descriptions:</p>
+<blockquote class="blockquote">
+<p>“Upbeat acoustic folk song with guitar and harmonica, about a road trip through California, male vocals, tempo 120 BPM”</p>
+</blockquote>
+<p>The output is a complete song — vocals, instruments, production — generated in about 30 seconds. Quality ranges from “surprisingly good” to “obviously AI” depending on the genre and complexity.</p>
+</section>
+<section id="notebooklm-audio-overviews" class="level3">
+<h3 class="anchored" data-anchor-id="notebooklm-audio-overviews">NotebookLM Audio Overviews</h3>
+<p>As covered in Module 5, NotebookLM can generate <strong>podcast-style audio discussions</strong> of your uploaded documents. Two AI voices have a natural-sounding conversation about your material — useful for reviewing content while commuting or exercising.</p>
+<hr>
+</section>
+</section>
+<section id="combining-modalities-the-creative-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="combining-modalities-the-creative-pipeline">Combining Modalities: The Creative Pipeline</h2>
+<p>The real power of multimodal AI emerges when you <strong>chain tools together:</strong></p>
+<section id="example-pipeline-course-marketing-video" class="level3">
+<h3 class="anchored" data-anchor-id="example-pipeline-course-marketing-video">Example Pipeline: Course Marketing Video</h3>
+<pre><code>1. TEXT → Write a script using ChatGPT/Claude
+2. TEXT → IMAGE → Generate visuals for each scene with DALL·E/Midjourney
+3. TEXT → AUDIO → Generate narration with text-to-speech
+4. IMAGE + AUDIO → VIDEO → Combine in a video editor (or use Runway)
+5. REVIEW → Human review for quality, accuracy, and appropriateness</code></pre>
+</section>
+<section id="example-pipeline-brand-identity-package" class="level3">
+<h3 class="anchored" data-anchor-id="example-pipeline-brand-identity-package">Example Pipeline: Brand Identity Package</h3>
+<pre><code>1. TEXT → Brand Sprint prompt (from Module 6) → positioning, tagline, colors
+2. TEXT → IMAGE → Logo concepts using image generation
+3. TEXT → DOCUMENT → Brand guidelines document using AI writing
+4. TEXT → IMAGE → Social media templates using brand colors/fonts
+5. REVIEW → Human refinement and final selection</code></pre>
+<p>The person with this workflow isn’t a designer, videographer, copywriter, or musician. They’re <strong>a director</strong> — someone who knows what they want and can guide AI tools to produce it. The bottleneck is no longer skill. It’s <strong>taste, judgment, and intent.</strong></p>
+<hr>
+</section>
+</section>
+<section id="recognizing-ai-generated-content" class="level2">
+<h2 class="anchored" data-anchor-id="recognizing-ai-generated-content">Recognizing AI-Generated Content</h2>
+<p>As AI-generated content becomes more sophisticated, recognizing it becomes an essential literacy skill:</p>
+<section id="visual-tells-as-of-2026" class="level3">
+<h3 class="anchored" data-anchor-id="visual-tells-as-of-2026">Visual Tells (as of 2026)</h3>
+<ul>
+<li><strong>Hands and fingers</strong> — still occasionally wrong (extra fingers, merged digits)</li>
+<li><strong>Text in images</strong> — often garbled or misspelled</li>
+<li><strong>Background inconsistencies</strong> — objects that blend or defy physics</li>
+<li><strong>Texture repetition</strong> — identical patterns in hair, fabric, or foliage</li>
+<li><strong>“Too perfect” quality</strong> — an uncanny smoothness that photos don’t have</li>
+<li><strong>Symmetry that’s too exact</strong> — real faces and objects are slightly asymmetrical</li>
+</ul>
+</section>
+<section id="detection-tools" class="level3">
+<h3 class="anchored" data-anchor-id="detection-tools">Detection Tools</h3>
+<p>Tools like Content Credentials (Adobe), AI-or-not, and Hive Moderation attempt to detect AI-generated images and text. They’re useful but <strong>imperfect</strong> — false positives (marking human content as AI) and false negatives (missing AI content) are common. Don’t rely on any single detector.</p>
+</section>
+<section id="the-deepfake-concern" class="level3">
+<h3 class="anchored" data-anchor-id="the-deepfake-concern">The Deepfake Concern</h3>
+<p>AI-generated video and audio of real people (deepfakes) pose serious risks:</p>
+<ul>
+<li><strong>Political manipulation</strong> — fake videos of candidates saying things they never said</li>
+<li><strong>Financial fraud</strong> — fake CEO video calls authorizing wire transfers (this has actually happened)</li>
+<li><strong>Personal harassment</strong> — fake explicit content of real people</li>
+<li><strong>Erosion of trust</strong> — when anything could be fake, nothing feels trustworthy</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Ethics of Multimodal AI
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Creating AI-generated images, video, or audio of real people without their consent is unethical and often illegal. Creating misleading content designed to deceive is always wrong, regardless of the technology used. The Pope puffer jacket was humorous. A deepfake of a political candidate is dangerous. The technology is the same — the intent and impact are what matter.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="module-7-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-7-summary">Module 7 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Image generation</strong> uses diffusion — starting from noise and gradually shaping it guided by your prompt. Detailed prompts with subject, style, composition, and lighting produce far better results.</p></li>
+<li><p><strong>Video generation</strong> is advancing rapidly but still limited to short clips. Best for b-roll, concepts, and social media — not long-form narrative.</p></li>
+<li><p><strong>Audio AI</strong> can generate near-human speech, clone voices, and create original music. Powerful for content creation, risky for deception.</p></li>
+<li><p><strong>The creative pipeline</strong> chains modalities: text → image → audio → video. The bottleneck is no longer skill — it’s taste, judgment, and intent.</p></li>
+<li><p><strong>AI-generated content</strong> can often be recognized by visual tells (hands, text, texture), but detection is imperfect and getting harder.</p></li>
+<li><p><strong>Deepfakes</strong> pose real risks: political, financial, and personal. Creating deceptive content of real people is unethical and often illegal. (See <a href="../module10/index.html">Module 10 — Ethics</a> for a deeper analysis of AI ethics and fairness.)</p></li>
+<li><p><strong>Your creative judgment</strong> — knowing what’s good, appropriate, and honest — is now the most valuable skill in the room.</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>Multimodal AI means anyone can create professional-quality content — images, video, music, entire brand identities — with zero traditional training. This is democratizing in the best sense: a small business owner in any city can create marketing materials that rival a New York agency’s output. But it also means the barrier between real and fake has collapsed. A world where anyone can generate a photorealistic image of anything means <strong>verification isn’t just an AI skill — it’s a survival skill.</strong> Every image, every video, every audio clip you encounter now requires the question: <strong>Is this real?</strong></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-7-the-brand-sprint" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-7-the-brand-sprint">🔬 Lab 7: The Brand Sprint</h2>
+<section id="lab-7-the-brand-sprint-full-version" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-7-the-brand-sprint-full-version">Lab 7: The Brand Sprint (Full Version)</h4>
+<p><strong>Time:</strong> 60 minutes | <strong>Tools needed:</strong> Any AI chatbot + any image generation tool (free options: DALL·E via ChatGPT, Bing Image Creator, Ideogram)</p>
+<p><strong>Purpose:</strong> Design a complete brand identity from scratch using AI — the full BA 1028 workflow.</p>
+<p><strong>Part A — The Brief (15 min)</strong> 1. Choose a real or hypothetical project: a campus club, a side business, a nonprofit event, or a personal brand. 2. Use the Brand Sprint prompt from Module 6. Let the AI interview you with 8 questions about your brand. 3. Review the AI’s brand output: positioning statement, tagline variants, color palette, font pairing, and logo concept prompts.</p>
+<p><strong>Part B — Visual Identity (20 min)</strong> 4. Take the 3 logo concept prompts the AI generated and run them through an image generation tool. 5. Generate at least 2 variants of each concept (6+ images total). 6. Select your favorite 2-3 outputs.</p>
+<p><strong>Part C — Brand Sheet (15 min)</strong> 7. Ask the AI to create a one-page brand sheet: logo placement guidelines, color swatches with hex codes, font hierarchy, and tone of voice summary. 8. Compile everything into a single document or presentation.</p>
+<p><strong>Part D — Reflection (10 min)</strong> 9. Write 3-4 sentences: How long would this have taken without AI? What required YOUR judgment that AI couldn’t handle? What would a professional designer do differently?</p>
+<p><strong>Submit:</strong> Your brand brief (AI interview), 6+ generated images, your brand sheet, and reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-7-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-7-quiz">🎮 Module 7 Quiz</h2>
+<div id="m7-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m7-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 7 Challenge</span><h3 style="color:white;border:none;">Multimodal AI</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m7-area"><div id="m7-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m7-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m7-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m7-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m7-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"AI image generation using diffusion works by:",a:"Starting with random noise and gradually removing it, guided by your text prompt",opts:["Searching a database of existing images","Starting with random noise and gradually removing it, guided by your text prompt","Drawing pixel by pixel from left to right","Combining parts of existing photographs"]},
+    {q:"The Pope puffer jacket image demonstrated:",a:"AI can create photorealistic images that fool millions, created by anyone in seconds",opts:["The Pope's fashion sense","AI can create photorealistic images that fool millions, created by anyone in seconds","That Midjourney is the best tool","That AI images are always obvious fakes"]},
+    {q:"Which tool is best known for rendering TEXT within images?",a:"Ideogram",opts:["Midjourney","DALL·E","Ideogram","Stable Diffusion"]},
+    {q:"A common visual tell of AI-generated images is:",a:"Problems with hands and fingers — sometimes extra or merged digits",opts:["Always having a watermark","Problems with hands and fingers — sometimes extra or merged digits","Being in black and white","Having too few details"]},
+    {q:"Video AI (like Sora) is currently best suited for:",a:"Short clips (5-60 seconds), b-roll, and concept visualization",opts:["Full-length feature films","Short clips (5-60 seconds), b-roll, and concept visualization","Real-time video calls","Replacing all video production"]},
+    {q:"The creative pipeline chains modalities in what order?",a:"Text → Image → Audio → Video → Human review",opts:["Video → Audio → Image → Text","Text → Image → Audio → Video → Human review","Random order doesn't matter","Image → Text → Audio → Video"]},
+    {q:"In multimodal AI creation, the bottleneck is no longer:",a:"Technical skill — it's now taste, judgment, and intent",opts:["Computing power","Technical skill — it's now taste, judgment, and intent","Internet speed","Budget"]},
+    {q:"Deepfakes are dangerous primarily because:",a:"They can create realistic fake video/audio of real people, enabling deception at scale",opts:["They're expensive to make","They can create realistic fake video/audio of real people, enabling deception at scale","They only affect celebrities","They're easy to detect"]},
+    {q:"Adobe Firefly's main advantage over other image generators is:",a:"Clear commercial licensing — you can use outputs in business without copyright concerns",opts:["It's the highest quality","Clear commercial licensing — you can use outputs in business without copyright concerns","It's free","It runs locally"]},
+    {q:"When prompting for AI images, which detail matters MOST?",a:"Being specific about subject, style, composition, and lighting",opts:["Using technical photography terms","Being specific about subject, style, composition, and lighting","Making the prompt as long as possible","Including the word 'please'"]},
+    {q:"AI music generation tools like Suno can:",a:"Generate complete songs with vocals, instruments, and production from a text description",opts:["Only create instrumental background music","Generate complete songs with vocals, instruments, and production from a text description","Replace professional musicians entirely","Only work with classical music"]},
+    {q:"Voice cloning technology can:",a:"Replicate a person's voice from just a few seconds of audio sample",opts:["Only work with celebrities' voices","Replicate a person's voice from just a few seconds of audio sample","Only generate robotic-sounding speech","Create new languages"]},
+    {q:"The ethics of creating AI images of real people:",a:"It's unethical and often illegal without consent, especially for misleading content",opts:["It's always fine since the image isn't real","It's unethical and often illegal without consent, especially for misleading content","It's only wrong if you share it","Ethics don't apply to AI-generated content"]},
+    {q:"AI detection tools for identifying generated content are:",a:"Useful but imperfect — both false positives and false negatives are common",opts:["100% accurate","Useful but imperfect — both false positives and false negatives are common","Completely unreliable","Only available to law enforcement"]},
+    {q:"NotebookLM's audio feature generates:",a:"A podcast-style conversation between two AI voices discussing your uploaded documents",opts:["Music based on your documents","A podcast-style conversation between two AI voices discussing your uploaded documents","A recording of your own voice","An audiobook narration"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned! Multimodal master!':score>=10?'👍 Almost! Review and retry.':'📖 Re-read the module and try again.';document.getElementById('m7-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m7-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m7-fb').textContent='';document.getElementById('m7-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m7-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m7-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m7-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m7-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m7-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module06/index.html">Module 06 — AI for Productivity</a></em> | <em>Next: <a href="../module08/index.html">Module 08 — Agents, GPTs, and Automation</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module06/index.html" class="pagination-link" aria-label="AI for Everyday Productivity">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AI for Everyday Productivity</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module08/index.html" class="pagination-link" aria-label="AI Agents and Automation">
+        <span class="nav-page-text">AI Agents and Automation</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

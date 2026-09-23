@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>How Machine Learning Works – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module03/index.html" rel="next">
+<link href="../module01/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="How Machine Learning Works – AI from the Ground Up">
+<meta property="og:description" content="Module 2 · Without the Math">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module02/index.html">How Machine Learning Works</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-algorithm-that-learned-to-be-sexist" id="toc-the-algorithm-that-learned-to-be-sexist" class="nav-link active" data-scroll-target="#the-algorithm-that-learned-to-be-sexist">The Algorithm That Learned to Be Sexist</a></li>
+  <li><a href="#the-big-idea-learning-from-data-instead-of-following-rules" id="toc-the-big-idea-learning-from-data-instead-of-following-rules" class="nav-link" data-scroll-target="#the-big-idea-learning-from-data-instead-of-following-rules">The Big Idea: Learning from Data Instead of Following Rules</a>
+  <ul class="collapse">
+  <li><a href="#ml-in-your-field-real-examples" id="toc-ml-in-your-field-real-examples" class="nav-link" data-scroll-target="#ml-in-your-field-real-examples">ML in YOUR Field — Real Examples</a></li>
+  </ul></li>
+  <li><a href="#the-three-flavors-of-machine-learning" id="toc-the-three-flavors-of-machine-learning" class="nav-link" data-scroll-target="#the-three-flavors-of-machine-learning">The Three Flavors of Machine Learning</a>
+  <ul class="collapse">
+  <li><a href="#supervised-learning-heres-the-answer-key" id="toc-supervised-learning-heres-the-answer-key" class="nav-link" data-scroll-target="#supervised-learning-heres-the-answer-key">1. Supervised Learning: “Here’s the Answer Key”</a></li>
+  <li><a href="#unsupervised-learning-find-the-patterns" id="toc-unsupervised-learning-find-the-patterns" class="nav-link" data-scroll-target="#unsupervised-learning-find-the-patterns">2. Unsupervised Learning: “Find the Patterns”</a></li>
+  <li><a href="#reinforcement-learning-trial-error-reward" id="toc-reinforcement-learning-trial-error-reward" class="nav-link" data-scroll-target="#reinforcement-learning-trial-error-reward">3. Reinforcement Learning: “Trial, Error, Reward”</a></li>
+  </ul></li>
+  <li><a href="#how-a-model-learns-the-training-pipeline" id="toc-how-a-model-learns-the-training-pipeline" class="nav-link" data-scroll-target="#how-a-model-learns-the-training-pipeline">How a Model Learns: The Training Pipeline</a>
+  <ul class="collapse">
+  <li><a href="#step-1-collect-data" id="toc-step-1-collect-data" class="nav-link" data-scroll-target="#step-1-collect-data">Step 1: Collect Data</a></li>
+  <li><a href="#step-2-prepare-and-split-the-data" id="toc-step-2-prepare-and-split-the-data" class="nav-link" data-scroll-target="#step-2-prepare-and-split-the-data">Step 2: Prepare and Split the Data</a></li>
+  <li><a href="#step-3-train-the-model" id="toc-step-3-train-the-model" class="nav-link" data-scroll-target="#step-3-train-the-model">Step 3: Train the Model</a></li>
+  <li><a href="#step-4-validate-and-tune" id="toc-step-4-validate-and-tune" class="nav-link" data-scroll-target="#step-4-validate-and-tune">Step 4: Validate and Tune</a></li>
+  <li><a href="#step-5-test-and-evaluate" id="toc-step-5-test-and-evaluate" class="nav-link" data-scroll-target="#step-5-test-and-evaluate">Step 5: Test and Evaluate</a></li>
+  <li><a href="#step-6-deploy-and-monitor" id="toc-step-6-deploy-and-monitor" class="nav-link" data-scroll-target="#step-6-deploy-and-monitor">Step 6: Deploy and Monitor</a></li>
+  </ul></li>
+  <li><a href="#neural-networks-a-simple-explanation" id="toc-neural-networks-a-simple-explanation" class="nav-link" data-scroll-target="#neural-networks-a-simple-explanation">Neural Networks: A Simple Explanation</a>
+  <ul class="collapse">
+  <li><a href="#the-building-block-a-single-neuron" id="toc-the-building-block-a-single-neuron" class="nav-link" data-scroll-target="#the-building-block-a-single-neuron">The Building Block: A Single Neuron</a></li>
+  <li><a href="#layers-input-hidden-output" id="toc-layers-input-hidden-output" class="nav-link" data-scroll-target="#layers-input-hidden-output">Layers: Input → Hidden → Output</a></li>
+  <li><a href="#deep-learning-many-hidden-layers" id="toc-deep-learning-many-hidden-layers" class="nav-link" data-scroll-target="#deep-learning-many-hidden-layers">Deep Learning = Many Hidden Layers</a></li>
+  </ul></li>
+  <li><a href="#the-data-pipeline-where-everything-begins" id="toc-the-data-pipeline-where-everything-begins" class="nav-link" data-scroll-target="#the-data-pipeline-where-everything-begins">The Data Pipeline: Where Everything Begins</a>
+  <ul class="collapse">
+  <li><a href="#where-bias-enters-the-pipeline" id="toc-where-bias-enters-the-pipeline" class="nav-link" data-scroll-target="#where-bias-enters-the-pipeline">Where Bias Enters the Pipeline</a></li>
+  </ul></li>
+  <li><a href="#evaluating-ai-outputs-five-questions-to-always-ask" id="toc-evaluating-ai-outputs-five-questions-to-always-ask" class="nav-link" data-scroll-target="#evaluating-ai-outputs-five-questions-to-always-ask">Evaluating AI Outputs: Five Questions to Always Ask</a></li>
+  <li><a href="#module-2-summary" id="toc-module-2-summary" class="nav-link" data-scroll-target="#module-2-summary">Module 2 Summary</a></li>
+  <li><a href="#lab-2-the-bias-detective" id="toc-lab-2-the-bias-detective" class="nav-link" data-scroll-target="#lab-2-the-bias-detective">🔬 Lab 2: The Bias Detective</a></li>
+  <li><a href="#module-2-quiz" id="toc-module-2-quiz" class="nav-link" data-scroll-target="#module-2-quiz">🎮 Module 2 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module01/index.html">PART I: FOUNDATIONS</a></li><li class="breadcrumb-item"><a href="../module02/index.html">How Machine Learning Works</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">How Machine Learning Works</h1>
+<p class="subtitle lead">Module 2 · Without the Math</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. AI tools evolve rapidly — underlying principles remain applicable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Module 1 (What Is AI?)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain how machine learning differs from traditional programming — in one sentence</li>
+<li>Describe the three types of machine learning with real examples</li>
+<li>Walk through how a model learns: training, validation, and testing</li>
+<li>Explain what a neural network does without using a single equation</li>
+<li>Describe the data pipeline from collection to deployment</li>
+<li>Identify where bias enters machine learning systems — and why it’s hard to remove</li>
+<li>Critically evaluate AI outputs by understanding what the model learned from</li>
+</ol>
+</div>
+</div>
+<section id="the-algorithm-that-learned-to-be-sexist" class="level2">
+<h2 class="anchored" data-anchor-id="the-algorithm-that-learned-to-be-sexist">The Algorithm That Learned to Be Sexist</h2>
+<p>In 2018, Reuters broke a story that stunned the tech world. Amazon had built a machine learning system to automate hiring — scan resumes, score candidates, surface the best ones. The model trained on ten years of Amazon’s hiring data to learn what a “good” resume looked like.</p>
+<p>It worked beautifully. The scores were consistent. The system was fast. There was just one problem: <strong>the model had taught itself to penalize women.</strong></p>
+<p>Because Amazon’s tech workforce had been predominantly male for a decade, the model learned that “male” was a feature of successful candidates. It downgraded resumes that contained the word “women’s” — as in “women’s chess club” or “captain of the women’s soccer team.” It penalized graduates of two all-women’s colleges. It had learned, with mathematical precision, to replicate a decade of human bias.</p>
+<p>Amazon scrapped the tool. But the lesson endures: <strong>machine learning doesn’t discover truth. It discovers patterns in data. If the data contains bias, the model learns bias — and serves it back to you with the authority of mathematics.</strong></p>
+<p>This module teaches you how machine learning actually works — not the equations, but the ideas.</p>
+<hr>
+</section>
+<section id="the-big-idea-learning-from-data-instead-of-following-rules" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-learning-from-data-instead-of-following-rules">The Big Idea: Learning from Data Instead of Following Rules</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The One-Sentence Summary
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Traditional programming:</strong> Humans write rules → computer follows them. <strong>Machine learning:</strong> Humans provide data → computer discovers the rules.</p>
+</div>
+</div>
+<p>Imagine you want to teach someone to recognize spam emails.</p>
+<p><strong>The traditional approach:</strong> You write a list of rules. If the subject line contains “FREE MONEY,” it’s spam. If there are more than three exclamation marks, it’s spam. You write hundreds of rules, maintain the list forever. Spammers adapt, you write more rules.</p>
+<p><strong>The machine learning approach:</strong> You collect 100,000 emails — 50,000 spam, 50,000 not spam — and show them to the algorithm. You say: “Figure out what makes spam different from real email.” The algorithm examines every email, looking for patterns that distinguish the two categories. It discovers its own rules.</p>
+<p>The second approach is how your email’s spam filter actually works. Nobody writes spam rules by hand anymore.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About Machine Learning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“ML is magic”</strong> — It’s math. Specifically, it’s optimization: adjusting numbers to minimize prediction errors. No magic, no consciousness, no understanding.</li>
+<li><strong>“More data always = better”</strong> — More <em>representative</em> data helps. More <em>biased</em> data just produces a more confidently biased model.</li>
+<li><strong>“ML is objective”</strong> — ML finds patterns in data. If the data reflects human decisions (hiring, lending, policing), the model inherits human biases — and scales them.</li>
+<li><strong>“The algorithm is neutral”</strong> — Choosing what to predict, what data to collect, and how to measure success are all human decisions that shape the outcome before the algorithm runs.</li>
+<li><strong>“ML will figure it out”</strong> — ML needs human oversight at every stage: data selection, feature engineering, model evaluation, deployment monitoring, and ethical review.</li>
+</ul>
+</div>
+</div>
+<section id="ml-in-your-field-real-examples" class="level3">
+<h3 class="anchored" data-anchor-id="ml-in-your-field-real-examples">ML in YOUR Field — Real Examples</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Agriculture</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li><strong>Supervised:</strong> Predicting hospital readmission risk from patient records (labeled: readmitted / not readmitted)</li>
+<li><strong>Unsupervised:</strong> Discovering patient subgroups with similar symptom patterns for personalized treatment</li>
+<li><strong>Reinforcement:</strong> Optimizing drug dosing schedules by learning from patient response data over time</li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li><strong>Supervised:</strong> Predicting customer churn from purchase history (labeled: churned / retained)</li>
+<li><strong>Unsupervised:</strong> Segmenting customers by behavior to target marketing campaigns</li>
+<li><strong>Reinforcement:</strong> Dynamic pricing that adjusts in real-time based on demand signals</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<ul>
+<li><strong>Supervised:</strong> Predicting which students are at risk of failing based on engagement data (labeled: passed / failed)</li>
+<li><strong>Unsupervised:</strong> Discovering common misconception patterns across thousands of student responses</li>
+<li><strong>Reinforcement:</strong> Adaptive learning systems that adjust difficulty based on student performance</li>
+</ul>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<ul>
+<li><strong>Supervised:</strong> Classifying crop diseases from photos (labeled: healthy / diseased / specific disease type)</li>
+<li><strong>Unsupervised:</strong> Identifying zones within a field that have similar soil characteristics for variable-rate treatment</li>
+<li><strong>Reinforcement:</strong> Optimizing irrigation scheduling by learning from soil moisture sensors and weather data</li>
+</ul>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-three-flavors-of-machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="the-three-flavors-of-machine-learning">The Three Flavors of Machine Learning</h2>
+<section id="supervised-learning-heres-the-answer-key" class="level3">
+<h3 class="anchored" data-anchor-id="supervised-learning-heres-the-answer-key">1. Supervised Learning: “Here’s the Answer Key”</h3>
+<p>You give the algorithm <strong>labeled examples</strong> — data with the correct answer — and it learns to predict answers for new data.</p>
+<p><strong>Real-world examples:</strong> Email spam detection (labeled “spam” or “not spam”), medical diagnosis (X-rays labeled “tumor” or “no tumor”), language translation (sentence pairs in two languages).</p>
+</section>
+<section id="unsupervised-learning-find-the-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="unsupervised-learning-find-the-patterns">2. Unsupervised Learning: “Find the Patterns”</h3>
+<p><strong>No labels.</strong> You give the algorithm raw data and say: “Find the structure.” It discovers groupings humans might not see.</p>
+<p><strong>Real-world examples:</strong> Customer segmentation, anomaly detection (finding cyberattacks), topic modeling across thousands of documents.</p>
+</section>
+<section id="reinforcement-learning-trial-error-reward" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-learning-trial-error-reward">3. Reinforcement Learning: “Trial, Error, Reward”</h3>
+<p>The algorithm learns by <strong>doing</strong> — taking actions, receiving rewards or penalties, and adjusting strategy.</p>
+<p><strong>Real-world examples:</strong> AlphaGo beating the world Go champion, self-driving cars, TikTok’s algorithm learning what keeps you scrolling.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 2.1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Identify the ML type for each scenario:</p>
+<ol type="1">
+<li>A hospital predicts readmission risk using labeled patient records.</li>
+<li>A retailer discovers product groupings from purchase data.</li>
+<li>A chatbot improves via customer satisfaction ratings.</li>
+<li>A bank detects fraudulent transactions.</li>
+</ol>
+<details>
+<summary>
+<strong>Click to check your answers</strong>
+</summary>
+<ol type="1">
+<li><strong>Supervised</strong> — labels exist (readmitted vs not).</li>
+<li><strong>Unsupervised</strong> — no predefined categories.</li>
+<li><strong>Reinforcement</strong> — actions + rewards.</li>
+<li>Could be <strong>unsupervised</strong> (anomaly detection) or <strong>supervised</strong> (labeled fraud examples). Most systems use a hybrid.</li>
+</ol>
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="how-a-model-learns-the-training-pipeline" class="level2">
+<h2 class="anchored" data-anchor-id="how-a-model-learns-the-training-pipeline">How a Model Learns: The Training Pipeline</h2>
+<p>Here’s the full process from raw data to deployed model:</p>
+<pre><code>RAW DATA → Clean &amp; Label → Split (Train/Validate/Test)
+                                    ↓
+                            TRAINING LOOP:
+                    Predict → Compare → Adjust → Repeat
+                         (millions of iterations)
+                                    ↓
+                    Validate → Tune → Test on unseen data
+                                    ↓
+                    DEPLOY → Monitor for drift → Retrain</code></pre>
+<section id="step-1-collect-data" class="level3">
+<h3 class="anchored" data-anchor-id="step-1-collect-data">Step 1: Collect Data</h3>
+<p>Everything starts with data. <strong>This is where most problems begin.</strong> If data is biased, the model learns bias. Amazon’s hiring tool learned from biased data and produced biased outputs.</p>
+</section>
+<section id="step-2-prepare-and-split-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="step-2-prepare-and-split-the-data">Step 2: Prepare and Split the Data</h3>
+<p>Data is cleaned and split into three sets:</p>
+<ul>
+<li><strong>Training set</strong> (~70-80%): What the model learns from</li>
+<li><strong>Validation set</strong> (~10-15%): Checks learning during training</li>
+<li><strong>Test set</strong> (~10-15%): Final evaluation on unseen data</li>
+</ul>
+<p>Why split? Because <strong>memorization is not learning.</strong> A student who memorizes last year’s answer key fails when the professor writes new questions.</p>
+</section>
+<section id="step-3-train-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-train-the-model">Step 3: Train the Model</h3>
+<p>The model processes training data in an optimization loop: <strong>predict → compare → adjust → repeat.</strong> Millions of times.</p>
+</section>
+<section id="step-4-validate-and-tune" class="level3">
+<h3 class="anchored" data-anchor-id="step-4-validate-and-tune">Step 4: Validate and Tune</h3>
+<p>If the model performs well on training data but poorly on validation data, it’s <strong>overfitting</strong>: memorizing rather than learning.</p>
+<p>If it performs poorly on both, it’s <strong>underfitting</strong>: it hasn’t learned enough.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Goldilocks Problem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Overfitting:</strong> Performs perfectly on training data, fails on new data. Learned the noise, not the signal.</li>
+<li><strong>Underfitting:</strong> Performs poorly on everything. Hasn’t captured the patterns.</li>
+<li><strong>Just right:</strong> Performs well on both known and unknown data. Learned the <em>patterns</em>, not the specific examples.</li>
+</ul>
+<p><strong>Concrete example:</strong> You’re building a model to predict house prices. It trains on 10,000 homes in one city. An overfit model memorizes that “houses on Elm Street sell for $400K” — it learned specific addresses, not the pattern (square footage + bedrooms + neighborhood quality → price). When tested on homes in a different city, it’s useless. An underfit model just predicts “every house costs $300K.” The right model learns that bigger homes in better neighborhoods cost more — a pattern that transfers to ANY city.</p>
+</div>
+</div>
+</section>
+<section id="step-5-test-and-evaluate" class="level3">
+<h3 class="anchored" data-anchor-id="step-5-test-and-evaluate">Step 5: Test and Evaluate</h3>
+<p>Final evaluation on data the model has never seen. The closest simulation of real-world performance.</p>
+</section>
+<section id="step-6-deploy-and-monitor" class="level3">
+<h3 class="anchored" data-anchor-id="step-6-deploy-and-monitor">Step 6: Deploy and Monitor</h3>
+<p>The model goes live — but real-world data changes over time (<strong>data drift</strong>). A model that worked in January might fail in June. A spam filter trained in 2023 may miss 2026’s spam tactics. Ongoing monitoring is essential.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: The Training Process
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Why is data split into three sets? <em>(Training = learn, Validation = check during training, Test = final evaluation on unseen data)</em></li>
+<li>What’s overfitting? <em>(Memorizing training data rather than learning general patterns — performs well on training data, poorly on new data)</em></li>
+<li>What’s the #1 law of machine learning? <em>(Garbage in, garbage out — the model is only as good as its data)</em></li>
+<li>A house price model that only works in the city it was trained on is an example of: <em>(Overfitting — it memorized specific data instead of learning transferable patterns)</em></li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="neural-networks-a-simple-explanation" class="level2">
+<h2 class="anchored" data-anchor-id="neural-networks-a-simple-explanation">Neural Networks: A Simple Explanation</h2>
+<section id="the-building-block-a-single-neuron" class="level3">
+<h3 class="anchored" data-anchor-id="the-building-block-a-single-neuron">The Building Block: A Single Neuron</h3>
+<p>A neuron takes in numbers, multiplies each by a <strong>weight</strong> (how important that input is), adds them up, and passes the result through a function that decides whether to “fire.” One neuron is useless. Millions connected in layers learn extraordinarily complex patterns.</p>
+<p><strong>A concrete forward pass:</strong> Imagine a single neuron deciding if an email is spam. It receives three inputs: (1) number of exclamation marks = 5, (2) contains “FREE” = 1 (yes), (3) from known sender = 0 (no). Each input has a learned weight: exclamation marks × 0.3 = 1.5, contains FREE × 0.8 = 0.8, known sender × (-1.0) = 0.0. Sum = 2.3. If the threshold is 1.5, the neuron fires: <strong>spam.</strong> The weights were learned during training — adjusted millions of times until the neuron got good at catching spam without flagging real emails.</p>
+</section>
+<section id="layers-input-hidden-output" class="level3">
+<h3 class="anchored" data-anchor-id="layers-input-hidden-output">Layers: Input → Hidden → Output</h3>
+<ul>
+<li><strong>Input layer:</strong> Receives raw data (pixels, words, numbers)</li>
+<li><strong>Hidden layers:</strong> Transform data, extracting increasingly abstract features. Early layers detect simple patterns (edges in images, common words in text). Deeper layers combine simple patterns into complex ones (edges → shapes → faces)</li>
+<li><strong>Output layer:</strong> Produces the result (“87% cat, 13% dog”)</li>
+</ul>
+</section>
+<section id="deep-learning-many-hidden-layers" class="level3">
+<h3 class="anchored" data-anchor-id="deep-learning-many-hidden-layers">Deep Learning = Many Hidden Layers</h3>
+<p>“Deep learning” just means many layers — sometimes dozens or hundreds. More layers = more complex patterns. Frontier LLMs are estimated to have dozens to over 100 layers, though most commercial model architectures (including GPT-4, Claude, and Gemini) are not publicly disclosed — these figures come from leaked estimates and inference, not official sources.</p>
+<p><strong>The analogy:</strong> A factory assembly line. Raw materials enter one end. Each station performs a transformation. No single station produces the finished product. But after dozens of stations, raw materials become a car. In a neural network, raw pixels enter the input layer. Each hidden layer transforms them. No single layer “understands” the image. But after many layers, the network correctly identifies a cat.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 2.2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A “hot dog or not” image classifier:</p>
+<ol type="1">
+<li>What would the training data look like?</li>
+<li>What might the hidden layers detect at different depths?</li>
+<li>What could go wrong if training data only included American-style hot dogs?</li>
+</ol>
+<details>
+<summary>
+<strong>Click to check your answers</strong>
+</summary>
+<ol type="1">
+<li>Thousands of photos labeled “hot dog” and “not hot dog.”</li>
+<li>Early layers: edges and colors. Middle layers: shapes (cylindrical bun, elongated sausage). Deep layers: the full “hot dog” concept.</li>
+<li>The model might fail on bratwurst, corn dogs, or Asian-style hot dogs. It learned “American hot dog” patterns, not the universal concept. <strong>This is exactly how bias enters ML.</strong></li>
+</ol>
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-data-pipeline-where-everything-begins" class="level2">
+<h2 class="anchored" data-anchor-id="the-data-pipeline-where-everything-begins">The Data Pipeline: Where Everything Begins</h2>
+<pre><code>COLLECT → CLEAN → LABEL → TRAIN → EVALUATE → DEPLOY → MONITOR</code></pre>
+<section id="where-bias-enters-the-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="where-bias-enters-the-pipeline">Where Bias Enters the Pipeline</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Stage</th>
+<th style="text-align: left;">How Bias Enters</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Collection</strong></td>
+<td style="text-align: left;">Data doesn’t represent the full population</td>
+<td style="text-align: left;">Medical AI trained mostly on white patients</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Cleaning</strong></td>
+<td style="text-align: left;">Removing “outliers” that are underrepresented groups</td>
+<td style="text-align: left;">Dropping non-English name applications</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Labeling</strong></td>
+<td style="text-align: left;">Human labelers bring their own biases</td>
+<td style="text-align: left;">Professional women labeled “receptionist”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Training</strong></td>
+<td style="text-align: left;">Model optimizes for the majority pattern</td>
+<td style="text-align: left;">Amazon: “male” = “successful”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Evaluation</strong></td>
+<td style="text-align: left;">Test set has the same biases as training set</td>
+<td style="text-align: left;">Model looks great — same blind spots</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Deployment</strong></td>
+<td style="text-align: left;">Applied to populations it wasn’t trained on</td>
+<td style="text-align: left;">US facial recognition deployed in Africa</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The #1 Law of Machine Learning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Garbage in, garbage out.</strong> A model is only as good as its data. If the data reflects historical biases, the model reproduces them — often more efficiently and at greater scale than humans.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 2.3 — The Bias Spotter
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A company builds an ML model to predict which job applicants will be “successful employees” based on 5 years of performance review data. Identify the bias risk at each stage:</p>
+<ol type="1">
+<li><strong>Data:</strong> What’s likely in 5 years of performance reviews? (Think: who does the reviewing?)</li>
+<li><strong>Labels:</strong> How is “successful” defined? (Revenue generated? Manager ratings? Tenure?)</li>
+<li><strong>Features:</strong> Which input variables might be proxies for protected characteristics?</li>
+<li><strong>Evaluation:</strong> If the test set has the same biases as the training set, will you even detect the problem?</li>
+<li><strong>Deployment:</strong> What happens when the model is applied to applicants from backgrounds underrepresented in the training data?</li>
+</ol>
+<details>
+<summary>
+<strong>Key risks</strong>
+</summary>
+<ol type="1">
+<li><strong>Data:</strong> Performance reviews carry well-documented biases — studies show women and minorities receive more subjective criticism and less credit for collaborative work.</li>
+<li><strong>Labels:</strong> If “successful” means “high manager rating,” the model learns what managers reward — which may reflect bias, not performance. If it means “stayed 3+ years,” it penalizes people who were underpaid and left for better opportunities.</li>
+<li><strong>Features:</strong> Zip code, university name, extracurricular activities, and even name formatting can be proxies for race, socioeconomic status, and national origin.</li>
+<li><strong>Evaluation:</strong> Yes — this is the insidious part. If your test set has the same biases, the model looks great on paper while systematically discriminating.</li>
+<li><strong>Deployment:</strong> The model will score these applicants as “low probability of success” because it has few examples of people like them succeeding — creating a self-fulfilling prophecy.</li>
+</ol>
+<strong>This is exactly what happened at Amazon (Module 2 hook).</strong> The model worked perfectly on biased data.
+</details>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="evaluating-ai-outputs-five-questions-to-always-ask" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-ai-outputs-five-questions-to-always-ask">Evaluating AI Outputs: Five Questions to Always Ask</h2>
+<ol type="1">
+<li><strong>What data was it trained on?</strong> (Who collected it? What’s missing?)</li>
+<li><strong>What was it optimized for?</strong> (Accuracy? Engagement? Profit?)</li>
+<li><strong>Who validated it?</strong> (Diverse populations? Diverse teams?)</li>
+<li><strong>What are its known failure modes?</strong></li>
+<li><strong>Who benefits and who’s harmed?</strong></li>
+</ol>
+<hr>
+</section>
+<section id="module-2-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-2-summary">Module 2 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Machine learning is learning from data</strong>, not following rules.</li>
+<li><strong>Three types:</strong> Supervised, Unsupervised, Reinforcement.</li>
+<li><strong>The training process</strong> splits data and iterates until the model generalizes well.</li>
+<li><strong>Neural networks</strong> are layers of simple operations. Deep learning = many layers.</li>
+<li><strong>Overfitting</strong> is memorization, not learning. The Goldilocks problem.</li>
+<li><strong>Bias enters at every stage</strong> of the data pipeline.</li>
+<li><strong>“Garbage in, garbage out”</strong> — the data shapes the model.</li>
+<li><strong>Always ask:</strong> What data? What optimization? Who validated? Who benefits?</li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>Machine learning doesn’t discover truth — it discovers patterns in data. And data is collected by humans, labeled by humans, and reflects human decisions about what to include and what to leave out. When an AI system discriminates, the tempting response is to blame the algorithm. But the algorithm did exactly what it was designed to do: <strong>find patterns in the data it was given.</strong> The real question isn’t “why is the AI biased?” The real question is “why is the data biased?” — and that’s a human question, not a technical one.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-2-the-bias-detective" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-2-the-bias-detective">🔬 Lab 2: The Bias Detective</h2>
+<section id="lab-2-the-bias-detective-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-2-the-bias-detective-1">Lab 2: The Bias Detective</h4>
+<p><strong>Time:</strong> 45 minutes | <strong>Tools needed:</strong> Any AI chatbot + browser</p>
+<p><strong>Part A — The Hiring Algorithm (15 min)</strong> Ask your AI chatbot: <em>“I’m building a hiring algorithm for a tech company using 10 years of employee data. Walk me through how I’d train a model, then identify at least 5 places where bias could enter.”</em> Compare its answer to the table in this module.</p>
+<p><strong>Part B — The Image Test (15 min)</strong> Ask your AI to describe: “a typical CEO,” “a typical nurse,” “a typical engineer,” “a typical teacher.” What gender, age, and race does it default to? What does this reveal about training data?</p>
+<p><strong>Part C — Reflection (15 min)</strong> Write 4-5 sentences: Where does bias come from? Is unbiased AI possible? What responsibility do AI <em>users</em> have?</p>
+<p><strong>Submit:</strong> Chatbot responses + reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-2-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-2-quiz">🎮 Module 2 Quiz</h2>
+<div id="m2-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m2-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 2 Challenge</span><h3 style="color:white;border:none;">Machine Learning Fundamentals</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m2-area"><div id="m2-q" style="font-size:1.15rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m2-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m2-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m2-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m2-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"The core difference between traditional programming and ML is:",a:"Traditional programming uses human-written rules; ML discovers rules from data",opts:["Traditional programming uses human-written rules; ML discovers rules from data","ML is faster","Traditional programming uses data; ML uses rules","No meaningful difference"]},
+    {q:"In supervised learning, the algorithm requires:",a:"Labeled data with correct answers provided",opts:["Labeled data with correct answers provided","A human supervising the computer","Unlabeled data","A reward function"]},
+    {q:"Amazon's hiring AI penalized women because:",a:"It learned from 10 years of male-dominated hiring data",opts:["Someone programmed it to discriminate","It learned from 10 years of male-dominated hiring data","Women submitted fewer applications","A bug in the code"]},
+    {q:"Overfitting occurs when a model:",a:"Memorizes training data but fails on new data",opts:["Memorizes training data but fails on new data","Is too simple to learn patterns","Performs equally well on all data","Takes too long to train"]},
+    {q:"A neural network with many hidden layers is called:",a:"Deep learning",opts:["Wide learning","Deep learning","Shallow learning","Broad learning"]},
+    {q:"Reinforcement learning is best described as:",a:"Learning by trial and error with rewards and penalties",opts:["Learning from labeled examples","Learning by trial and error with rewards and penalties","Finding clusters in unlabeled data","Copying human behavior"]},
+    {q:"The test set is used to:",a:"Evaluate performance on data never seen during training",opts:["Train the model","Evaluate performance on data never seen during training","Fix bugs","Store predictions"]},
+    {q:"'Garbage in, garbage out' means:",a:"A model is only as good as its training data",opts:["AI produces waste","A model is only as good as its training data","Bad models should be discarded","AI can't process bad data"]},
+    {q:"Customer segmentation without predefined categories uses:",a:"Unsupervised learning",opts:["Supervised learning","Unsupervised learning","Reinforcement learning","Manual work"]},
+    {q:"Hidden layers in a neural network:",a:"Transform data by extracting increasingly abstract features",opts:["Hide data from users","Transform data by extracting increasingly abstract features","Store memory","Connect to the internet"]},
+    {q:"Bias in ML most commonly originates from:",a:"Training data that doesn't represent the full population",opts:["Algorithms programmed to discriminate","Training data that doesn't represent the full population","Using too much data","Networks being too complex"]},
+    {q:"A model performing poorly on ALL data is:",a:"Underfitting",opts:["Overfitting","Underfitting","Well-calibrated","Impossible"]},
+    {q:"Data drift refers to:",a:"Real-world data changing over time after deployment",opts:["Data being lost","Real-world data changing over time after deployment","The model forgetting training","Random errors"]},
+    {q:"Which stage is LEAST likely to introduce bias?",a:"None — bias can enter at every stage",opts:["Collection","Cleaning","Training","None — bias can enter at every stage"]},
+    {q:"The factory assembly line analogy describes:",a:"How data passes through multiple layers, each refining the output",opts:["How data is manufactured","How data passes through multiple layers, each refining the output","How AI replaces workers","How robots are built"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned!':score>=10?'👍 Good effort! Review and retry.':'📖 Keep studying!';document.getElementById('m2-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];
+    document.getElementById('m2-q').textContent=(idx+1)+'. '+q.q;
+    document.getElementById('m2-fb').textContent='';
+    document.getElementById('m2-pr').textContent='Question '+(idx+1)+' of '+Qs.length;
+    document.getElementById('m2-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m2-btns');btns.innerHTML='';
+    var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m2-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m2-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m2-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module01/index.html">Module 01 — What Is AI?</a></em> | <em>Next: <a href="../module03/index.html">Module 03 — LLMs and Generative AI</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module01/index.html" class="pagination-link" aria-label="What Is Artificial Intelligence?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">What Is Artificial Intelligence?</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module03/index.html" class="pagination-link" aria-label="LLMs and Generative AI">
+        <span class="nav-page-text">LLMs and Generative AI</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

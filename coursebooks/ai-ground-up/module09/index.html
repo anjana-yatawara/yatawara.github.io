@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>AI Infrastructure — Under the Hood – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../module10/index.html" rel="next">
+<link href="../module08/index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="AI Infrastructure — Under the Hood – AI from the Ground Up">
+<meta property="og:description" content="Module 9 · Cloud, Local, RAG, Fine-Tuning, Open Source">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module09/index.html">PART IV: DEPTH</a></li><li class="breadcrumb-item"><a href="../module09/index.html">AI Infrastructure — Under the Hood</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../self-assessment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Self-Assessment</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART I: FOUNDATIONS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module01/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What Is Artificial Intelligence?</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module02/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How Machine Learning Works</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module03/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LLMs and Generative AI</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART II: COMMUNICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module04/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Art and Science of Prompting</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART III: APPLICATION</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module05/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Research and Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module06/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI for Everyday Productivity</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module07/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multimodal AI — Creating Beyond Text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module08/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Agents and Automation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART IV: DEPTH</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module09/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">AI Infrastructure — Under the Hood</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module10/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Ethics, Bias, and Responsible Use</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module11/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Across Disciplines</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">PART V: FUTURE</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module12/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI and Your Career</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module13/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">The Future of AI and Staying Current</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../module14/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capstone Project</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Labs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../labs/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Labs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Specialty Tracks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/educators.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Educators</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/business.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Business Professionals</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../specialty-tracks/builders.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Specialty Track: Technical Builders</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendix</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/prompt-library.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Prompt Library</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/tool-directory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Tool Directory</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/framework-cards.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Framework Quick-Reference Cards</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/policy-templates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AI Policy Templates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/resources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Resources and Further Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/case-studies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Case Studies Index</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/citations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citations and References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-0.002-experiment" id="toc-the-0.002-experiment" class="nav-link active" data-scroll-target="#the-0.002-experiment">The $0.002 Experiment</a></li>
+  <li><a href="#cloud-vs-local-where-ai-runs-and-where-your-data-goes" id="toc-cloud-vs-local-where-ai-runs-and-where-your-data-goes" class="nav-link" data-scroll-target="#cloud-vs-local-where-ai-runs-and-where-your-data-goes">Cloud vs Local: Where AI Runs (and Where Your Data Goes)</a>
+  <ul class="collapse">
+  <li><a href="#cloud-ai-apis-and-chat-platforms" id="toc-cloud-ai-apis-and-chat-platforms" class="nav-link" data-scroll-target="#cloud-ai-apis-and-chat-platforms">Cloud AI (APIs and chat platforms)</a></li>
+  <li><a href="#local-ai-on-your-own-hardware" id="toc-local-ai-on-your-own-hardware" class="nav-link" data-scroll-target="#local-ai-on-your-own-hardware">Local AI (on your own hardware)</a></li>
+  <li><a href="#hybrid-the-pattern-organizations-actually-use" id="toc-hybrid-the-pattern-organizations-actually-use" class="nav-link" data-scroll-target="#hybrid-the-pattern-organizations-actually-use">Hybrid: the pattern organizations actually use</a></li>
+  <li><a href="#which-infrastructure-for-your-situation" id="toc-which-infrastructure-for-your-situation" class="nav-link" data-scroll-target="#which-infrastructure-for-your-situation">Which infrastructure for YOUR situation?</a></li>
+  </ul></li>
+  <li><a href="#the-real-costs-a-2026-comparison" id="toc-the-real-costs-a-2026-comparison" class="nav-link" data-scroll-target="#the-real-costs-a-2026-comparison">The Real Costs: A 2026 Comparison</a></li>
+  <li><a href="#small-language-models-why-smaller-can-be-better" id="toc-small-language-models-why-smaller-can-be-better" class="nav-link" data-scroll-target="#small-language-models-why-smaller-can-be-better">Small Language Models: Why Smaller Can Be Better</a>
+  <ul class="collapse">
+  <li><a href="#the-slms-worth-knowing-in-2026" id="toc-the-slms-worth-knowing-in-2026" class="nav-link" data-scroll-target="#the-slms-worth-knowing-in-2026">The SLMs worth knowing in 2026</a></li>
+  <li><a href="#vram-rule-of-thumb-q4_k_m-quantization" id="toc-vram-rule-of-thumb-q4_k_m-quantization" class="nav-link" data-scroll-target="#vram-rule-of-thumb-q4_k_m-quantization">VRAM rule of thumb (Q4_K_M quantization)</a></li>
+  <li><a href="#when-slms-beat-big-models" id="toc-when-slms-beat-big-models" class="nav-link" data-scroll-target="#when-slms-beat-big-models">When SLMs beat big models</a></li>
+  <li><a href="#when-you-still-want-the-frontier" id="toc-when-you-still-want-the-frontier" class="nav-link" data-scroll-target="#when-you-still-want-the-frontier">When you still want the frontier</a></li>
+  </ul></li>
+  <li><a href="#retrieval-augmented-generation-rag" id="toc-retrieval-augmented-generation-rag" class="nav-link" data-scroll-target="#retrieval-augmented-generation-rag">Retrieval-Augmented Generation (RAG)</a>
+  <ul class="collapse">
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#the-solution" id="toc-the-solution" class="nav-link" data-scroll-target="#the-solution">The solution</a></li>
+  <li><a href="#rag-in-the-slm-rag-experiment" id="toc-rag-in-the-slm-rag-experiment" class="nav-link" data-scroll-target="#rag-in-the-slm-rag-experiment">RAG in the SLM-RAG experiment</a></li>
+  <li><a href="#what-actually-makes-rag-work-in-2026" id="toc-what-actually-makes-rag-work-in-2026" class="nav-link" data-scroll-target="#what-actually-makes-rag-work-in-2026">What actually makes RAG work in 2026</a></li>
+  <li><a href="#graphrag-when-vector-search-isnt-enough" id="toc-graphrag-when-vector-search-isnt-enough" class="nav-link" data-scroll-target="#graphrag-when-vector-search-isnt-enough">GraphRAG: when vector search isn’t enough</a></li>
+  <li><a href="#long-context-windows-does-rag-still-matter" id="toc-long-context-windows-does-rag-still-matter" class="nav-link" data-scroll-target="#long-context-windows-does-rag-still-matter">Long context windows: does RAG still matter?</a></li>
+  </ul></li>
+  <li><a href="#fine-tuning-teaching-the-model-your-voice" id="toc-fine-tuning-teaching-the-model-your-voice" class="nav-link" data-scroll-target="#fine-tuning-teaching-the-model-your-voice">Fine-Tuning: Teaching the Model Your Voice</a>
+  <ul class="collapse">
+  <li><a href="#prompt-vs.-rag-vs.-fine-tune-when-each-wins" id="toc-prompt-vs.-rag-vs.-fine-tune-when-each-wins" class="nav-link" data-scroll-target="#prompt-vs.-rag-vs.-fine-tune-when-each-wins">Prompt vs.&nbsp;RAG vs.&nbsp;fine-tune — when each wins</a></li>
+  <li><a href="#qlora-why-fine-tuning-is-now-cheap" id="toc-qlora-why-fine-tuning-is-now-cheap" class="nav-link" data-scroll-target="#qlora-why-fine-tuning-is-now-cheap">QLoRA: why fine-tuning is now cheap</a></li>
+  </ul></li>
+  <li><a href="#the-open-source-ai-ecosystem" id="toc-the-open-source-ai-ecosystem" class="nav-link" data-scroll-target="#the-open-source-ai-ecosystem">The Open-Source AI Ecosystem</a>
+  <ul class="collapse">
+  <li><a href="#hugging-face-the-github-of-ai" id="toc-hugging-face-the-github-of-ai" class="nav-link" data-scroll-target="#hugging-face-the-github-of-ai">Hugging Face — the GitHub of AI</a></li>
+  <li><a href="#ollama-run-models-locally-with-one-command" id="toc-ollama-run-models-locally-with-one-command" class="nav-link" data-scroll-target="#ollama-run-models-locally-with-one-command">Ollama — run models locally with one command</a></li>
+  <li><a href="#lm-studio-jan-gui-alternatives" id="toc-lm-studio-jan-gui-alternatives" class="nav-link" data-scroll-target="#lm-studio-jan-gui-alternatives">LM Studio / Jan — GUI alternatives</a></li>
+  <li><a href="#langchain-llamaindex-build-real-applications" id="toc-langchain-llamaindex-build-real-applications" class="nav-link" data-scroll-target="#langchain-llamaindex-build-real-applications">LangChain / LlamaIndex — build real applications</a></li>
+  </ul></li>
+  <li><a href="#the-infrastructure-decision-framework" id="toc-the-infrastructure-decision-framework" class="nav-link" data-scroll-target="#the-infrastructure-decision-framework">The Infrastructure Decision Framework</a></li>
+  <li><a href="#guided-practices" id="toc-guided-practices" class="nav-link" data-scroll-target="#guided-practices">Guided Practices</a></li>
+  <li><a href="#module-9-summary" id="toc-module-9-summary" class="nav-link" data-scroll-target="#module-9-summary">Module 9 Summary</a></li>
+  <li><a href="#lab-9-the-rag-experiment" id="toc-lab-9-the-rag-experiment" class="nav-link" data-scroll-target="#lab-9-the-rag-experiment">🔬 Lab 9: The RAG Experiment</a></li>
+  <li><a href="#module-9-quiz" id="toc-module-9-quiz" class="nav-link" data-scroll-target="#module-9-quiz">🎮 Module 9 Quiz</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../module09/index.html">PART IV: DEPTH</a></li><li class="breadcrumb-item"><a href="../module09/index.html">AI Infrastructure — Under the Hood</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">AI Infrastructure — Under the Hood</h1>
+<p class="subtitle lead">Module 9 · Cloud, Local, RAG, Fine-Tuning, Open Source</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><em>Content current as of April 2026. Model names and prices change every few months; the infrastructure principles — where your data goes, what closes the knowledge gap, when to prompt vs.&nbsp;retrieve vs.&nbsp;fine-tune — are what’s durable.</em></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Builds on:</strong> Module 8 (custom GPTs and agents)</p>
+<p>After completing this module, you will be able to:</p>
+<ol type="1">
+<li>Explain the tradeoffs between cloud, local, and hybrid AI deployment, including what data crosses which boundary</li>
+<li>Describe what small language models (SLMs) are, why 4-bit quantization matters, and when a 7B model is enough</li>
+<li>Explain RAG (Retrieval-Augmented Generation) as the single most important applied-AI technique in 2026</li>
+<li>Decide — on evidence, not vibes — when to prompt, when to RAG, when to fine-tune, and when to do nothing</li>
+<li>Navigate the open-source ecosystem (Hugging Face, Ollama, LangChain/LlamaIndex) without drowning in it</li>
+<li>Apply a decision framework that scales from a nonprofit with 3 users to a hospital with 3,000</li>
+</ol>
+</div>
+</div>
+<section id="the-0.002-experiment" class="level2">
+<h2 class="anchored" data-anchor-id="the-0.002-experiment">The $0.002 Experiment</h2>
+<p>In 2025, a research team at a public university asked a simple question: <em>could a small, cheap AI running on a single campus GPU match the accuracy of GPT-4?</em></p>
+<p>The answer surprised even the researchers.</p>
+<p>They took two small language models — <strong>Mistral-7B</strong> and <strong>DeepSeek-7B</strong>, each with 7 billion parameters (compare GPT-4’s estimated 1.8 trillion) — fine-tuned them on university course materials using a technique called <strong>QLoRA</strong>, and paired them with a local vector database that could retrieve relevant textbook passages on demand. The system is called <strong>SLM-RAG</strong> (Small Language Model with Retrieval-Augmented Generation).</p>
+<p>Across 186 graded prompts from two undergraduate statistics courses:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">Median Score (0–5)</th>
+<th style="text-align: center;">Mean Latency</th>
+<th style="text-align: center;">Cost per 1K Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>SLM-RAG (Mistral-7B)</strong></td>
+<td style="text-align: center;">4.3</td>
+<td style="text-align: center;">6.8 seconds</td>
+<td style="text-align: center;"><strong>$0.002</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>SLM-RAG (DeepSeek-7B)</strong></td>
+<td style="text-align: center;">4.2</td>
+<td style="text-align: center;">7.1 seconds</td>
+<td style="text-align: center;"><strong>$0.002</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>GPT-4</strong></td>
+<td style="text-align: center;">4.4</td>
+<td style="text-align: center;">12.4 seconds</td>
+<td style="text-align: center;"><strong>$0.025</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The difference in accuracy was not statistically significant (<em>p</em> = 0.41). The SLM-RAG system <strong>matched GPT-4</strong> while cutting cost by <strong>92%</strong> and latency by <strong>45%</strong>. All traffic stayed on a single NVIDIA A6000 GPU on campus. No student data ever left the building.</p>
+<p>This experiment proved something that the industry’s marketing mostly obscures: <strong>for domain-specific work where you can provide relevant context, you do not need a frontier model.</strong> A small, well-configured model running on your own hardware can match the giants — at a cost and privacy profile that changes what’s possible for schools, clinics, and small organizations (Yatawara et al., 2025, <em>Campus-Hosted Small Language Models with Retrieval-Augmented Generation</em>, <em>AI</em> Journal, MDPI).</p>
+<p>This module teaches you the infrastructure landscape as it actually stands in April 2026 — what runs where, what costs what, and how to make the right choice for <em>your</em> situation.</p>
+<hr>
+</section>
+<section id="cloud-vs-local-where-ai-runs-and-where-your-data-goes" class="level2">
+<h2 class="anchored" data-anchor-id="cloud-vs-local-where-ai-runs-and-where-your-data-goes">Cloud vs Local: Where AI Runs (and Where Your Data Goes)</h2>
+<p>Every AI tool you use runs on one of two kinds of infrastructure. The distinction matters far more than most people realize, because <strong>where the computation happens determines where your data goes.</strong></p>
+<section id="cloud-ai-apis-and-chat-platforms" class="level3">
+<h3 class="anchored" data-anchor-id="cloud-ai-apis-and-chat-platforms">Cloud AI (APIs and chat platforms)</h3>
+<p>When you use ChatGPT, Claude, Gemini, or Perplexity, your prompt is sent to <strong>remote servers</strong> owned by the AI company. The model runs there, and the response comes back. Most people never think about this.</p>
+<p><strong>Advantages.</strong> No hardware. Always the newest model. Trivial to use.</p>
+<p><strong>Disadvantages.</strong> Your data travels to — and is at least briefly processed on — someone else’s servers. Ongoing subscription or per-token costs. You depend on the provider’s pricing, policies, and continued existence. No internet, no AI.</p>
+</section>
+<section id="local-ai-on-your-own-hardware" class="level3">
+<h3 class="anchored" data-anchor-id="local-ai-on-your-own-hardware">Local AI (on your own hardware)</h3>
+<p>With tools like <strong>Ollama</strong> or <strong>LM Studio</strong>, you download and run AI models <strong>on your own machine</strong>. The weights live on your SSD, the computation happens on your GPU or CPU, and your data never leaves the box.</p>
+<p><strong>Advantages.</strong> Complete privacy. Zero marginal cost after hardware. Works offline. No rate limits.</p>
+<p><strong>Disadvantages.</strong> Hardware required — though less than you’d think (see below). Local models are usually a half-step behind the frontier on pure reasoning benchmarks. You handle updates. Initial setup is a Saturday project.</p>
+</section>
+<section id="hybrid-the-pattern-organizations-actually-use" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-the-pattern-organizations-actually-use">Hybrid: the pattern organizations actually use</h3>
+<p>Almost every serious organization ends up with a hybrid stack:</p>
+<ul>
+<li><strong>Cloud</strong> for general-purpose, low-sensitivity work — drafting, brainstorming, summarizing public documents</li>
+<li><strong>Local or on-premises</strong> for anything touching regulated data — student records (FERPA), patient data (HIPAA), client files, proprietary IP, financial detail</li>
+</ul>
+<p>The SLM-RAG experiment <em>is</em> this philosophy: when student data matters, <strong>bring the AI to the data</strong> instead of sending the data to the AI.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Common Misconceptions About AI Infrastructure
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>“Local AI is always worse than cloud AI.”</strong> For domain-specific work with RAG, a 7B local model matched GPT-4 at <em>p</em> = 0.41. Size isn’t everything. Context is.</li>
+<li><strong>“Cloud AI is private enough.”</strong> Free tiers may use your conversations for training. Enterprise tiers contractually don’t, but data still transits external servers. For HIPAA/FERPA, local is often the only genuinely compliant option.</li>
+<li><strong>“You need a $5,000 GPU to run local AI.”</strong> Phi-4-mini (3.8B), Gemma 3 4B, and Llama 3.2 3B all run well on an 8 GB laptop. An M-series MacBook runs 8B models at 40+ tokens/second. The entry bar is low.</li>
+<li><strong>“Fine-tuning is always worth it.”</strong> For most tasks, RAG is cheaper, faster, and good enough. Fine-tune only when you need the model to adopt a <em>behavior pattern</em>, not reference specific <em>content</em>.</li>
+<li><strong>“Open-source means second-tier.”</strong> Llama 4, DeepSeek R1/V3, Qwen 3, and GLM-4.7 post competitive numbers against proprietary frontier models on major benchmarks as of Q1 2026. Several are released under permissive licenses (MIT, Apache 2.0). The open-source stack is world-class.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="which-infrastructure-for-your-situation" class="level3">
+<h3 class="anchored" data-anchor-id="which-infrastructure-for-your-situation">Which infrastructure for YOUR situation?</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Healthcare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Education</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Small Business</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Government</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><strong>Recommended.</strong> Hybrid. HIPAA-compliant cloud for administrative and educational content; <strong>local or on-premises for anything touching PHI</strong>. RAG over clinical guidelines for decision support. Ambient AI scribes (Abridge, Nuance DAX Copilot, Suki, Freed) run through vendor BAAs and are now common — a recent JAMA multi-site study reported they cut clinician EHR time by ~13 minutes per day and documentation time by ~16 minutes.</p>
+<p><strong>Key constraint.</strong> HIPAA is non-negotiable, and a Business Associate Agreement (BAA) is the minimum bar for any vendor. Ambient scribes also raise a second-order question: if the AI documents more diagnoses, billing goes up — make sure the clinical motivation, not the coding motivation, is driving adoption.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><strong>Recommended.</strong> Cloud AI (enterprise tiers with FERPA language in the contract) for teaching support and content creation. Institutional or local hosting for anything involving student records. Custom GPTs (ChatGPT Edu) or Claude Projects for student-facing tutors that stay inside the course corpus.</p>
+<p><strong>Key constraint.</strong> FERPA governs student data — and free-tier cloud tools do not satisfy it. CSU’s ChatGPT Edu deployment is the template most public universities are converging on.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><strong>Recommended.</strong> Start with free cloud tiers. Upgrade to paid ($20/user) when you hit message limits. Move to Team plans at ~5–20 users. Consider local only when (a) you handle sensitive client data or (b) your token bill exceeds the amortized cost of a $2,000 GPU.</p>
+<p><strong>Key constraint.</strong> Budget — but don’t over-optimize prematurely. The first $20/month buys 95% of the value. The hard cost decision comes at the $200–$2,000/month level.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p><strong>Recommended.</strong> On-premises or government-cloud (FedRAMP High / IL-5) for any data involving citizens. Local RAG over policy documents and procedures. Avoid generic SaaS chatbots for anything beyond public-facing FAQ.</p>
+<p><strong>Key constraint.</strong> Data sovereignty, public accountability, and — as the COMPAS case in Module 10 showed — fairness testing before any deployment that affects a person’s rights, liberty, or benefits.</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="the-real-costs-a-2026-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="the-real-costs-a-2026-comparison">The Real Costs: A 2026 Comparison</h2>
+<p>What does AI actually cost to run? Here is the landscape as of April 2026, with prices verified against provider pricing pages this month:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">Typical cost</th>
+<th style="text-align: left;">Best for</th>
+<th style="text-align: left;">Real trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Free tiers</strong> (ChatGPT, Claude, Gemini, Grok)</td>
+<td style="text-align: left;">$0</td>
+<td style="text-align: left;">Getting started, light personal use</td>
+<td style="text-align: left;">Daily message caps; free-tier data may be used to train</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Paid individual</strong> (ChatGPT Plus, Claude Pro)</td>
+<td style="text-align: left;">~$20/user/mo</td>
+<td style="text-align: left;">Individual power users</td>
+<td style="text-align: left;">Per-user cost compounds fast for teams</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Team plans</strong> (ChatGPT Team, Claude Team)</td>
+<td style="text-align: left;">$25–$30/user/mo</td>
+<td style="text-align: left;">Small teams (5–20)</td>
+<td style="text-align: left;">Still per-seat; data policies vary</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>API access — budget tier</strong> (GPT-5.4 Nano, Gemini 3 Flash, Haiku 4.5, Grok 4.1)</td>
+<td style="text-align: left;">~$0.10–$1 per M input tokens</td>
+<td style="text-align: left;">Developers, high-volume automation</td>
+<td style="text-align: left;">Quality gap vs.&nbsp;flagship on hard reasoning</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>API — flagship</strong> (GPT-5.4, Gemini 3.1 Pro, Claude Opus 4.7, Grok 4)</td>
+<td style="text-align: left;">$2–$5 per M input, $12–$25 per M output</td>
+<td style="text-align: left;">Complex reasoning, agents, long context</td>
+<td style="text-align: left;">Bills can run thousands a month at scale</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Local model</strong> (Ollama + open-source)</td>
+<td style="text-align: left;">$0 after hardware (~$1–3K)</td>
+<td style="text-align: left;">Privacy-critical, heavy steady load</td>
+<td style="text-align: left;">Setup effort; slightly behind on reasoning benchmarks</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Enterprise</strong> (Azure OpenAI, AWS Bedrock, Vertex AI)</td>
+<td style="text-align: left;">$1,000–$50,000+/mo</td>
+<td style="text-align: left;">Regulated, large-scale deployments</td>
+<td style="text-align: left;">Complex contracts; long onboarding</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Practical levers that most teams miss.</strong> The list prices above are a starting point. Two mechanisms can cut real API spend by 80–95%:</p>
+<ul>
+<li><strong>Prompt caching.</strong> Repeated context (system prompts, long documents, a whole codebase) is cached and billed at ~10% of the input rate on cache hits. For RAG and agent workloads, this is the single biggest cost lever.</li>
+<li><strong>Batch processing.</strong> Asynchronous batch APIs ship results within 24 hours at a ~50% discount across providers. If your task can wait, you pay half.</li>
+</ul>
+<p><strong>The SLM-RAG sweet spot.</strong> For a university department or small clinic handling ~200 queries/day on domain-specific content, a $2,000 GPU running a local model with RAG costs roughly $50–$80/month (electricity plus amortized hardware over 5 years) vs $500–$1,500/month for equivalent flagship API usage. Break-even sits at 3–4 months. That math is what made the original SLM-RAG experiment viable — and what makes it replicable by almost any public institution.</p>
+<hr>
+</section>
+<section id="small-language-models-why-smaller-can-be-better" class="level2">
+<h2 class="anchored" data-anchor-id="small-language-models-why-smaller-can-be-better">Small Language Models: Why Smaller Can Be Better</h2>
+<p>The AI industry’s loudest marketing message is “bigger is better.” The numbers tell a more interesting story. For domain-specific tasks with appropriate context, <strong>small models match or beat their giant counterparts</strong> — and do so at 50× less compute.</p>
+<p>The key technique is <strong>quantization</strong>. A 7B parameter model at full 16-bit precision needs ~14 GB of VRAM. Quantized to <strong>4 bits (Q4_K_M)</strong> — the current community default — it needs ~5 GB with negligible quality loss. That’s the reason the same model that required an $8,000 server GPU two years ago now runs on a MacBook Air.</p>
+<section id="the-slms-worth-knowing-in-2026" class="level3">
+<h3 class="anchored" data-anchor-id="the-slms-worth-knowing-in-2026">The SLMs worth knowing in 2026</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 23%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Model</th>
+<th style="text-align: center;">Params</th>
+<th style="text-align: left;">Creator</th>
+<th style="text-align: left;">License</th>
+<th style="text-align: left;">What it’s best at</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Phi-4 / Phi-4-mini</strong></td>
+<td style="text-align: center;">14B / 3.8B</td>
+<td style="text-align: left;">Microsoft</td>
+<td style="text-align: left;">MIT</td>
+<td style="text-align: left;">Reasoning and math — Phi-4 beats many 70B models on MATH</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Llama 3.3 / Llama 4 Scout</strong></td>
+<td style="text-align: center;">8B / 17B active (MoE)</td>
+<td style="text-align: left;">Meta</td>
+<td style="text-align: left;">Llama Community License</td>
+<td style="text-align: left;">Best all-around general model; huge fine-tuning ecosystem</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Gemma 3</strong></td>
+<td style="text-align: center;">4B / 12B / 27B</td>
+<td style="text-align: left;">Google</td>
+<td style="text-align: left;">Gemma License</td>
+<td style="text-align: left;">Multimodal, polished prose, excellent instruction-following</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Qwen 3</strong></td>
+<td style="text-align: center;">7B / 14B / 32B / 235B</td>
+<td style="text-align: left;">Alibaba</td>
+<td style="text-align: left;">Apache 2.0</td>
+<td style="text-align: left;">Strong coding and multilingual; Qwen2.5-Coder is the de facto coding SLM</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>DeepSeek-R1 (distilled)</strong></td>
+<td style="text-align: center;">1.5B – 70B</td>
+<td style="text-align: left;">DeepSeek</td>
+<td style="text-align: left;">MIT</td>
+<td style="text-align: left;">Best open reasoning; distilled variants bring chain-of-thought to consumer hardware</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Mistral 7B / Small 3</strong></td>
+<td style="text-align: center;">7B / 22B</td>
+<td style="text-align: left;">Mistral</td>
+<td style="text-align: left;">Apache 2.0</td>
+<td style="text-align: left;">Fast, efficient, strong at structured extraction</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vram-rule-of-thumb-q4_k_m-quantization" class="level3">
+<h3 class="anchored" data-anchor-id="vram-rule-of-thumb-q4_k_m-quantization">VRAM rule of thumb (Q4_K_M quantization)</h3>
+<p>A quick planning heuristic you can actually use:</p>
+<ul>
+<li><strong>~0.6 GB of VRAM per billion parameters</strong> at Q4_K_M</li>
+<li><strong>8 GB VRAM</strong> → comfortable for 7–8B models (Llama 3.3 8B, Qwen 3 8B, Phi-4-mini)</li>
+<li><strong>12 GB VRAM</strong> (RTX 3060/4060) → 12–14B models (Phi-4, Gemma 3 12B, Qwen 3 14B)</li>
+<li><strong>24 GB VRAM</strong> (RTX 4090 / A5000) → 22–32B models (Gemma 3 27B, Qwen 3 32B, Mistral Small)</li>
+<li><strong>48 GB+ VRAM</strong> → 70B models at Q4 (Llama 3.3 70B) or 2×24 GB cards</li>
+<li><strong>Apple Silicon</strong> unified memory counts as VRAM — an M-series Mac with 32 GB runs 12–14B models comfortably</li>
+</ul>
+</section>
+<section id="when-slms-beat-big-models" class="level3">
+<h3 class="anchored" data-anchor-id="when-slms-beat-big-models">When SLMs beat big models</h3>
+<ul>
+<li><strong>Domain-specific Q&amp;A</strong> where RAG can supply the context</li>
+<li><strong>Privacy-sensitive settings</strong> where data cannot leave the building</li>
+<li><strong>High-volume simple tasks</strong> (classification, extraction, routing) where $0.002 vs $0.025 per 1K tokens compounds into real money</li>
+<li><strong>Latency-sensitive apps</strong> — smaller models respond faster</li>
+<li><strong>Edge deployment</strong> — on-device on phones, laptops, or field equipment</li>
+</ul>
+</section>
+<section id="when-you-still-want-the-frontier" class="level3">
+<h3 class="anchored" data-anchor-id="when-you-still-want-the-frontier">When you still want the frontier</h3>
+<ul>
+<li><strong>Multi-step agentic reasoning</strong> where the model must plan, act, check, and revise</li>
+<li><strong>Broad world knowledge</strong> where no RAG corpus is available</li>
+<li><strong>Novel problems</strong> that require the strongest generalist available</li>
+<li><strong>Tight production deadlines</strong> where “mostly works” beats “works once we’ve tuned it”</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="retrieval-augmented-generation-rag" class="level2">
+<h2 class="anchored" data-anchor-id="retrieval-augmented-generation-rag">Retrieval-Augmented Generation (RAG)</h2>
+<p>RAG is the single most important applied-AI technique to understand in 2026. It solves the one problem every LLM has: <strong>it doesn’t know your data.</strong></p>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">The problem</h3>
+<p>A trained LLM has read billions of web pages, books, and articles. It has not read your organization’s policy manual, your course textbook, this quarter’s sales reports, or the patient intake forms for a specific clinic. Ask it a question about any of those and it does one of two things: (1) it admits ignorance, or (2) it hallucinates a fluent-sounding answer based on patterns from similar-looking documents it <em>did</em> read. Option 2 is the dangerous one — and the one behind most of the LLM failures in Module 1.</p>
+</section>
+<section id="the-solution" class="level3">
+<h3 class="anchored" data-anchor-id="the-solution">The solution</h3>
+<p>RAG inserts a <strong>retrieval step</strong> between the user’s question and the model’s answer:</p>
+<pre><code>┌────────────────────────────────────────────────────────┐
+│ 1. CHUNK  — split your documents into small passages   │
+│            (typically 300–1,000 characters each)       │
+├────────────────────────────────────────────────────────┤
+│ 2. EMBED  — convert each chunk into a vector           │
+│            (a list of numbers encoding meaning)        │
+├────────────────────────────────────────────────────────┤
+│ 3. STORE  — save the vectors in a vector DB            │
+│            (Qdrant, Pinecone, ChromaDB, FAISS, pgvector) │
+├────────────────────────────────────────────────────────┤
+│ 4. RETRIEVE — when a question comes in, find the top-K │
+│              most semantically similar chunks          │
+├────────────────────────────────────────────────────────┤
+│ 5. AUGMENT — inject those chunks into the prompt:      │
+│              "Based on these passages from our manual…"│
+├────────────────────────────────────────────────────────┤
+│ 6. GENERATE — the LLM answers using YOUR text as       │
+│              context, dramatically reducing hallucination │
+└────────────────────────────────────────────────────────┘</code></pre>
+<p><strong>Analogy.</strong> RAG is like handing an expert consultant your company’s manual before the meeting. They’re still the expert — but now their advice is grounded in <em>your</em> specific situation, not the generic one from their training.</p>
+<p><strong>Why this closes the knowledge gap.</strong> Modern LLMs are excellent at <em>reading</em> text and synthesizing it; they’re worse at <em>recalling</em> specific text from their training. RAG converts a recall problem into a reading problem — which is the one the model is good at. That is why a 7B model plus relevant context competes with a 1.8T model without it: <strong>small model + right context ≈ big model without context.</strong></p>
+</section>
+<section id="rag-in-the-slm-rag-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="rag-in-the-slm-rag-experiment">RAG in the SLM-RAG experiment</h3>
+<p>In SLM-RAG, course PDFs were chunked into ~500-character passages, embedded with the BAAI/bge-small-en-v1.5 embedding model, and stored in a local <strong>Qdrant</strong> vector database. When a student asked a question, the top-4 most similar passages were retrieved and prepended to the prompt with explicit “Based on these passages…” instructions. That single architectural choice — not a bigger model, not more training data — is what closed the gap with GPT-4.</p>
+</section>
+<section id="what-actually-makes-rag-work-in-2026" class="level3">
+<h3 class="anchored" data-anchor-id="what-actually-makes-rag-work-in-2026">What actually makes RAG work in 2026</h3>
+<p>The six-step pipeline above is the <em>shape</em> of RAG. The <em>engineering</em> — what separates a demo that looks good on three questions from a system that holds up in production — happens in three places. These are the decisions that determine whether your RAG system is actually useful.</p>
+<p><strong>1. The embedding model is the single most important choice.</strong> Vector search retrieves whatever the embedder says is “similar.” If the embedder doesn’t capture domain-specific meaning, nothing downstream saves you. Current defaults:</p>
+<ul>
+<li><strong><code>text-embedding-3-small</code></strong> (OpenAI) — 1536 dims, cheap, strong general baseline, configurable dimensions</li>
+<li><strong><code>BAAI/bge-small-en-v1.5</code></strong> — 384 dims, free, open-source, excellent for English. What SLM-RAG used.</li>
+<li><strong><code>BAAI/bge-large-en-v1.5</code></strong> / <strong><code>BAAI/bge-m3</code></strong> — larger, better, still free; bge-m3 supports 100+ languages</li>
+<li><strong><code>jina-embeddings-v3</code></strong> — strong multilingual performance</li>
+<li><strong>Domain-adapted</strong> — if you have labeled query/document pairs from real use, fine-tuning a bi-encoder on your corpus beats any off-the-shelf model for your task</li>
+</ul>
+<p>For any RAG system that matters, evaluate at least two embedders on a held-out set of ~50 query–passage pairs from your domain before committing.</p>
+<p><strong>2. Hybrid retrieval beats dense alone.</strong> Pure vector search has a well-documented failure mode: it retrieves things that are <em>semantically</em> close but miss specific terms. Ask about “phi regulatory compliance” and dense search may return passages about HIPAA generally while skipping the one document that literally says “phi disclosure requirements.” The production-grade pattern:</p>
+<pre><code>Query
+  ├──→ Sparse (BM25): top-50 by keyword/lexical match
+  ├──→ Dense (embeddings): top-50 by semantic similarity
+  │
+  └──→ Merge with Reciprocal Rank Fusion (RRF)
+         │
+         └──→ Rerank top-50 with cross-encoder → top-5 → LLM</code></pre>
+<p><strong>BM25</strong> is the 1990s keyword-search algorithm. It finds exact term matches, handles entity names, product codes, and technical jargon that dense embeddings often fuzz over. <strong>RRF</strong> is a one-line fusion algorithm: each document gets a score of <code>sum(1 / (k + rank))</code> across the two lists, with <code>k</code> typically 60. Documents that rank well in <em>both</em> lists win. LangChain’s <code>EnsembleRetriever</code>, LlamaIndex’s hybrid retriever, and every serious vector DB (Qdrant, Weaviate, Milvus, pgvector, Elasticsearch) support hybrid out of the box.</p>
+<p><strong>3. Reranking is where precision comes from.</strong> The retriever’s job is <em>recall</em> — casting a wide net. The reranker’s job is <em>precision</em> — carefully reordering the net’s contents. A cross-encoder reranker (Cohere Rerank, <code>BAAI/bge-reranker-v2</code>, Jina Reranker) takes the query and each candidate together as a concatenated input and produces a relevance score. Unlike bi-encoder embeddings, it sees the <em>interaction</em> between query and document tokens, which is substantially more accurate. Cost: 50–200 ms to rerank 50 candidates. Payoff: typically 15–30% improvement in top-5 precision on real RAG benchmarks.</p>
+<p><strong>Standard production pattern:</strong> hybrid retrieve top-50 → rerank with cross-encoder → pass top-5 to the LLM. If your RAG system doesn’t follow this pattern, it’s almost certainly leaving quality on the table.</p>
+</section>
+<section id="graphrag-when-vector-search-isnt-enough" class="level3">
+<h3 class="anchored" data-anchor-id="graphrag-when-vector-search-isnt-enough">GraphRAG: when vector search isn’t enough</h3>
+<p>Classic RAG retrieves passages based on similarity to the query. That’s excellent for “find me the fact” questions. It fails on “global” questions: <em>“What themes appear across this corpus?”</em>, <em>“Summarize the main arguments in my 200 annual reports,”</em> <em>“Which authors disagree with each other?”</em> No single passage contains the answer — the answer emerges from the <em>structure</em> of the corpus.</p>
+<p><strong>GraphRAG</strong> (Microsoft’s 2024 open-source release) addresses this by pre-building a knowledge graph during ingestion. An LLM extracts entities and relationships from each document, builds a graph, then clusters the graph into hierarchical communities. At query time, the system traverses the graph instead of just retrieving nearest-neighbor chunks. On thematic and summary-level questions, GraphRAG consistently outperforms classic RAG on benchmarks — often substantially. The cost: graph construction is expensive (you run an LLM over the whole corpus once, upfront), and you need a graph database and schema.</p>
+<p><strong>Practical decision rule.</strong> Start with hybrid + rerank. If your users are asking questions like <em>“what are the main findings across these papers”</em> rather than <em>“what does section 4.2 say about X”</em>, GraphRAG is worth the engineering lift. Otherwise, hybrid + rerank covers 95% of real use cases.</p>
+</section>
+<section id="long-context-windows-does-rag-still-matter" class="level3">
+<h3 class="anchored" data-anchor-id="long-context-windows-does-rag-still-matter">Long context windows: does RAG still matter?</h3>
+<p>A real 2025–2026 question. Gemini 2.5 Pro offers 2M tokens of context; Claude Opus 4.7 is at 200K–1M depending on tier; Llama 4 Scout ships with a 10M-token context window. You can fit a whole textbook in the prompt. So why bother with retrieval?</p>
+<p>Three reasons RAG still matters even in the long-context era:</p>
+<ul>
+<li><strong>Cost.</strong> A 500K-token prompt at flagship rates costs $1–3 <em>per query</em>. RAG retrieves the 2,000 tokens that actually matter and bills you for those. Over a million queries that’s the difference between a $2M and a $20K bill.</li>
+<li><strong>Latency.</strong> Processing 500K tokens takes 5–30 seconds depending on model. RAG retrieves in &lt;100 ms and generates the answer in 2–5 seconds.</li>
+<li><strong>“Lost in the middle.”</strong> Well-documented effect: LLMs attend less reliably to information in the middle of long contexts than at the beginning or end. A 200-page PDF dumped into the prompt gets worse retrieval than a surgically selected 4-passage excerpt.</li>
+</ul>
+<p>The pragmatic synthesis: <strong>long context changes the constraint, not the principle.</strong> For large corpora (anything more than a single book), RAG wins on cost, speed, and accuracy. For a single long document the user is actively working with, long context is cleaner. Real systems use both: RAG over the large corpus, long context for the working document.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✅ Test Yourself: RAG Basics
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>What problem does RAG solve? <em>(LLMs don’t know your specific data; RAG retrieves and injects it as context.)</em></li>
+<li>List the 6 steps of the pipeline. <em>(Chunk → Embed → Store → Retrieve → Augment → Generate.)</em></li>
+<li>Why does RAG reduce hallucinations? <em>(The model answers from text that is present in the prompt instead of reconstructing from training memory.)</em></li>
+<li>What’s the difference between retrieval and reranking? <em>(Retrieval = recall, cast a wide net for top-50 candidates; reranking = precision, carefully reorder to put the 5 most relevant at the top using a cross-encoder that sees query–document interactions.)</em></li>
+<li>When is RAG the wrong choice? <em>(When you need a behavior pattern or style — that calls for fine-tuning — or when the task requires no domain grounding at all. For “global” questions over a corpus, consider GraphRAG instead.)</em></li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="fine-tuning-teaching-the-model-your-voice" class="level2">
+<h2 class="anchored" data-anchor-id="fine-tuning-teaching-the-model-your-voice">Fine-Tuning: Teaching the Model Your Voice</h2>
+<p>Where RAG provides context at query time, <strong>fine-tuning</strong> permanently nudges the model’s weights so its default behavior changes.</p>
+<section id="prompt-vs.-rag-vs.-fine-tune-when-each-wins" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-vs.-rag-vs.-fine-tune-when-each-wins">Prompt vs.&nbsp;RAG vs.&nbsp;fine-tune — when each wins</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Best for</th>
+<th style="text-align: left;">Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Prompting</strong></td>
+<td style="text-align: left;">Instructions + examples in the conversation</td>
+<td style="text-align: left;">One-offs, general questions, prototyping, “is this even worth automating?”</td>
+<td style="text-align: left;">Minutes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>RAG</strong></td>
+<td style="text-align: left;">Retrieve YOUR docs, add them as context</td>
+<td style="text-align: left;">Domain-specific Q&amp;A, grounding in proprietary content, reducing hallucinations</td>
+<td style="text-align: left;">Hours to a few days</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Fine-tuning</strong></td>
+<td style="text-align: left;">Permanently adjust model weights on your examples</td>
+<td style="text-align: left;">Adopting a specific style, vocabulary, tone, or output schema</td>
+<td style="text-align: left;">Days; GPU required</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The decision rule:</strong> if the answer is in a document, use RAG. If the <em>way</em> you want the model to answer is what’s special — your house style, a specific rubric, a structured output schema — fine-tune. If you don’t know which, start with RAG. RAG is reversible in an hour; fine-tuning is a weekend you can’t get back.</p>
+</section>
+<section id="qlora-why-fine-tuning-is-now-cheap" class="level3">
+<h3 class="anchored" data-anchor-id="qlora-why-fine-tuning-is-now-cheap">QLoRA: why fine-tuning is now cheap</h3>
+<p>Traditional fine-tuning of a 7B model required multiple server GPUs and hundreds of GB of memory. <strong>QLoRA</strong> (Quantized Low-Rank Adaptation) changed that:</p>
+<ol type="1">
+<li>Load the base model in <strong>4-bit quantized</strong> form (14 GB → ~5 GB for a 7B model)</li>
+<li>Freeze the base weights entirely</li>
+<li>Attach small <strong>LoRA adapters</strong> — tiny trainable matrices that learn the delta between the base behavior and the behavior you want</li>
+<li>Train for a few epochs on your Q&amp;A pairs</li>
+</ol>
+<p>For SLM-RAG, QLoRA fine-tuning of Mistral-7B and DeepSeek-7B ran in hours — not days — on a single A6000. The result was a model that used the course’s vocabulary, followed the course’s problem-solving approach, and referenced concepts in the order the course taught them.</p>
+<hr>
+</section>
+</section>
+<section id="the-open-source-ai-ecosystem" class="level2">
+<h2 class="anchored" data-anchor-id="the-open-source-ai-ecosystem">The Open-Source AI Ecosystem</h2>
+<p>A vibrant ecosystem of free, open-source tools makes all of this accessible to individuals and small organizations.</p>
+<section id="hugging-face-the-github-of-ai" class="level3">
+<h3 class="anchored" data-anchor-id="hugging-face-the-github-of-ai">Hugging Face — the GitHub of AI</h3>
+<p>Hugging Face hosts <strong>hundreds of thousands of models, datasets, and evaluation benchmarks</strong>, almost all freely downloadable. If you need a model for text generation, embeddings, speech, translation, vision, or almost any task, Hugging Face has it. The <code>transformers</code> and <code>datasets</code> libraries are the lingua franca of applied ML.</p>
+</section>
+<section id="ollama-run-models-locally-with-one-command" class="level3">
+<h3 class="anchored" data-anchor-id="ollama-run-models-locally-with-one-command">Ollama — run models locally with one command</h3>
+<p>Ollama makes local inference embarrassingly easy:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install (macOS/Linux/Windows)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://ollama.com/install.sh <span class="kw">|</span> <span class="fu">sh</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull and run a model</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> run llama3.3:8b</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Or try a reasoning model</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">ollama</span> run deepseek-r1:7b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>No cloud. No API keys. No subscription. Your prompts never touch the internet. Ollama also exposes an <strong>OpenAI-compatible API on <code>localhost:11434</code></strong>, which means any app built for OpenAI (or Claude, via proxies) can point at a local model with a one-line config change.</p>
+</section>
+<section id="lm-studio-jan-gui-alternatives" class="level3">
+<h3 class="anchored" data-anchor-id="lm-studio-jan-gui-alternatives">LM Studio / Jan — GUI alternatives</h3>
+<p>If the command line isn’t your thing, <strong>LM Studio</strong> and <strong>Jan.ai</strong> provide polished desktop GUIs for downloading, configuring, and chatting with local models. LM Studio in particular is how most non-technical people first experience local AI.</p>
+</section>
+<section id="langchain-llamaindex-build-real-applications" class="level3">
+<h3 class="anchored" data-anchor-id="langchain-llamaindex-build-real-applications">LangChain / LlamaIndex — build real applications</h3>
+<p>Once you’ve moved past chat, these frameworks are how you connect a model to tools, databases, documents, and workflows. LlamaIndex is specifically optimized for RAG; LangChain is more general. Both support local models, cloud APIs, and most vector databases out of the box. They are the right level of abstraction for building a RAG system, a multi-step agent, or any workflow that chains an LLM with other systems.</p>
+<hr>
+</section>
+</section>
+<section id="the-infrastructure-decision-framework" class="level2">
+<h2 class="anchored" data-anchor-id="the-infrastructure-decision-framework">The Infrastructure Decision Framework</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Choosing the Right Approach
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ask these questions in order, and stop at the first “yes”:</p>
+<ol type="1">
+<li><strong>Is the data sensitive or regulated?</strong> (HIPAA/FERPA/PII/client-confidential?) → Consider local or on-premises.</li>
+<li><strong>Do I need domain-specific accuracy over my own documents?</strong> → Add RAG.</li>
+<li><strong>Do I need the model to adopt a specific voice, style, or output schema?</strong> → Consider fine-tuning.</li>
+<li><strong>Is per-token cost a binding constraint?</strong> → Consider SLMs for the hot path; reserve flagship models for the genuinely hard 5% of requests.</li>
+<li><strong>Do I need cutting-edge capability I can’t get locally?</strong> → Use the best cloud model available — with caching and batching.</li>
+<li><strong>Am I still exploring?</strong> → Start with a free cloud tier. Move to local/custom only once you know what actually works.</li>
+</ol>
+<p>Most people should start with cloud AI, add RAG when they hit the “it doesn’t know our stuff” wall, and only fine-tune when prompting and RAG visibly can’t close the gap.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="guided-practices" class="level2">
+<h2 class="anchored" data-anchor-id="guided-practices">Guided Practices</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 9.1 — Cost Calculator
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You’re advising a small nonprofit that processes 200 document queries per day. Compare the options:</p>
+<ol type="1">
+<li><strong>Option A.</strong> ChatGPT Team at $25/user/month × 3 staff users.</li>
+<li><strong>Option B.</strong> Claude API — estimate 500 input tokens + 200 output tokens per query, Haiku 4.5 at $1/M input, $5/M output.</li>
+<li><strong>Option C.</strong> Local Llama 3.3 8B on a $2,000 desktop (Ollama, electricity only).</li>
+</ol>
+<p>For each: compute monthly cost, identify the main advantage, and identify the main risk. Which do you recommend and why?</p>
+<details>
+<summary>
+<strong>Hints</strong>
+</summary>
+<p><strong>Option A.</strong> 3 × $25 = <strong>$75/month</strong>. Simple, no setup. Risk: staff may paste sensitive data into Team tier without reading the data policy.</p>
+<p><strong>Option B.</strong> 200 queries × 30 days = 6,000 queries/month. Input: 3M tokens × $1/M = $3. Output: 1.2M × $5/M = $6. <strong>≈ $9/month.</strong> Cheaper, but requires a developer to wrap it in a usable interface. Cache-heavy RAG workloads could drop this to pennies.</p>
+<p><strong>Option C.</strong> ≈ $30/month electricity + amortized hardware (~$33/month over 5 years) = <strong>≈ $63/month</strong>. Data stays local. Risk: requires someone competent to set it up and update models quarterly.</p>
+<strong>Recommendation depends on technical capacity.</strong> If the nonprofit has no developer: A. If it has one who can spend a day wrapping the API: B (by far the best cost-per-query). If it handles sensitive client data: C.
+</details>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Guided Practice 9.2 — RAG vs Fine-Tuning Decision
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each scenario, decide whether RAG, fine-tuning, both, or neither is appropriate. Justify in one sentence.</p>
+<ol type="1">
+<li>A hospital wants an AI that answers patient questions using its post-surgery care protocols.</li>
+<li>A marketing agency wants an AI that writes copy in their distinctive brand voice across all clients.</li>
+<li>A student wants help studying for a chemistry exam.</li>
+<li>A law firm wants an AI that can reference their 10,000-page internal policy manual.</li>
+<li>A restaurant wants a chatbot that takes reservations.</li>
+<li>A publisher wants an AI that can both match their house style <em>and</em> cite their own back catalog accurately.</li>
+</ol>
+<details>
+<summary>
+<strong>Answers</strong>
+</summary>
+<ol type="1">
+<li><strong>RAG.</strong> Ground responses in the actual protocols; fine-tuning adds risk and no clear benefit for a medical content lookup.</li>
+<li><strong>Fine-tuning.</strong> Brand voice is a behavior pattern, not a retrievable document — and the pattern must apply to <em>new</em> topics, so RAG alone can’t carry it.</li>
+<li><strong>Neither.</strong> Use a good prompt with SMARTS. A general-purpose model already knows high-school chemistry.</li>
+<li><strong>RAG.</strong> Classic use case. 10K pages vastly exceeds any context window, but vector search handles it in milliseconds.</li>
+<li><strong>Neither.</strong> This is a structured booking workflow, not a language task. Use a proper booking system with an LLM wrapper only if you want one.</li>
+<li><strong>Both.</strong> Fine-tune on past published pieces for voice, then add RAG over the back catalog for accurate citations. This is the only scenario in the list where combining is the right answer.</li>
+</ol>
+</details>
+</div>
+</div>
+<hr>
+</section>
+<section id="module-9-summary" class="level2">
+<h2 class="anchored" data-anchor-id="module-9-summary">Module 9 Summary</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Key Takeaways
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p><strong>Cloud AI</strong> is convenient but sends your data to external servers. <strong>Local AI</strong> keeps everything on your machine but requires hardware and setup. Most real organizations run a hybrid — cloud for general, local for regulated.</p></li>
+<li><p><strong>Small language models</strong> (3B–14B parameters at Q4_K_M quantization) handle the vast majority of production tasks, especially when paired with RAG. SLM-RAG proved it: a 7B local model matched GPT-4 accuracy at 92% lower cost and half the latency.</p></li>
+<li><p><strong>RAG</strong> — retrieve your documents, inject them as context, generate — is the single most effective technique for grounding AI in your data and suppressing hallucinations. If you learn one infrastructure pattern in 2026, make it this one.</p></li>
+<li><p><strong>Fine-tuning</strong> permanently adjusts model weights. QLoRA makes it affordable on a single GPU. Use it when you need the model to adopt a specific <em>behavior pattern</em>, not when you just need it to look things up.</p></li>
+<li><p><strong>Decision order.</strong> Prompting (fast, free) → RAG (domain grounding) → Fine-tuning (behavioral change) → Custom infrastructure (full control). Don’t jump to step 3 when step 2 will do.</p></li>
+<li><p><strong>Ollama</strong> runs models locally with one command. <strong>Hugging Face</strong> hosts hundreds of thousands of free models. <strong>LangChain/LlamaIndex</strong> connects them to your data and workflows. The open-source stack is world-class in 2026.</p></li>
+<li><p><strong>The equity argument.</strong> If only a $200/month subscription buys you good AI, AI’s benefits flow to whoever can afford it. If a single campus GPU matches the frontier for your actual work — every school, every clinic, every small business can participate on its own terms.</p></li>
+</ol>
+</div>
+</div>
+<div class="think-about-it">
+<div class="tai-header">
+💭 Think About It
+</div>
+<div class="tai-body">
+<p>The SLM-RAG experiment wasn’t just a technical achievement — it was a <strong>statement about equity</strong>. If the only way to access good AI is a $200/month cloud subscription routed through someone else’s servers, then AI’s benefits flow to institutions and individuals who can afford it, and the data flows somewhere else. But if a single GPU on a campus server can match a frontier model for domain-specific work, then <strong>every school, every clinic, every small business</strong> can have AI that works for them — on their terms, with their data, at a cost they can sustain. The infrastructure choice isn’t merely technical. It’s political. It determines who gets to participate in the AI revolution and who gets left behind.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="lab-9-the-rag-experiment" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="lab-9-the-rag-experiment">🔬 Lab 9: The RAG Experiment</h2>
+<section id="lab-9-the-rag-experiment-1" class="level4 lab-section">
+<h4 class="anchored" data-anchor-id="lab-9-the-rag-experiment-1">Lab 9: The RAG Experiment</h4>
+<p><strong>Time:</strong> 60 minutes | <strong>Tools needed:</strong> NotebookLM (as a simplified RAG system) + any general chatbot + 3–5 documents from your field</p>
+<p><strong>Purpose.</strong> Experience the difference between grounded and ungrounded AI responses, and see hallucinations appear in real time.</p>
+<p><strong>Part A — Prepare Your Documents (10 min)</strong></p>
+<ol type="1">
+<li>Gather 3–5 documents from your domain (course materials, policy manuals, research papers, technical guides).</li>
+<li>Upload them to NotebookLM. NotebookLM is a simplified RAG system — it retrieves from <em>your</em> documents before generating.</li>
+</ol>
+<p><strong>Part B — Grounded vs Ungrounded Comparison (25 min)</strong></p>
+<ol start="3" type="1">
+<li>Write 5 domain-specific questions that require knowledge from your documents.</li>
+<li>Ask each question to BOTH NotebookLM (grounded in your docs) AND a general chatbot (ChatGPT, Claude, Gemini — ungrounded).</li>
+<li>Rate each pair:</li>
+</ol>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 17%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Question</th>
+<th style="text-align: center;">NotebookLM Accuracy (1–5)</th>
+<th style="text-align: center;">Chatbot Accuracy (1–5)</th>
+<th style="text-align: left;">Which was more useful?</th>
+<th style="text-align: center;">Did the chatbot hallucinate?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Q1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Q2</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">…</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Part C — Boundary Testing (15 min)</strong></p>
+<ol start="6" type="1">
+<li>Ask NotebookLM 2 questions that <strong>cannot</strong> be answered from your documents.</li>
+<li>Does it acknowledge the limitation, or does it confabulate?</li>
+<li>Ask the same questions to the general chatbot. Compare. Note: a good RAG system saying “I don’t know” is a <em>feature</em>, not a failure.</li>
+</ol>
+<p><strong>Part D — Reflection (10 min)</strong></p>
+<ol start="9" type="1">
+<li>Write a short paragraph: what’s the value of grounding AI in your own documents? When would you use NotebookLM vs a general chatbot? How does this connect to SLM-RAG?</li>
+</ol>
+<p><strong>Submit.</strong> Your comparison table, boundary-test results, and reflection.</p>
+</section>
+<hr>
+</section>
+<section id="module-9-quiz" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="module-9-quiz">🎮 Module 9 Quiz</h2>
+<div id="m9-game">
+
+</div>
+<script>
+(function(){
+  var el=document.getElementById('m9-game');
+  el.innerHTML='<div class="game-section"><span class="game-badge">Module 9 Challenge</span><h3 style="color:white;border:none;">AI Infrastructure</h3><p>Get 12 out of 15 to earn the badge!</p><div class="game-container" id="m9-area"><div id="m9-q" style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;min-height:70px;text-align:left;line-height:1.5;"></div><div id="m9-btns" style="display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;"></div><div id="m9-fb" style="font-size:1rem;min-height:30px;margin-bottom:0.5rem;"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;"><div id="m9-sc" style="font-size:1rem;">Score: 0 / 0</div><div id="m9-pr" style="font-size:0.9rem;opacity:0.8;"></div></div></div></div>';
+  var Qs=[
+    {q:"The SLM-RAG experiment showed that a 7B-parameter model:",a:"Matched GPT-4 accuracy (p = 0.41) while cutting cost by 92% and latency by 45%",opts:["Was much worse than GPT-4","Matched GPT-4 accuracy (p = 0.41) while cutting cost by 92% and latency by 45%","Was twice as expensive as GPT-4","Required 8 GPUs to run"]},
+    {q:"RAG stands for:",a:"Retrieval-Augmented Generation",opts:["Random AI Generation","Retrieval-Augmented Generation","Rapid Automated Grounding","Real-time AI Gateway"]},
+    {q:"The core privacy advantage of local AI is:",a:"Your data never leaves your machine — no external server ever sees it",opts:["It's always faster","Your data never leaves your machine — no external server ever sees it","It's always more accurate","It requires less electricity"]},
+    {q:"RAG reduces hallucinations primarily because:",a:"The model answers from text present in the prompt instead of reconstructing it from training memory",opts:["It deletes false information from the model","The model answers from text present in the prompt instead of reconstructing it from training memory","It makes the model smaller","It trains the model on more internet data"]},
+    {q:"QLoRA makes fine-tuning affordable because it:",a:"Loads the base model in 4-bit quantized form and trains only small LoRA adapters on top",opts:["Skips training entirely","Loads the base model in 4-bit quantized form and trains only small LoRA adapters on top","Uses free cloud computing","Only works for tiny models"]},
+    {q:"Ollama lets you:",a:"Run open-source models locally with a single command and exposes an OpenAI-compatible API on localhost",opts:["Access OpenAI's servers faster","Run open-source models locally with a single command and exposes an OpenAI-compatible API on localhost","Build websites","Edit documents"]},
+    {q:"The SLM-RAG system's p-value of 0.41 means:",a:"The accuracy difference between SLM-RAG and GPT-4 was not statistically significant",opts:["SLM-RAG was significantly better","The accuracy difference between SLM-RAG and GPT-4 was not statistically significant","GPT-4 was significantly better","The experiment failed"]},
+    {q:"When should you use RAG rather than fine-tuning?",a:"When you need answers grounded in specific documents without changing the model's underlying behavior",opts:["Always — RAG is strictly better","When you need answers grounded in specific documents without changing the model's underlying behavior","Only in academic research","Never — fine-tuning is always better"]},
+    {q:"Q4_K_M quantization reduces a 7B model's memory footprint from about:",a:"14 GB to about 5 GB, with negligible quality loss",opts:["14 GB to about 10 GB, with large quality loss","14 GB to about 5 GB, with negligible quality loss","7 GB to about 3 GB, and doubles latency","It doesn't reduce memory, it only speeds things up"]},
+    {q:"The equity argument for local AI is:",a:"If only expensive cloud subscriptions deliver frontier capability, AI's benefits flow only to those who can afford them",opts:["Local AI is always free","If only expensive cloud subscriptions deliver frontier capability, AI's benefits flow only to those who can afford them","Everyone should use the same model","Cloud AI is unethical"]},
+    {q:"In the RAG pipeline, 'embedding' means:",a:"Converting text chunks into vectors (lists of numbers) that encode semantic meaning",opts:["Hiding information in images","Converting text chunks into vectors (lists of numbers) that encode semantic meaning","Inserting ads into AI responses","Compressing files for storage"]},
+    {q:"The recommended decision order for AI infrastructure is:",a:"Prompting → RAG → Fine-tuning → Custom infrastructure",opts:["Fine-tuning → RAG → Prompting","Prompting → RAG → Fine-tuning → Custom infrastructure","Always use the biggest cloud model","Build everything from scratch"]},
+    {q:"The SLM-RAG system ran on what hardware?",a:"A single NVIDIA A6000 GPU on campus — all data stayed on premises",opts:["A 100-GPU cloud cluster","A single NVIDIA A6000 GPU on campus — all data stayed on premises","A laptop with no GPU","Google's TPU infrastructure"]},
+    {q:"The two production-cost levers that can reduce API bills by 80–95% are:",a:"Prompt caching (~10% of input rate on cache hits) and batch processing (50% discount)",opts:["Using smaller fonts in prompts","Prompt caching (~10% of input rate on cache hits) and batch processing (50% discount)","Asking for shorter answers","Using GPT-5 Nano exclusively"]},
+    {q:"For most people starting with AI, the best first step is:",a:"Use free cloud tiers; add RAG when domain grounding matters; move local/custom only once you know what actually works",opts:["Buy expensive GPU hardware immediately","Use free cloud tiers; add RAG when domain grounding matters; move local/custom only once you know what actually works","Build a RAG system from scratch on day one","Fine-tune a model before you've used one"]}
+  ];
+  for(var i=Qs.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=Qs[i];Qs[i]=Qs[j];Qs[j]=t;}
+  var idx=0,score=0,answered=false;
+  function show(){
+    if(idx>=Qs.length){var pct=Math.round(100*score/Qs.length);var msg=score>=12?'🏆 Badge Earned! Infrastructure expert!':score>=10?'👍 Almost! Review and retry.':'📖 Re-read the RAG and fine-tuning sections.';document.getElementById('m9-area').innerHTML='<div style="font-size:1.5rem;font-weight:800;margin:1rem 0;">Final Score: '+score+'/'+Qs.length+' ('+pct+'%)</div><div style="font-size:1.2rem;margin:1rem 0;">'+msg+'</div><button onclick="location.reload()" style="padding:10px 24px;background:linear-gradient(90deg,#1E40AF,#0EA5E9);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">Play Again</button>';return;}
+    answered=false;var q=Qs[idx];document.getElementById('m9-q').textContent=(idx+1)+'. '+q.q;document.getElementById('m9-fb').textContent='';document.getElementById('m9-pr').textContent='Question '+(idx+1)+' of '+Qs.length;document.getElementById('m9-sc').textContent='Score: '+score+' / '+idx;
+    var btns=document.getElementById('m9-btns');btns.innerHTML='';var opts=q.opts.slice();for(var i=opts.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=opts[i];opts[i]=opts[j];opts[j]=t;}
+    opts.forEach(function(o){var b=document.createElement('button');b.textContent=o;b.style.cssText='padding:10px 18px;border:2px solid rgba(255,255,255,0.2);border-radius:8px;background:rgba(255,255,255,0.07);color:white;font-size:0.9rem;cursor:pointer;font-weight:500;transition:all 0.2s;min-width:200px;text-align:left;line-height:1.4;';b.onmouseover=function(){if(!answered)this.style.background='rgba(255,255,255,0.18)';};b.onmouseout=function(){if(!answered)this.style.background='rgba(255,255,255,0.07)';};b.onclick=function(){if(answered)return;answered=true;if(o===q.a){score++;this.style.background='#059669';this.style.borderColor='#059669';document.getElementById('m9-fb').innerHTML='✅ Correct!';}else{this.style.background='#DC2626';this.style.borderColor='#DC2626';document.getElementById('m9-fb').innerHTML='❌ Answer: <strong>'+q.a+'</strong>';btns.querySelectorAll('button').forEach(function(bb){if(bb.textContent===q.a){bb.style.background='#059669';bb.style.borderColor='#059669';}});}document.getElementById('m9-sc').textContent='Score: '+score+' / '+(idx+1);setTimeout(function(){idx++;show();},2200);};btns.appendChild(b);});
+  }
+  show();
+})();
+</script>
+<hr>
+<hr>
+<p><em>Previous: <a href="../module08/index.html">Module 08 — Agents and GPTs</a></em> | <em>Next: <a href="../module10/index.html">Module 10 — AI Ethics and Responsibility</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../module08/index.html" class="pagination-link" aria-label="AI Agents and Automation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AI Agents and Automation</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../module10/index.html" class="pagination-link" aria-label="Ethics, Bias, and Responsible Use">
+        <span class="nav-page-text">Ethics, Bias, and Responsible Use</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

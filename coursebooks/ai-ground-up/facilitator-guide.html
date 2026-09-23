@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Facilitator Guide – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="Facilitator Guide – AI from the Ground Up">
+<meta property="og:description" content="For Instructors Teaching This Course">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="./module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="./module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="./module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="./module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="./module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="./appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#course-configurations" id="toc-course-configurations" class="nav-link active" data-scroll-target="#course-configurations">Course Configurations</a>
+  <ul class="collapse">
+  <li><a href="#configuration-1-full-semester-14-16-weeks" id="toc-configuration-1-full-semester-14-16-weeks" class="nav-link" data-scroll-target="#configuration-1-full-semester-14-16-weeks">Configuration 1: Full Semester (14-16 weeks)</a></li>
+  <li><a href="#configuration-2-extended-education-certificate-6-8-weeks" id="toc-configuration-2-extended-education-certificate-6-8-weeks" class="nav-link" data-scroll-target="#configuration-2-extended-education-certificate-6-8-weeks">Configuration 2: Extended Education Certificate (6-8 weeks)</a></li>
+  <li><a href="#configuration-3-workshop-1-2-days" id="toc-configuration-3-workshop-1-2-days" class="nav-link" data-scroll-target="#configuration-3-workshop-1-2-days">Configuration 3: Workshop (1-2 days)</a></li>
+  <li><a href="#configuration-4-self-paced-online" id="toc-configuration-4-self-paced-online" class="nav-link" data-scroll-target="#configuration-4-self-paced-online">Configuration 4: Self-Paced Online</a></li>
+  </ul></li>
+  <li><a href="#pacing-guidance" id="toc-pacing-guidance" class="nav-link" data-scroll-target="#pacing-guidance">Pacing Guidance</a></li>
+  <li><a href="#module-4-deep-dive-running-the-practice-ladder" id="toc-module-4-deep-dive-running-the-practice-ladder" class="nav-link" data-scroll-target="#module-4-deep-dive-running-the-practice-ladder">Module 4 Deep-Dive: Running the Practice Ladder</a>
+  <ul class="collapse">
+  <li><a href="#the-ladder-at-a-glance" id="toc-the-ladder-at-a-glance" class="nav-link" data-scroll-target="#the-ladder-at-a-glance">The ladder at a glance</a></li>
+  <li><a href="#recommended-session-structure-two-75-min-sessions" id="toc-recommended-session-structure-two-75-min-sessions" class="nav-link" data-scroll-target="#recommended-session-structure-two-75-min-sessions">Recommended Session Structure (Two 75-min Sessions)</a></li>
+  <li><a href="#expected-difficulty-curve" id="toc-expected-difficulty-curve" class="nav-link" data-scroll-target="#expected-difficulty-curve">Expected Difficulty Curve</a></li>
+  <li><a href="#common-pitfalls-and-how-to-handle-them" id="toc-common-pitfalls-and-how-to-handle-them" class="nav-link" data-scroll-target="#common-pitfalls-and-how-to-handle-them">Common Pitfalls and How to Handle Them</a></li>
+  <li><a href="#grading-the-ladder" id="toc-grading-the-ladder" class="nav-link" data-scroll-target="#grading-the-ladder">Grading the Ladder</a></li>
+  </ul></li>
+  <li><a href="#assessment-strategy" id="toc-assessment-strategy" class="nav-link" data-scroll-target="#assessment-strategy">Assessment Strategy</a>
+  <ul class="collapse">
+  <li><a href="#formative-during-the-course" id="toc-formative-during-the-course" class="nav-link" data-scroll-target="#formative-during-the-course">Formative (During the Course)</a></li>
+  <li><a href="#summative-end-of-course" id="toc-summative-end-of-course" class="nav-link" data-scroll-target="#summative-end-of-course">Summative (End of Course)</a></li>
+  <li><a href="#suggested-grading-breakdown-credit-bearing" id="toc-suggested-grading-breakdown-credit-bearing" class="nav-link" data-scroll-target="#suggested-grading-breakdown-credit-bearing">Suggested Grading Breakdown (Credit-Bearing)</a></li>
+  <li><a href="#quiz-policies" id="toc-quiz-policies" class="nav-link" data-scroll-target="#quiz-policies">Quiz Policies</a></li>
+  <li><a href="#lab-submission-expectations" id="toc-lab-submission-expectations" class="nav-link" data-scroll-target="#lab-submission-expectations">Lab Submission Expectations</a></li>
+  <li><a href="#capstone-rubric-reference" id="toc-capstone-rubric-reference" class="nav-link" data-scroll-target="#capstone-rubric-reference">Capstone Rubric Reference</a></li>
+  </ul></li>
+  <li><a href="#common-student-questions-faq" id="toc-common-student-questions-faq" class="nav-link" data-scroll-target="#common-student-questions-faq">Common Student Questions (FAQ)</a></li>
+  <li><a href="#facilitation-tips" id="toc-facilitation-tips" class="nav-link" data-scroll-target="#facilitation-tips">Facilitation Tips</a>
+  <ul class="collapse">
+  <li><a href="#module-4-is-the-keystone" id="toc-module-4-is-the-keystone" class="nav-link" data-scroll-target="#module-4-is-the-keystone">Module 4 Is the Keystone</a></li>
+  <li><a href="#let-students-fail-safely" id="toc-let-students-fail-safely" class="nav-link" data-scroll-target="#let-students-fail-safely">Let Students Fail (Safely)</a></li>
+  <li><a href="#use-real-tasks" id="toc-use-real-tasks" class="nav-link" data-scroll-target="#use-real-tasks">Use Real Tasks</a></li>
+  <li><a href="#the-try-to-break-it-exercise" id="toc-the-try-to-break-it-exercise" class="nav-link" data-scroll-target="#the-try-to-break-it-exercise">The “Try to Break It” Exercise</a></li>
+  <li><a href="#discussion-not-debate" id="toc-discussion-not-debate" class="nav-link" data-scroll-target="#discussion-not-debate">Discussion, Not Debate</a></li>
+  <li><a href="#pair-work-in-m4" id="toc-pair-work-in-m4" class="nav-link" data-scroll-target="#pair-work-in-m4">Pair Work in M4</a></li>
+  <li><a href="#accessibility" id="toc-accessibility" class="nav-link" data-scroll-target="#accessibility">Accessibility</a></li>
+  </ul></li>
+  <li><a href="#adaptation-notes" id="toc-adaptation-notes" class="nav-link" data-scroll-target="#adaptation-notes">Adaptation Notes</a>
+  <ul class="collapse">
+  <li><a href="#for-k-12-educators" id="toc-for-k-12-educators" class="nav-link" data-scroll-target="#for-k-12-educators">For K-12 Educators</a></li>
+  <li><a href="#for-corporateprofessional-training" id="toc-for-corporateprofessional-training" class="nav-link" data-scroll-target="#for-corporateprofessional-training">For Corporate/Professional Training</a></li>
+  <li><a href="#for-community-education" id="toc-for-community-education" class="nav-link" data-scroll-target="#for-community-education">For Community Education</a></li>
+  </ul></li>
+  <li><a href="#technical-requirements" id="toc-technical-requirements" class="nav-link" data-scroll-target="#technical-requirements">Technical Requirements</a></li>
+  <li><a href="#pedagogical-basis-for-the-m4-practice-ladder" id="toc-pedagogical-basis-for-the-m4-practice-ladder" class="nav-link" data-scroll-target="#pedagogical-basis-for-the-m4-practice-ladder">Pedagogical Basis for the M4 Practice Ladder</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Facilitator Guide</h1>
+<p class="subtitle lead">For Instructors Teaching This Course</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Who This Is For
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This guide is for instructors, workshop facilitators, and training coordinators using <em>AI from the Ground Up</em> in a structured setting — a college course, professional development workshop, corporate training, or community education program.</p>
+</div>
+</div>
+<hr>
+<section id="course-configurations" class="level2">
+<h2 class="anchored" data-anchor-id="course-configurations">Course Configurations</h2>
+<p>This course is modular. Here are tested configurations:</p>
+<section id="configuration-1-full-semester-14-16-weeks" class="level3">
+<h3 class="anchored" data-anchor-id="configuration-1-full-semester-14-16-weeks">Configuration 1: Full Semester (14-16 weeks)</h3>
+<p>One module per week + capstone project in final 2 weeks. Best for: credit-bearing college courses.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Weeks</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1-3</td>
+<td style="text-align: left;">Part I: Foundations (M1-M3)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4-5</td>
+<td style="text-align: left;"><strong>Part II: Communication (M4) — dedicate TWO weeks, this is the keystone with a 10-exercise practice ladder</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">6-9</td>
+<td style="text-align: left;">Part III: Application (M5-M8)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10-12</td>
+<td style="text-align: left;">Part IV: Depth (M9-M11)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">13-14</td>
+<td style="text-align: left;">Part V: Future (M12-M13)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">15-16</td>
+<td style="text-align: left;">Capstone (M14) — project work + presentations</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="configuration-2-extended-education-certificate-6-8-weeks" class="level3">
+<h3 class="anchored" data-anchor-id="configuration-2-extended-education-certificate-6-8-weeks">Configuration 2: Extended Education Certificate (6-8 weeks)</h3>
+<p>Core modules only. Best for: non-credit professional certificates, ExEd offerings.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Weeks</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">M1 (What Is AI?) + M2 (How ML Works)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">M3 (LLMs &amp; GenAI)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3-4</td>
+<td style="text-align: left;"><strong>M4 (Prompting) — two full weeks; this is the core skill</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">M5 (Research) + M6 (Productivity)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">M7 (Multimodal) + M10 (Ethics)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">M12 (Career) + Simplified Capstone</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="configuration-3-workshop-1-2-days" class="level3">
+<h3 class="anchored" data-anchor-id="configuration-3-workshop-1-2-days">Configuration 3: Workshop (1-2 days)</h3>
+<p>Intensive format. Best for: corporate training, faculty development, conference workshops.</p>
+<p><strong>One-Day (6 hours):</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Time</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">9:00-10:15</td>
+<td style="text-align: left;">M1 (condensed) + M3 (condensed) — what AI is and how LLMs work</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10:30-12:30</td>
+<td style="text-align: left;"><strong>M4 — BRIEFS + selected ladder exercises (4.A, 4.C, 4.D, 4.H) — core skill</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1:30-2:45</td>
+<td style="text-align: left;">M6 — Productivity (hands-on: Two Tuesdays exercise with real tasks)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3:00-4:30</td>
+<td style="text-align: left;">M10 (condensed) + M12 (condensed) — ethics + career integration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two-Day:</strong> Full practice ladder (all 10 exercises) on Day 1 morning + Add M5 (Research), M7 (Multimodal), M8 (Agents), and the capstone project.</p>
+</section>
+<section id="configuration-4-self-paced-online" class="level3">
+<h3 class="anchored" data-anchor-id="configuration-4-self-paced-online">Configuration 4: Self-Paced Online</h3>
+<p>All 14 modules available asynchronously. Learners complete at their own pace.</p>
+<ul>
+<li>Require the <a href="./self-assessment.html">Self-Assessment</a> before starting</li>
+<li>Set deadlines for lab submissions (labs are the accountability mechanism)</li>
+<li>Use discussion boards for Think About It reflections</li>
+<li><strong>For M4 specifically:</strong> require submission of Exercise 4.D.2 (three BRIEFS prompts from the learner’s own life) as a gating checkpoint before Lab 4. This is the empirical evidence of production capability.</li>
+<li>Optional synchronous sessions for Q&amp;A and demos</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="pacing-guidance" class="level2">
+<h2 class="anchored" data-anchor-id="pacing-guidance">Pacing Guidance</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Module</th>
+<th style="text-align: center;">Lecture Time</th>
+<th style="text-align: center;">Lab Time</th>
+<th style="text-align: center;">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">M1: What Is AI?</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">60 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M2: How ML Works</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">75 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M3: LLMs &amp; GenAI</td>
+<td style="text-align: center;">40 min</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">70 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>M4: Prompting (expanded)</strong></td>
+<td style="text-align: center;"><strong>60 min</strong></td>
+<td style="text-align: center;"><strong>~115 min ladder + 45 min Lab 4</strong></td>
+<td style="text-align: center;"><strong>~220 min</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M5: Research</td>
+<td style="text-align: center;">35 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">80 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M6: Productivity</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">60 min</td>
+<td style="text-align: center;">90 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M7: Multimodal</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">75 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M8: Agents</td>
+<td style="text-align: center;">35 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">80 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M9: Infrastructure</td>
+<td style="text-align: center;">40 min</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">70 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M10: Ethics</td>
+<td style="text-align: center;">40 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">85 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M11: Disciplines</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">60 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M12: Career</td>
+<td style="text-align: center;">25 min</td>
+<td style="text-align: center;">45 min</td>
+<td style="text-align: center;">70 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">M13: Future</td>
+<td style="text-align: center;">30 min</td>
+<td style="text-align: center;">20 min</td>
+<td style="text-align: center;">50 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M14: Capstone</td>
+<td style="text-align: center;">15 min (intro)</td>
+<td style="text-align: center;">3-5 hrs</td>
+<td style="text-align: center;">Variable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total estimated contact hours:</strong> ~18 hours lecture + ~12 hours labs = ~30 hours (not counting capstone)</p>
+<hr>
+</section>
+<section id="module-4-deep-dive-running-the-practice-ladder" class="level2">
+<h2 class="anchored" data-anchor-id="module-4-deep-dive-running-the-practice-ladder">Module 4 Deep-Dive: Running the Practice Ladder</h2>
+<p>M4 is the keystone. Every subsequent module assumes fluency in BRIEFS and SMARTS. The 10-exercise practice ladder is designed to build that fluency systematically, using the faded-worked-example pattern validated in cognitive load research (Renkl &amp; Atkinson, 2003; meta-analysis <em>g</em> = 0.46, Belland et al., 2017).</p>
+<section id="the-ladder-at-a-glance" class="level3">
+<h3 class="anchored" data-anchor-id="the-ladder-at-a-glance">The ladder at a glance</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">#</th>
+<th style="text-align: left;">Exercise</th>
+<th style="text-align: left;">Scaffolding</th>
+<th style="text-align: left;">Skill</th>
+<th style="text-align: center;">Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">4.A</td>
+<td style="text-align: left;">Recognize Before You Produce</td>
+<td style="text-align: left;">Fully worked</td>
+<td style="text-align: left;">Diagnose missing BRIEFS element</td>
+<td style="text-align: center;">8 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.B</td>
+<td style="text-align: left;">Single-Element Insertion</td>
+<td style="text-align: left;">High scaffold</td>
+<td style="text-align: left;">Produce each BRIEFS element in isolation</td>
+<td style="text-align: center;">12 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4.C</td>
+<td style="text-align: left;">Completion Drill</td>
+<td style="text-align: left;">Partial scaffold</td>
+<td style="text-align: left;">Fill missing elements in a skeleton</td>
+<td style="text-align: center;">10 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.D</td>
+<td style="text-align: left;">Full BRIEFS Production</td>
+<td style="text-align: left;">Low scaffold</td>
+<td style="text-align: left;">Write 3 full BRIEFS prompts from scratch</td>
+<td style="text-align: center;">15 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4.E</td>
+<td style="text-align: left;">Calibration Handshake Drill</td>
+<td style="text-align: left;">High scaffold</td>
+<td style="text-align: left;">Practice restate-and-confirm across 3 scenarios</td>
+<td style="text-align: center;">10 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.F</td>
+<td style="text-align: left;">Technique Selection</td>
+<td style="text-align: left;">Mixed</td>
+<td style="text-align: left;">Match task → zero-shot / few-shot / CoT / role / structured</td>
+<td style="text-align: center;">12 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4.G</td>
+<td style="text-align: left;">SMARTS Multi-Turn Walkthrough</td>
+<td style="text-align: left;">Partial scaffold</td>
+<td style="text-align: left;">Write all 6 SMARTS turns on a real task</td>
+<td style="text-align: center;">20 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.H</td>
+<td style="text-align: left;">Anti-Pattern Gallery</td>
+<td style="text-align: left;">Low scaffold</td>
+<td style="text-align: left;">Diagnose and repair 7 broken prompts</td>
+<td style="text-align: center;">15 min</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4.I</td>
+<td style="text-align: left;">Transfer &amp; Red-Team</td>
+<td style="text-align: left;">Independent</td>
+<td style="text-align: left;">Re-target across domains; break BRIEFS</td>
+<td style="text-align: center;">15 min</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.J</td>
+<td style="text-align: left;">Rubric-Based Peer Critique</td>
+<td style="text-align: left;">Independent + collaborative</td>
+<td style="text-align: left;">Score a partner’s prompt using the 5-dim rubric</td>
+<td style="text-align: center;">20 min</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total ladder time:</strong> ~2 hours. Add Lab 4 (45 min) for ~3 hours total practice. For a two-week treatment, split the ladder across sessions.</p>
+</section>
+<section id="recommended-session-structure-two-75-min-sessions" class="level3">
+<h3 class="anchored" data-anchor-id="recommended-session-structure-two-75-min-sessions">Recommended Session Structure (Two 75-min Sessions)</h3>
+<p><strong>Session 1 — BRIEFS Mastery (75 min)</strong> - Lecture/discussion: Whisperers Study + BRIEFS framework (25 min) - Exercise 4.A — Recognize (8 min individual, 5 min pair-share) - Exercise 4.B — Insertion (12 min individual) - Exercise 4.C — Completion (10 min individual, 5 min debrief) - Exercise 4.D — Production (15 min individual) - Closing check: call on 2-3 students to read their 4.D.2 prompts aloud; class diagnoses score (5 min)</p>
+<p><strong>Session 2 — SMARTS + Mastery (75 min)</strong> - Exercise 4.E — Handshake (10 min) - Lecture/discussion: Core + Advanced techniques (15 min) - Exercise 4.F — Technique Selection (12 min) - Lecture/discussion: SMARTS framework (10 min) - Exercise 4.G — SMARTS Walkthrough (20 min, assigned if time-short) - Exercise 4.H — Anti-Pattern Gallery (8 min)</p>
+<p><strong>Session 3 (optional, 45 min) — Transfer and Peer Review</strong> - Exercise 4.I — Transfer &amp; Red-Team (15 min) - Exercise 4.J — Peer Critique (20 min pair work + 10 min whole-class debrief)</p>
+<p><strong>Then:</strong> Lab 4 assigned as homework.</p>
+</section>
+<section id="expected-difficulty-curve" class="level3">
+<h3 class="anchored" data-anchor-id="expected-difficulty-curve">Expected Difficulty Curve</h3>
+<p>Students should find: - <strong>4.A easy → 4.B harder than expected.</strong> The transition from recognition to production is the steepest jump. Expect slow work on 4.B. Do not rush it. - <strong>4.C surprisingly comfortable.</strong> The given elements anchor students; they report “oh I can do this” here. Good place to build confidence. - <strong>4.D feels familiar if 4.B-4.C went well.</strong> If students struggle on 4.D, it’s because they skipped the deliberate practice in 4.B. Send them back. - <strong>4.E feels unnatural.</strong> Writing Phase 2 (“what will the model say back?”) is a novel exercise in perspective-taking. Normalize the discomfort. - <strong>4.F easy for technically-oriented students, hard for the rest.</strong> Pair strong-technical with less-technical students here. - <strong>4.G longest exercise, most complaints.</strong> Some students will want to skip SMARTS steps. Don’t let them. The walkthrough is the only way to feel the difference between “ask the AI a question” and “think WITH the AI.” - <strong>4.H genuinely fun.</strong> Diagnosing broken prompts is the rare pedagogy exercise students actually enjoy. Use this energy. - <strong>4.I stretches everyone.</strong> The red-team portion (find where BRIEFS fails) is the most important 5 minutes of the module. - <strong>4.J transformational for many.</strong> Reviewing someone else’s prompt is often when students finally see their own patterns. Expect several “oh” moments.</p>
+</section>
+<section id="common-pitfalls-and-how-to-handle-them" class="level3">
+<h3 class="anchored" data-anchor-id="common-pitfalls-and-how-to-handle-them">Common Pitfalls and How to Handle Them</h3>
+<p><strong>1. Students rush 4.B.</strong> They want to skip to writing full prompts. Forbid combining elements until they’ve done each on its own line. The isolation is the point.</p>
+<p><strong>2. Students resist 4.E’s Phase 2.</strong> “How am I supposed to predict what the model will say?” Tell them: you’re not predicting — you’re <em>calibrating your expectations</em> so Phase 3 has something to check against. If your prediction is wildly off, your Phase 1 was weak.</p>
+<p><strong>3. Students skip the self-explanation prompts.</strong> These are the payload. Require at least one written self-explanation per session (submitted as a discussion post) or the exercise value drops by roughly half. This is backed by Renkl 1997 and multiple replications.</p>
+<p><strong>4. Pairings in 4.J go sideways.</strong> Some pairs will critique too gently (“your prompt is great!”) or too harshly. Give them the critique script before they start. Model one critique out loud for the whole class first.</p>
+<p><strong>5. The strong students finish early.</strong> Expertise reversal is real — cognitive load research shows that as learners become more expert, worked examples start hurting them. For your stronger students, fast-forward through 4.A-4.C and have them focus on 4.H and 4.I (the diagnostic and transfer exercises). Or: pair them with weaker students for 4.J, where the act of reviewing sharpens the stronger student’s own standards.</p>
+<p><strong>6. The weak students stall on 4.D.</strong> If a student can’t write three full BRIEFS prompts after 4.A-4.C, send them back to 4.B. They need more deliberate practice on isolated elements. Do not let them limp through 4.D producing low-quality work — that will cement bad habits.</p>
+<p><strong>7. Students ask “can’t I just read about BRIEFS and skip the exercises?”</strong> Answer with the evidence: Zhang et al.&nbsp;(2025) studied translation students with strong theoretical knowledge and found they still wrote short, informal prompts unless given structured scaffolding. Knowledge doesn’t transfer to skill without practice. This is the same reason reading about squats doesn’t make you able to squat.</p>
+</section>
+<section id="grading-the-ladder" class="level3">
+<h3 class="anchored" data-anchor-id="grading-the-ladder">Grading the Ladder</h3>
+<p>Recommend <strong>completion grading, not quality grading</strong>, for the ladder itself. Students need to feel safe experimenting. Grade strict on Lab 4 (which comes after the ladder and is the quality checkpoint).</p>
+<p>If you must grade quality on the ladder, grade only Exercise 4.D.2 and Exercise 4.I (the independent production exercises) using the 5-dimension rubric from Card 5 in the Framework Cards appendix.</p>
+<hr>
+</section>
+</section>
+<section id="assessment-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-strategy">Assessment Strategy</h2>
+<section id="formative-during-the-course" class="level3">
+<h3 class="anchored" data-anchor-id="formative-during-the-course">Formative (During the Course)</h3>
+<ul>
+<li><strong>Module quizzes</strong> (built-in JavaScript games) — self-paced, not graded</li>
+<li><strong>Micro-checks</strong> (Test Yourself boxes) — embedded comprehension checks</li>
+<li><strong>Think About It</strong> reflections — submit as discussion posts or journal entries</li>
+<li><strong>Lab deliverables</strong> — the primary formative assessment</li>
+<li><strong>M4 ladder exercises</strong> — completion-graded, not quality-graded (see above)</li>
+<li><strong>Self-explanation prompts</strong> — brief written reflections after each major exercise; these drive learning</li>
+</ul>
+</section>
+<section id="summative-end-of-course" class="level3">
+<h3 class="anchored" data-anchor-id="summative-end-of-course">Summative (End of Course)</h3>
+<ul>
+<li><strong>Post-course Self-Assessment</strong> — compare to pre-course baseline</li>
+<li><strong>Capstone Project</strong> (Module 14) — the culminating assessment</li>
+<li><strong>Portfolio</strong> — optional: collect all lab deliverables into a portfolio</li>
+</ul>
+</section>
+<section id="suggested-grading-breakdown-credit-bearing" class="level3">
+<h3 class="anchored" data-anchor-id="suggested-grading-breakdown-credit-bearing">Suggested Grading Breakdown (Credit-Bearing)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Component</th>
+<th style="text-align: center;">Weight</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lab submissions (13 labs)</td>
+<td style="text-align: center;">40%</td>
+<td style="text-align: left;">Completion + quality, not perfection</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Participation/reflections</td>
+<td style="text-align: center;">15%</td>
+<td style="text-align: left;">Think About It responses, discussion, M4 self-explanations</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Module quizzes</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: left;">Best attempt, unlimited retries</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">M4 ladder completion</td>
+<td style="text-align: center;">5%</td>
+<td style="text-align: left;">Pass/complete, not quality-graded</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Capstone project</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: left;">See Module 14 rubric (5 dimensions)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="quiz-policies" class="level3">
+<h3 class="anchored" data-anchor-id="quiz-policies">Quiz Policies</h3>
+<ul>
+<li>Quizzes are <strong>learning tools, not gatekeepers.</strong> Unlimited retries, best score counts.</li>
+<li>Each module quiz has 10-18 questions randomized from a pool. Students see different questions on each attempt.</li>
+<li>Badge threshold: 80% (e.g., 14/18 for M4). Students who earn the badge have demonstrated competency.</li>
+<li>For grading: award full credit for earning the badge (any number of attempts). Partial credit for 60-79%.</li>
+</ul>
+</section>
+<section id="lab-submission-expectations" class="level3">
+<h3 class="anchored" data-anchor-id="lab-submission-expectations">Lab Submission Expectations</h3>
+<ul>
+<li>Labs are the <strong>primary evidence of learning.</strong> Each lab produces a tangible deliverable.</li>
+<li>Grade on: completeness (did they do all parts?), quality (is the work thoughtful?), and reflection (do they show learning?).</li>
+<li>Do NOT grade on whether the AI output was “correct” — grade on whether the student evaluated, iterated, and reflected on it.</li>
+<li>Late policy: recommended 1-week grace period. Labs build on each other, so falling behind compounds.</li>
+</ul>
+</section>
+<section id="capstone-rubric-reference" class="level3">
+<h3 class="anchored" data-anchor-id="capstone-rubric-reference">Capstone Rubric Reference</h3>
+<p>The capstone rubric (Module 14, Step 5) evaluates five dimensions:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dimension</th>
+<th style="text-align: center;">Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Practical Applicability</td>
+<td style="text-align: center;">25%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AI Competence (BRIEFS/SMARTS usage)</td>
+<td style="text-align: center;">25%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ethical Consideration</td>
+<td style="text-align: center;">20%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Evidence and Testing</td>
+<td style="text-align: center;">15%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reflection Quality</td>
+<td style="text-align: center;">15%</td>
+</tr>
+</tbody>
+</table>
+<p>Passing score: 70% (3.5/5 average). See Module 14 for full rubric with level descriptors.</p>
+<hr>
+</section>
+</section>
+<section id="common-student-questions-faq" class="level2">
+<h2 class="anchored" data-anchor-id="common-student-questions-faq">Common Student Questions (FAQ)</h2>
+<p><strong>“Can I use AI to complete assignments in this course?”</strong> Yes — strategically. This course teaches you to use AI well. The policy: use AI as a tool, disclose how you used it, and ensure the thinking is yours. See Module 10 and the Policy Templates appendix.</p>
+<p><strong>“Which AI tool should I use?”</strong> Start with the free tier of ChatGPT or Claude. Both are excellent. The Tool Directory appendix compares 60+ tools. The underlying frameworks (BRIEFS, SMARTS) work with any AI.</p>
+<p><strong>“I’m not technical. Will I be able to do this?”</strong> Yes. No programming is required for any module. The course is designed for non-technical learners. Module 9 (Infrastructure) explains technical concepts but doesn’t require coding.</p>
+<p><strong>“How much time should I spend per module?”</strong> Approximately 60-90 minutes per module (lecture + lab). <strong>Module 4 is the exception — budget 3 hours</strong> for the full practice ladder plus Lab 4. The capstone takes an additional 10-15 hours. Total course commitment: ~35-45 hours.</p>
+<p><strong>“Do I really need to do all 10 exercises in M4?”</strong> Yes — and here’s why. Reading about BRIEFS takes 10 minutes. Becoming fluent in it takes the full ladder. Cognitive load research (Renkl &amp; Atkinson 2003 and replications) shows that knowledge doesn’t transfer to skill without scaffolded practice. Students who skip the ladder write measurably weaker prompts in Lab 4.</p>
+<p><strong>“The tools in the course have changed since it was written. Is it still relevant?”</strong> Yes. Specific tool interfaces change; the principles don’t. BRIEFS works with any AI model. Verification matters regardless of the tool. The frameworks are designed to outlast any specific product.</p>
+<p><strong>“I’m worried about academic integrity. How do I know if I’m using AI appropriately?”</strong> Module 10 covers this in depth. The short answer: if you can explain your work, defend your reasoning, and show how AI contributed (vs.&nbsp;replaced) your thinking, you’re using it appropriately. When in doubt, disclose.</p>
+<hr>
+</section>
+<section id="facilitation-tips" class="level2">
+<h2 class="anchored" data-anchor-id="facilitation-tips">Facilitation Tips</h2>
+<section id="module-4-is-the-keystone" class="level3">
+<h3 class="anchored" data-anchor-id="module-4-is-the-keystone">Module 4 Is the Keystone</h3>
+<p>If you can only go deep on one module, make it Module 4. The BRIEFS and SMARTS frameworks are used in every subsequent module. <strong>The 10-exercise practice ladder is designed to be used as written.</strong> Budget the full time. Have students work through each rung in order. Don’t let strong students skip ahead.</p>
+</section>
+<section id="let-students-fail-safely" class="level3">
+<h3 class="anchored" data-anchor-id="let-students-fail-safely">Let Students Fail (Safely)</h3>
+<p>The Lab 4 experiment (BRIEFS Before/After) works best when students see their OWN weak prompts produce bad results. Don’t pre-teach too much. Let them experience the alignment gap, then show them how BRIEFS fixes it.</p>
+</section>
+<section id="use-real-tasks" class="level3">
+<h3 class="anchored" data-anchor-id="use-real-tasks">Use Real Tasks</h3>
+<p>Every lab can be adapted to use students’ actual work tasks. A nursing student should write nursing prompts, not generic ones. An ag major should work with ag scenarios. The field-specific panel tabs in each module are designed to make this easy. <strong>M4 Exercise 4.D.2 requires students to use their own tasks</strong> — this is the first moment the course becomes personal.</p>
+</section>
+<section id="the-try-to-break-it-exercise" class="level3">
+<h3 class="anchored" data-anchor-id="the-try-to-break-it-exercise">The “Try to Break It” Exercise</h3>
+<p>In any module, have students deliberately try to make AI produce wrong, biased, or nonsensical output. This builds critical thinking faster than any lecture about limitations. <strong>M4 Exercise 4.I (Red-Team) formalizes this</strong> — require it, don’t treat it as optional.</p>
+</section>
+<section id="discussion-not-debate" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-not-debate">Discussion, Not Debate</h3>
+<p>Ethics discussions (especially M10) work better as structured exploration than debate. Use the guided practices as written — they ask students to analyze, not argue. Frame it: “There are multiple defensible positions. Your job is to understand them, not win.”</p>
+</section>
+<section id="pair-work-in-m4" class="level3">
+<h3 class="anchored" data-anchor-id="pair-work-in-m4">Pair Work in M4</h3>
+<p>Exercises 4.J (Peer Critique) is the only exercise that <em>requires</em> pairing. Exercises 4.A, 4.H, and 4.I benefit from pair discussion after individual work. Don’t pair students for 4.B, 4.C, 4.D — those are individual production exercises.</p>
+</section>
+<section id="accessibility" class="level3">
+<h3 class="anchored" data-anchor-id="accessibility">Accessibility</h3>
+<ul>
+<li>All content is text-based and screen-reader friendly</li>
+<li>Quizzes use keyboard-navigable buttons</li>
+<li>All images should have alt text (add when deploying)</li>
+<li>Consider providing printed Framework Cards for students who prefer paper</li>
+<li><strong>For M4 specifically:</strong> print Cards 2, 2b, 3, and 5 for every student at the start of the M4 session. These are the working references for the ladder.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="adaptation-notes" class="level2">
+<h2 class="anchored" data-anchor-id="adaptation-notes">Adaptation Notes</h2>
+<section id="for-k-12-educators" class="level3">
+<h3 class="anchored" data-anchor-id="for-k-12-educators">For K-12 Educators</h3>
+<ul>
+<li>Use Modules 1-4 + 6 + 10 as a “mini-course”</li>
+<li>Replace business examples with age-appropriate scenarios</li>
+<li>The BRIEFS framework works for middle and high school students — simplify to The 3 Questions for younger learners</li>
+<li><strong>For M4 ladder:</strong> use exercises 4.A, 4.C, 4.D, and 4.H only. Skip 4.B (too abstract for younger students), 4.E, 4.F, 4.G (too technical), and 4.I (too meta).</li>
+<li>Lab activities can be shortened to 20-minute in-class exercises</li>
+</ul>
+</section>
+<section id="for-corporateprofessional-training" class="level3">
+<h3 class="anchored" data-anchor-id="for-corporateprofessional-training">For Corporate/Professional Training</h3>
+<ul>
+<li>Emphasize Modules 4, 6, 8, and 10 (prompting, productivity, agents, ethics)</li>
+<li>Replace academic examples with industry-specific scenarios</li>
+<li>Use the Policy Templates (Appendix) as a deliverable</li>
+<li><strong>For M4 ladder:</strong> prioritize 4.D (real-world production), 4.H (anti-patterns they’ve likely committed), and 4.J (peer critique — especially valuable in cross-functional teams)</li>
+<li>The Two Tuesdays exercise (M6) is the highest-impact single activity for professionals</li>
+</ul>
+</section>
+<section id="for-community-education" class="level3">
+<h3 class="anchored" data-anchor-id="for-community-education">For Community Education</h3>
+<ul>
+<li>Start with The 3 Questions, not BRIEFS</li>
+<li>Use the bilingual content prompt from the Prompt Library for Spanish-speaking audiences</li>
+<li>Focus on practical modules: M4 (prompting), M6 (productivity), M12 (career)</li>
+<li><strong>For M4 ladder:</strong> use exercises 4.A, 4.C, and 4.D only, with extra support</li>
+<li>The Self-Assessment works well as both an icebreaker and a motivator</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="technical-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="technical-requirements">Technical Requirements</h2>
+<ul>
+<li>Students need: a device with internet access and a free AI account (ChatGPT, Claude, or Gemini)</li>
+<li>No programming required for any module</li>
+<li>Labs can be completed with free-tier AI tools</li>
+<li>Module 9 (Infrastructure) mentions local models — this is informational, not a requirement</li>
+</ul>
+<hr>
+</section>
+<section id="pedagogical-basis-for-the-m4-practice-ladder" class="level2">
+<h2 class="anchored" data-anchor-id="pedagogical-basis-for-the-m4-practice-ladder">Pedagogical Basis for the M4 Practice Ladder</h2>
+<p>For instructors who want to defend the ladder design to department heads, grant reviewers, or curriculum committees:</p>
+<p>The practice ladder implements <strong>faded worked examples</strong>, a pattern with decades of empirical support in cognitive load theory:</p>
+<ul>
+<li><strong>Renkl &amp; Atkinson (2003)</strong> formalized the transition from example study to problem solving, showing that successive fading of worked solution steps facilitates skill acquisition better than example-problem pairs alone.</li>
+<li><strong>Belland, Walker, Kim, &amp; Lefler (2017)</strong> meta-analyzed 144 studies and 333 outcomes on computer-based scaffolding in STEM, finding a consistent <em>g</em> = 0.46 effect on cognitive outcomes.</li>
+<li><strong>Jang et al.&nbsp;(2024)</strong> at ICLS directly studied prompt scaffolding with ChatGPT for argumentation writing and found positive effects.</li>
+<li><strong>Zhang et al.&nbsp;(2025)</strong> showed that students with strong theoretical knowledge still wrote short, informal prompts unless given structured scaffolding — the specific gap the ladder addresses.</li>
+<li><strong>Qian (2025)</strong> systematically reviewed prompt engineering in education and validated the distinction between <em>technique-based</em> (BRIEFS) and <em>process-based</em> (SMARTS) approaches.</li>
+<li><strong>Turan et al.&nbsp;(2024)</strong> documented rubric-based peer review producing better downstream prompting than solo practice — the evidence base for Exercise 4.J.</li>
+</ul>
+<p>For a fuller writeup, see the <strong>Module 4 Pedagogical Rationale</strong> document in the course root directory.</p>
+<hr>
+<p><em>Questions about teaching this course? Contact Dr.&nbsp;Yatawara at ayatawara@csub.edu.</em></p>
+<p><em>Back to <a href="./index.html">Modules</a></em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

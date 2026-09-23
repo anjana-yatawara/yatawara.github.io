@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr.&nbsp;Anjana Yatawara">
+<meta name="dcterms.date" content="2026-04-01">
+
+<title>Module 4 Practice Ladder: Pedagogical Rationale – AI from the Ground Up</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-de84f8d6bb715db06a919283c2d1e787.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-539040c83e44a31b1dd33d784133b5d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<meta property="og:title" content="Module 4 Practice Ladder: Pedagogical Rationale – AI from the Ground Up">
+<meta property="og:description" content="Research foundation and design decisions for the 10-exercise stepwise progression">
+<meta property="og:type" content="website">
+<meta name="description" content="AI from the Ground Up: A Complete Practical Guide to Artificial Intelligence for Everyone. Free open-access course with 14 modules, 13 labs, interactive quizzes, and the BRIEFS + SMARTS frameworks. By Dr. Anjana Yatawara.">
+<meta name="keywords" content="AI literacy, artificial intelligence, generative AI, prompt engineering, BRIEFS framework, SMARTS framework, LLM, machine learning, AI essentials, AI certificate, Yatawara">
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">AI from the Ground Up</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-modules" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Modules</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-modules">    
+        <li class="dropdown-header"><strong>PART I: FOUNDATIONS</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module01/index.html">
+ <span class="dropdown-text">1 · What Is AI?</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module02/index.html">
+ <span class="dropdown-text">2 · How Machine Learning Works</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module03/index.html">
+ <span class="dropdown-text">3 · LLMs and Generative AI</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART II: COMMUNICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module04/index.html">
+ <span class="dropdown-text">4 · The Art and Science of Prompting</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART III: APPLICATION</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module05/index.html">
+ <span class="dropdown-text">5 · AI for Research and Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module06/index.html">
+ <span class="dropdown-text">6 · AI for Everyday Productivity</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module07/index.html">
+ <span class="dropdown-text">7 · Multimodal AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module08/index.html">
+ <span class="dropdown-text">8 · AI Agents and Automation</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART IV: DEPTH</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module09/index.html">
+ <span class="dropdown-text">9 · AI Infrastructure</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module10/index.html">
+ <span class="dropdown-text">10 · Ethics and Responsible Use</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module11/index.html">
+ <span class="dropdown-text">11 · AI Across Disciplines</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header"><strong>PART V: FUTURE</strong></li>
+        <li>
+    <a class="dropdown-item" href="../module12/index.html">
+ <span class="dropdown-text">12 · AI and Your Career</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module13/index.html">
+ <span class="dropdown-text">13 · The Future of AI</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../module14/index.html">
+ <span class="dropdown-text">14 · Capstone Project</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../labs/index.html"> 
+<span class="menu-text">Labs</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tools" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tools</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tools">    
+        <li>
+    <a class="dropdown-item" href="../appendix/prompt-library.html">
+ <span class="dropdown-text">Prompt Library</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/tool-directory.html">
+ <span class="dropdown-text">AI Tool Directory</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/framework-cards.html">
+ <span class="dropdown-text">Framework Cards</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/policy-templates.html">
+ <span class="dropdown-text">Policy Templates</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../appendix/glossary.html">
+ <span class="dropdown-text">Glossary</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/anjana-yatawara/ai-from-the-ground-up"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#summary" id="toc-summary" class="nav-link active" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#the-problem-the-ladder-solves" id="toc-the-problem-the-ladder-solves" class="nav-link" data-scroll-target="#the-problem-the-ladder-solves">The Problem the Ladder Solves</a></li>
+  <li><a href="#the-pedagogical-pattern-backward-faded-worked-examples" id="toc-the-pedagogical-pattern-backward-faded-worked-examples" class="nav-link" data-scroll-target="#the-pedagogical-pattern-backward-faded-worked-examples">The Pedagogical Pattern: Backward-Faded Worked Examples</a></li>
+  <li><a href="#exercise-by-exercise-rationale" id="toc-exercise-by-exercise-rationale" class="nav-link" data-scroll-target="#exercise-by-exercise-rationale">Exercise-by-Exercise Rationale</a>
+  <ul class="collapse">
+  <li><a href="#exercise-4.a-recognize-before-you-produce" id="toc-exercise-4.a-recognize-before-you-produce" class="nav-link" data-scroll-target="#exercise-4.a-recognize-before-you-produce">Exercise 4.A — Recognize Before You Produce</a></li>
+  <li><a href="#exercise-4.b-single-element-insertion" id="toc-exercise-4.b-single-element-insertion" class="nav-link" data-scroll-target="#exercise-4.b-single-element-insertion">Exercise 4.B — Single-Element Insertion</a></li>
+  <li><a href="#exercise-4.c-completion-drill" id="toc-exercise-4.c-completion-drill" class="nav-link" data-scroll-target="#exercise-4.c-completion-drill">Exercise 4.C — Completion Drill</a></li>
+  <li><a href="#exercise-4.d-full-briefs-production" id="toc-exercise-4.d-full-briefs-production" class="nav-link" data-scroll-target="#exercise-4.d-full-briefs-production">Exercise 4.D — Full BRIEFS Production</a></li>
+  <li><a href="#exercise-4.e-calibration-handshake-drill" id="toc-exercise-4.e-calibration-handshake-drill" class="nav-link" data-scroll-target="#exercise-4.e-calibration-handshake-drill">Exercise 4.E — Calibration Handshake Drill</a></li>
+  <li><a href="#exercise-4.f-technique-selection" id="toc-exercise-4.f-technique-selection" class="nav-link" data-scroll-target="#exercise-4.f-technique-selection">Exercise 4.F — Technique Selection</a></li>
+  <li><a href="#exercise-4.g-smarts-multi-turn-walkthrough" id="toc-exercise-4.g-smarts-multi-turn-walkthrough" class="nav-link" data-scroll-target="#exercise-4.g-smarts-multi-turn-walkthrough">Exercise 4.G — SMARTS Multi-Turn Walkthrough</a></li>
+  <li><a href="#exercise-4.h-anti-pattern-gallery" id="toc-exercise-4.h-anti-pattern-gallery" class="nav-link" data-scroll-target="#exercise-4.h-anti-pattern-gallery">Exercise 4.H — Anti-Pattern Gallery</a></li>
+  <li><a href="#exercise-4.i-transfer-and-red-team" id="toc-exercise-4.i-transfer-and-red-team" class="nav-link" data-scroll-target="#exercise-4.i-transfer-and-red-team">Exercise 4.I — Transfer and Red-Team</a></li>
+  <li><a href="#exercise-4.j-rubric-based-peer-critique" id="toc-exercise-4.j-rubric-based-peer-critique" class="nav-link" data-scroll-target="#exercise-4.j-rubric-based-peer-critique">Exercise 4.J — Rubric-Based Peer Critique</a></li>
+  </ul></li>
+  <li><a href="#self-explanation-prompts" id="toc-self-explanation-prompts" class="nav-link" data-scroll-target="#self-explanation-prompts">Self-Explanation Prompts</a></li>
+  <li><a href="#measurement-and-validation" id="toc-measurement-and-validation" class="nav-link" data-scroll-target="#measurement-and-validation">Measurement and Validation</a></li>
+  <li><a href="#limitations-and-open-questions" id="toc-limitations-and-open-questions" class="nav-link" data-scroll-target="#limitations-and-open-questions">Limitations and Open Questions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Module 4 Practice Ladder: Pedagogical Rationale</h1>
+<p class="subtitle lead">Research foundation and design decisions for the 10-exercise stepwise progression</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Dr.&nbsp;Anjana Yatawara </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This document is the research-backed rationale for the Module 4 practice ladder in <em>AI from the Ground Up</em>. It is written for three audiences: (1) instructors adopting the curriculum, (2) reviewers evaluating the course for tenure or grant purposes, and (3) myself, as a reference when revising future iterations.</p>
+</div>
+</div>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Module 4 of <em>AI from the Ground Up</em> teaches the BRIEFS and SMARTS frameworks — the keystone communication skills of the course. The module’s first draft contained strong conceptual content but thin practice architecture: a single three-prompt rewriting exercise and a before/after lab. Field use and review revealed the same failure mode documented in the literature: learners could recognize the patterns but not reliably produce them under their own steam.</p>
+<p>The revised module replaces the single guided practice with a <strong>10-exercise stepwise practice ladder</strong> (Exercises 4.A through 4.J), designed so each exercise reduces the scaffolding by one step. This follows the well-validated <strong>faded worked example</strong> pattern from cognitive load theory, with direct empirical support from recent studies on prompt engineering pedagogy specifically.</p>
+<p>The ladder’s design is defensible on six lines of evidence, summarized below.</p>
+<hr>
+</section>
+<section id="the-problem-the-ladder-solves" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-the-ladder-solves">The Problem the Ladder Solves</h2>
+<p>Zhang et al.&nbsp;(2025) studied translation students learning to use ChatGPT for professional translation tasks. These students possessed strong disciplinary knowledge — they knew genre conventions, target audience considerations, and translation theory. Nevertheless, without structured scaffolding, they wrote prompts that were “short, informal, and often lacking in contextual detail.” Theoretical knowledge did not transfer to prompting skill.</p>
+<p>This is the specific failure the Module 4 ladder addresses. Reading about BRIEFS takes ten minutes. Becoming fluent in BRIEFS requires scaffolded, deliberate practice.</p>
+<p>The same pattern appears across the prompt engineering pedagogy literature:</p>
+<ul>
+<li>Qian (2025), in a systematic review of prompt engineering in education, identified the gap between “technique-based” and “process-based” approaches and the need for structured instructional scaffolds to bridge them.</li>
+<li>The IJETHE systematic review (Kim &amp; Frick, 2025) found that frameworks are most effective when treated as “scaffolds to help educators articulate their educational goals” rather than as rigid formulas to be memorized.</li>
+<li>A PRISMA review of 30 K-12 STEM studies (arXiv 2410.11123) found that while simple and zero-shot prompting dominate classroom practice, few-shot and chain-of-thought prompting produce measurably better outcomes — a gap between what students default to and what works.</li>
+</ul>
+<hr>
+</section>
+<section id="the-pedagogical-pattern-backward-faded-worked-examples" class="level2">
+<h2 class="anchored" data-anchor-id="the-pedagogical-pattern-backward-faded-worked-examples">The Pedagogical Pattern: Backward-Faded Worked Examples</h2>
+<p>The ladder implements the <strong>faded worked example</strong> pattern first formalized by Renkl and Atkinson (2003) in <em>Educational Psychologist</em>. The pattern:</p>
+<ol type="1">
+<li>Begin with a <strong>fully worked example</strong> (recognition-level practice — Exercise 4.A).</li>
+<li>Successively fade solution steps (Exercises 4.B, 4.C — partial production).</li>
+<li>End with <strong>independent problem solving</strong> (Exercises 4.D, 4.H, 4.I — full production).</li>
+<li>Add <strong>collaborative review</strong> at the end to consolidate (Exercise 4.J).</li>
+</ol>
+<p>The underlying rationale is cognitive load theoretic. Novice learners have limited working memory capacity; unguided problem-solving from the outset overloads them. Worked examples reduce extraneous cognitive load, allowing learners to build schemas. As expertise grows, examples become redundant (the expertise reversal effect), so scaffolding is gradually removed.</p>
+<p><strong>Empirical support</strong> for this pattern in education generally:</p>
+<ul>
+<li>Renkl and Atkinson (2003): successive fading produces better learning than example-problem pairs alone.</li>
+<li>Renkl, Atkinson, and Große (2004): position of faded steps does not matter; what matters is that fading triggers self-explanation activities.</li>
+<li>Sweller, Ayres, and Kalyuga (2011): comprehensive cognitive load theory synthesis.</li>
+<li>Chen, Kalyuga, and Sweller (2015, 2016): worked example effect confirmed at micro level (each solution step).</li>
+<li>Miller-Cotto (2026, <em>British Journal of Educational Psychology</em>): working memory moderates the fading effect, but the fading benefit holds broadly across 6th-grade geometry students.</li>
+</ul>
+<p><strong>Empirical support specifically for STEM scaffolding:</strong></p>
+<ul>
+<li>Belland, Walker, Kim, and Lefler (2017) meta-analyzed 144 experimental studies with 333 outcome measures on computer-based scaffolding in STEM education. Their random-effects meta-analysis found a consistently positive effect (<em>ḡ</em> = 0.46) on cognitive outcomes across contexts of use, scaffolding characteristics, and levels of assessment.</li>
+</ul>
+<hr>
+</section>
+<section id="exercise-by-exercise-rationale" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-by-exercise-rationale">Exercise-by-Exercise Rationale</h2>
+<section id="exercise-4.a-recognize-before-you-produce" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.a-recognize-before-you-produce">Exercise 4.A — Recognize Before You Produce</h3>
+<p><strong>Design:</strong> Six weak prompts; learner identifies which BRIEFS element is most-missing.</p>
+<p><strong>Rationale:</strong> Recognition precedes production. VanLehn’s (1996) staged model of cognitive skill acquisition identifies an early phase where learners build declarative knowledge before procedural skill. Recognition-level exercises serve this phase without imposing production load.</p>
+<p><strong>Specific prediction:</strong> Across the six prompts, ~60% of cases should diagnose as missing Intent, matching the Whisperers Study finding (Yatawara, 2026) that intent is the #1 signal. This creates a direct empirical tie-in to the module’s framing.</p>
+</section>
+<section id="exercise-4.b-single-element-insertion" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.b-single-element-insertion">Exercise 4.B — Single-Element Insertion</h3>
+<p><strong>Design:</strong> Learners add each of the six BRIEFS elements to a bare prompt one at a time, in isolation.</p>
+<p><strong>Rationale:</strong> Element isolation is standard in deliberate practice (Ericsson, 1993). Drilling scales in isolation before playing a song is the canonical analogy. The exercise deliberately resists combination — combining elements is Exercise 4.D’s job.</p>
+<p><strong>Self-explanation prompt (“Which element was hardest?”):</strong> This is the load-bearing pedagogy piece. Self-explanation prompts increase germane cognitive load — the productive load associated with schema construction. Renkl (1997) and subsequent replications show that prompting self-explanation during example study roughly doubles learning gains.</p>
+</section>
+<section id="exercise-4.c-completion-drill" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.c-completion-drill">Exercise 4.C — Completion Drill</h3>
+<p><strong>Design:</strong> Three BRIEFS skeletons with 2–3 elements filled in; learner adds the rest.</p>
+<p><strong>Rationale:</strong> Completion problems occupy the middle rung of the faded-worked-example sequence (Renkl, Atkinson, and Große, 2004). The given elements anchor the learner and reduce element-interactivity load while still requiring production.</p>
+<p><strong>Design choice:</strong> Each skeleton deliberately leaves a different mix of elements empty. Skeleton 2 and 3 both leave Stakes empty, because Stakes is the element students most often under-specify. This is a targeted intervention, not random.</p>
+</section>
+<section id="exercise-4.d-full-briefs-production" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.d-full-briefs-production">Exercise 4.D — Full BRIEFS Production</h3>
+<p><strong>Design:</strong> Three bare prompts (“Help me with my resume,” etc.) rewritten using full BRIEFS; then three from the learner’s own life.</p>
+<p><strong>Rationale:</strong> This is the production capstone for the BRIEFS-specific skill. It replaces the original course’s single Guided Practice 4.1.</p>
+<p><strong>Variation 4.D.2 (your own three)</strong> is the handoff point where the course becomes personal. The three prompts produced here are reused in Exercise 4.J (peer critique) and Lab 4 (Before/After experiment). This creates spaced retrieval across the module — students revisit their own work under different demands.</p>
+</section>
+<section id="exercise-4.e-calibration-handshake-drill" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.e-calibration-handshake-drill">Exercise 4.E — Calibration Handshake Drill</h3>
+<p><strong>Design:</strong> Three scenarios, each requiring the learner to write all three phases of the handshake (own message → model’s probable restatement → confirm-or-correct).</p>
+<p><strong>Rationale:</strong> The calibration handshake was the most striking finding of the Whisperers Study (Yatawara, 2026) — all 26 models across 5 providers independently converged on the same three-phase protocol. The drill exists because Phase 3 is the phase users skip, and the habit must be built deliberately.</p>
+<p><strong>Phase 2 (“what will the model say back?”) is the exercise’s pedagogical payload.</strong> Writing Phase 2 requires perspective-taking — imagining the model’s interpretation of your message. This is the same skill that undergirds the study’s meta-finding: models fail when they model the user poorly. Practicing the reverse — modeling the model — sharpens first-message precision.</p>
+</section>
+<section id="exercise-4.f-technique-selection" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.f-technique-selection">Exercise 4.F — Technique Selection</h3>
+<p><strong>Design:</strong> Five tasks; learner matches each to one of five core techniques (zero-shot, few-shot, chain-of-thought, role-based, structured output) and writes the actual prompt.</p>
+<p><strong>Rationale:</strong> Technique choice is a distinct skill from BRIEFS. BRIEFS designs the content of the first message; technique choice designs its form. The arXiv 2410.11123 PRISMA review found that K-12 STEM prompt engineering defaults to zero-shot, missing the accuracy gains available from few-shot and chain-of-thought. The exercise explicitly targets this gap.</p>
+</section>
+<section id="exercise-4.g-smarts-multi-turn-walkthrough" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.g-smarts-multi-turn-walkthrough">Exercise 4.G — SMARTS Multi-Turn Walkthrough</h3>
+<p><strong>Design:</strong> Learner writes all six SMARTS turns on a real complex task, then compresses to a 3-turn variant.</p>
+<p><strong>Rationale:</strong> SMARTS is a process-based framework (Qian, 2025’s terminology) and cannot be practiced in isolation the way BRIEFS elements can. The full 6-turn walkthrough is the only way to feel the interaction shape. The compression variation (6 → 3 turns) introduces the principle of “use the framework at the level the task warrants” — a lesson against over-engineering.</p>
+</section>
+<section id="exercise-4.h-anti-pattern-gallery" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.h-anti-pattern-gallery">Exercise 4.H — Anti-Pattern Gallery</h3>
+<p><strong>Design:</strong> Seven broken prompts (Wall of Context, Frankenstein, Yes-Man Bait, Phantom Context, Role Dump, Format/Content Mismatch, Leading Question); learner diagnoses and proposes a one-move repair.</p>
+<p><strong>Rationale:</strong> Diagnostic skill is a higher-level cognitive target than production skill (Bloom’s taxonomy: “evaluate” &gt; “create” at the surface, though they interact). The exercise is also the most explicitly engaging — diagnosing broken artifacts is famously rewarding in code review, medical education, and proofreading contexts.</p>
+<p><strong>Coverage choice:</strong> The seven anti-patterns were chosen for distinct failure modes. Leading Question (#7) is included specifically because sophisticated-looking hallucinated confirmation is one of the most dangerous outputs of poor prompting — and one learners rarely recognize as a problem until shown.</p>
+</section>
+<section id="exercise-4.i-transfer-and-red-team" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.i-transfer-and-red-team">Exercise 4.I — Transfer and Red-Team</h3>
+<p><strong>Design:</strong> Part 1: re-target a BRIEFS prompt across three radically different domains (agriculture, medicine, software, education). Part 2: find a case where BRIEFS is the wrong tool.</p>
+<p><strong>Rationale:</strong> Transfer is the real test of skill acquisition (Barnett and Ceci, 2002). The cross-domain rewriting forces the learner to distinguish <em>structure</em> (the BRIEFS skeleton, preserved) from <em>content</em> (domain-specific details, changed). This is the near-transfer vs far-transfer distinction; the exercise explicitly trains far transfer by crossing domain boundaries.</p>
+<p><strong>The red-team portion</strong> is the single most important exercise in the module. Naming when <em>not</em> to use a framework is a stronger signal of mastery than using it appropriately. A learner who can articulate three cases where BRIEFS fails (creative exploration, single-fact lookup, emotional processing) has internalized the framework’s boundary conditions — which are more important than the framework itself.</p>
+</section>
+<section id="exercise-4.j-rubric-based-peer-critique" class="level3">
+<h3 class="anchored" data-anchor-id="exercise-4.j-rubric-based-peer-critique">Exercise 4.J — Rubric-Based Peer Critique</h3>
+<p><strong>Design:</strong> Paired learners exchange one of their Exercise 4.D.2 prompts and score using a 5-dimension rubric. A structured critique script (say what’s working → identify weakest dimension → propose one targeted revision) constrains the feedback form.</p>
+<p><strong>Rationale:</strong> Peer review is validated for prompt engineering specifically:</p>
+<ul>
+<li>Turan et al.&nbsp;(2024) in <em>Education Sciences</em> documented that “I Learn with Prompt Engineering” assignments requiring peer-review with pre-defined rubrics produced better downstream prompting than solo practice. The rubric is non-optional — peer review without a rubric degrades into vague impressions.</li>
+<li>In software engineering education (Ho et al., 2024; the Socratique “Mr.&nbsp;Pepper” study), structured peer code review is the canonical skill-building mechanism, and the evidence base is a natural fit for prompt engineering given the artifact-review similarity.</li>
+<li>Classical peer-review findings (Topping, 1998) hold that the reviewer learns more than the reviewee, because scoring a rubric forces tacit standards to become explicit.</li>
+</ul>
+<p><strong>The critique script</strong> is adapted from SE code review practice (Bacchelli and Bird, 2013; Rigby and Bird, 2017). It solves two peer-review failure modes: over-gentle feedback that loses signal, and over-harsh feedback that damages motivation. The “one targeted revision” constraint channels cognitive effort toward actionability.</p>
+<hr>
+</section>
+</section>
+<section id="self-explanation-prompts" class="level2">
+<h2 class="anchored" data-anchor-id="self-explanation-prompts">Self-Explanation Prompts</h2>
+<p>Every exercise includes a <strong>self-explanation prompt</strong> — a short written reflection question designed to trigger schema-building processes during example study.</p>
+<p>The self-explanation literature is one of the most robust findings in educational psychology:</p>
+<ul>
+<li>Chi, Bassok, Lewis, Reimann, and Glaser (1989): self-explaining worked examples distinguishes high-learners from low-learners.</li>
+<li>Renkl (1997): self-explanation activities mediate the worked-example effect.</li>
+<li>VanLehn and Jones (1993); VanLehn, Jones, and Chi (1992): computational models of self-explanation converge on the same prediction — explanation generates schema.</li>
+<li>Renkl and Atkinson (2003): self-explanation prompts, embedded in faded worked examples, produce larger gains than worked examples alone.</li>
+</ul>
+<p>The specific self-explanation prompts in the ladder are written to target personal blind spots (“Which element was hardest for you?”) rather than generic principles (“What did you learn?”). Blind-spot targeting is the difference between self-explanation that builds schema and self-explanation that rehearses surface features.</p>
+<hr>
+</section>
+<section id="measurement-and-validation" class="level2">
+<h2 class="anchored" data-anchor-id="measurement-and-validation">Measurement and Validation</h2>
+<p>The ladder is <strong>designed to be measured</strong>. Three measurement opportunities are built in:</p>
+<ol type="1">
+<li><p><strong>Lab 4 (Before/After Experiment)</strong> — direct measurement of prompt quality improvement on learner-selected tasks. The lab collects 10 prompts and 10 responses per student with three-dimension scoring (Relevance, Accuracy, Usefulness). This is the closest available approximation to a randomized within-subject comparison.</p></li>
+<li><p><strong>Self-Assessment Part B (pre/post)</strong> — self-reported competency on 10 items aligned to the ladder exercises. Administered before Module 1 and after Module 14.</p></li>
+<li><p><strong>Module 4 Quiz</strong> — 18-item knowledge check with a 14/18 (78%) badge threshold. Two items directly test knowledge from the ladder exercises (Exercise 4.A’s diagnostic pattern; Exercise 4.H’s anti-pattern recognition).</p></li>
+</ol>
+<p>For formal efficacy testing, the natural design is a <strong>between-sections quasi-experiment</strong>: one section receives the full ladder, a second receives only the original Guided Practice 4.1, and Lab 4 serves as the common outcome measure. This design is viable in any regular offering of the course and would produce a publishable effect size estimate in 1–2 semesters.</p>
+<hr>
+</section>
+<section id="limitations-and-open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-and-open-questions">Limitations and Open Questions</h2>
+<p><strong>1. Dose effect unclear.</strong> I do not yet know whether the full 10-exercise ladder is necessary, or whether a subset (e.g., 4.A, 4.D, 4.H, 4.J) captures most of the gain. The between-sections design above would also estimate a dose-response curve if variants of the ladder were compared.</p>
+<p><strong>2. Expertise reversal not formally handled.</strong> For advanced learners, worked examples lose their effectiveness (Kalyuga, Chandler, and Sweller, 1998). The facilitator guide addresses this informally (pair advanced learners with novices in 4.J; fast-forward through 4.A–4.C), but no adaptive mechanism is built into the ladder itself.</p>
+<p><strong>3. Transfer horizon unmeasured.</strong> Lab 4 measures near-term prompt quality. Whether ladder-trained learners produce better prompts 6 months later, in novel domains, is unknown. Measuring this would require a longitudinal follow-up, which the course currently cannot support.</p>
+<p><strong>4. Cultural and linguistic generalization.</strong> All examples use English-language prompts aimed at US higher-education contexts. Whether the ladder generalizes to students working in other languages or cultural contexts is unknown.</p>
+<p>These limitations are research opportunities, not reasons to delay adoption.</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Bacchelli, A., &amp; Bird, C. (2013). Expectations, outcomes, and challenges of modern code review. In <em>Proceedings of the 35th International Conference on Software Engineering (ICSE)</em> (pp.&nbsp;712–721). IEEE.</p>
+<p>Barnett, S. M., &amp; Ceci, S. J. (2002). When and where do we apply what we learn? A taxonomy for far transfer. <em>Psychological Bulletin</em>, 128(4), 612–637.</p>
+<p>Belland, B. R., Walker, A. E., Kim, N. J., &amp; Lefler, M. (2017). Synthesizing results from empirical research on computer-based scaffolding in STEM education: A meta-analysis. <em>Review of Educational Research</em>, 87(2), 309–344.</p>
+<p>Chen, O., Kalyuga, S., &amp; Sweller, J. (2015). The worked example effect, the generation effect, and element interactivity. <em>Journal of Educational Psychology</em>, 107(3), 689–704.</p>
+<p>Chi, M. T. H., Bassok, M., Lewis, M. W., Reimann, P., &amp; Glaser, R. (1989). Self-explanations: How students study and use examples in learning to solve problems. <em>Cognitive Science</em>, 13(2), 145–182.</p>
+<p>Ericsson, K. A., Krampe, R. T., &amp; Tesch-Römer, C. (1993). The role of deliberate practice in the acquisition of expert performance. <em>Psychological Review</em>, 100(3), 363–406.</p>
+<p>Jang, J., Eun, S., Lee, H., Choi, J., &amp; Cho, Y. H. (2024). The effects of prompt scaffolding on learning to write arguments with ChatGPT. In <em>Proceedings of the 18th International Conference of the Learning Sciences — ICLS 2024</em> (pp.&nbsp;1502–1505). International Society of the Learning Sciences.</p>
+<p>Kalyuga, S., Chandler, P., &amp; Sweller, J. (1998). Levels of expertise and instructional design. <em>Human Factors</em>, 40(1), 1–17.</p>
+<p>Miller-Cotto, D. (2026). Does working memory moderate the effect of fading on math performance? <em>British Journal of Educational Psychology</em>. Advance online publication.</p>
+<p>Qian, Y. (2025). Prompt engineering in education: A systematic review of approaches and educational applications. <em>Journal of Educational Computing Research</em>. Advance online publication.</p>
+<p>Renkl, A. (1997). Learning from worked-out examples: A study on individual differences. <em>Cognitive Science</em>, 21(1), 1–29.</p>
+<p>Renkl, A., &amp; Atkinson, R. K. (2003). Structuring the transition from example study to problem solving in cognitive skills acquisition: A cognitive load perspective. <em>Educational Psychologist</em>, 38(1), 15–22.</p>
+<p>Renkl, A., Atkinson, R. K., &amp; Große, C. S. (2004). How fading worked solution steps works — a cognitive load perspective. <em>Instructional Science</em>, 32(1), 59–82.</p>
+<p>Rigby, P. C., &amp; Bird, C. (2013). Convergent contemporary software peer review practices. In <em>Proceedings of the 2013 9th Joint Meeting on Foundations of Software Engineering</em> (pp.&nbsp;202–212). ACM.</p>
+<p>Sweller, J., Ayres, P., &amp; Kalyuga, S. (2011). <em>Cognitive load theory</em> (Explorations in the Learning Sciences, Instructional Systems and Performance Technologies, Vol. 1). Springer.</p>
+<p>Topping, K. (1998). Peer assessment between students in colleges and universities. <em>Review of Educational Research</em>, 68(3), 249–276.</p>
+<p>Turan, B., et al.&nbsp;(2024). The impact of prompt engineering and a generative AI-driven tool on autonomous learning: A case study. <em>Education Sciences</em>, 15(2), 199.</p>
+<p>VanLehn, K. (1996). Cognitive skill acquisition. <em>Annual Review of Psychology</em>, 47(1), 513–539.</p>
+<p>Yatawara, A. (2025). <em>SMARTS: A Process-Based Framework for Multi-Turn AI Reasoning</em>. ELEVATE Project Working Paper, California State University, Bakersfield.</p>
+<p>Yatawara, A. (2026). <em>LLM &amp; Human Whisperers: What Large Language Models Ask of Us</em> (SSRN Working Paper).</p>
+<p>Zhang, X., et al.&nbsp;(2025). An empirical study of student translators’ prompting behaviours. [Referenced in Prompt Engineering Frameworks review, <em>ITLJ</em>.]</p>
+<hr>
+<p><em>This document may be cited as: Yatawara, A. (2026). Module 4 Practice Ladder: Pedagogical Rationale. AI from the Ground Up, California State University, Bakersfield.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.yatawara\.com\/coursebooks\/ai-ground-up\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026– <a href="https://www.yatawara.com">Dr.&nbsp;Anjana Yatawara</a></p>
+</div>   
+    <div class="nav-footer-center">
+<p><em>Understand it. Use it. Build with it.</em></p>
+</div>
+    <div class="nav-footer-right">
+<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC BY-NC 4.0</a></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
