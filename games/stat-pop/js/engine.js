@@ -14,10 +14,13 @@ export function grade(question, response) {
   if (Array.isArray(question.answer)) return Array.isArray(response) && JSON.stringify(response) === JSON.stringify(question.answer);
   return String(response ?? '').trim() === String(question.answer ?? '').trim();
 }
+// Each question is scored once, on its first submitted response.
 export function recordAnswer(state, question, correct) {
-  const key = question.id; state.attempts++; state.attempted[key] = (state.attempted[key] || 0) + 1;
-  if (correct) { if (!state.mastered[key]) state.score += question.reward || 10; state.mastered[key] = true; state.retryQueue = state.retryQueue.filter(id => id !== key); }
-  else { state.errors[key] = (state.errors[key] || 0) + 1; if (!state.retryQueue.includes(key)) state.retryQueue.push(key); }
+  const key = question.id;
+  if (state.attempted[key]) return state;
+  state.attempts++; state.attempted[key] = 1;
+  if (correct) { state.score++; state.mastered[key] = true; }
+  else { state.errors[key] = 1; }
   return state;
 }
 export const percent = (questions, state) => questions.length ? Math.floor(100 * questions.filter(q => state.mastered[q.id]).length / questions.length) : 0;

@@ -1,7 +1,7 @@
 ﻿export const CONFIG = {
   examNotice: 'Exam reminder: The exam will be based on the concepts and skills represented in this practice. Exam: Monday, November 2, 2026, at the regular class time.',
   homeUrl: 'https://yatawara.com',
-  storageKey: 'yatawara_math2200_statpop_v1'
+  storageKey: 'yatawara_math2200_statpop_quiz_v2'
 };
 export const WORLDS = [
   {id:'sample-sprinkle', name:'Sample Sprinkle Village', short:'Samples & data', icon:'✿', color:'pink', description:'Meet populations, samples, and the data that tell their stories.'},
