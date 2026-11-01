@@ -12,11 +12,20 @@ test('numeric tolerance and allowed percentages',()=>{assert.ok(grade({type:'num
 test('each question contributes at most one point on its first submission',()=>{const s=freshState(),qs=[{id:'a'},{id:'b'}];recordAnswer(s,qs[0],false);assert.equal(s.score,0);recordAnswer(s,qs[0],true);assert.equal(s.score,0);assert.equal(s.attempts,1);recordAnswer(s,qs[1],true);assert.equal(s.score,1);assert.equal(s.attempts,2);assert.equal(percent(qs,s),50);});
 test('storage handles roundtrip, corruption, version and reset',()=>{let raw=null;const storage={getItem:()=>raw,setItem:(_,v)=>raw=v,removeItem:()=>raw=null};const s=freshState();s.attempts=3;assert.ok(saveState(s,storage));assert.equal(loadState(storage).attempts,3);raw='{';assert.equal(loadState(storage).attempts,0);raw=JSON.stringify({version:999,attempts:5});assert.equal(loadState(storage).attempts,0);clearState(storage);assert.equal(raw,null);});
 
-test('independent coverage manifest exactly matches playable activities', async()=>{const {REQUIRED_SOURCE_ITEMS}=await import('../js/data/coverageManifest.js'); const ids=QUESTIONS.map(q=>q.id); assert.equal(new Set(REQUIRED_SOURCE_ITEMS).size,REQUIRED_SOURCE_ITEMS.length); assert.deepEqual([...ids].sort(),[...REQUIRED_SOURCE_ITEMS].sort()); for(let i=1;i<=14;i++) assert.ok(REQUIRED_SOURCE_ITEMS.some(id=>id.startsWith('OE'+String(i).padStart(2,'0'))),`missing OE${i}`);});
+test('independent coverage manifest exactly matches the full question bank', async()=>{const {REQUIRED_SOURCE_ITEMS}=await import('../js/data/coverageManifest.js'); const ids=QUESTIONS.map(q=>q.id); assert.equal(new Set(REQUIRED_SOURCE_ITEMS).size,REQUIRED_SOURCE_ITEMS.length); assert.deepEqual([...ids].sort(),[...REQUIRED_SOURCE_ITEMS].sort()); for(let i=1;i<=14;i++) assert.ok(REQUIRED_SOURCE_ITEMS.some(id=>id.startsWith('OE'+String(i).padStart(2,'0'))),`missing OE${i}`);});
 
 
 test('matching, sorting, and R-code assembly grade complete stable-ID sequences',()=>{
  for (const id of ['OE04b-terms-match','OE02b-variable-sort','OE12-r-code-builder']) {
   const q=QUESTIONS.find(item=>item.id===id); assert.ok(q,id); assert.ok(grade(q,[...q.answer]),id); assert.ok(!grade(q,q.answer.slice(1)),id); assert.ok(!grade(q,[...q.answer].reverse()),id);
  }
+});
+
+test('short quiz selection is unique, valid, covers each topic, and keeps the proportion sequence ordered', async()=>{
+ const {QUIZ_IDS}=await import('../js/data/quizSelection.js'); const byId=new Map(QUESTIONS.map(q=>[q.id,q]));
+ assert.equal(QUIZ_IDS.length,64); assert.equal(new Set(QUIZ_IDS).size,QUIZ_IDS.length);
+ for(const id of QUIZ_IDS) assert.ok(byId.has(id),`missing ${id}`);
+ for(const world of ['sample-sprinkle','design-dessert','probability-pop','normal-cloud','hypothesis-space','proportion-potion']) assert.ok(QUIZ_IDS.some(id=>byId.get(id).world===world),`missing topic ${world}`);
+ assert.ok(QUIZ_IDS.indexOf('OE12-02-hypotheses')<QUIZ_IDS.indexOf('OE12-07-z'));
+ assert.ok(QUIZ_IDS.indexOf('OE12-07-z')<QUIZ_IDS.indexOf('OE12-18-interpret'));
 });

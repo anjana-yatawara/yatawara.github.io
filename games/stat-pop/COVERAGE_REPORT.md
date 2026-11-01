@@ -1,6 +1,6 @@
 # MATH 2200 source coverage
 
-Each listed activity is an independent requirement for mastery. Open-ended IDs identify individual source actions and concepts.
+This report describes the full 161-activity source bank. The live shortened quiz uses the 64 IDs listed in js/data/quizSelection.js; it does not include every activity below. Open-ended IDs identify individual source actions and concepts.
 
 | Source item | Activity / requirement ID | World | Mastery key | Status |
 | --- | --- | --- | --- | --- |

@@ -1,4 +1,4 @@
-﻿import { CONFIG } from './config.js';
+﻿import { CONFIG } from './config.js?v=3';
 export const freshState = () => ({version:1, attempted:{}, mastered:{}, errors:{}, retryQueue:[], score:0, attempts:0, noticeDismissed:false, reducedMotion:false, lastWorld:null});
 export function loadState(storage = globalThis.localStorage) {
   try { const raw = storage?.getItem(CONFIG.storageKey); if (!raw) return freshState(); const saved = JSON.parse(raw); if (!saved || saved.version !== 1) return freshState(); return {...freshState(), ...saved}; } catch { return freshState(); }
